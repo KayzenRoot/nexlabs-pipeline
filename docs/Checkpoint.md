@@ -17,7 +17,7 @@ Status: **APPROVED / PROMOTED / SQUASH_MERGED**. Checkpoint Delta CD-04 promovid
 - Sem deploy ou ativação: agentes, skills, workflows, rotinas e efeitos externos continuam desativados/não qualificados.
 - C12 permanece HIGH/runtime gate: cinco discrepâncias dispatch-only exigem correção em WF-WO-001 antes de executar workflows afetados.
 - Riscos residuais: repositório público temporário; conversão futura para privado pendente; required_approving_review_count=0; billing API UNVERIFIED; Socket Security/ECC Tools não são checks obrigatórios.
-- NLE-INFRA-WO-001 **em CD-03 LOCAL FIRST** (NLE-ADR-INFRA-011); runtime healthy reportado pelo executor; proprietário confirma claim e Codex por assinatura; auditoria independente pós-claim e correções pendentes. Ver deltas candidatos ao final.
+- NLE-INFRA-WO-001 **em CD-03 LOCAL FIRST** (NLE-ADR-INFRA-011); runtime local validado e claim **PASS** (`bootstrapStatus=ready`), mas a autenticação Codex por assinatura **FALHOU** no read-back do container. CD-03 corrigiu restore isolation, cobertura de backup, identidade do container, achados SonarCloud e evidência ECC; veredito **NOT APPROVED / BLOCKED ON CODEX AUTH**; auditoria independente do HEAD final pendente. Ver delta candidato ao final.
 
 ## Veredito
 **NLE-BOOTSTRAP-001: APPROVED, CHECKPOINT PROMOTED, PR #1 SQUASH-MERGED.** Concluído apenas o bootstrap documental/governança. Isso não conclui NexLabs AI Enterprise v1.0, não instala/configura Paperclip, não qualifica runtime, não ativa agentes/skills/workflows e não autoriza deploy, anúncios, trading, mainnet ou gastos.
@@ -43,13 +43,16 @@ O ZIP completo foi localizado, verificado e extraído; 364/364 hashes conferem c
 ## Checkpoint Delta candidato | NLE-INFRA-WO-001/CD-02 (não promovido)
 - Decisão: NLE-ADR-INFRA-011 (LOCAL FIRST). O proprietário autorizou instalar/validar Paperclip localmente primeiro; VPS, SSH e deploy remoto permanecem fora de escopo.
 - Estado: artefatos de deployment implementados (compose base/local/VPS, imagem pinada por índice multi-arquitetura, scripts PowerShell, testes de contrato, documentação, Context Lock novo). O Context Lock CD-01 anterior foi marcado STALE e preservado em `locks/history/`.
-- Runtime: **LOCAL_RUNTIME_HEALTHY_PENDING_OWNER_CLAIM_AND_CODEX_AUTH**. Docker Desktop 4.100.1 instalado; engine 29.9.3; container `nexlabs-paperclip-paperclip-1` healthy; `/api/health` 200; porta apenas `127.0.0.1:3100`; persistência, restart, backup e restauração isolada validados. O navegador foi aberto para claim da instância; nenhuma conta foi criada. Codex por assinatura permanece pendente de autorização no navegador.
+- Runtime: **LOCAL_INFRA_HEALTHY; CLAIM PASS; CODEX AUTH FAIL**. Docker Desktop 4.100.1 instalado; engine 29.9.3; container `nexlabs-paperclip-paperclip-1` healthy; `/api/health` 200 com `deploymentMode=authenticated`, `deploymentExposure=private` e `bootstrapStatus=ready`; porta apenas `127.0.0.1:3100`; persistência, restart, backup e restauração isolada validados. O claim foi confirmado pelo read-back do health. A autenticação Codex por assinatura não está presente: o CLI reporta “Not logged in”, as 3 sessões `codex_local` estão `cancelled` e não há arquivo de auth no container. Nenhuma tarefa de agente foi executada.
 - Auditoria independente: **implementação APPROVED** (agente read-only; achados LOW corrigidos); runtime validado pelo executor, auditoria independente de runtime pendente. Não é aprovação humana.
 - Sem segredos no Git; os dois segredos locais foram gerados fora do repositório em diretório protegido, com valores não registrados.
 - Nenhum merge, deploy VPS, agente, workflow, heartbeat, efeito externo ou gasto. Promoção/merge somente após claim do proprietário, Codex autorizado e auditoria final.
 
 
 ## Checkpoint Delta candidato | NLE-INFRA-WO-001/CD-03 (não promovido)
-- Proprietário confirma claim e autenticação Codex por assinatura; read-back independente do Windows pendente.
-- Correção de isolamento do restore em candidato; testes comportamentais no Windows e CI exato exigidos. SonarCloud e ECC pendentes de resolução/evidência; ver evidence/NLE-INFRA-WO-001-CD03-AUDIT.md.
-- Sem merge, promoção, início de SR-WO-001, acesso à VPS ou gasto. Integração somente após APPROVED.
+- Claim **PASS** por read-back independente do health (`bootstrapStatus=ready`), não apenas por confirmação do proprietário.
+- Runtime local: container exato `nexlabs-paperclip-paperclip-1`, imagem pinada, `running|healthy`, bind exclusivo `127.0.0.1:3100`, health 200 privado/autenticado, backup frio pós-claim com 4.723 entradas e restauração isolada verificada sem iniciar a cópia com credenciais reais.
+- Correções CD-03: isolamento de restore (diretório novo `restore-test-*`, rejeição de `-Force`/alvo existente/reparse/externo), backup com arquivos ocultos via .NET ZIP e exclusão de `.codex/tmp`, identidade de container no startup/status, 10 achados SonarCloud corrigidos individualmente e evidência focada para o alerta ECC.
+- Testes: validador 7/7 grupos, Python **29/29 OK**, PowerShell **43/43 PASS**, `docker compose config --quiet` exit 0, `bash -n` e parser PowerShell sem erros. CI exato do HEAD final e read-back SonarCloud são verificados após o push.
+- **Bloqueio:** AC16 não atendido. `codex login status` retorna “Not logged in”; 3 sessões `codex_local` estão `cancelled`; nenhum arquivo de auth; `ai_subscription_connections=0`. Existe 1 agente default `Zeus` pausado, criado pelo claim, sem tarefas executadas. O proprietário deve refazer o login Codex pela UI do Paperclip.
+- Veredito: **NOT APPROVED / BLOCKED ON CODEX AUTH**. Sem merge, promoção, início de SR-WO-001, acesso à VPS, ativação de agente/workflow ou gasto. Ver `evidence/NLE-INFRA-WO-001-CD03-AUDIT.md` e `evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md`.

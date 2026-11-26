@@ -100,6 +100,17 @@ authorizes it. Do not set `OPENAI_API_KEY`, do not copy personal Codex auth
 files, and do not run agent tasks during installation. See
 `deploy/local/codex/README.md`.
 
+After the owner completes the login, verify the runtime instead of assuming the
+UI confirmation is sufficient:
+
+```powershell
+docker exec nexlabs-paperclip-paperclip-1 codex login status
+```
+
+On 2026-11-26 the container reported `Not logged in`, all three `codex_local`
+auth sessions were `cancelled`, and no auth file existed. In that state AC16 is
+not met and no agent may run.
+
 ## NexLabs catalog
 
 The 105 agents, 10 departments, 92 packages, 1,110 assignments, 1,071 contextual

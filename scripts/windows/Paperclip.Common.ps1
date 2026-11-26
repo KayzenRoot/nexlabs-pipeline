@@ -179,6 +179,43 @@ function Get-PaperclipComposeArguments {
     return $commandArgs
 }
 
+function Get-PaperclipContainerId {
+    param(
+        [string]$RepositoryRoot,
+        [string]$SecretFile
+    )
+    if (-not (Enable-PaperclipDockerCli)) { return $null }
+    $arguments = Get-PaperclipComposeArguments -RepositoryRoot $RepositoryRoot -SecretFile $SecretFile -ComposeCommand @('ps', '-q', 'paperclip')
+    $previousProjectName = $env:COMPOSE_PROJECT_NAME
+    $env:COMPOSE_PROJECT_NAME = 'nexlabs-paperclip'
+    try {
+        $id = & docker @arguments 2>$null | Select-Object -First 1
+    } finally {
+        if ($null -eq $previousProjectName) {
+            Remove-Item Env:COMPOSE_PROJECT_NAME -ErrorAction SilentlyContinue
+        } else {
+            $env:COMPOSE_PROJECT_NAME = $previousProjectName
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($id)) { return $null }
+    return ([string]$id).Trim()
+}
+
+function Assert-PaperclipContainerIdentity {
+    param(
+        [string]$RepositoryRoot,
+        [string]$SecretFile
+    )
+    $id = Get-PaperclipContainerId -RepositoryRoot $RepositoryRoot -SecretFile $SecretFile
+    if (-not $id) { throw 'PAPERCLIP_CONTAINER_NOT_FOUND' }
+    $image = ((& docker inspect $id --format '{{.Config.Image}}') -join '').Trim()
+    $state = ((& docker inspect $id --format '{{.State.Status}}|{{.State.Health.Status}}') -join '').Trim()
+    $expected = Get-PaperclipImageReference -RepositoryRoot $RepositoryRoot
+    if ($image -ne $expected) { throw "PAPERCLIP_IMAGE_MISMATCH: $image" }
+    if ($state -notmatch '^running\|healthy$') { throw "PAPERCLIP_CONTAINER_NOT_HEALTHY: $state" }
+    return [pscustomobject]@{ Id = $id; Image = $image; State = $state }
+}
+
 function Invoke-PaperclipCompose {
     param(
         [string]$RepositoryRoot,
@@ -231,9 +268,21 @@ function Get-PaperclipHealth {
     param([int]$Port = 3100)
     try {
         $response = Invoke-WebRequest -UseBasicParsing -Uri "http://127.0.0.1:$Port/api/health" -TimeoutSec 5
-        return [pscustomobject]@{ Ok = ($response.StatusCode -eq 200); StatusCode = $response.StatusCode }
+        $body = $response.Content | ConvertFrom-Json
+        $ok = (
+            $response.StatusCode -eq 200 -and
+            $body.status -eq 'ok' -and
+            $body.deploymentMode -eq 'authenticated' -and
+            $body.deploymentExposure -eq 'private'
+        )
+        return [pscustomobject]@{
+            Ok              = [bool]$ok
+            StatusCode      = $response.StatusCode
+            Status          = $body.status
+            BootstrapStatus = $body.bootstrapStatus
+        }
     } catch {
-        return [pscustomobject]@{ Ok = $false; StatusCode = 0 }
+        return [pscustomobject]@{ Ok = $false; StatusCode = 0; Status = $null; BootstrapStatus = $null }
     }
 }
 
@@ -254,13 +303,37 @@ function New-PaperclipBackupArchive {
         [string]$BackupDir
     )
     if (-not (Test-Path $DataDir)) { throw "DATA_DIR_MISSING: $DataDir" }
-    $items = @(Get-ChildItem -LiteralPath $DataDir -Force)
+    $items = @(Get-ChildItem -LiteralPath $DataDir -Force -Recurse)
     if ($items.Count -eq 0) { throw "DATA_DIR_EMPTY: $DataDir" }
     New-PaperclipDirectory -Path $BackupDir
     Set-OwnerOnlyAcl -Path $BackupDir
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
     $stamp = (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
-    $archive = Join-Path $BackupDir "paperclip-data-$stamp.zip"
-    Get-ChildItem -LiteralPath $DataDir -Force | Compress-Archive -DestinationPath $archive -CompressionLevel Optimal
+    $suffix = [guid]::NewGuid().ToString('N').Substring(0, 8)
+    $archive = Join-Path $BackupDir "paperclip-data-$stamp-$suffix.zip"
+    $basePath = [IO.Path]::GetFullPath($DataDir).TrimEnd([char[]]@('\', '/'))
+    $zip = [IO.Compression.ZipFile]::Open($archive, [IO.Compression.ZipArchiveMode]::Create)
+    try {
+        foreach ($item in $items) {
+            $relative = $item.FullName.Substring($basePath.Length).TrimStart([char[]]@('\', '/')).Replace('\', '/')
+            # Codex CLI recreates root-owned sandbox helper binaries under .codex/tmp.
+            # They are ephemeral and unreadable from the Windows host; auth/config stay included.
+            if ($relative.ToLowerInvariant().StartsWith('.codex/tmp')) { continue }
+            if ($item.PSIsContainer) {
+                [void]$zip.CreateEntry($relative + '/')
+            } else {
+                [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                    $zip,
+                    $item.FullName,
+                    $relative,
+                    [IO.Compression.CompressionLevel]::Optimal
+                )
+            }
+        }
+    } finally {
+        $zip.Dispose()
+    }
     $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $archive).Hash.ToLowerInvariant()
     $sidecar = "$archive.sha256"
     $utf8 = New-Object System.Text.UTF8Encoding($false)

@@ -1,13 +1,13 @@
 {
   "work_order": "NLE-INFRA-WO-001",
   "delta": "CD-03",
-  "status": "CORRECTION_REQUIRED_RUNTIME_AUDIT_PENDING",
+  "status": "BLOCKED_CODEX_AUTH",
   "decision": "NLE-ADR-INFRA-011 (LOCAL FIRST)",
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
-  "head_at_context_capture": "28cfe934638d97c656cb7ec050e6a5235221136f",
-  "head_note": "28cfe934 first correction CI success; canonical Git blob identities capture the following candidate content, excluding self-referential lock. Final head and CI must be verified externally.",
+  "head_at_context_capture": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
+  "head_note": "b7f447d is the CD-03 source-check HEAD. The corrections and this evidence are appended to the same PR; canonical SHA-256/Git-blob identities capture this corrected working tree. The final evidence commit hash and exact CI run are verified externally after push; the lock cannot contain its own commit hash.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -49,7 +49,8 @@
     "cloud_image": false,
     "api_keys_created": false,
     "agents_activated": false,
-    "external_effects": false
+    "external_effects": false,
+    "agent_rows_paused": 1
   },
   "tests": {
     "previous_source_validator": "7 groups PASS at CD-02",
@@ -57,10 +58,10 @@
     "previous_powershell": "30/30 at CD-02",
     "previous_runtime_health": "HTTP 200 executor reported",
     "previous_backup_restore": "PASS executor reported pre-claim",
-    "current_cd03": "PENDING",
-    "docker_compose_config": "RECHECK_REQUIRED",
-    "post_claim_runtime": "INDEPENDENT_READBACK_REQUIRED",
-    "restore_regressions": "PENDING_POWERSHELL"
+    "current_cd03": "validator 7/7 PASS; Python 29/29 OK; PowerShell 43/43 PASS; compose config exit 0; bash -n PASS; PowerShell parser 0 errors",
+    "docker_compose_config": "PASS_EXIT_0",
+    "post_claim_runtime": "PASS_FRESH_HOST_READBACK",
+    "restore_regressions": "PASS_43_OF_43"
   },
   "governance": {
     "main_protected": true,
@@ -69,21 +70,20 @@
     "no_bypass": true
   },
   "ci": {
-    "status": "PENDING_FINAL_CD03",
+    "status": "PENDING_FINAL_CD03_HEAD",
     "previous_head_sha": "28cfe934638d97c656cb7ec050e6a5235221136f",
     "previous_run_id": 45877720820,
     "previous_conclusion": "success",
     "workflow": "docs-validation"
   },
   "blockers": [
-    "Independent post-claim runtime evidence on actual Windows host unavailable in chat",
-    "Restore isolation correction requires behavioral tests on Windows and independent review",
-    "Ten SonarCloud issue details unavailable from public API; resolve or classify individually",
-    "ECC security evidence request needs focused security validation and exact-head evidence",
-    "Docker Desktop eligibility and zero-additional-cost qualification require confirmation"
+    "Codex subscription authentication is not valid at runtime; AC16 unmet",
+    "Independent read-only audit of the final pushed HEAD is pending",
+    "Final GitHub CI run and SonarCloud API read-back at the pushed HEAD are pending",
+    "Docker Desktop commercial-size eligibility requires owner attestation"
   ],
-  "next_action": "Run CD-03 local Codex preflight, focused tests and sanitized independent runtime audit. No merge or SR-WO-001 before APPROVED.",
-  "audit": "CORRECTION_REQUIRED; FINAL_HEAD_AND_RUNTIME_INDEPENDENT_AUDIT_PENDING",
+  "next_action": "Push corrections and evidence to PR #3, verify CI/Sonar, obtain independent read-only audit, then report blocked Codex auth. No merge, agent execution, VPS access, checkpoint promotion or next Work Order.",
+  "audit": "EXECUTOR_FINAL_AUDIT_COMPLETE; INDEPENDENT_FINAL_HEAD_AUDIT_PENDING",
   "merge": false,
   "deploy": "NOT_AUTHORIZED",
   "runtime_activation": false,
@@ -96,8 +96,8 @@
     "owner authorization or scope changes"
   ],
   "generated_on": "2026-11-26",
-  "head_after_implementation": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
-  "head_audited": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
+  "head_after_implementation": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
+  "head_audited": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
   "audit_note": "Independent agent audit of 6a7aaa2 approved implementation; runtime was blocked at audit time. Runtime was validated by the executor on 8f6af9e after owner-authorized Docker installation. Independent runtime audit pending.",
   "corrections": [
     "Removed pre-existing trailing whitespace from the Work Order; full-range diff-check expected clean after commit.",
@@ -107,8 +107,8 @@
     "CD-03 candidate: forbid force restore, enforce fresh isolated direct-child restore-test target and reject reparse ancestors; add behavioral and static regression tests.",
     "CD-03 follow-up: protected restore ACL before archive extraction and checkpoint candidate reconciled; exact Git blob identities captured for current critical files."
   ],
-  "head_corrective": "8f6af9ebda0799d8395af64609574788a8586a2f",
-  "head_runtime_validation": "8f6af9ebda0799d8395af64609574788a8586a2f",
+  "head_corrective": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
+  "head_runtime_validation": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
   "runtime": {
     "docker_desktop": "4.100.1",
     "installer_sha256": "98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2",
@@ -119,7 +119,7 @@
     "health_http": 200,
     "ui_http": 200,
     "bind": "127.0.0.1:3100",
-    "bootstrap_status": "OWNER_CONFIRMED_CLAIM; FRESH_READBACK_PENDING",
+    "bootstrap_status": "READBACK_VERIFIED_READY",
     "browser_opened": true,
     "persistence": {
       "stop_start": "PASS",
@@ -136,16 +136,35 @@
       "port": 3101,
       "permissions_repaired": true
     },
-    "owner_claim": "OWNER_CONFIRMED_NOT_INDEPENDENTLY_VERIFIED",
-    "codex_subscription_auth": "OWNER_CONFIRMED_NOT_INDEPENDENTLY_VERIFIED",
-    "docker_license": "Accepted by official installer on explicit owner instruction; no Docker account or subscription created; commercial licensing to be confirmed by owner."
+    "owner_claim": "PASS_BOOTSTRAP_STATUS_READY",
+    "codex_subscription_auth": "FAIL_NOT_LOGGED_IN_NO_AUTH_FILE_THREE_CANCELLED_SESSIONS",
+    "docker_license": "Accepted by official installer on explicit owner instruction; no Docker account or subscription created; commercial licensing to be confirmed by owner.",
+    "codex_auth_audit": {
+      "cli_status": "Not logged in (default and CODEX_HOME=/paperclip/.codex)",
+      "adapter_auth_sessions": "3 codex_local, all cancelled; result_claim/connection_id/grant_id null",
+      "ai_subscription_connections": 0,
+      "ai_connection_pools": 0,
+      "ai_provider_defaults": 0,
+      "tool_connections": 0,
+      "auth_files_present": false,
+      "agent_rows": 1,
+      "agent_status": "Zeus codex_local paused; no task/run rows",
+      "agent_tasks_executed": 0
+    },
+    "container_id": "15d16428468e31993dd2f9992dc79845509ccd74c9ecb46630a3e3fdd2e93a1a",
+    "health": {
+      "http": 200,
+      "status": "ok",
+      "deploymentMode": "authenticated",
+      "deploymentExposure": "private",
+      "bootstrapStatus": "ready"
+    }
   },
   "pending_actions": [
-    "Independent post-claim runtime evidence on actual Windows host unavailable in chat",
-    "Restore isolation correction requires behavioral tests on Windows and independent review",
-    "Ten SonarCloud issue details unavailable from public API; resolve or classify individually",
-    "ECC security evidence request needs focused security validation and exact-head evidence",
-    "Docker Desktop eligibility and zero-additional-cost qualification require confirmation"
+    "Owner must complete Codex login through the Paperclip UI and verify codex login status",
+    "Push the CD-03 corrections, wait for docs-validation, and read back SonarCloud",
+    "Request independent read-only audit of the final pushed HEAD and runtime evidence",
+    "Update PR #3 with the evidence bundle and proposed checkpoint delta; do not merge"
   ],
   "historical_preinstall_host_evidence": {
     "os": "Microsoft Windows 11 Home Single Language 10.0.26200 build 26200 x64",
@@ -227,7 +246,7 @@
     "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
     "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "cf6fb9f736249283cfe8868389bbac8e8a34ed69144e43155f0fc262ba165cae"
   },
-  "fingerprint_status": "CD03_GIT_BLOB_IDENTITIES_CAPTURED; HISTORICAL_SHA256_NOT_CURRENT; FINAL_SHA256_RECALCULATION_AND_INDEPENDENT_READBACK_REQUIRED",
+  "fingerprint_status": "SHA256_RECALCULATED_FROM_CORRECTED_WORKING_TREE; GIT_BLOB_IDENTITIES_CAPTURED; FINAL_COMMIT_EXTERNAL_VERIFICATION_REQUIRED",
   "owner_authorization": {
     "claim": "CONFIRMED_BY_OWNER",
     "codex_subscription_auth": "CONFIRMED_BY_OWNER",
@@ -237,34 +256,37 @@
     "additional_spend_usd": 0
   },
   "canonical_git_blob_fingerprints": {
-    "docs/Checkpoint.md": "583980453ef18c8cb8c63f46cf760c22479f31d2",
+    "docs/Checkpoint.md": "1cb7346a53d2ed593cb9565151ce34a71d5095aa",
     "docs/Decisions-Ledger.md": "2f36e4ae40ba9db7b1240cbbe88bf1970fd920bf",
-    "docs/Backlog.md": "50417aba4b59229d6f97b2f79fb558c85ba3c007",
+    "docs/Backlog.md": "a2b9d69f74c095dcb376bc55428a667e3c55578d",
     "docs/Architecture.md": "6b22865933fa7a3c81ec913dacf96137237cae85",
-    "docs/Deployment.md": "10ee582e223f459d345c79c5972800baa2d2b058",
+    "docs/Deployment.md": "11b63e481c86bb8bcdd3007f6745e3cb9ea95b51",
     "docs/decisions-index.json": "460e93919dc8e9c63b0251c90f198c87a12285af",
-    "work-orders/NLE-INFRA-WO-001.md": "37c2e6860231e7ae993b631572c6af9d0dbee8d1",
+    "work-orders/NLE-INFRA-WO-001.md": "c3136ff8294673f464b949f84e309624e33f729c",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "06981c4cb469b8066eeec173331c2d544f547166",
     "deploy/compose.yaml": "409f4684560ce8306781a984760cf7d78a80b193",
     "deploy/local/compose.yaml": "009ee029a27523730a40770c72c922cfc5b3c77b",
     "deploy/vps/compose.yaml": "1a593cf9dc4510d6ef50f82a651929c1eb8301c3",
     "deploy/image-lock.json": "80b935aaf033bb75b812d56f228084e6eec72770",
-    "deploy/README.md": "950483fb3028f96d2dc04b25095b2e706ba446ec",
+    "deploy/README.md": "4c3c99a2161affbe703bbe7684d38c5576c80b07",
     "deploy/local/README.md": "9ec78aabaccfbb30353e528147771473360633ec",
     "deploy/vps/README.md": "3a01a21f0dd06dc9458dfd0da8d9aa97e7253752",
     "deploy/local/codex/README.md": "13b30d7820b8eed1d0a4f27efbf5dd51e4b5db75",
     "deploy/local/agents/README.md": "51a91511324d92625778c8643d68039de3d81f85",
     ".gitignore": "da350420ffea028508f85017649d56d42533bd1c",
-    "scripts/windows/Paperclip.Common.ps1": "ee983a2c14a10d0f17d6536960996b675f102f17",
+    ".github/workflows/docs-validation.yml": "0c3e71cc76fd510100205d55616ab51021ffed60",
+    "scripts/windows/Paperclip.Common.ps1": "4c60f08f7f31407fd21cf863caf48b2db447a316",
     "scripts/windows/Initialize-PaperclipSecrets.ps1": "7f11a0387fc5abbdd876cd5716143f8273b4200b",
-    "scripts/windows/Start-Paperclip.ps1": "93f7708b0cfe309c85ce6ef6e24170de10a67e83",
+    "scripts/windows/Start-Paperclip.ps1": "358f9e2f3f4f31f7f0bdf51e3906574ff67f62ce",
     "scripts/windows/Stop-Paperclip.ps1": "3c8a018c981422bcb57c01ae8a9390eac1698491",
-    "scripts/windows/Get-PaperclipStatus.ps1": "2f886ca7e024811e1ccef0638993b0f0649da56d",
+    "scripts/windows/Get-PaperclipStatus.ps1": "48a4c70ae0083d07dfed495a923fdfba85084eea",
     "scripts/windows/Backup-Paperclip.ps1": "bb439bb61303ae6cf2e67ca636d81ff262b86ce2",
     "scripts/windows/Restore-Paperclip.ps1": "53a9eb01d3dc506531c70c31f0dde6206334686f",
-    "scripts/windows/Test-PaperclipDeployment.ps1": "a84e5e6d531b0e561a48bf2c05b7fe6b2bfa38dd",
+    "scripts/windows/Test-PaperclipDeployment.ps1": "ae46ee841e729336cb625915c0dd3ff87333217d",
     "scripts/windows/README.md": "3d12861b20821311ffc5d864fba1e53e2c0e0616",
-    "tests/deployment/test_deploy_contract.py": "061f964b268dde0446e8e408ec400a1517894ff6",
+    "scripts/infra/collect_windows_inventory.ps1": "94cd9d8d3891f17f76eb377faeedf179fbcec694",
+    "scripts/infra/collect_vps_inventory.sh": "cc52f530ad4789cd28255327995691a074ce93c7",
+    "tests/deployment/test_deploy_contract.py": "8d855450ba458a1792588c6bbcac7c30cd697752",
     "tests/deployment/__init__.py": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
     "tests/test_infra_inventory.py": "ee2fe01e5d2a623fe67e9ff9ccd6dcd75db3b392",
     "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "9ba17d376fe01d2eaf31a4d2073fa5b25fc20b00",
@@ -274,6 +296,69 @@
     "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
     "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
     "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "81b1a5317466b45a19df23e25d7da406b74899e1"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "15d8d9d6b43cada65dae27bcccd07d53c1299dda",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "7dbf2467a0310993d018805833561e1797841031"
+  },
+  "verdict": "NOT_APPROVED_BLOCKED_CODEX_AUTH",
+  "sonar": {
+    "open_issues_at_start": 10,
+    "fixes": "APPLIED_INDIVIDUALLY",
+    "final_api_readback": "PENDING_PUSHED_HEAD"
+  },
+  "ecc": {
+    "alert": "SECURITY_EVIDENCE_REQUESTED",
+    "evidence_file": "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md",
+    "permissions_expanded": false
+  },
+  "docker_eligibility": {
+    "plan": "personal",
+    "organizations": 0,
+    "paid_subscription_observed": false,
+    "additional_spend_usd": 0,
+    "commercial_size_attestation": "OWNER_ATTESTATION_REQUIRED"
+  },
+  "canonical_fingerprints_sha256": {
+    "docs/Checkpoint.md": "a15ebab07d07cfa28f0fb89e390caeec448dbbf853df75ee79c838cc005653e2",
+    "docs/Decisions-Ledger.md": "07af059db1e75700fcd21fc235a1817f2163864c1a01628ba13edac1eb89f24a",
+    "docs/Backlog.md": "52e32dbae8a72f00f0fa3d0eb41771877c95f54f9b27561818653b8d69def57e",
+    "docs/Architecture.md": "9fc38e604e1d837fa8649a0fafdcb677801d5336925111940c2dad29c140fa3c",
+    "docs/Deployment.md": "bd921537a08a5d00f857511ec27e85d0a047d0c926eb24c3a09e2dc7b3e32743",
+    "docs/decisions-index.json": "d75c81f886ca54b0df79344894b2d853a89218198e6fa36f0f6bbd54790713b9",
+    "work-orders/NLE-INFRA-WO-001.md": "d1706e9e4b12469c7bdb08f21e311414eab4448a1d5be535469f6e62e9a5740d",
+    "prompts/NLE-INFRA-WO-001-CODEX.md": "31f1714fe74f1db00c026856c92a3aaa260fc945cdd3542829de4bc9ae7c4e49",
+    "deploy/compose.yaml": "a88ba00caa17915b96510c7a4ec33ee1fd33a8fd3db3d8291721b64514d5eb66",
+    "deploy/local/compose.yaml": "5656f89a67df28fc79268e3714d20c7fafe7a4f42019a7159ad2cf79f4952a54",
+    "deploy/vps/compose.yaml": "fdc8128252b3da00a82b8c8266e5a4241cd65ef0ce6f8fd4b7676cbaf5b98285",
+    "deploy/image-lock.json": "bb23e4c2d16baa100a94ad1e7bc73b2d25e7740625d7daeb55ba7669607f055d",
+    "deploy/README.md": "d183c54c397e988071ebc56b2522376a8c827eccaa7f60878f94f29f06348903",
+    "deploy/local/README.md": "5d5c4c8a320305dd410dcdf76c041b741a6b15523fd804395d96baaff09ffe79",
+    "deploy/vps/README.md": "10b619af07f6023373b293665893b8a921f3573cc1220c54665256fe143f9efe",
+    "deploy/local/codex/README.md": "a6141377e7745076872c64f5b2b1c8cbd27283ec200cdf405310d5840dcd18d3",
+    "deploy/local/agents/README.md": "2d0a67f1b92a1c6bd90c349eef41dd2d70926ba4a3aae46300798db1482c9419",
+    ".gitignore": "c46658c9045932d921107b03b09126deba959dfdd23d38f0c59365a8bd6f84fc",
+    ".github/workflows/docs-validation.yml": "7002255da60ce33ffad2c0652a540b1111549d784bb7084d183e30dae0e65548",
+    "scripts/windows/Paperclip.Common.ps1": "f13b5972700c13a3fd17182888a05bc653a1083b7f0fac52b6d0c7856f26b778",
+    "scripts/windows/Initialize-PaperclipSecrets.ps1": "fd85547d14e57ee55c3f9d575bd2f16167c0927f57620c0e5fcead4a8d1ab452",
+    "scripts/windows/Start-Paperclip.ps1": "1c0e4d577c64c5a63c5351625164acf2aadcc7877874db41ed753d524a5c21cc",
+    "scripts/windows/Stop-Paperclip.ps1": "c33f3b59883d517a6fbaf88b69d1f80b2b7f5cf0c4680de53c119111a2713d97",
+    "scripts/windows/Get-PaperclipStatus.ps1": "965961d22ba04bd6fe9527f39b57c613a0a9e2b91e407eb284772995796544b6",
+    "scripts/windows/Backup-Paperclip.ps1": "37a613df59bedb59f6e48a916efdf271413d73f315b3a8732e3eda0a8280adf3",
+    "scripts/windows/Restore-Paperclip.ps1": "1a5a82da59c98acae58696dbc167bd123e5a6e5502f21cce878154ab21434763",
+    "scripts/windows/Test-PaperclipDeployment.ps1": "efd5c09d5112be46929f83a54e2d47a24717b530e0cd9a063c68755392c2db7d",
+    "scripts/windows/README.md": "aee7a7c6458a165bde8c2e877379b1fe865c4e22e6b71d9c3ba70956c865d3a8",
+    "scripts/infra/collect_windows_inventory.ps1": "22f8adf831214778e5d0ae02c4da5cf17bf26dcd77e56f8511ed5d8fd91ba97f",
+    "scripts/infra/collect_vps_inventory.sh": "85bdb80dd3a1d5de2e4b55e1110840d462429f77100a89a9fecf90d0b899b604",
+    "tests/deployment/test_deploy_contract.py": "30e79e6e108568e8ae78b07d0396a1fceb73f7bde0a03e82ed36e2d8ef9e1673",
+    "tests/deployment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
+    "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "cf6fb9f736249283cfe8868389bbac8e8a34ed69144e43155f0fc262ba165cae",
+    "README.md": "6acf8c5468ca06e3522f5acdac3139980efa9720d364a5837b08602ef6a49e75",
+    "docs/Scope.md": "e3ac2829657b98802fd902e64ad5628fe4529eadaeda66673d956f472a7bb877",
+    "docs/Definition-of-Done.md": "41e9951e58ae8e05e080deab23c5f93db4988b4e621557a95b4d562b3d940780",
+    "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
+    "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94",
+    "locks/source-lock.json": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "2dbbbc8c5a2d103caa35a9a95047290124eef52e6b28f71def53da686dd991a9",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "8c2abc0ea8f31aab23e82c88fc7d6d13238f1b075fb4deaf588b6dcf0b3ab0d9"
   }
 }

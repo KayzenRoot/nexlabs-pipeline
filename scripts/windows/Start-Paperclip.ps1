@@ -28,9 +28,15 @@ try {
 
     $portState = Get-PaperclipPortState -Port $Port
     if ($portState.InUse) {
+        try {
+            $null = Assert-PaperclipContainerIdentity -RepositoryRoot $repositoryRoot -SecretFile $paths.SecretFile
+        } catch {
+            Write-Error "PORT_IN_USE_UNRELATED_SERVICE: $($_.Exception.Message)"
+            exit 4
+        }
         $health = Get-PaperclipHealth -Port $Port
         if (-not $health.Ok) {
-            Write-Error "PORT_IN_USE: TCP $Port is occupied by a process that is not healthy Paperclip"
+            Write-Error "PORT_IN_USE: TCP $Port is occupied but Paperclip health is not ok"
             exit 4
         }
         Write-Output "PAPERCLIP_ALREADY_READY http://localhost:$Port"
@@ -41,6 +47,12 @@ try {
     if (-not (Wait-PaperclipHealth -Port $Port -TimeoutSeconds 420)) {
         Write-Error "PAPERCLIP_HEALTH_TIMEOUT: inspect docker compose ps and container logs"
         exit 5
+    }
+    try {
+        $null = Assert-PaperclipContainerIdentity -RepositoryRoot $repositoryRoot -SecretFile $paths.SecretFile
+    } catch {
+        Write-Error "PAPERCLIP_IDENTITY_MISMATCH: $($_.Exception.Message)"
+        exit 6
     }
     Write-Output "PAPERCLIP_READY http://localhost:$Port"
     exit 0

@@ -23,9 +23,12 @@ try {
     Set-PaperclipLocalEnvironment -RepositoryRoot $repositoryRoot -DataDir $paths.Data -Port $Port
 
     Invoke-PaperclipCompose -RepositoryRoot $repositoryRoot -SecretFile $paths.SecretFile -ComposeCommand @('ps')
+    $container = Assert-PaperclipContainerIdentity -RepositoryRoot $repositoryRoot -SecretFile $paths.SecretFile
+    Write-Output "CONTAINER_ID=$($container.Id) IMAGE_MATCH=True STATE=$($container.State)"
     $health = Get-PaperclipHealth -Port $Port
     if ($health.Ok) {
         Write-Output "HEALTH_OK http://localhost:$Port/api/health"
+        Write-Output "BOOTSTRAP_STATUS=$($health.BootstrapStatus)"
         Write-Output "DATA_DIR=$($paths.Data)"
         exit 0
     }

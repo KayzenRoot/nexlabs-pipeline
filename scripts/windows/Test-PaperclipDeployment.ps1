@@ -90,6 +90,14 @@ try {
     $nested = Join-Path $tempData 'nested'
     New-PaperclipDirectory -Path $nested
     [IO.File]::WriteAllText((Join-Path $nested 'sentinel-b.txt'), 'B', (New-Object System.Text.UTF8Encoding($false)))
+    $hiddenFile = Join-Path $tempData 'hidden.txt'
+    [IO.File]::WriteAllText($hiddenFile, 'H', (New-Object System.Text.UTF8Encoding($false)))
+    (Get-Item -LiteralPath $hiddenFile -Force).Attributes = [IO.FileAttributes]::Hidden
+    $hiddenDir = Join-Path $tempData 'hidden-dir'
+    New-PaperclipDirectory -Path $hiddenDir
+    (Get-Item -LiteralPath $hiddenDir -Force).Attributes = [IO.FileAttributes]::Hidden
+    $hiddenNested = Join-Path $hiddenDir 'nested.txt'
+    [IO.File]::WriteAllText($hiddenNested, 'N', (New-Object System.Text.UTF8Encoding($false)))
 
     $backup = New-PaperclipBackupArchive -DataDir $tempData -BackupDir $tempBackups
     Check-PaperclipTest 'backup_archive_created' ([bool](Test-Path $backup.ArchivePath))
@@ -103,6 +111,12 @@ try {
     $expectedB = Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $tempData 'nested\sentinel-b.txt')
     Check-PaperclipTest 'restore_sentinel_a' ([bool]($restoredA.Hash -eq $expectedA.Hash))
     Check-PaperclipTest 'restore_sentinel_b' ([bool]($restoredB.Hash -eq $expectedB.Hash))
+    $restoredHidden = Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $tempRestore 'hidden.txt')
+    $expectedHidden = Get-FileHash -Algorithm SHA256 -LiteralPath $hiddenFile
+    $restoredHiddenNested = Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $tempRestore 'hidden-dir\nested.txt')
+    $expectedHiddenNested = Get-FileHash -Algorithm SHA256 -LiteralPath $hiddenNested
+    Check-PaperclipTest 'restore_hidden_file' ([bool]($restoredHidden.Hash -eq $expectedHidden.Hash))
+    Check-PaperclipTest 'restore_hidden_nested' ([bool]($restoredHiddenNested.Hash -eq $expectedHiddenNested.Hash))
 
     $tampered = Join-Path $tempRoot 'tampered.zip'
     [IO.File]::Copy($backup.ArchivePath, $tampered, $true)
@@ -157,6 +171,16 @@ try {
     catch { $existingArchiveTargetRejected = $_.Exception.Message -eq 'RESTORE_TARGET_ALREADY_EXISTS' }
     Check-PaperclipTest 'restore_archive_existing_target_rejected' $existingArchiveTargetRejected
     Check-PaperclipTest 'live_sentinel_unchanged' ([bool]((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $tempData 'sentinel-a.txt')).Hash -eq $expectedA.Hash))
+
+    $junctionTarget = Join-Path $tempRoot 'junction-target'
+    New-PaperclipDirectory -Path $junctionTarget
+    $junctionRoot = Join-Path $tempRoot 'junction-root'
+    New-Item -ItemType Junction -Path $junctionRoot -Target $junctionTarget -ErrorAction Stop | Out-Null
+    $junctionRejected = $false
+    try { Assert-PaperclipIsolatedRestoreTarget -Root $junctionRoot -TargetDir (Join-Path $junctionRoot 'restore-test-x') }
+    catch { $junctionRejected = $_.Exception.Message -eq 'RESTORE_ROOT_REPARSE_POINT' }
+    Check-PaperclipTest 'restore_junction_root_rejected' $junctionRejected
+    [IO.Directory]::Delete($junctionRoot, $false)
 
     $portState = Get-PaperclipPortState -Port 3100
     if ($portState.InUse) {

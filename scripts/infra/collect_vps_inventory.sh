@@ -2,29 +2,31 @@
 # NLE-INFRA-WO-001: strictly read-only VPS inventory.
 # No installation, service changes, network probes, credential reads, or file writes.
 set -u
+readonly NOT_AVAILABLE='NOT_AVAILABLE'
 
 section() { printf '\n## %s\n' "$1"; }
 
 run() {
   local label="$1"; shift
+  local cmd="$1"
   section "$label"
-  if ! command -v "$1" >/dev/null 2>&1; then
-    printf 'NOT_AVAILABLE\n'
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    printf '%s\n' "$NOT_AVAILABLE"
     return 0
   fi
   "$@" 2>&1
   local rc=$?
-  if [ "$rc" -ne 0 ]; then
+  if [[ "$rc" -ne 0 ]]; then
     printf 'COMMAND_EXIT=%s\n' "$rc"
   fi
   return 0
 }
 
 os_release() {
-  if [ -r /etc/os-release ]; then
+  if [[ -r /etc/os-release ]]; then
     awk -F= '/^(ID|VERSION_ID|PRETTY_NAME)=/ {gsub(/^"|"$/, "", $2); print $1 "=" $2}' /etc/os-release
   else
-    printf 'NOT_AVAILABLE\n'
+    printf '%s\n' "$NOT_AVAILABLE"
   fi
 }
 
@@ -32,7 +34,7 @@ cpu_summary() {
   if command -v lscpu >/dev/null 2>&1; then
     lscpu | awk -F: '/^(Architecture|CPU\(s\)|Model name|Socket\(s\)|Core\(s\) per socket|Thread\(s\) per core|Virtualization):/ {gsub(/^[ \t]+/, "", $2); print $1 "=" $2}'
   else
-    printf 'NOT_AVAILABLE\n'
+    printf '%s\n' "$NOT_AVAILABLE"
   fi
 }
 
@@ -68,7 +70,7 @@ docker_versions() {
     docker version --format 'client={{.Client.Version}} server={{.Server.Version}}' 2>&1 || true
     docker compose version --short 2>&1 || true
   else
-    printf 'NOT_AVAILABLE\n'
+    printf '%s\n' "$NOT_AVAILABLE"
   fi
 }
 
@@ -77,7 +79,7 @@ docker_containers() {
     docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}' 2>&1 \
       | sed -E 's/([0-9]{1,3}\.){3}[0-9]{1,3}:/[IPv4]:/g; s/\[[0-9a-fA-F:]+\]:/[IPv6]:/g'
   else
-    printf 'NOT_AVAILABLE\n'
+    printf '%s\n' "$NOT_AVAILABLE"
   fi
 }
 
@@ -85,7 +87,7 @@ docker_usage() {
   if command -v docker >/dev/null 2>&1; then
     docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}' 2>&1 || true
   else
-    printf 'NOT_AVAILABLE\n'
+    printf '%s\n' "$NOT_AVAILABLE"
   fi
 }
 
@@ -99,7 +101,7 @@ listening_ports() {
       print scope ":" port;
     }' | sort -u
   else
-    printf 'NOT_AVAILABLE\n'
+    printf '%s\n' "$NOT_AVAILABLE"
   fi
 }
 
@@ -111,7 +113,7 @@ wireguard_summary() {
   if command -v wg >/dev/null 2>&1; then
     wg show interfaces 2>&1
   else
-    printf 'NOT_AVAILABLE\n'
+    printf '%s\n' "$NOT_AVAILABLE"
   fi
 }
 

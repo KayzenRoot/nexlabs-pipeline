@@ -29,7 +29,7 @@ $volumes = @()
 $services = @()
 $listeners = @()
 
-try { $os = Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, BuildNumber, OSArchitecture } catch {}
+try { $os = Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, BuildNumber, OSArchitecture } catch { $os = "NOT_AVAILABLE" }
 try {
     $computer = Get-CimInstance Win32_ComputerSystem
     $computer = [ordered]@{
@@ -41,10 +41,10 @@ try {
 
 try {
     $processors = @(Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors)
-} catch {}
+} catch { $processors = @("NOT_AVAILABLE") }
 try {
     $gpus = @(Get-CimInstance Win32_VideoController | Select-Object Name, DriverVersion, AdapterRAM)
-} catch {}
+} catch { $gpus = @("NOT_AVAILABLE") }
 try {
     $volumes = @(Get-Volume | Where-Object { $_.DriveLetter } | ForEach-Object {
         [ordered]@{
@@ -54,11 +54,11 @@ try {
             FreeGiB = [math]::Round(($_.SizeRemaining / 1GB), 2)
         }
     })
-} catch {}
+} catch { $volumes = @("NOT_AVAILABLE") }
 try {
     $services = @(Get-Service | Where-Object { $_.Name -match "docker|wireguard|ssh" } |
         Select-Object Name, Status, StartType)
-} catch {}
+} catch { $services = @("NOT_AVAILABLE") }
 try {
     $listeners = @(Get-NetTCPConnection -State Listen -ErrorAction Stop |
         ForEach-Object {
@@ -86,7 +86,7 @@ if (Get-Command codex -ErrorAction SilentlyContinue) {
         } elseif ($loginOutput -match "(?i)logged in|authenticated") {
             $codexLoginStatus = "AUTHENTICATED"
         }
-    } catch {}
+    } catch { $codexLoginStatus = "UNKNOWN" }
 }
 
 $dockerPs = $dockerPs -replace '(?:\d{1,3}\.){3}\d{1,3}(?=:)', '[IPv4]' -replace '\[[0-9a-fA-F:]+\](?=:)', '[IPv6]'

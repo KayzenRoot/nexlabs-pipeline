@@ -143,7 +143,7 @@ Install and validate the first functional Paperclip instance **locally on this W
 - AC13: protected local secrets created outside Git; no secret values in repository, logs or evidence.
 - AC14: PowerShell initialization, start, safe stop, status and backup scripts exist and pass offline safety tests; no `down -v`.
 - AC15: Paperclip starts locally, `/api/health` passes, data persists across restart, backup and restore are validated. **BLOCKED if Docker Desktop is absent; do not install it without owner authorization.**
-- AC16: Codex integration prepared using the official mechanism, without API key and without reading/copying personal auth files.
+- AC16: Codex integration prepared using the official mechanism, without API key and without reading/copying personal auth files. **CD-03 status: NOT MET** — runtime auth is not valid (see final runtime qualification).
 - AC17: VPS composition prepared with external PostgreSQL 17 pinned digest and ARM64 compatibility; no VPS access, SSH or deploy.
 - AC18: catalog 105/92/1110/1071/62/35 preserved; no agent import, hiring, heartbeat, workflow or external effect.
 - AC19: Source Pack validator, existing tests, deployment tests, secret scan and GitHub CI pass on the exact head; Evidence Bundle, audit and Checkpoint Delta are produced. No merge without independent APPROVED and owner authorization.
@@ -155,7 +155,14 @@ Install and validate the first functional Paperclip instance **locally on this W
 - `python3 scripts/validate_sources.py`; `python3 -m unittest discover -s tests -v`; GitHub CI `docs-validation`.
 
 ### Runtime validation result | 2026-11-26
-Docker Desktop 4.100.1 was installed from the official installer (SHA-256 `98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2`), engine 29.9.3. The pinned Paperclip container `nexlabs-paperclip-paperclip-1` is healthy; `/api/health` returns 200; the port is bound only to `127.0.0.1:3100`; the UI returns 200. Persistence across stop/start, full backup with SHA-256, isolated restore with permission repair, and a second restored instance health 200 were validated. The browser was opened for the owner to claim the instance; no account was created. Codex subscription authentication remains pending owner action. No agent, workflow, heartbeat, VPS, deploy or spend was activated.
+Docker Desktop 4.100.1 was installed from the official installer (SHA-256 `98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2`), engine 29.9.3. The pinned Paperclip container `nexlabs-paperclip-paperclip-1` is healthy (container ID `15d16428468e31993dd2f9992dc79845509ccd74c9ecb46630a3e3fdd2e93a1a`); `/api/health` returns 200 with `deploymentMode=authenticated`, `deploymentExposure=private` and `bootstrapStatus=ready`; the port is bound only to `127.0.0.1:3100`. Persistence across stop/start, full backup with SHA-256, isolated restore with permission repair, and the claim read-back were validated. No agent, workflow, heartbeat, VPS, deploy or spend was activated.
+
+### CD-03 final runtime qualification | 2026-11-26
+- Claim: **PASS** via `bootstrapStatus=ready`.
+- Container identity, pinned image, healthy state and loopback bind: **PASS**.
+- Restore isolation, hidden-file backup, container identity and SonarCloud corrections: **PASS** (Python 29/29, PowerShell 43/43, validator 7/7, Compose config exit 0).
+- **AC16: NOT MET.** Codex subscription authentication is not valid at runtime: `codex login status` returns "Not logged in", all 3 `codex_local` auth sessions are `cancelled` with null result/connection/grant, `ai_subscription_connections=0`, and no auth file exists in the container. One default agent (`Zeus`) exists paused from the claim and has run no tasks. No API key was created and no auth file was copied.
+- Verdict: **NOT APPROVED — BLOCKED ON CODEX AUTHENTICATION**. Owner must complete a successful Codex login through the Paperclip UI. No merge, checkpoint promotion, VPS access, agent execution or next Work Order.
 
 ### Stop conditions CD-02
 Stop without installing or reconfiguring if Docker Desktop/WSL2 is absent or requires administrator privileges not authorized; the image lacks the required architecture; port 3100 is occupied without a safe alternative; a secret would be exposed; data loss risk; authentication requires human action; a subscription/spend is required; or any HIGH/CRITICAL risk appears.

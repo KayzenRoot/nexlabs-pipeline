@@ -109,6 +109,29 @@ class DeployContractTests(unittest.TestCase):
             common.index("Expand-Archive -LiteralPath $ArchivePath"),
         )
 
+    def test_startup_verifies_container_identity(self):
+        common = self.read("scripts/windows/Paperclip.Common.ps1")
+        start = self.read("scripts/windows/Start-Paperclip.ps1")
+        for marker in (
+            "PAPERCLIP_CONTAINER_NOT_FOUND",
+            "PAPERCLIP_IMAGE_MISMATCH",
+            "PAPERCLIP_CONTAINER_NOT_HEALTHY",
+            "Assert-PaperclipContainerIdentity",
+        ):
+            self.assertIn(marker, common)
+        self.assertIn("PORT_IN_USE_UNRELATED_SERVICE", start)
+        self.assertLess(
+            start.index("Assert-PaperclipContainerIdentity -RepositoryRoot"),
+            start.index("PAPERCLIP_ALREADY_READY"),
+        )
+
+    def test_backup_covers_hidden_and_excludes_codex_tmp(self):
+        common = self.read("scripts/windows/Paperclip.Common.ps1")
+        self.assertIn("Get-ChildItem -LiteralPath $DataDir -Force -Recurse", common)
+        self.assertIn(".codex/tmp", common)
+        self.assertIn("CreateEntryFromFile", common)
+        self.assertIn("RESTORE_PERMISSIONS_REPAIRED", self.read("scripts/windows/Restore-Paperclip.ps1"))
+
     def test_no_secret_values_committed(self):
         patterns = (
             re.compile(r"BETTER_AUTH_SECRET=[0-9a-fA-F]{64}"),
