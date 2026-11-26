@@ -115,6 +115,14 @@ wireguard_summary() {
   fi
 }
 
+network_interface_names() {
+  if command -v ip >/dev/null 2>&1; then
+    ip -o link show 2>&1 | awk -F': ' '{print $2}' | awk '{print $1}'
+  else
+    printf 'NOT_AVAILABLE\\n'
+  fi
+}
+
 service_summary() {
   if command -v systemctl >/dev/null 2>&1; then
     printf 'docker='
@@ -132,7 +140,7 @@ date -u +'%Y-%m-%dT%H:%M:%SZ' 2>/dev/null || printf 'UNKNOWN\n'
 printf 'No files are created or modified by this collector.\n'
 printf 'No environment variables, secret files, process arguments, credentials, or logs are read.\n'
 
-run 'Kernel and architecture' uname -a
+run 'Kernel and architecture' uname -srm
 run 'Operating system' os_release
 run 'GNU libc' getconf GNU_LIBC_VERSION
 run 'CPU' cpu_summary
@@ -146,7 +154,7 @@ run 'Listening TCP ports (IP addresses omitted)' listening_ports
 run 'Firewall status (UFW only; OCI rules not queried)' firewall_summary
 run 'WireGuard interface names only' wireguard_summary
 run 'Relevant service state' service_summary
-run 'Network interface names only' ip -brief link
+run 'Network interface names only' network_interface_names
 run 'OCI CLI presence only (no API call)' bash -c 'if command -v oci >/dev/null 2>&1; then echo PRESENT_NOT_QUERIED; else echo NOT_AVAILABLE; fi'
 
 printf '\nEND NLE-INFRA-WO-001 | READ_ONLY | NO_CONFIGURATION_CHANGED\n'
