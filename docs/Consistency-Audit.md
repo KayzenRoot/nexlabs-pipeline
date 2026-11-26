@@ -30,3 +30,11 @@ O pacote completo foi recebido e verificado: 364/364 arquivos originais, seis ZI
 - Proveniência do pacote e estado Git remoto separados em `docs/Provenance.md`; HEAD auditado em `locks/context-lock.json`.
 - NLE-ADR-BOOT-007 é a decisão vigente de visibilidade; o texto private-only histórico permanece preservado, sem sobrescrever decisões.
 - Nenhum novo achado C01–C12; C12 continua HIGH/runtime gate. Auditoria independente Round 1: **CORRECTION REQUIRED** (H1–H3/M1–M2); correções aplicadas; **Round 2 PENDING**. Ver `evidence/NLE-BOOTSTRAP-001-CD03-AUDIT-ROUND1.md` e `evidence/NLE-BOOTSTRAP-001-CD03-AUDIT.md`.
+
+
+## CD-04 | fechamento do bootstrap após merge (2026-11-26)
+- C01: **RESOLVIDO para bootstrap documental/governança**. PR #1 integrada via squash após Round 2 APPROVED e autorização do proprietário. `main` read-back em `301905ac0f9eb6ddeb2338c9caa74a8516858a50`; base `48d3e422313f869992d09b99f0b7e09acd4e1caa`; HEAD aprovado `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0` preservado. Isso não resolve privacidade de produção nem autoriza runtime.
+- C02–C11: mantidos conforme condições anteriores; não foram implicitamente promovidos. Billing API não lida; privacidade pública temporária; backup/RPO/RTO e runtime continuam dependentes de WOs próprios.
+- C12: **HIGH / RUNTIME GATE ABERTO**. As cinco divergências dispatch-only permanecem bloqueadas para execução até correção específica em WF-WO-001.
+- Round 2 independente APPROVED refere-se ao HEAD `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0`, não ao merge commit; a integração squash preserva exatamente esse conteúdo. CI final `45829492379` success no HEAD aprovado. O checkpoint registra o merge SHA sem afirmar que o merge commit foi executado pelo workflow de PR.
+- Veredito: NLE-BOOTSTRAP-001 concluído e integrado no escopo documental/governança; NexLabs AI Enterprise runtime/v1.0 ainda não concluída. NLE-INFRA-WO-001 não iniciado.

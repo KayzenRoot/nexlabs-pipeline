@@ -34,13 +34,16 @@ O pacote original foi produzido na fase CD-01 (documentos com referência histó
 | Visibilidade | PUBLIC, sob NLE-ADR-BOOT-007 (produção privada) |
 | Base | `48d3e422313f869992d09b99f0b7e09acd4e1caa` |
 | Branch | `chore/nle-bootstrap-001` |
-| PR | #1, draft |
+| PR | #1, merged/closed via squash |
 | HEAD no início do CD-03 | `70418070aa80b2b35093be46e87fb246eacfeb6a` |
 | HEAD auditado | `668a77eb5683254018476cdeb02dcfdfcbbc6ca6` |
-| HEAD final | registrado no Evidence Bundle/PR #1 após o push, sem hash autorreferente |
-| CI | run `45826789668`, success; GitHub Actions, runner padrão `ubuntu-24.04` |
+| HEAD final auditado Round 2 | `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0` |
+| CI final | run `45829492379`, success no HEAD `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0`; GitHub Actions, runner padrão `ubuntu-24.04` |
 | Check obrigatório | `docs-validation`, app_id `15368`, `strict=true`, lido de volta |
-| Auditoria independente | `ROUND1 CORRECTION REQUIRED`; correções aplicadas; `ROUND2 PENDING` — ver `evidence/NLE-BOOTSTRAP-001-CD03-AUDIT.md` |
+| Auditoria independente | Round 1 CORRECTION REQUIRED corrigido; Round 2 **APPROVED** por agente independente read-only; comentário final https://github.com/KayzenRoot/nexlabs-pipeline/pull/1#issuecomment-7193611818 |
+
+| Squash merge | `301905ac0f9eb6ddeb2338c9caa74a8516858a50`; `main` read-back no mesmo SHA |
+| Custo | US$0 adicional qualificado por política pública + runner padrão; billing API não lida (UNVERIFIED) |
 
 ## 3. Regra de leitura
 
@@ -49,4 +52,5 @@ O pacote original foi produzido na fase CD-01 (documentos com referência histó
 - O run de CI prova **execução** do validador e dos 7 testes naquele ponto.
 - O read-back de proteção/ruleset prova **governança**.
 - A auditoria independente prova **revisão separada**; ela não é autoaprovação.
-- Nenhum item autoriza merge, deploy, gasto, agentes, skills, rotinas ou integrações externas.
+- Merge da PR #1 foi autorizado pelo proprietário e concluído via squash em `301905ac0f9eb6ddeb2338c9caa74a8516858a50`.
+- Nenhuma evidência autoriza deploy, gasto, agentes, skills, rotinas ou integrações externas.
