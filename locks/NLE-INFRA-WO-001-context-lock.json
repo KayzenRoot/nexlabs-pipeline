@@ -1,13 +1,13 @@
 {
   "work_order": "NLE-INFRA-WO-001",
   "delta": "CD-03",
-  "status": "APPROVED_PENDING_FINAL_CI_AUDIT",
+  "status": "APPROVED",
   "decision": "NLE-ADR-INFRA-011 (LOCAL FIRST)",
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
   "head_at_context_capture": "cbe49a8b9c2a97a1ad9bcb534cd9faaf1337a176",
-  "head_note": "cbe49a8 is the auth-gate source HEAD. The official OpenAI Subscription connection was completed and this evidence/docs/lock commit follows on the same PR. Canonical SHA-256/Git-blob identities capture this tree; final CI and independent audit are verified externally because the lock cannot contain its own commit hash.",
+  "head_note": "cbe49a8 is the auth-gate source HEAD; 51dbfeb is the auth-gate evidence head that passed CI, SonarCloud, ECC and independent audit. This documentation-only follow-up records the final verdict and LOW correction. Canonical SHA-256/Git-blob identities capture this tree; the follow-up CI run is verified externally because the lock cannot contain its own commit hash.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -59,7 +59,7 @@
     "previous_powershell": "30/30 at CD-02",
     "previous_runtime_health": "HTTP 200 executor reported",
     "previous_backup_restore": "PASS executor reported pre-claim",
-    "current_cd03": "validator 7/7 PASS; Python 34/34 OK; PowerShell 43/43 PASS; compose config exit 0; bash -n PASS; PowerShell parser 0 errors; security scan 437 files/0 findings",
+    "current_cd03": "validator 7/7 PASS; Python 34/34 OK; PowerShell 43/43 PASS; compose config exit 0; bash -n PASS; PowerShell parser 0 errors; security scan 439 files/0 findings",
     "docker_compose_config": "PASS_EXIT_0",
     "post_claim_runtime": "PASS_FRESH_HOST_READBACK",
     "restore_regressions": "PASS_43_OF_43",
@@ -73,7 +73,7 @@
     "no_bypass": true
   },
   "ci": {
-    "status": "PENDING_AUTH_GATE_HEAD_RUN",
+    "status": "PASS_AT_51DBFEB_RUN_45892550947; INDEPENDENT_AUDIT_APPROVED; FOLLOW_UP_CI_EXTERNAL",
     "previous_head_sha": "28cfe934638d97c656cb7ec050e6a5235221136f",
     "previous_run_id": 45877720820,
     "previous_conclusion": "success",
@@ -92,15 +92,16 @@
     "final_code_conclusion": "success",
     "final_evidence_head_sha": "b7a20f4422e1b9f400769ab39bd33f4d4bd43eb6",
     "final_evidence_run_id": 45883919521,
-    "final_evidence_conclusion": "success"
+    "final_evidence_conclusion": "success",
+    "auth_gate_head_sha": "51dbfebe2a3240e4630c9479dc653b16b89750ad",
+    "auth_gate_run_id": 45892550947,
+    "auth_gate_conclusion": "success"
   },
   "blockers": [
-    "Final GitHub CI at the auth-gate HEAD is pending",
-    "Independent read-only audit of the auth-gate HEAD and managed connection evidence is pending",
     "Pre-auth backup does not contain the new Paperclip-vault credential; fresh cold backup required before restore reliance"
   ],
-  "next_action": "Verify final CI and independent audit, then report APPROVED if all gates pass. No merge, agent execution, VPS access, checkpoint promotion or next Work Order.",
-  "audit": "PRIOR_CORRECTION_AUDIT_APPROVED_AT_B7A20F4; NEW_AUTH_GATE_AUDIT_PENDING",
+  "next_action": "Report APPROVED and update PR #3. No merge, agent execution, VPS access, checkpoint promotion or next Work Order without separate authorization.",
+  "audit": "INDEPENDENT_AUTH_GATE_AUDIT_APPROVED_AT_51DBFEB; LOW_DOC_FIXED; NO_HIGH_CRITICAL",
   "merge": false,
   "deploy": "NOT_AUTHORIZED",
   "runtime_activation": false,
@@ -161,7 +162,7 @@
       "human_authorization": "OWNER_COMPLETED_IN_VISIBLE_BROWSER; DEVICE_CODE_ENABLED_BY_OWNER",
       "ui_connection": "Kayzen’s OpenAI: Connected, ChatGPT subscription, Company shared",
       "live_usage_check": "PASS (Codex Primary 1%, Secondary weekly 81%)",
-      "tool_connection": "OpenAI active/enabled/health ok; auth_kind=oauth; credential_source=paperclip_vault; ownership=customer; connection_kind=managed; aiIsolatedSubscription=true",
+      "tool_connection": "OpenAI active/enabled/health ok; auth_kind=oauth; credential_source=paperclip_vault; ownership=customer; connection_kind=managed; config.aiIsolatedSubscription=true",
       "grant": "active, not revoked",
       "adapter_auth_session": "authenticated; connection_id and connection_grant_id present; provider=openai; method=subscription; ownership=shared; allAgents=true",
       "cli_default_status": "Not logged in (not the Paperclip adapter source of truth)",
@@ -179,9 +180,8 @@
     }
   },
   "pending_actions": [
-    "Push auth-gate evidence/docs/lock and wait for docs-validation + SonarCloud + ECC",
-    "Request independent read-only audit of the auth-gate HEAD and managed connection evidence",
-    "Update PR #3 with the final evidence bundle and checkpoint delta; do not merge"
+    "Update PR #3 with the APPROVED auth-gate evidence bundle and checkpoint delta",
+    "Do not merge without separate owner authorization; do not start SR-WO-001"
   ],
   "historical_preinstall_host_evidence": {
     "os": "Microsoft Windows 11 Home Single Language 10.0.26200 build 26200 x64",
@@ -263,7 +263,7 @@
     "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
     "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "cf6fb9f736249283cfe8868389bbac8e8a34ed69144e43155f0fc262ba165cae"
   },
-  "fingerprint_status": "SHA256_RECALCULATED_FROM_AUTH_GATE_WORKING_TREE; GIT_BLOB_IDENTITIES_CAPTURED; FINAL_COMMIT_EXTERNAL_VERIFICATION_REQUIRED",
+  "fingerprint_status": "SHA256_RECALCULATED_FROM_FINAL_AUTH_GATE_TREE; GIT_BLOB_IDENTITIES_CAPTURED; FOLLOW_UP_COMMIT_EXTERNAL_VERIFICATION_REQUIRED",
   "owner_authorization": {
     "claim": "CONFIRMED_BY_OWNER",
     "codex_subscription_auth": "CONFIRMED_BY_OWNER",
@@ -273,13 +273,13 @@
     "additional_spend_usd": 0
   },
   "canonical_git_blob_fingerprints": {
-    "docs/Checkpoint.md": "82111661084fe6e8a81d20a3189e53f6fdbeebbd",
+    "docs/Checkpoint.md": "c65a0fa26dcb57ddbc6d6f9d80cf8bd2642f5a45",
     "docs/Decisions-Ledger.md": "2f36e4ae40ba9db7b1240cbbe88bf1970fd920bf",
-    "docs/Backlog.md": "a3115984b518c8c9dd1907b07cc0d3c68256db1e",
+    "docs/Backlog.md": "cbb49e9a9d9d50c3d9d44974e21dc80fbd8d293f",
     "docs/Architecture.md": "6b22865933fa7a3c81ec913dacf96137237cae85",
     "docs/Deployment.md": "f37196f80025e206a0bdbafb7fbfff7862b3d92e",
     "docs/decisions-index.json": "460e93919dc8e9c63b0251c90f198c87a12285af",
-    "work-orders/NLE-INFRA-WO-001.md": "5df4f95585ec0c709acde678fd8ef048205fe09a",
+    "work-orders/NLE-INFRA-WO-001.md": "df2307d556d5d37ab7e0854211c8a54e966aef33",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "06981c4cb469b8066eeec173331c2d544f547166",
     "deploy/compose.yaml": "409f4684560ce8306781a984760cf7d78a80b193",
     "deploy/local/compose.yaml": "009ee029a27523730a40770c72c922cfc5b3c77b",
@@ -315,10 +315,10 @@
     "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
     "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
     "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "55f7d19d0ed132d20263b5a185fbcafa3e09cb68",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "8f9456927967ffbae9a012a186494e1760c99dfc"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "fcbf6283e50723bf48022d4cae03c4431e21ca1a",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "2b5820b4cce1fbd7a09cf1ee4953d2e169c5339c"
   },
-  "verdict": "APPROVED_PENDING_FINAL_CI_AUDIT",
+  "verdict": "APPROVED",
   "sonar": {
     "open_issues_at_start": 10,
     "fixes": "APPLIED_INDIVIDUALLY",
@@ -342,13 +342,13 @@
     "owner_statement": "Empresa pequena elegível (<250 funcionários e <US$10M receita anual)"
   },
   "canonical_fingerprints_sha256": {
-    "docs/Checkpoint.md": "8eb6c96cc32af1c67761fd00dd4b8b551642af760ea82d52fb6332f799a7c256",
+    "docs/Checkpoint.md": "d8df539713d04fba52bdaefd22f5b2120ae132eba39065c365075548900af0ad",
     "docs/Decisions-Ledger.md": "07af059db1e75700fcd21fc235a1817f2163864c1a01628ba13edac1eb89f24a",
-    "docs/Backlog.md": "4435279713cc75e5dc839de818173a73d1ff954eebb1382590184fd103131156",
+    "docs/Backlog.md": "5281e9f3a316fef6b6a2d33b082b2c59c0da322f1b68479e1caebd7d0563c13b",
     "docs/Architecture.md": "9fc38e604e1d837fa8649a0fafdcb677801d5336925111940c2dad29c140fa3c",
     "docs/Deployment.md": "510bd0ef2190f67dcde66eeb47512d4375359a8bcb3fc202a1ec72271b475e2f",
     "docs/decisions-index.json": "d75c81f886ca54b0df79344894b2d853a89218198e6fa36f0f6bbd54790713b9",
-    "work-orders/NLE-INFRA-WO-001.md": "42c67dc1bc2f9899215a6c34dd4f781d24094d1006c4b64ec8b8720c6691045e",
+    "work-orders/NLE-INFRA-WO-001.md": "b6d4d027f6fb5cae1a63979ed733c785f28b5363509ebec713c3cf0e2632b5d0",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "31f1714fe74f1db00c026856c92a3aaa260fc945cdd3542829de4bc9ae7c4e49",
     "deploy/compose.yaml": "a88ba00caa17915b96510c7a4ec33ee1fd33a8fd3db3d8291721b64514d5eb66",
     "deploy/local/compose.yaml": "5656f89a67df28fc79268e3714d20c7fafe7a4f42019a7159ad2cf79f4952a54",
@@ -384,19 +384,23 @@
     "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
     "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94",
     "locks/source-lock.json": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "87ae8b4e71e2af5d849c7ad38e083938609284f1014b801c0df6d5254e8137f8",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "357d7856c5e05cf48951e09fff4aa6020b8c5fcb85532732bdea42f86f82e0d7"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "1d19e4a01156548a9539301e8d31cdd89e15125cf9735055c1ff73d9dee54107",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "d26dd4e87b622b174355a48aa8cd47d389557621c721c9456f3055093b9d278f"
   },
   "independent_audit": {
     "verdict": "APPROVED",
-    "head": "b7a20f4422e1b9f400769ab39bd33f4d4bd43eb6",
-    "scope": "CD-03 correction/evidence",
+    "head": "51dbfebe2a3240e4630c9479dc653b16b89750ad",
+    "scope": "CD-03 auth gate / final HEAD",
     "high_critical_findings": 0,
     "low_findings": [
-      "final CI run b7a20f4 not recorded in lock/audit (corrected)",
-      "secret-scan wording implied e-mail/CPF/CNPJ rules not present in scanner (corrected)"
+      "lock scan count said 437 instead of 439 (corrected)"
     ],
-    "codex_blocker_confirmed": true,
-    "ac16_met": false
+    "info_notes": [
+      "aiIsolatedSubscription is a config JSON field (wording clarified)",
+      "UI quota numbers are executor-recorded observations; managed connection/grant independently corroborated"
+    ],
+    "codex_blocker": false,
+    "ac16_met": true,
+    "zeus_paused": true
   }
 }

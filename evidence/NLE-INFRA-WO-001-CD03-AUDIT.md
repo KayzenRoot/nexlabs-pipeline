@@ -38,10 +38,10 @@ Scope: local Windows 11 / Docker Desktop / Paperclip only. No VPS, SSH, deploy, 
 - After **Connect**, Paperclip saved the connection:
   - UI: `Kayzen’s OpenAI` (connection id `1ad1e9ca-6dde-40a7-9e18-90d6baf3bcb7`), status **Connected**, sign-in method **ChatGPT subscription**, access **Company shared**.
   - A live **Check usage** call succeeded and returned Codex quota data (Primary 5h at 1%, Secondary weekly at 81%, workspace spend control not reported). This proves the credential is accepted by OpenAI, not merely stored.
-  - Read-only DB (no token values printed): `tool_connections` has one `OpenAI` row with `status=active`, `enabled=true`, `health_status=ok`, `auth_kind=oauth`, `credential_source=paperclip_vault`, `ownership=customer`, `connection_kind=managed`, `connection_purpose=ai`, `aiIsolatedSubscription=true`; its `connection_grants` row is `active` and not revoked.
+  - Read-only DB (no token values printed): `tool_connections` has one `OpenAI` row with `status=active`, `enabled=true`, `health_status=ok`, `auth_kind=oauth`, `credential_source=paperclip_vault`, `ownership=customer`, `connection_kind=managed`, `connection_purpose=ai`, `config.aiIsolatedSubscription=true`; its `connection_grants` row is `active` and not revoked.
   - `adapter_auth_sessions`: one row `status=authenticated` with non-null `connection_id` and `connection_grant_id`; descriptor `provider=openai`, `method=subscription`, `ownership=shared`, `allAgents=true`, `connection_method=local_subscription`. Four older rows remain `cancelled` from the failed attempts and are historical.
   - `ai_subscription_connections` remains empty in this build; the AI subscription connector is persisted in `tool_connections` (`connection_purpose=ai`, `connection_kind=managed`) with the vault credential and active grant described above. The UI usage check is the functional proof.
-- The credential is managed in the **Paperclip vault**, not the CLI default profile. `codex login status` inside the container still reports “Not logged in”; per the Work Order, the CLI default is not the source of truth for the Paperclip adapter. The Paperclip UI plus the managed connection/grant above are authoritative.
+- The credential is managed in the **Paperclip vault**, not the CLI default profile. `codex login status` inside the container still reports “Not logged in”; per the Work Order, the CLI default is not the source of truth for the Paperclip adapter. The Paperclip UI plus the managed connection/grant above are authoritative. The UI quota figures are executor-recorded Paperclip observations; the managed connection, grant and authenticated session were independently corroborated by read-only DB queries.
 - AC16: **MET**. No agent task ran, no API key was created, and no personal credential was copied.
 
 ## 4. Corrections applied
@@ -102,11 +102,13 @@ The auth gate changed documentation only; the immutable Python/PowerShell suites
 
 ## 10. Verdict
 
-**APPROVED — AUTH GATE MET, PENDING FINAL CI AND INDEPENDENT AUDIT.**
+**APPROVED — AUTH GATE MET; FINAL CI AND INDEPENDENT AUDIT PASSED.**
 
-The local runtime, claim, Codex subscription connection and AC16 are now satisfied: Paperclip reports the OpenAI connection as Connected/ChatGPT subscription, the live usage check succeeded, and the managed vault connection/grant are active. Restore isolation, hidden-file backup coverage, container identity, SonarCloud and ECC gates remain valid. `Zeus` stayed paused, no agent task ran, no API key was created and no credential was copied. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record until final CI and independent audit pass.
+The local runtime, claim, Codex subscription connection and AC16 are satisfied: Paperclip reports the OpenAI connection as Connected/ChatGPT subscription, the live usage check succeeded, and the managed vault connection/grant are active. Restore isolation, hidden-file backup coverage, container identity, SonarCloud and ECC gates remain valid. `Zeus` stayed paused, no agent task ran, no API key was created and no credential was copied. Auth-gate head `51dbfeb` passed CI run `45892550947`, SonarCloud reports 0 open issues/gate OK, and the ECC gate passed; a documentation-only follow-up commit carries this verdict. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record.
 
 ## 11. Independent read-only audit
 
-- The prior independent audit at `b7a20f4` approved the correction/evidence scope and correctly recorded the then-blocked Codex auth; it is historical and does not cover this auth gate.
-- A new independent read-only audit of the auth-gate HEAD and the managed connection evidence is required. Result and any findings will be appended before merge.
+- An independent read-only agent audited auth-gate head `51dbfeb` and the runtime evidence: verdict **APPROVED**, no HIGH/CRITICAL findings.
+- It independently verified the managed connection in the database: one `tool_connections` OpenAI row active/enabled/health ok with `credential_source=paperclip_vault` and `config.aiIsolatedSubscription=true`; one active, non-revoked organization grant; one `authenticated` adapter session with non-null connection/grant; older cancelled sessions historical; `ai_subscription_connections` empty as documented.
+- It confirmed `Zeus` paused, zero agent task/run rows, health/identity/loopback unchanged, Docker small-business attestation accurately labeled, all 44 SHA-256 and 44 Git-blob fingerprints matching, CI/Sonar/ECC passing, and **AC16 MET** not merely owner-confirmed.
+- Its LOW finding (lock still said 437 scanned files instead of 439) was corrected in this commit; its INFO notes were addressed by clarifying `config.aiIsolatedSubscription` and labeling the quota figures as UI observations. No code changed after the audited head.
