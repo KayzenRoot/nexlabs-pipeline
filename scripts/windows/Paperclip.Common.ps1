@@ -274,12 +274,41 @@ function New-PaperclipBackupArchive {
     }
 }
 
+function Assert-PaperclipIsolatedRestoreTarget {
+    param([string]$Root, [string]$TargetDir)
+    $rootPath = [IO.Path]::GetFullPath($Root)
+    $targetPath = [IO.Path]::GetFullPath($TargetDir)
+    $parent = [IO.Path]::GetDirectoryName($targetPath)
+    $trim = [char[]]@('\', '/')
+    if (-not [string]::Equals($rootPath.TrimEnd($trim), $parent.TrimEnd($trim), [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'RESTORE_TARGET_NOT_DIRECT_CHILD'
+    }
+    if ([IO.Path]::GetFileName($targetPath) -notmatch '^restore-test-[a-zA-Z0-9][a-zA-Z0-9-]{0,80}$') {
+        throw 'RESTORE_TARGET_NOT_ISOLATED'
+    }
+    if (-not (Test-Path -LiteralPath $rootPath -PathType Container)) {
+        throw 'RESTORE_ROOT_MISSING'
+    }
+    # Reject junctions/symlinks in the root and all existing ancestors.
+    $ancestor = Get-Item -LiteralPath $rootPath -Force -ErrorAction Stop
+    while ($null -ne $ancestor) {
+        if (($ancestor.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+            throw 'RESTORE_ROOT_REPARSE_POINT'
+        }
+        $ancestor = $ancestor.Parent
+    }
+    if ((Test-Path -LiteralPath $targetPath) -or ($null -ne (Get-Item -LiteralPath $targetPath -Force -ErrorAction SilentlyContinue))) {
+        throw 'RESTORE_TARGET_ALREADY_EXISTS'
+    }
+}
+
 function Expand-PaperclipBackupArchive {
     param(
         [string]$ArchivePath,
         [string]$TargetDir,
         [switch]$Force
     )
+    if ($Force) { throw 'RESTORE_FORCE_FORBIDDEN' }
     if (-not (Test-Path $ArchivePath)) { throw "BACKUP_MISSING: $ArchivePath" }
     $sidecar = "$ArchivePath.sha256"
     if (-not (Test-Path $sidecar)) { throw "BACKUP_SIDECAR_MISSING: $ArchivePath" }
@@ -287,11 +316,12 @@ function Expand-PaperclipBackupArchive {
     if ($expected -notmatch '^[0-9a-f]{64}$') { throw "BACKUP_SIDECAR_INVALID: $ArchivePath" }
     $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ArchivePath).Hash.ToLowerInvariant()
     if ($expected -ne $actual) { throw "BACKUP_HASH_MISMATCH: $ArchivePath" }
-    if ((Test-Path $TargetDir) -and @(Get-ChildItem -LiteralPath $TargetDir -Force).Count -gt 0 -and -not $Force) {
-        throw "RESTORE_TARGET_NOT_EMPTY: $TargetDir"
+    if ((Test-Path -LiteralPath $TargetDir) -or ($null -ne (Get-Item -LiteralPath $TargetDir -Force -ErrorAction SilentlyContinue))) {
+        throw 'RESTORE_TARGET_ALREADY_EXISTS'
     }
-    New-PaperclipDirectory -Path $TargetDir
-    Expand-Archive -LiteralPath $ArchivePath -DestinationPath $TargetDir -Force:$Force
+    # No -Force: directory creation must fail if it already exists.
+    New-Item -ItemType Directory -Path $TargetDir -ErrorAction Stop | Out-Null
+    Expand-Archive -LiteralPath $ArchivePath -DestinationPath $TargetDir
     return $TargetDir
 }
 

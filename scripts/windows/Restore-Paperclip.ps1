@@ -10,14 +10,17 @@ param(
 . (Join-Path $PSScriptRoot 'Paperclip.Common.ps1')
 
 try {
+    if ($Force) { throw 'RESTORE_FORCE_FORBIDDEN' }
     $paths = Get-PaperclipPaths -Root $Root
     $archive = [IO.Path]::GetFullPath($BackupPath)
     if (-not $TargetDataDir) {
         $stamp = (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
-        $TargetDataDir = Join-Path $paths.Root "restore-test-$stamp"
+        $suffix = [guid]::NewGuid().ToString("N")
+        $TargetDataDir = Join-Path $paths.Root "restore-test-$stamp-$suffix"
     }
     $target = [IO.Path]::GetFullPath($TargetDataDir)
-    Expand-PaperclipBackupArchive -ArchivePath $archive -TargetDir $target -Force:$Force
+    Assert-PaperclipIsolatedRestoreTarget -Root $paths.Root -TargetDir $target
+    Expand-PaperclipBackupArchive -ArchivePath $archive -TargetDir $target
     $entries = @(Get-ChildItem -LiteralPath $target -Force)
     if ($entries.Count -eq 0) { throw 'RESTORE_EMPTY_TARGET' }
     $repaired = Repair-PaperclipRestoredPermissions -DataDir $target

@@ -87,6 +87,24 @@ class DeployContractTests(unittest.TestCase):
         self.assertIn("@('stop')", text)
         self.assertNotIn("@('down')", text)
 
+    def test_restore_isolation_guard_precedes_extraction(self):
+        restore = self.read("scripts/windows/Restore-Paperclip.ps1")
+        common = self.read("scripts/windows/Paperclip.Common.ps1")
+        self.assertIn("RESTORE_FORCE_FORBIDDEN", restore)
+        self.assertLess(
+            restore.index("Assert-PaperclipIsolatedRestoreTarget -Root"),
+            restore.index("Expand-PaperclipBackupArchive -ArchivePath"),
+        )
+        for marker in (
+            "RESTORE_TARGET_NOT_DIRECT_CHILD",
+            "RESTORE_TARGET_NOT_ISOLATED",
+            "RESTORE_ROOT_REPARSE_POINT",
+            "RESTORE_TARGET_ALREADY_EXISTS",
+            "RESTORE_FORCE_FORBIDDEN",
+        ):
+            self.assertIn(marker, common)
+        self.assertNotIn("-DestinationPath $TargetDir -Force", common)
+
     def test_no_secret_values_committed(self):
         patterns = (
             re.compile(r"BETTER_AUTH_SECRET=[0-9a-fA-F]{64}"),

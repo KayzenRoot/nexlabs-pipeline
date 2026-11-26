@@ -1,36 +1,28 @@
 {
   "work_order": "NLE-INFRA-WO-001",
-  "delta": "CD-02",
-  "status": "LOCAL_RUNTIME_HEALTHY_PENDING_OWNER_CLAIM_AND_CODEX_AUTH",
+  "delta": "CD-03",
+  "status": "CORRECTION_REQUIRED_RUNTIME_AUDIT_PENDING",
   "decision": "NLE-ADR-INFRA-011 (LOCAL FIRST)",
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
-  "head_at_context_capture": "7e3fd8f71fb283274301cfdab714826c046f2917",
-  "head_note": "Lock records audited implementation 6a7aaa2, correction 8f6af9e and runtime validation on 8f6af9e; the runtime evidence commit and final head are recorded in the CD-02 Evidence Bundle/PR #3 comment.",
+  "head_at_context_capture": "feafa8c0f807c28beae1aed1424f79c941fee874",
+  "head_note": "CD-03 remote source check anchored to feafa8c; this correction commit is a new candidate, not the previously audited head. Recompute all canonical fingerprints and record exact final CI and independent audit before approval.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
     "reason": "Owner changed strategy to LOCAL FIRST under NLE-ADR-INFRA-011."
   },
   "host_evidence": {
+    "evidence_kind": "EXECUTOR_REPORT_CD02_NOT_FRESH_HOST_READBACK",
     "os": "Microsoft Windows 11 Home Single Language 10.0.26200 build 26200 x64",
-    "cpu_logical": 8,
-    "ram_bytes": 24591810560,
-    "virtualization_firmware_enabled": true,
-    "wsl": {
-      "default_distro": "Ubuntu-26.04",
-      "version": 2,
-      "state": "Stopped"
-    },
-    "docker_desktop_installed": false,
-    "docker_cli_available": false,
-    "docker_daemon_available": false,
-    "port_3100": "FREE",
-    "disk": {
-      "C_free_gib": 29.96,
-      "D_free_gib": 119.87
-    }
+    "docker_desktop_installed": true,
+    "docker_cli_available": true,
+    "docker_daemon_available": true,
+    "port_3100": "LOOPBACK_IN_USE_REPORTED",
+    "docker_desktop_version": "4.100.1",
+    "docker_engine_version": "29.9.3",
+    "source": "https://github.com/KayzenRoot/nexlabs-pipeline/pull/3#issuecomment-7200461686"
   },
   "image_lock": {
     "paperclip": {
@@ -59,7 +51,149 @@
     "agents_activated": false,
     "external_effects": false
   },
-  "canonical_fingerprints": {
+  "tests": {
+    "previous_source_validator": "7 groups PASS at CD-02",
+    "previous_python": "26/26 at CD-02",
+    "previous_powershell": "30/30 at CD-02",
+    "previous_runtime_health": "HTTP 200 executor reported",
+    "previous_backup_restore": "PASS executor reported pre-claim",
+    "current_cd03": "PENDING",
+    "docker_compose_config": "RECHECK_REQUIRED",
+    "post_claim_runtime": "INDEPENDENT_READBACK_REQUIRED",
+    "restore_regressions": "PENDING_POWERSHELL"
+  },
+  "governance": {
+    "main_protected": true,
+    "required_check": "docs-validation",
+    "no_force_push": true,
+    "no_bypass": true
+  },
+  "ci": {
+    "status": "PENDING_CD03",
+    "previous_head_sha": "feafa8c0f807c28beae1aed1424f79c941fee874",
+    "previous_run_id": 45875741872,
+    "previous_conclusion": "success",
+    "workflow": "docs-validation"
+  },
+  "blockers": [
+    "Independent post-claim runtime evidence on actual Windows host unavailable in chat",
+    "Restore isolation correction requires behavioral tests on Windows and independent review",
+    "Ten SonarCloud issue details unavailable from public API; resolve or classify individually",
+    "ECC security evidence request needs focused security validation and exact-head evidence",
+    "Docker Desktop eligibility and zero-additional-cost qualification require confirmation"
+  ],
+  "next_action": "Run CD-03 local Codex preflight, focused tests and sanitized independent runtime audit. No merge or SR-WO-001 before APPROVED.",
+  "audit": "CORRECTION_REQUIRED; FINAL_HEAD_AND_RUNTIME_INDEPENDENT_AUDIT_PENDING",
+  "merge": false,
+  "deploy": "NOT_AUTHORIZED",
+  "runtime_activation": false,
+  "additional_spend_usd": 0,
+  "stale_when": [
+    "base or branch head changes",
+    "canonical fingerprint changes",
+    "Paperclip/PostgreSQL image digest changes",
+    "Docker/WSL2/host state changes",
+    "owner authorization or scope changes"
+  ],
+  "generated_on": "2026-11-26",
+  "head_after_implementation": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
+  "head_audited": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
+  "audit_note": "Independent agent audit of 6a7aaa2 approved implementation; runtime was blocked at audit time. Runtime was validated by the executor on 8f6af9e after owner-authorized Docker installation. Independent runtime audit pending.",
+  "corrections": [
+    "Removed pre-existing trailing whitespace from the Work Order; full-range diff-check expected clean after commit.",
+    "Anchored lock to audited/corrective heads and recorded CI run 45845361323.",
+    "Restore now fails closed when the SHA-256 sidecar is missing.",
+    "ACL now purges non-owner explicit ACEs via icacls reset; .gitignore covers arbitrary paperclip.env/data/backup paths.",
+    "CD-03 candidate: forbid force restore, enforce fresh isolated direct-child restore-test target and reject reparse ancestors; add behavioral and static regression tests."
+  ],
+  "head_corrective": "8f6af9ebda0799d8395af64609574788a8586a2f",
+  "head_runtime_validation": "8f6af9ebda0799d8395af64609574788a8586a2f",
+  "runtime": {
+    "docker_desktop": "4.100.1",
+    "installer_sha256": "98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2",
+    "engine": "29.9.3",
+    "container": "nexlabs-paperclip-paperclip-1",
+    "image": "ghcr.io/paperclipai/paperclip:2026.1117.0@sha256:bdf38d10544dc6c831e16dc027f23ad586353ef3be1a1b2c6979e63b956aceb1",
+    "healthy": true,
+    "health_http": 200,
+    "ui_http": 200,
+    "bind": "127.0.0.1:3100",
+    "bootstrap_status": "OWNER_CONFIRMED_CLAIM; FRESH_READBACK_PENDING",
+    "browser_opened": true,
+    "persistence": {
+      "stop_start": "PASS",
+      "data_files": 3540,
+      "data_bytes_approx": 89105365
+    },
+    "backup": {
+      "file": "paperclip-data-20261126T180447Z.zip",
+      "size_mib": 12.96,
+      "sha256": "b1dea3e66ee2f523de672bd750be546301aa8673529798e2730bc1e3ebbb8106"
+    },
+    "restore_isolated": {
+      "health_http": 200,
+      "port": 3101,
+      "permissions_repaired": true
+    },
+    "owner_claim": "OWNER_CONFIRMED_NOT_INDEPENDENTLY_VERIFIED",
+    "codex_subscription_auth": "OWNER_CONFIRMED_NOT_INDEPENDENTLY_VERIFIED",
+    "docker_license": "Accepted by official installer on explicit owner instruction; no Docker account or subscription created; commercial licensing to be confirmed by owner."
+  },
+  "pending_actions": [
+    "Independent post-claim runtime evidence on actual Windows host unavailable in chat",
+    "Restore isolation correction requires behavioral tests on Windows and independent review",
+    "Ten SonarCloud issue details unavailable from public API; resolve or classify individually",
+    "ECC security evidence request needs focused security validation and exact-head evidence",
+    "Docker Desktop eligibility and zero-additional-cost qualification require confirmation"
+  ],
+  "historical_preinstall_host_evidence": {
+    "os": "Microsoft Windows 11 Home Single Language 10.0.26200 build 26200 x64",
+    "cpu_logical": 8,
+    "ram_bytes": 24591810560,
+    "virtualization_firmware_enabled": true,
+    "wsl": {
+      "default_distro": "Ubuntu-26.04",
+      "version": 2,
+      "state": "Stopped"
+    },
+    "docker_desktop_installed": false,
+    "docker_cli_available": false,
+    "docker_daemon_available": false,
+    "port_3100": "FREE",
+    "disk": {
+      "C_free_gib": 29.96,
+      "D_free_gib": 119.87
+    }
+  },
+  "historical_cd02_tests": {
+    "source_validator": "7 PASS",
+    "python_unittest": "26/26 OK",
+    "powershell_offline_selftest": "30/30 PASS",
+    "compose_yaml_parse": "PASS",
+    "docker_compose_config": "BLOCKED_DOCKER_ABSENT",
+    "paperclip_start_health": "BLOCKED_DOCKER_ABSENT",
+    "persistence_restart": "PASS",
+    "container_backup_restore": "BLOCKED_DOCKER_ABSENT",
+    "localhost_exposure": "PASS_127_0_0_1",
+    "secret_scan": "PASS",
+    "restore_requires_sidecar": "PASS_FAIL_CLOSED",
+    "git_diff_check": "PASS_AFTER_WHITESPACE_CORRECTION",
+    "runtime_health": "PASS_200",
+    "backup": "PASS",
+    "restore_isolated": "PASS_200"
+  },
+  "previous_ci": {
+    "status": "PASS",
+    "workflow": "docs-validation",
+    "run_id": 45848372035,
+    "run_url": "https://github.com/KayzenRoot/nexlabs-pipeline/actions/runs/45848372035",
+    "head_sha": "8f6af9ebda0799d8395af64609574788a8586a2f",
+    "conclusion": "success",
+    "runner": "ubuntu-24.04 (standard GitHub-hosted)",
+    "validator_groups": "7 PASS",
+    "tests": "26/26 PASS"
+  },
+  "historical_cd02_canonical_fingerprints": {
     "docs/Checkpoint.md": "5c96dd513773971a0999a04394f16f74bad8d4e20d45b22d291a58164ae0052b",
     "docs/Decisions-Ledger.md": "07af059db1e75700fcd21fc235a1817f2163864c1a01628ba13edac1eb89f24a",
     "docs/Backlog.md": "280b7a0adfaa29b5d26133811f811b6d5298d22e9800d374bc201496b95d9b17",
@@ -92,100 +226,13 @@
     "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
     "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "cf6fb9f736249283cfe8868389bbac8e8a34ed69144e43155f0fc262ba165cae"
   },
-  "tests": {
-    "source_validator": "7 PASS",
-    "python_unittest": "26/26 OK",
-    "powershell_offline_selftest": "30/30 PASS",
-    "compose_yaml_parse": "PASS",
-    "docker_compose_config": "BLOCKED_DOCKER_ABSENT",
-    "paperclip_start_health": "BLOCKED_DOCKER_ABSENT",
-    "persistence_restart": "PASS",
-    "container_backup_restore": "BLOCKED_DOCKER_ABSENT",
-    "localhost_exposure": "PASS_127_0_0_1",
-    "secret_scan": "PASS",
-    "restore_requires_sidecar": "PASS_FAIL_CLOSED",
-    "git_diff_check": "PASS_AFTER_WHITESPACE_CORRECTION",
-    "runtime_health": "PASS_200",
-    "backup": "PASS",
-    "restore_isolated": "PASS_200"
-  },
-  "governance": {
-    "main_protected": true,
-    "required_check": "docs-validation",
-    "no_force_push": true,
-    "no_bypass": true
-  },
-  "ci": {
-    "status": "PASS",
-    "workflow": "docs-validation",
-    "run_id": 45848372035,
-    "run_url": "https://github.com/KayzenRoot/nexlabs-pipeline/actions/runs/45848372035",
-    "head_sha": "8f6af9ebda0799d8395af64609574788a8586a2f",
-    "conclusion": "success",
-    "runner": "ubuntu-24.04 (standard GitHub-hosted)",
-    "validator_groups": "7 PASS",
-    "tests": "26/26 PASS"
-  },
-  "blockers": [],
-  "next_action": "Owner completes claim and Codex subscription authorization; run independent runtime audit; then checkpoint/merge decision. Do not start NLE-SR-WO-001 yet.",
-  "audit": "IMPLEMENTATION_APPROVED_RUNTIME_VALIDATED_BY_EXECUTOR_RUNTIME_AUDIT_PENDING",
-  "merge": false,
-  "deploy": "NOT_AUTHORIZED",
-  "runtime_activation": false,
-  "additional_spend_usd": 0,
-  "stale_when": [
-    "base or branch head changes",
-    "canonical fingerprint changes",
-    "Paperclip/PostgreSQL image digest changes",
-    "Docker/WSL2/host state changes",
-    "owner authorization or scope changes"
-  ],
-  "generated_on": "2026-11-26",
-  "head_after_implementation": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
-  "head_audited": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
-  "audit_note": "Independent agent audit of 6a7aaa2 approved implementation; runtime was blocked at audit time. Runtime was validated by the executor on 8f6af9e after owner-authorized Docker installation. Independent runtime audit pending.",
-  "corrections": [
-    "Removed pre-existing trailing whitespace from the Work Order; full-range diff-check expected clean after commit.",
-    "Anchored lock to audited/corrective heads and recorded CI run 45845361323.",
-    "Restore now fails closed when the SHA-256 sidecar is missing.",
-    "ACL now purges non-owner explicit ACEs via icacls reset; .gitignore covers arbitrary paperclip.env/data/backup paths."
-  ],
-  "head_corrective": "8f6af9ebda0799d8395af64609574788a8586a2f",
-  "head_runtime_validation": "8f6af9ebda0799d8395af64609574788a8586a2f",
-  "runtime": {
-    "docker_desktop": "4.100.1",
-    "installer_sha256": "98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2",
-    "engine": "29.9.3",
-    "container": "nexlabs-paperclip-paperclip-1",
-    "image": "ghcr.io/paperclipai/paperclip:2026.1117.0@sha256:bdf38d10544dc6c831e16dc027f23ad586353ef3be1a1b2c6979e63b956aceb1",
-    "healthy": true,
-    "health_http": 200,
-    "ui_http": 200,
-    "bind": "127.0.0.1:3100",
-    "bootstrap_status": "bootstrap_pending",
-    "browser_opened": true,
-    "persistence": {
-      "stop_start": "PASS",
-      "data_files": 3540,
-      "data_bytes_approx": 89105365
-    },
-    "backup": {
-      "file": "paperclip-data-20261126T180447Z.zip",
-      "size_mib": 12.96,
-      "sha256": "b1dea3e66ee2f523de672bd750be546301aa8673529798e2730bc1e3ebbb8106"
-    },
-    "restore_isolated": {
-      "health_http": 200,
-      "port": 3101,
-      "permissions_repaired": true
-    },
-    "owner_claim": "PENDING",
-    "codex_subscription_auth": "PENDING",
-    "docker_license": "Accepted by official installer on explicit owner instruction; no Docker account or subscription created; commercial licensing to be confirmed by owner."
-  },
-  "pending_actions": [
-    "Owner claims the Paperclip instance in the browser (no account created by executor).",
-    "Owner authorizes Codex subscription authentication in the browser.",
-    "Independent runtime audit and final checkpoint/merge authorization."
-  ]
+  "fingerprint_status": "STALE_CD02_FINGERPRINTS_PRESERVED; RECOMPUTE_SHA256_BEFORE_CD03_APPROVAL",
+  "owner_authorization": {
+    "claim": "CONFIRMED_BY_OWNER",
+    "codex_subscription_auth": "CONFIRMED_BY_OWNER",
+    "merge": "AUTHORIZED_ONLY_AFTER_APPROVED",
+    "next_work_order": "SR-WO-001_ONLY_AFTER_MERGE_READBACK",
+    "vps": "NO_ACCESS",
+    "additional_spend_usd": 0
+  }
 }

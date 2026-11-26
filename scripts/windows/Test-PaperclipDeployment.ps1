@@ -127,6 +127,37 @@ try {
     }
     Check-PaperclipTest 'restore_requires_sidecar' ([bool]$sidecarRequired)
 
+    $isolatedCandidate = Join-Path $tempRoot 'restore-test-fresh'
+    Assert-PaperclipIsolatedRestoreTarget -Root $tempRoot -TargetDir $isolatedCandidate
+    Check-PaperclipTest 'restore_fresh_isolated_target_allowed' $true
+
+    foreach ($unsafeTarget in @(
+        $tempData,
+        $tempSecrets,
+        $tempBackups,
+        (Join-Path $tempData 'restore-test-nested'),
+        (Join-Path (Split-Path -Parent $tempRoot) 'restore-test-outside')
+    )) {
+        $rejected = $false
+        try { Assert-PaperclipIsolatedRestoreTarget -Root $tempRoot -TargetDir $unsafeTarget }
+        catch { $rejected = $_.Exception.Message -match '^RESTORE_TARGET_' }
+        Check-PaperclipTest 'restore_unsafe_target_rejected' $rejected
+    }
+    New-PaperclipDirectory -Path $isolatedCandidate
+    $existingRejected = $false
+    try { Assert-PaperclipIsolatedRestoreTarget -Root $tempRoot -TargetDir $isolatedCandidate }
+    catch { $existingRejected = $_.Exception.Message -eq 'RESTORE_TARGET_ALREADY_EXISTS' }
+    Check-PaperclipTest 'restore_existing_empty_target_rejected' $existingRejected
+    $forceRejected = $false
+    try { $null = Expand-PaperclipBackupArchive -ArchivePath $backup.ArchivePath -TargetDir $tempData -Force }
+    catch { $forceRejected = $_.Exception.Message -eq 'RESTORE_FORCE_FORBIDDEN' }
+    Check-PaperclipTest 'restore_force_rejected' $forceRejected
+    $existingArchiveTargetRejected = $false
+    try { $null = Expand-PaperclipBackupArchive -ArchivePath $backup.ArchivePath -TargetDir $tempData }
+    catch { $existingArchiveTargetRejected = $_.Exception.Message -eq 'RESTORE_TARGET_ALREADY_EXISTS' }
+    Check-PaperclipTest 'restore_archive_existing_target_rejected' $existingArchiveTargetRejected
+    Check-PaperclipTest 'live_sentinel_unchanged' ([bool]((Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $tempData 'sentinel-a.txt')).Hash -eq $expectedA.Hash))
+
     $portState = Get-PaperclipPortState -Port 3100
     if ($portState.InUse) {
         $health = Get-PaperclipHealth -Port 3100
