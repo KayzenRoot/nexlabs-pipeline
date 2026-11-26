@@ -15,11 +15,11 @@ import unittest
 from security.approval import (
     HmacSha256TestVerifier, InMemoryNonceStore, canonical_approval_bytes,
 )
-from security.authorization import authorize
+from security.authorization import authorize as evaluate_authorization
 from security.contracts import (
     AccessRequest, ApprovalEnvelope, Grant, Principal, SecurityError,
 )
-from security.core import EXPECTED_POLICY, verify_policy
+from security.core import EXPECTED_POLICY, policy_fingerprint, verify_policy
 from security.isolation import assert_tenant_match, resolve_workspace_path
 from security.network import (
     NetworkPeer, NetworkPolicy, ServiceBinding, validate_network_policy,
@@ -27,19 +27,19 @@ from security.network import (
 from security.secrets import SecretRef, validate_secret_ref
 
 NOW = datetime(2026, 11, 26, 12, 0, tzinfo=timezone.utc)
-POLICY = "a" * 64
+POLICY = policy_fingerprint(EXPECTED_POLICY)
 PAYLOAD = "b" * 64
 KEY = b"synthetic-test-key-only-never-production"
 
 
 def fixture_request(risk="STANDARD"):
-    actor = Principal("agent-1", "agent", "tenant-1", "project-1", "host-1", "ACTIVE", 7)
+    actor = Principal("agent-1", "agent", "tenant-1", "project-1", "host-1", "ACTIVE", 1)
     return AccessRequest(
         actor=actor, action="document.read", target_id="doc-1",
         tenant_id="tenant-1", project_id="project-1", task_id="task-1",
         workflow_id="workflow-1", skill_id="skill-1", host_id="host-1",
         provider_id="provider-local", risk=risk, policy_sha256=POLICY,
-        policy_epoch=7, payload_sha256=PAYLOAD, effect="INTERNAL_ONLY",
+        policy_epoch=1, payload_sha256=PAYLOAD, effect="INTERNAL_ONLY",
         requested_spend_usd=Decimal("0"), now=NOW,
     )
 
@@ -79,6 +79,12 @@ def sign(envelope):
     return hmac.new(KEY, canonical_approval_bytes(envelope), hashlib.sha256).hexdigest()
 
 
+def authorize(request, grants, **kwargs):
+    return evaluate_authorization(
+        request, grants, current_policy_sha256=POLICY, current_policy_epoch=1, **kwargs
+    )
+
+
 class AuthorizationTests(unittest.TestCase):
     def test_exact_internal_grant_allows(self):
         request = fixture_request()
@@ -114,10 +120,26 @@ class AuthorizationTests(unittest.TestCase):
 
     def test_stale_principal_and_cross_tenant_deny(self):
         request = fixture_request()
-        stale = replace(request, actor=replace(request.actor, policy_epoch=6))
+        stale = replace(request, actor=replace(request.actor, policy_epoch=0))
         cross = replace(request, tenant_id="tenant-2")
         self.assertEqual(authorize(stale, [fixture_grant(request)]).reason, "PRINCIPAL_POLICY_STALE")
         self.assertEqual(authorize(cross, [fixture_grant(request)]).reason, "TENANT_ISOLATION_DENY")
+
+    def test_request_policy_hash_and_epoch_are_bound_to_trusted_current_policy(self):
+        request = fixture_request()
+        wrong_hash = evaluate_authorization(
+            request, [fixture_grant(request)], current_policy_sha256="c" * 64,
+            current_policy_epoch=1,
+        )
+        wrong_epoch = evaluate_authorization(
+            request, [fixture_grant(request)], current_policy_sha256=POLICY,
+            current_policy_epoch=2,
+        )
+        self.assertEqual(wrong_hash.reason, "REQUEST_POLICY_STALE")
+        self.assertEqual(wrong_epoch.reason, "REQUEST_POLICY_STALE")
+        boolean_epoch = replace(request, policy_epoch=True)
+        self.assertEqual(authorize(boolean_epoch, [fixture_grant(request)]).reason,
+                         "POLICY_EPOCH_INVALID")
 
     def test_project_and_host_mismatch_deny(self):
         request = fixture_request()
@@ -226,6 +248,11 @@ class NetworkPolicyTests(unittest.TestCase):
                     services=(ServiceBinding("svc", address, 443, "PRIVATE"),)
                 ))
 
+    def test_special_purpose_reserved_and_cgnat_ranges_are_not_private_allowlists(self):
+        for cidr in ("192.0.0.0/24", "100.64.0.0/10", "198.18.0.0/15"):
+            with self.subTest(cidr=cidr), self.assertRaises(SecurityError):
+                validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
+
     def test_peer_must_be_inside_allowlist(self):
         policy = NetworkPolicy(
             allowed_cidrs=("10.8.0.0/24",),
@@ -320,6 +347,21 @@ class WorkspaceIsolationTests(unittest.TestCase):
                 with self.subTest(value=value), self.assertRaises(SecurityError):
                     resolve_workspace_path(root, "tenant-1", "project-1", "task-1", value)
 
+    def test_symlink_ancestor_of_workspace_root_denied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            real_parent = base / "real-parent"
+            root = real_parent / "workspace"
+            root.mkdir(parents=True)
+            alias = base / "alias"
+            try:
+                alias.symlink_to(real_parent, target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest("symlink creation unavailable")
+            with self.assertRaisesRegex(SecurityError, "WORKSPACE_ROOT_REPARSE_POINT"):
+                resolve_workspace_path(alias / "workspace", "tenant-1", "project-1",
+                                        "task-1", "draft.txt")
+
     def test_symlink_component_denied(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -363,6 +405,12 @@ class PolicyTests(unittest.TestCase):
         changed["default_effect"] = "ALLOW"
         with self.assertRaisesRegex(SecurityError, "POLICY_DRIFT_OR_GRANT"):
             verify_policy(changed)
+
+    def test_policy_fingerprint_is_stable_and_changes_with_policy(self):
+        self.assertEqual(policy_fingerprint(EXPECTED_POLICY), POLICY)
+        changed = dict(EXPECTED_POLICY)
+        changed["policy_epoch"] = 2
+        self.assertNotEqual(policy_fingerprint(changed), POLICY)
 
 
 if __name__ == "__main__":

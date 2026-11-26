@@ -13,7 +13,7 @@ NLE-SR-WO-001/CD-01 is APPROVED and merged; checkpoint PR #6 is read back at the
 
 ## SCOPE
 - Standard-library-only Python package `security/`.
-- Immutable principal, resource scope, grant and authorization request contracts.
+- Immutable principal, resource scope, grant and authorization request contracts. The principal is a trusted adapter input; this slice does not authenticate live Paperclip/user identities.
 - Fail-closed policy evaluation requiring exact principal/task/tenant/project/workflow/skill/host/provider/risk/policy/epoch intersection; no hierarchy or CEO bypass.
 - Approval envelope verifier binding actor, independent human approver, action, target, tenant, payload hash, policy hash, evidence, zero-spend ceiling, expiry and one-time nonce. A pluggable verifier contract; HMAC-SHA256 adapter is test-only and not selected as production trust architecture.
 - Generic private-network descriptor validator: private/loopback addresses only, no wildcard/public bind, no default route, unique peer identities, no live config generation.
@@ -47,10 +47,10 @@ US$0 additional; standard library only; no API keys; no secrets; no live network
 - AC02 Principal, request, grant and policy validation are strict and fail closed.
 - AC03 Grant decision checks every exact scope dimension, epoch, revocation, expiry, tenant/project and zero-cost policy.
 - AC04 HIGH_ASSURANCE approval binds actor/approver/action/target/tenant/payload/policy/evidence/expiry/nonce; rejects self-approval, invalid signature, replay and any nonzero cost.
-- AC05 Network descriptor accepts only explicitly private/loopback ranges and rejects public, wildcard, default route, invalid port and duplicate peer/key reference.
+- AC05 Network descriptor accepts only explicitly RFC1918/ULA/loopback ranges and rejects public/special-purpose, wildcard, default route, invalid port and duplicate peer/key reference.
 - AC06 SecretRef is opaque, version-pinned and tenant/purpose scoped; no secret resolution exists.
 - AC07 Workspace resolver rejects cross-tenant, traversal, symlink and reparse paths without creating or modifying directories.
-- AC08 100% targeted tests, canonical source validator, Registry verification, security scan, SonarCloud and required CI pass; no HIGH/CRITICAL.
+- AC08 100% targeted tests, canonical source validator, Registry verification, security scan, SonarCloud and required Linux CI and Windows junction CI pass; no HIGH/CRITICAL.
 - AC09 Independent audit APPROVED on exact final HEAD; checkpoint delta proposed only after approval.
 
 ## TESTS

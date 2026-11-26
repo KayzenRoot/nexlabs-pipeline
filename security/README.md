@@ -11,7 +11,7 @@ python -m unittest discover -s tests -v
 
 ## Implemented contracts
 
-- Exact identity/grant intersection across principal, action, target, tenant, project, task, workflow, skill, host, provider, risk, policy hash and policy epoch. No hierarchy inheritance or privileged bypass.
+- Exact identity/grant intersection across principal, action, target, tenant, project, task, workflow, skill, host, provider, risk, policy hash and policy epoch. The caller supplies the trusted current policy hash/epoch; principal claims must come from a trusted identity adapter, not raw user input. No hierarchy inheritance or privileged bypass.
 - Default deny; only internal-only requests with zero spend can be authorized.
 - HIGH_ASSURANCE approval envelope binds actor, independent human approver, action, target, tenant, payload/policy hashes, evidence, zero-cost ceiling, expiry and a one-time nonce.
 - Signature verifier is pluggable. The included HMAC-SHA256 adapter is test-only. Production signer/key custody remains unselected and must be approved separately.
