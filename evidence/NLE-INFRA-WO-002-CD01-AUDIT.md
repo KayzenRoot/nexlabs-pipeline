@@ -43,9 +43,9 @@ The independent security review also found a real authorization gap not reported
 ## 4. Coverage investigation — 0.0% new code
 
 - The workflow runs `unittest`, `security verify`, the registry verifier and the security scanner, but it does not run a coverage tool, produce a coverage report, or upload one to SonarCloud.
-- There is no `sonar-project.properties`, `coverage.xml`, or equivalent report step in the repository/workflow.
+- There is no `sonar-project.properties`, `coverage.xml`, or equivalent report step in the repository/workflow. Sonar reports `new_lines_to_cover=0` and no coverage measure; the quality gate conditions are reliability/security/maintainability ratings, duplication and security-hotspot review, with **no coverage condition**.
 - Therefore **0.0% is a missing-report artifact, not proof that the tests did not execute**. The 98/98 test result is test execution evidence, not coverage evidence.
-- No paid service or dependency was added; generating/uploading coverage would require a separate approved tooling decision.
+- Coverage is **not an acceptance criterion** in this Work Order. AC08's “100% targeted tests” means the targeted test suite passed (98/98), not a coverage percentage. No paid service or dependency was added; generating/uploading coverage would require a separate approved tooling decision.
 
 ## 5. Regression and revalidation
 
@@ -62,22 +62,35 @@ The independent security review also found a real authorization gap not reported
 | Schema alignment | Approval/grant/secret-ref/network schemas match dataclass fields; nested peer/service schemas are closed |
 | No effects | 0 model calls, 0 network sockets, 0 imports, 0 Paperclip writes, 0 secret resolutions, 0 VPS access, US$0 |
 
+### AC06 SecretRef evidence
+
+- `security/secrets.py` defines only an immutable metadata dataclass (`reference_id`, `provider_id`, `tenant_id`, `project_id`, `purpose`, `version`) and `validate_secret_ref`.
+- Validation requires provider allowlist, purpose allowlist, exact tenant, exact project and a non-`latest` version. No function reads, resolves, creates, rotates, logs or exports a value; no environment/credential/keyring access exists in the module.
+- Tests: `test_opaque_pinned_scoped_reference_validates`, `test_unknown_provider_purpose_and_cross_tenant_deny`, `test_latest_secret_version_denied`, `test_secret_purpose_and_project_are_exact`, plus schema alignment.
+
+### AC08 CI evidence
+
+- Run `45908006041` at corrected HEAD `fb6fa8d` has **both** jobs success:
+  - `docs-validation` on `ubuntu-24.04`: Source Pack validation, 98-test canonical suite, Registry verify, security verify, scanner.
+  - `security-windows` on `windows-2025`: security-control suite including the real `mklink /J` junction and offline policy verify.
+- SonarCloud at the same head: 0 open issues, quality gate OK; ECC Security Evidence pass; Socket pass.
+
 ## 6. Acceptance criteria
 
 | AC | Status |
 |---|---|
-| AC01 Context Lock / 364 Source Pack unchanged | **PASS** |
-| AC02 Principal/request/grant/policy strict and fail-closed | **PASS** |
-| AC03 Exact grant dimensions/epoch/revocation/expiry/zero cost | **PASS** |
-| AC04 HIGH_ASSURANCE approval binding/self-approval/replay/zero cost | **PASS after Correction Delta** — full scope binding added and tested |
-| AC05 Network descriptor private-only/wildcard/default/port/duplicate | **PASS** |
-| AC06 Opaque version-pinned tenant/purpose SecretRef | **PASS** |
-| AC07 Workspace traversal/symlink/reparse isolation | **PASS**, including Windows junction |
-| AC08 Tests/validator/registry/scanner/Sonar/Linux+Windows CI | **PENDING final correction-HEAD CI and Sonar reanalysis** |
-| AC09 Independent audit of exact final HEAD | **PENDING new audit** |
+| AC01 Context Lock / 364 Source Pack unchanged | **PASS** — 26 canonical + 20 implementation fingerprints, zero mismatches; validator 7/7 |
+| AC02 Principal/request/grant/policy strict and fail-closed | **PASS** — helpers `_validate_request`, `_grant_is_eligible`, `_select_grant`; fail-closed tests |
+| AC03 Exact grant dimensions/epoch/revocation/expiry/zero cost | **PASS** — exact-dimension, revoked/expired/future, stale-policy and zero-cost tests |
+| AC04 HIGH_ASSURANCE approval binding/self-approval/replay/zero cost | **PASS after Correction Delta** — full scope binding + 7 mismatch + nonce single-use tests |
+| AC05 Network descriptor private-only/wildcard/default/port/duplicate | **PASS** — RFC1918/ULA/loopback accepted; public/special/CGNAT/wildcard/default/link-local rejected |
+| AC06 Opaque version-pinned tenant/purpose SecretRef | **PASS** — itemized above; no resolution code |
+| AC07 Workspace traversal/symlink/reparse isolation | **PASS** — traversal/absolute/Windows paths, symlink ancestors/components, real junction; non-mutating |
+| AC08 Tests/validator/registry/scanner/Sonar/Linux+Windows CI | **PASS** — 98/98, 45/45, 7/7, 105/92/1110, 472/0, Sonar 0/OK, Linux+Windows run 45908006041 |
+| AC09 Independent audit of exact final HEAD | **PENDING final re-audit** — initial audit required the above evidence; checkpoint delta withheld |
 
 ## 7. Verdict at this stage
 
-**CORRECTION DELTA APPLIED — FINAL CI/SONAR/ECC AND NEW INDEPENDENT AUDIT PENDING.**
+**CORRECTION DELTA APPLIED — FINAL INDEPENDENT RE-AUDIT PENDING.**
 
-The 11 Sonar findings were corrected at their root causes, the approval-scope replay gap was fixed, the 0.0% coverage cause was identified without misrepresenting test execution, and all 364 sources/registry counts remain intact. No merge, checkpoint promotion, runtime capability, VPS access, credential, model call or spend is authorized.
+The 11 Sonar findings were corrected at their root causes, the approval-scope replay gap was fixed, AC06/AC08 evidence was itemized, the 0.0% coverage cause was identified without misrepresenting test execution, and all 364 sources/registry counts remain intact. No merge, checkpoint promotion, runtime capability, VPS access, credential, model call or spend is authorized. A final independent audit of the new evidence-only HEAD is the remaining gate.
