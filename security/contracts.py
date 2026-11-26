@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import re
 
 IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
@@ -37,10 +37,10 @@ def require_utc(value: datetime, reason: str = "INVALID_TIMESTAMP") -> None:
 
 
 def as_decimal(value: Decimal | str | int) -> Decimal:
-    require(not isinstance(value, bool), "INVALID_MONEY")
+    require(not isinstance(value, (bool, float)), "INVALID_MONEY")
     try:
         result = value if isinstance(value, Decimal) else Decimal(str(value))
-    except Exception as exc:
+    except (InvalidOperation, TypeError, ValueError) as exc:
         raise SecurityError("INVALID_MONEY") from exc
     require(result.is_finite() and result >= 0, "INVALID_MONEY")
     return result

@@ -64,7 +64,8 @@ def fixture_approval(request=None, **changes):
     request = request or fixture_request("HIGH_ASSURANCE")
     values = dict(
         approval_id="approval-1", actor_id=request.actor.principal_id,
-        approver_id="human-owner", approver_kind="human", action=request.action,
+        approver_id="human-owner", approver_kind="human", approver_role="OWNER",
+        action=request.action,
         target_id=request.target_id, tenant_id=request.tenant_id,
         payload_sha256=request.payload_sha256, policy_sha256=request.policy_sha256,
         evidence_refs=("evidence-001",), max_spend_usd=Decimal("0"),
@@ -161,6 +162,11 @@ class AuthorizationTests(unittest.TestCase):
         self.assertEqual(authorize(replace(request, requested_spend_usd=Decimal("0.01")),
                                    [fixture_grant(request)]).reason, "SPEND_FORBIDDEN")
 
+    def test_float_money_values_are_rejected(self):
+        request = fixture_request()
+        result = authorize(replace(request, requested_spend_usd=0.0), [fixture_grant(request)])
+        self.assertEqual(result.reason, "INVALID_MONEY")
+
     def test_unknown_principal_risk_and_privilege_mutation_deny(self):
         request = fixture_request()
         self.assertFalse(authorize(replace(request, actor=replace(request.actor, state="UNKNOWN")),
@@ -192,7 +198,8 @@ class AuthorizationTests(unittest.TestCase):
     def test_self_approval_and_nonhuman_approver_deny(self):
         request = fixture_request("HIGH_ASSURANCE")
         for changes in ({"approver_id": request.actor.principal_id},
-                        {"approver_kind": "agent"}):
+                        {"approver_kind": "agent"},
+                        {"approver_role": "AGENT_ADMIN"}):
             envelope = fixture_approval(request, **changes)
             result = authorize(request, [fixture_grant(request)], approval=envelope,
                                approval_signature=sign(envelope),

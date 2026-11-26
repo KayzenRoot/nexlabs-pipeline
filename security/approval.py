@@ -23,6 +23,7 @@ def canonical_approval_bytes(envelope: ApprovalEnvelope) -> bytes:
         "actor_id": envelope.actor_id,
         "approver_id": envelope.approver_id,
         "approver_kind": envelope.approver_kind,
+        "approver_role": envelope.approver_role,
         "action": envelope.action,
         "target_id": envelope.target_id,
         "tenant_id": envelope.tenant_id,
@@ -91,6 +92,8 @@ def verify_approval(
                   envelope.action, envelope.target_id, envelope.tenant_id):
         require_id(value, "APPROVAL_FIELD_INVALID")
     require(envelope.approver_kind == "human", "APPROVER_MUST_BE_HUMAN")
+    require(envelope.approver_role in {"OWNER", "AUTHORIZED_REVIEWER"},
+            "APPROVER_ROLE_NOT_AUTHORIZED")
     require(envelope.approver_id != envelope.actor_id, "SELF_APPROVAL_FORBIDDEN")
     require(envelope.actor_id == request.actor.principal_id, "APPROVAL_ACTOR_MISMATCH")
     require(envelope.action == request.action, "APPROVAL_ACTION_MISMATCH")

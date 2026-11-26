@@ -1,7 +1,6 @@
 """Exact-scope, default-deny authorization evaluator."""
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Iterable
 
 from .approval import NonceStore, SignatureVerifier, verify_approval
@@ -107,6 +106,7 @@ def authorize(
             verify_approval(approval, approval_signature, verifier, nonce_store, request)
 
         return AccessDecision(True, "AUTHORIZED_INTERNAL_ONLY", selected.grant_id)
-    except Exception as exc:
-        reason = str(exc) if isinstance(exc, SecurityError) else "INVALID_REQUEST"
-        return _deny(reason)
+    except SecurityError as exc:
+        return _deny(str(exc))
+    except (AttributeError, TypeError, ValueError):
+        return _deny("INVALID_REQUEST")

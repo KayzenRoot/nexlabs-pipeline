@@ -61,7 +61,11 @@
     ],
     "signature_verifier": "PLUGGABLE_UNSELECTED",
     "nonce_store": "DURABLE_PROVIDER_REQUIRED",
-    "hmac_adapter": "TEST_ONLY"
+    "hmac_adapter": "TEST_ONLY",
+    "authorized_roles": [
+      "OWNER",
+      "AUTHORIZED_REVIEWER"
+    ]
   },
   "network": {
     "transport": null,

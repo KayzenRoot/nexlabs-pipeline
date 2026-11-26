@@ -8,6 +8,7 @@
     "actor_id",
     "approver_id",
     "approver_kind",
+    "approver_role",
     "action",
     "target_id",
     "tenant_id",
@@ -72,6 +73,12 @@
     "expires_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "approver_role": {
+      "enum": [
+        "OWNER",
+        "AUTHORIZED_REVIEWER"
+      ]
     }
   }
 }

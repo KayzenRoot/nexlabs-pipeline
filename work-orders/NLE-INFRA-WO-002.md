@@ -30,7 +30,7 @@ WireGuard installation/configuration or key generation; VPN, firewall, NSG, DNS,
 ## REQUIREMENTS / ARCHITECTURE RULES
 1. Default deny, exact scope intersection, no inherited grants and no privileged role bypass.
 2. Tenant/project isolation applies to every request; unknown, stale, revoked, expired or mismatched claims deny.
-3. HIGH_ASSURANCE requires an independent human approver, bound payload/policy hashes, evidence, expiry, zero spend and replay-resistant nonce verification.
+3. HIGH_ASSURANCE requires an independent human approver with an authorized OWNER/AUTHORIZED_REVIEWER role, bound payload/policy hashes, evidence, expiry, zero spend and replay-resistant nonce verification.
 4. Every effect other than explicitly internal-only is denied. Maximum additional spend is exactly USD 0.
 5. Network policy must reject public/wildcard/default routes. WireGuard remains an unselected candidate until its ADR is ratified.
 6. Secret references contain identifiers/metadata only. Secret values and signing keys never enter Git, fixtures, logs or agent context.

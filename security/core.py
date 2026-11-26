@@ -82,12 +82,15 @@ def _unique_object(pairs):
     return result
 
 
+def _reject_constant(_value):
+    raise SecurityError("NONFINITE_POLICY_NUMBER")
+
+
 def read_policy(path: Path = ROOT / "security" / "policy.json") -> dict:
     try:
         return json.loads(path.read_text(encoding="utf-8"),
                           object_pairs_hook=_unique_object,
-                          parse_constant=lambda _value: (_ for _ in ()).throw(
-                              SecurityError("NONFINITE_POLICY_NUMBER")))
+                          parse_constant=_reject_constant)
     except OSError as exc:
         raise SecurityError("POLICY_FILE_UNAVAILABLE") from exc
 
