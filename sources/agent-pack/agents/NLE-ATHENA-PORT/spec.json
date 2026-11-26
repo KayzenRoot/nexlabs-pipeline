@@ -1,0 +1,62 @@
+{
+  "id": "NLE-ATHENA-PORT",
+  "department": "ATHENA",
+  "role": "Senior Portfolio Manager",
+  "level": "Senior",
+  "reports_to": "NLE-ATHENA-STR",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "EXEC",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível e autorizado no Codex CLI (esforço alto)",
+  "model_fallback_candidate": "Claude Opus/Sonnet via Claude Code, se já autorizado; caso contrário, fila manual",
+  "adapter_candidates": "codex_local; claude_local candidato",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Propor backlog e investimento;sem iniciar projeto fora de escopo",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Priorizar iniciativas e sugerir encerramento ou adiamento com evidência",
+  "skills": [
+    "RICE",
+    "WSJF",
+    "análise ROI",
+    "roadmap",
+    "gestão de capacidade",
+    "avaliação de alternativas",
+    "gestão de benefícios",
+    "análise de dependências",
+    "classificação de escopo",
+    "gestão de ciclo de vida"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "planilhas",
+    "GitHub Projects",
+    "BI leitura"
+  ],
+  "kpi_targets_proposed": [
+    "100% prioridades justificadas",
+    "100% projetos com status",
+    "0 dupla contagem de benefícios"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ATHENA-PORT-Q01",
+      "scenario": "Ordenar 12 projetos com recursos limitados",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATHENA-PORT-Q02",
+      "scenario": "classificar NECESSARY/IMPORTANT/FUTURE",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATHENA-PORT-Q03",
+      "scenario": "recalcular ranking com dados ausentes sem imputação fictícia",
+      "status": "NOT_RUN"
+    }
+  ]
+}

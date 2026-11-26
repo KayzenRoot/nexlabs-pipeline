@@ -1,0 +1,254 @@
+[
+  {
+    "id": "ADR-SR-001",
+    "plan": "NLE-SKILL-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "ADR-SR-002",
+    "plan": "NLE-SKILL-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "ADR-SR-003",
+    "plan": "NLE-SKILL-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "ADR-SR-004",
+    "plan": "NLE-SKILL-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "ADR-SR-005",
+    "plan": "NLE-SKILL-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "WF-ADR-001",
+    "plan": "NLE-WF-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "WF-ADR-002",
+    "plan": "NLE-WF-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "WF-ADR-003",
+    "plan": "NLE-WF-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "WF-ADR-004",
+    "plan": "NLE-WF-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "WF-ADR-005",
+    "plan": "NLE-WF-PLAN-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-001",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-002",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-003",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-004",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-005",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-006",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-007",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INT-ADR-008",
+    "plan": "NLE-INT-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-001",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-002",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-003",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-004",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-005",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-006",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-007",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-008",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-009",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "INFRA-ADR-010",
+    "plan": "NLE-INFRA-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "CC-ADR-001",
+    "plan": "NLE-CC-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "CC-ADR-002",
+    "plan": "NLE-CC-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "CC-ADR-003",
+    "plan": "NLE-CC-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "CC-ADR-004",
+    "plan": "NLE-CC-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "CC-ADR-005",
+    "plan": "NLE-CC-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "CC-ADR-006",
+    "plan": "NLE-CC-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "CC-ADR-007",
+    "plan": "NLE-CC-PLAN-001",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-BOOT-001",
+    "plan": "NLE-BOOTSTRAP-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-BOOT-002",
+    "plan": "NLE-BOOTSTRAP-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-BOOT-003",
+    "plan": "NLE-BOOTSTRAP-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-BOOT-004",
+    "plan": "NLE-BOOTSTRAP-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-BOOT-005",
+    "plan": "NLE-BOOTSTRAP-001",
+    "status": "PROPOSED",
+    "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-BOOT-006",
+    "plan": "NLE-BOOTSTRAP-001/CD-01",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-BOOT-007",
+    "plan": "NLE-BOOTSTRAP-001/CD-02",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "work_order": "NLE-BOOTSTRAP-001",
+  "status": "BLOCKED_PUBLIC_REPO_NO_GIT_BASE",
+  "repository": "KayzenRoot/nexlabs-pipeline",
+  "base_sha": null,
+  "head_sha": null,
+  "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
+  "canonical_fingerprints": {
+    "README.md": "d50f979fd92ec7ff3c66069af4d8897f153135d28d0907323b930fef5854eec4",
+    "docs/Checkpoint.md": "4276c49d7cc391119cb325f34c6ff0ead9a47fc47474a38e75e013357a9d5873",
+    "docs/Decisions-Ledger.md": "691ee8a7a8d65f8eaa20621837673c036b7371541b5d46463c80be61a7f76a14",
+    "docs/Scope.md": "8494ea719fceb10bdc9d0f7c96c3fa4909ac0e8c27a2a9339d044f9ea903f1c5",
+    "docs/Definition-of-Done.md": "78f25c8667af90b96441cd9fbd3caaf21da41654c6475963f58f106ecefc2d57",
+    "docs/Architecture.md": "1b0064162245ade1d29c2ec954b235c1327bc73acea7dd7e37bd43b81aa13e61",
+    "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
+    "docs/Backlog.md": "d5bd5c91695b65afe08db4336ff072eadfc45e2fde19b7f9b8f309100802be13",
+    "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94"
+  },
+  "stale_when": "base or approved critical sources change; recompute/rebase without force and re-audit",
+  "remote_gates": "admin/push verified, public, no main found; private/base/governance/CI not verified"
+}

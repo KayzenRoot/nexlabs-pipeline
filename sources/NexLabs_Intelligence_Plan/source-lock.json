@@ -1,0 +1,25 @@
+{
+  "status": "LOCAL_SOURCE_SNAPSHOT_NOT_GIT_CONTEXT_LOCK",
+  "files": [
+    {
+      "path": "NexLabs_AI_Enterprise_Agent_Catalog.json",
+      "sha256": "b1ce5e09d1df6c1172d700927d7d65a26ad2626c9b959e11c9c072a96790df12"
+    },
+    {
+      "path": "NexLabs_Skills_Registry/registry.json",
+      "sha256": "b9571d8917a991b3b99507cefd1173cd9befb874b9f8e3e93fc879daa0f08f4d"
+    },
+    {
+      "path": "NexLabs_Skills_Registry/assignment-matrix.csv",
+      "sha256": "a975033d1ee0b4d4a6b6d991700c55aead52d8a657f6f221f422e9de93669609"
+    },
+    {
+      "path": "NexLabs_Workflows/workflows.json",
+      "sha256": "d726f19dada81ef34b6db677f04d9cbc27b3d8f1861598cb23dfe92757e937ad"
+    },
+    {
+      "path": "NexLabs_Workflows/assignment-trace.csv",
+      "sha256": "d4141bdbd6a305cb78e24157501ec74da019d57cc03dbcf04db185ab08bb3ce8"
+    }
+  ]
+}

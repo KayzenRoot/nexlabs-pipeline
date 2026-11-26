@@ -1,0 +1,64 @@
+{
+  "id": "NLE-APOLLO-CRO",
+  "department": "APOLLO",
+  "role": "Staff CRO & Funnel Expert",
+  "level": "Staff",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Criar hipóteses e alterações em branch;sem alterar checkout real livremente",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Identificar atritos e propor experimentos de conversão",
+  "skills": [
+    "funnel analytics",
+    "landing page UX",
+    "A/B testing",
+    "sample size",
+    "checkout optimization",
+    "heatmap interpretation",
+    "offer testing",
+    "statistical inference",
+    "friction analysis",
+    "dark pattern detection",
+    "event tracking"
+  ],
+  "tools_candidates": [
+    "GA4",
+    "analytics sandbox",
+    "Python",
+    "Playwright",
+    "Figma leitura"
+  ],
+  "kpi_targets_proposed": [
+    "100% testes com métrica primária",
+    "0 dark patterns",
+    "100% resultados com incerteza"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-CRO-Q01",
+      "scenario": "Calcular amostra em cenário sintético",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CRO-Q02",
+      "scenario": "detectar viés de experimento",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CRO-Q03",
+      "scenario": "revisar checkout com taxa oculta",
+      "status": "NOT_RUN"
+    }
+  ]
+}

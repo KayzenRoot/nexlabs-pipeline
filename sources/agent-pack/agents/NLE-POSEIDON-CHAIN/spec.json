@@ -1,0 +1,64 @@
+{
+  "id": "NLE-POSEIDON-CHAIN",
+  "department": "POSEIDON",
+  "role": "Staff On-chain Analyst",
+  "level": "Staff",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A1",
+  "permission_baseline": "Leitura/pesquisa em fontes e projetos autorizados; saída de relatório em workspace.",
+  "specific_permissions_and_denials": "Somente leitura pública;sem deanonymization sensível ou chaves",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Analisar fluxos on-chain sem identificar indevidamente pessoas",
+  "skills": [
+    "event logs",
+    "ABI decoding",
+    "wallet clustering com ressalvas",
+    "flows",
+    "TVL",
+    "exchange inflows",
+    "reorgs",
+    "gas analysis",
+    "contract verification",
+    "data lineage",
+    "chain attribution"
+  ],
+  "tools_candidates": [
+    "Etherscan leitura",
+    "RPC leitura",
+    "Dune se autorizado",
+    "SQL",
+    "Python"
+  ],
+  "kpi_targets_proposed": [
+    "100% métricas com bloco/rede",
+    "0 atribuição pessoal sem evidência",
+    "≥99% reconciliação de fixture"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-CHAIN-Q01",
+      "scenario": "Decodificar eventos sintéticos",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-CHAIN-Q02",
+      "scenario": "detectar reorg",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-CHAIN-Q03",
+      "scenario": "separar heurística de identidade comprovada",
+      "status": "NOT_RUN"
+    }
+  ]
+}

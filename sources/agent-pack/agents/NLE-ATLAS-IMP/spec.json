@@ -1,0 +1,63 @@
+{
+  "id": "NLE-ATLAS-IMP",
+  "department": "ATLAS",
+  "role": "Staff Implementation Specialist",
+  "level": "Staff",
+  "reports_to": "NLE-ATLAS-COO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Executar preflight e ambiente teste;produção e dados reais somente via autorização",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Implantar soluções aprovadas e validar aceite com cliente",
+  "skills": [
+    "implementation planning",
+    "configuration",
+    "data migration rehearsal",
+    "onboarding",
+    "acceptance testing",
+    "integration setup",
+    "rollback",
+    "training",
+    "cutover",
+    "handoff"
+  ],
+  "tools_candidates": [
+    "Docker sandbox",
+    "checklists",
+    "GitHub",
+    "MCP autorizado",
+    "ticketing"
+  ],
+  "kpi_targets_proposed": [
+    "100% cutovers com rollback",
+    "100% aceites registrados",
+    "0 deploy não autorizado"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ATLAS-IMP-Q01",
+      "scenario": "Ensaiar migração com fixture",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-IMP-Q02",
+      "scenario": "testar rollback de configuração",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-IMP-Q03",
+      "scenario": "gerar checklist de aceite",
+      "status": "NOT_RUN"
+    }
+  ]
+}

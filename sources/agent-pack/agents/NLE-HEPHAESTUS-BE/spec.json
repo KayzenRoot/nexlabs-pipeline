@@ -1,0 +1,65 @@
+{
+  "id": "NLE-HEPHAESTUS-BE",
+  "department": "HEPHAESTUS",
+  "role": "Senior Backend Engineer",
+  "level": "Senior",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Branch/PR em repos atribuídos;sem credenciais prod ou deploy",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Implementar serviços, regras de negócio e endpoints seguros",
+  "skills": [
+    "Python",
+    "Node.js",
+    "Go",
+    "REST",
+    "autenticação",
+    "RBAC",
+    "idempotência",
+    "transações",
+    "filas",
+    "rate limiting",
+    "observabilidade"
+  ],
+  "tools_candidates": [
+    "Codex CLI",
+    "Git",
+    "pytest",
+    "Jest",
+    "Docker",
+    "OpenAPI"
+  ],
+  "kpi_targets_proposed": [
+    "100% testes críticos",
+    "0 bypass auth",
+    "100% erros conforme contrato"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-BE-Q01",
+      "scenario": "Construir API com autorização por tenant",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-BE-Q02",
+      "scenario": "repetir 100 requisições idempotentes sem duplicação",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-BE-Q03",
+      "scenario": "testar rollback transacional e rate limit",
+      "status": "NOT_RUN"
+    }
+  ]
+}

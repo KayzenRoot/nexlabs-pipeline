@@ -1,0 +1,62 @@
+{
+  "id": "NLE-HEPHAESTUS-PM",
+  "department": "HEPHAESTUS",
+  "role": "Senior Product Manager",
+  "level": "Senior",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Criar propostas e backlog;sem expandir versão unilateralmente",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Definir valor e escopo de produto, histórias e aceite",
+  "skills": [
+    "discovery",
+    "JTBD",
+    "roadmap",
+    "product analytics",
+    "pesquisa de usuário",
+    "priorização",
+    "hipóteses",
+    "experimentos",
+    "go-to-market",
+    "Definition of Done"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "GitHub issues",
+    "Figma leitura",
+    "analytics agregados"
+  ],
+  "kpi_targets_proposed": [
+    "100% features com hipótese",
+    "≥95% histórias com aceite",
+    "0 escopo não autorizado"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-PM-Q01",
+      "scenario": "Priorizar 20 pedidos com DoD",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-PM-Q02",
+      "scenario": "definir experimento de ativação",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-PM-Q03",
+      "scenario": "rejeitar feature fora de escopo",
+      "status": "NOT_RUN"
+    }
+  ]
+}

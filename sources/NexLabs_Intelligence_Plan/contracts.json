@@ -1,0 +1,203 @@
+{
+  "status": "PROPOSED_NOT_IMPLEMENTED",
+  "common_envelope": {
+    "required": [
+      "schema_version",
+      "request_id",
+      "trace_id",
+      "task_id",
+      "idempotency_key",
+      "payload_hash",
+      "lease_token"
+    ],
+    "identity_resolution": "server-side verified principal, tenant, project, purpose, grant digest and policy epoch; ignore user/model claimed scope",
+    "reject": [
+      "expired/revoked lease",
+      "policy mismatch",
+      "idempotency payload conflict",
+      "unqualified skill/provider",
+      "scope violation"
+    ]
+  },
+  "entities": {
+    "source_version": [
+      "id",
+      "tenant_id",
+      "scope_id",
+      "classification",
+      "source_uri",
+      "sha256",
+      "version",
+      "observed_at",
+      "valid_from",
+      "expires_at",
+      "status",
+      "license",
+      "retention_policy_id"
+    ],
+    "chunk": [
+      "id",
+      "tenant_id",
+      "source_version_id",
+      "locator",
+      "text_ref",
+      "embedding_model_revision",
+      "content_hash"
+    ],
+    "graph_node": [
+      "id",
+      "tenant_id",
+      "scope_id",
+      "entity_type",
+      "entity_key",
+      "valid_from",
+      "valid_to",
+      "status"
+    ],
+    "graph_edge": [
+      "id",
+      "tenant_id",
+      "from_node",
+      "to_node",
+      "predicate",
+      "evidence_id",
+      "valid_from",
+      "valid_to",
+      "status"
+    ],
+    "memory_candidate": [
+      "id",
+      "tenant_id",
+      "scope_id",
+      "author_agent_id",
+      "run_id",
+      "kind",
+      "claim",
+      "evidence_ids",
+      "state",
+      "reviewer_id"
+    ],
+    "claim": [
+      "id",
+      "type",
+      "text",
+      "source_version_id",
+      "locator",
+      "as_of",
+      "validation_state"
+    ],
+    "skill_release": [
+      "package_id",
+      "version",
+      "digest",
+      "evaluation_id",
+      "approval_id",
+      "status"
+    ],
+    "context_lock": [
+      "task_id",
+      "git_base",
+      "git_head",
+      "critical_source_digests",
+      "skill_digests",
+      "corpus_epoch",
+      "policy_epoch",
+      "model_adapter",
+      "expiry"
+    ],
+    "audit_event": [
+      "id",
+      "trace_id",
+      "principal_id",
+      "scope_id",
+      "action",
+      "outcome",
+      "policy_epoch",
+      "prior_digest",
+      "digest",
+      "occurred_at"
+    ],
+    "deletion_tombstone": [
+      "source_id",
+      "tenant_id",
+      "authorized_request_id",
+      "effective_at",
+      "backup_cutoff"
+    ]
+  },
+  "logical_endpoints": [
+    {
+      "method": "POST",
+      "path": "/v1/context/assemble",
+      "mode": "read authorized sources"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/retrieval/query",
+      "mode": "read authorized sources"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/graph/query",
+      "mode": "read authorized paths"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/memory/observe",
+      "mode": "append observation"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/feedback/propose",
+      "mode": "candidate only"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/claims/validate",
+      "mode": "validate evidence"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/evaluations/run",
+      "mode": "sandbox only"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/review/approve",
+      "mode": "separate review principal"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/releases/promote",
+      "mode": "separate approved release service"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/revoke",
+      "mode": "authorized administrator only"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/deletion",
+      "mode": "authorized administrator only"
+    }
+  ],
+  "events": [
+    "source.quarantined",
+    "source.approved",
+    "source.revoked",
+    "context.stale",
+    "claim.rejected",
+    "memory.candidate",
+    "feedback.reviewed",
+    "evaluation.completed",
+    "skill.release.approved",
+    "skill.rollback",
+    "grant.revoked",
+    "deletion.completed",
+    "budget.exhausted",
+    "incident.opened"
+  ],
+  "default_effect": "DENY",
+  "agents_can_call_admin": false
+}

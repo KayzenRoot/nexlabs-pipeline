@@ -1,0 +1,106 @@
+{
+  "status": "PROPOSED_DISABLED",
+  "profiles": {
+    "EXEC": {
+      "route": "Codex oficial, raciocínio alto para decisões complexas",
+      "host": "VPS ou Windows qualificado",
+      "fallback": "fila humana; outro modelo oficialmente autorizado após benchmark",
+      "input_tokens": 12000,
+      "output_tokens": 3000,
+      "wall_min": 20,
+      "tool_calls": 20
+    },
+    "ENG": {
+      "route": "Codex oficial, perfil de engenharia",
+      "host": "Windows/WSL2 preferencial; VPS só leve",
+      "fallback": "DeepSeek 4.1 Flash/OpenCode ou Claude Code candidato se autorizado e gratuito; senão fila",
+      "input_tokens": 12000,
+      "output_tokens": 3000,
+      "wall_min": 45,
+      "tool_calls": 40
+    },
+    "RESEARCH": {
+      "route": "Codex oficial, esforço moderado; DeepSeek 4.1 Flash candidato via API permitida",
+      "host": "VPS preferencial",
+      "fallback": "FTS, pesquisa determinística/manual; Gemini CLI candidato qualificado",
+      "input_tokens": 6000,
+      "output_tokens": 1500,
+      "wall_min": 15,
+      "tool_calls": 20
+    },
+    "CREATIVE": {
+      "route": "Codex oficial para texto; mídia via ferramenta própria autorizada",
+      "host": "VPS texto; Windows mídia",
+      "fallback": "modelo local ou Claude/Gemini autorizado; senão fila",
+      "input_tokens": 6000,
+      "output_tokens": 2000,
+      "wall_min": 20,
+      "tool_calls": 20
+    },
+    "QUANT": {
+      "route": "Codex oficial + Python determinístico",
+      "host": "VPS análise leve; Windows backtest pesado",
+      "fallback": "Python e relatório humano, nunca trades reais",
+      "input_tokens": 12000,
+      "output_tokens": 3000,
+      "wall_min": 30,
+      "tool_calls": 25
+    },
+    "AUDIT": {
+      "route": "modelo autorizado independente ou Codex em sessão/identidade segregada + testes; revisão humana HIGH_ASSURANCE quando necessária",
+      "host": "host qualificado isolado",
+      "fallback": "revisor independente humano, BLOCKED se insuficiente",
+      "input_tokens": 24000,
+      "output_tokens": 6000,
+      "wall_min": 40,
+      "tool_calls": 35
+    }
+  },
+  "hard_assurance_override": {
+    "input_tokens": 24000,
+    "output_tokens": 6000,
+    "requires": "gate e janela real validada; split se necessário"
+  },
+  "triage": {
+    "input_tokens": 2000,
+    "output_tokens": 500
+  },
+  "limits": {
+    "additional_spend_usd": 0,
+    "llm_slots_global": 1,
+    "llm_slots_candidate_after_approval": 2,
+    "windows_jobs": 1,
+    "vps_light_or_embedding_jobs": 1,
+    "per_agent_runs": 1,
+    "pending_global": 100,
+    "pending_per_project": 20,
+    "new_children_per_run": 2,
+    "delegation_depth": 3,
+    "lease_seconds": 120,
+    "renew_seconds": 30,
+    "internal_idempotent_retries": 1,
+    "quota_pause_background_pct": 70,
+    "quota_stop_pct": 90,
+    "quota_unknown": "manual supervised or blocked",
+    "provider_cost_unknown": "BLOCKED",
+    "auto_paid_fallback": false,
+    "heartbeat_default": false,
+    "external_effects": "DENY"
+  },
+  "ram_mib_caps": {
+    "paperclip": 1024,
+    "postgres": 1536,
+    "intelligence": 512,
+    "embedding": 768,
+    "9router": 512,
+    "proxy_backup_aux": 256
+  },
+  "disk_gib_growth_caps": {
+    "images": 10,
+    "db_wal": 8,
+    "documents_artifacts": 8,
+    "models_cache": 4,
+    "logs": 2,
+    "backup_staging": 8
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "agents": 105,
+  "packages": 92,
+  "workflows": 62,
+  "assignments": 1110,
+  "platform_scenarios_specified": 48,
+  "operational_tests_run": 0,
+  "enabled_agents": 0,
+  "new_spend_usd": 0,
+  "status": "STRUCTURAL_VALIDATION_ONLY"
+}

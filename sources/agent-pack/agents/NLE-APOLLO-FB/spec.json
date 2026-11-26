@@ -1,0 +1,63 @@
+{
+  "id": "NLE-APOLLO-FB",
+  "department": "APOLLO",
+  "role": "Senior Facebook Specialist",
+  "level": "Senior",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Publicar somente em páginas autorizadas;grupos conforme regras e aprovação humana quando necessário;sem bot de spam",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Gerenciar páginas e participação legítima em comunidades",
+  "skills": [
+    "Facebook Pages",
+    "comunidades",
+    "Graph API",
+    "post copy",
+    "moderação",
+    "política de grupos",
+    "Insights",
+    "UTM",
+    "agendamento permitido",
+    "gestão de comentários",
+    "reputação"
+  ],
+  "tools_candidates": [
+    "Meta Business Suite",
+    "Graph API autorizada",
+    "fila editorial",
+    "analytics"
+  ],
+  "kpi_targets_proposed": [
+    "0 posts em grupos não autorizados",
+    "100% links rastreáveis",
+    "100% incidentes escalados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-FB-Q01",
+      "scenario": "Adaptar post a página e comunidade",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-FB-Q02",
+      "scenario": "recusar grupo que proíbe publicidade",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-FB-Q03",
+      "scenario": "simular 429 sem contornar limite",
+      "status": "NOT_RUN"
+    }
+  ]
+}

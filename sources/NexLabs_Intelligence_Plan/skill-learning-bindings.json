@@ -1,0 +1,3344 @@
+[
+  {
+    "package_id": "executive-strategy",
+    "owners": [
+      "NLE-ZEUS-CEO",
+      "NLE-ATHENA-STR",
+      "NLE-ATHENA-PORT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATHENA-PORT",
+      "NLE-ATHENA-STR",
+      "NLE-ZEUS-CEO"
+    ],
+    "assignment_ids": [
+      "NLE-ZEUS-CEO-S01",
+      "NLE-ZEUS-CEO-S02",
+      "NLE-ZEUS-CEO-S03",
+      "NLE-ZEUS-CEO-S04",
+      "NLE-ZEUS-CEO-S05",
+      "NLE-ZEUS-CEO-S06",
+      "NLE-ZEUS-CEO-S07",
+      "NLE-ZEUS-CEO-S10",
+      "NLE-ZEUS-CEO-S12",
+      "NLE-ATHENA-STR-S01",
+      "NLE-ATHENA-STR-S02",
+      "NLE-ATHENA-STR-S03",
+      "NLE-ATHENA-STR-S04",
+      "NLE-ATHENA-STR-S05",
+      "NLE-ATHENA-STR-S06",
+      "NLE-ATHENA-STR-S07",
+      "NLE-ATHENA-STR-S08",
+      "NLE-ATHENA-STR-S09",
+      "NLE-ATHENA-STR-S10",
+      "NLE-ATHENA-PORT-S01",
+      "NLE-ATHENA-PORT-S02",
+      "NLE-ATHENA-PORT-S03",
+      "NLE-ATHENA-PORT-S04",
+      "NLE-ATHENA-PORT-S06",
+      "NLE-ATHENA-PORT-S07",
+      "NLE-ATHENA-PORT-S08",
+      "NLE-ATHENA-PORT-S09",
+      "NLE-ATHENA-PORT-S10"
+    ],
+    "baseline_acceptance": "Detectar conflito de recursos e produzir ordem sem ciclos",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "project-governance",
+    "owners": [
+      "NLE-ATHENA-PMO"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATHENA-PMO"
+    ],
+    "assignment_ids": [
+      "NLE-ATHENA-PMO-S02",
+      "NLE-ATHENA-PMO-S03",
+      "NLE-ATHENA-PMO-S05",
+      "NLE-ATHENA-PMO-S06",
+      "NLE-ATHENA-PMO-S07",
+      "NLE-ATHENA-PMO-S08",
+      "NLE-ATHENA-PMO-S09",
+      "NLE-ATHENA-PMO-S10"
+    ],
+    "baseline_acceptance": "Dependência circular e alteração de escopo devem bloquear avanço",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "business-requirements",
+    "owners": [
+      "NLE-ATHENA-BA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATHENA-BA"
+    ],
+    "assignment_ids": [
+      "NLE-ATHENA-BA-S01",
+      "NLE-ATHENA-BA-S02",
+      "NLE-ATHENA-BA-S03",
+      "NLE-ATHENA-BA-S04",
+      "NLE-ATHENA-BA-S05",
+      "NLE-ATHENA-BA-S06",
+      "NLE-ATHENA-BA-S07",
+      "NLE-ATHENA-BA-S08",
+      "NLE-ATHENA-BA-S09",
+      "NLE-ATHENA-BA-S10"
+    ],
+    "baseline_acceptance": "Detectar contradição e requisito sem teste",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "knowledge-retrieval",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATHENA-KM"
+    ],
+    "assignment_ids": [
+      "NLE-ATHENA-KM-S01",
+      "NLE-ATHENA-KM-S02",
+      "NLE-ATHENA-KM-S03",
+      "NLE-ATHENA-KM-S04",
+      "NLE-ATHENA-KM-S05",
+      "NLE-ATHENA-KM-S08",
+      "NLE-ATHENA-KM-S09",
+      "NLE-ATHENA-KM-S10"
+    ],
+    "baseline_acceptance": "Recuperar fonte correta e rejeitar documento adulterado",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "process-excellence",
+    "owners": [
+      "NLE-ATHENA-PEX"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATHENA-PEX"
+    ],
+    "assignment_ids": [
+      "NLE-ATHENA-PEX-S01",
+      "NLE-ATHENA-PEX-S02",
+      "NLE-ATHENA-PEX-S03",
+      "NLE-ATHENA-PEX-S04",
+      "NLE-ATHENA-PEX-S05",
+      "NLE-ATHENA-PEX-S06",
+      "NLE-ATHENA-PEX-S07",
+      "NLE-ATHENA-PEX-S08",
+      "NLE-ATHENA-PEX-S09",
+      "NLE-ATHENA-PEX-S10"
+    ],
+    "baseline_acceptance": "Medir lead time e demonstrar redução sem omitir etapas",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "technology-strategy",
+    "owners": [
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-ARCH"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-CTO"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-CTO-S01",
+      "NLE-HEPHAESTUS-CTO-S02",
+      "NLE-HEPHAESTUS-CTO-S03",
+      "NLE-HEPHAESTUS-CTO-S04",
+      "NLE-HEPHAESTUS-CTO-S05",
+      "NLE-HEPHAESTUS-CTO-S06",
+      "NLE-HEPHAESTUS-CTO-S07",
+      "NLE-HEPHAESTUS-CTO-S08",
+      "NLE-HEPHAESTUS-CTO-S09",
+      "NLE-HEPHAESTUS-CTO-S10",
+      "NLE-HEPHAESTUS-ARCH-S01",
+      "NLE-HEPHAESTUS-ARCH-S02",
+      "NLE-HEPHAESTUS-ARCH-S03",
+      "NLE-HEPHAESTUS-ARCH-S04",
+      "NLE-HEPHAESTUS-ARCH-S05",
+      "NLE-HEPHAESTUS-ARCH-S06",
+      "NLE-HEPHAESTUS-ARCH-S07",
+      "NLE-HEPHAESTUS-ARCH-S10",
+      "NLE-HEPHAESTUS-ARCH-S11"
+    ],
+    "baseline_acceptance": "Rejeitar arquitetura incompatível com restrição aprovada",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "product-discovery",
+    "owners": [
+      "NLE-HEPHAESTUS-PM",
+      "NLE-MUSES-NICHE",
+      "NLE-PROMETHEUS-BIZ"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-PM",
+      "NLE-MUSES-NICHE",
+      "NLE-PROMETHEUS-BIZ"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-PM-S01",
+      "NLE-HEPHAESTUS-PM-S02",
+      "NLE-HEPHAESTUS-PM-S03",
+      "NLE-HEPHAESTUS-PM-S04",
+      "NLE-HEPHAESTUS-PM-S05",
+      "NLE-HEPHAESTUS-PM-S06",
+      "NLE-HEPHAESTUS-PM-S07",
+      "NLE-HEPHAESTUS-PM-S08",
+      "NLE-HEPHAESTUS-PM-S09",
+      "NLE-MUSES-NICHE-S01",
+      "NLE-MUSES-NICHE-S02",
+      "NLE-MUSES-NICHE-S03",
+      "NLE-MUSES-NICHE-S04",
+      "NLE-MUSES-NICHE-S05",
+      "NLE-MUSES-NICHE-S06",
+      "NLE-MUSES-NICHE-S07",
+      "NLE-MUSES-NICHE-S08",
+      "NLE-MUSES-NICHE-S09",
+      "NLE-PROMETHEUS-BIZ-S01",
+      "NLE-PROMETHEUS-BIZ-S02",
+      "NLE-PROMETHEUS-BIZ-S03",
+      "NLE-PROMETHEUS-BIZ-S04",
+      "NLE-PROMETHEUS-BIZ-S05",
+      "NLE-PROMETHEUS-BIZ-S06",
+      "NLE-PROMETHEUS-BIZ-S08",
+      "NLE-PROMETHEUS-BIZ-S09",
+      "NLE-PROMETHEUS-BIZ-S10"
+    ],
+    "baseline_acceptance": "Não promover hipótese sem evidência suficiente",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "ux-design",
+    "owners": [
+      "NLE-HEPHAESTUS-UX"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-UX"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-UX-S01",
+      "NLE-HEPHAESTUS-UX-S02",
+      "NLE-HEPHAESTUS-UX-S04",
+      "NLE-HEPHAESTUS-UX-S05",
+      "NLE-HEPHAESTUS-UX-S06",
+      "NLE-HEPHAESTUS-UX-S07",
+      "NLE-HEPHAESTUS-UX-S08",
+      "NLE-HEPHAESTUS-UX-S09",
+      "NLE-HEPHAESTUS-UX-S10"
+    ],
+    "baseline_acceptance": "Detectar contraste, foco e navegação deficientes",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "frontend-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-FE"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-FE"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-FE-S01",
+      "NLE-HEPHAESTUS-FE-S02",
+      "NLE-HEPHAESTUS-FE-S03",
+      "NLE-HEPHAESTUS-FE-S04",
+      "NLE-HEPHAESTUS-FE-S05",
+      "NLE-HEPHAESTUS-FE-S06",
+      "NLE-HEPHAESTUS-FE-S08",
+      "NLE-HEPHAESTUS-FE-S09",
+      "NLE-HEPHAESTUS-FE-S10",
+      "NLE-HEPHAESTUS-FE-S11"
+    ],
+    "baseline_acceptance": "Testar hidratação, desempenho e XSS em fixture",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "backend-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-BE"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-BE"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-BE-S01",
+      "NLE-HEPHAESTUS-BE-S02",
+      "NLE-HEPHAESTUS-BE-S03",
+      "NLE-HEPHAESTUS-BE-S04",
+      "NLE-HEPHAESTUS-BE-S05",
+      "NLE-HEPHAESTUS-BE-S06",
+      "NLE-HEPHAESTUS-BE-S08",
+      "NLE-HEPHAESTUS-BE-S09",
+      "NLE-HEPHAESTUS-BE-S10",
+      "NLE-HEPHAESTUS-BE-S11"
+    ],
+    "baseline_acceptance": "Rejeitar acesso cruzado e duplicação de transação",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "mobile-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-MOB"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-MOB"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-MOB-S01",
+      "NLE-HEPHAESTUS-MOB-S02",
+      "NLE-HEPHAESTUS-MOB-S03",
+      "NLE-HEPHAESTUS-MOB-S04",
+      "NLE-HEPHAESTUS-MOB-S05",
+      "NLE-HEPHAESTUS-MOB-S06",
+      "NLE-HEPHAESTUS-MOB-S07",
+      "NLE-HEPHAESTUS-MOB-S08",
+      "NLE-HEPHAESTUS-MOB-S09",
+      "NLE-HEPHAESTUS-MOB-S10"
+    ],
+    "baseline_acceptance": "Validar armazenamento seguro e recuperação offline",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "api-integrations",
+    "owners": [
+      "NLE-HEPHAESTUS-INT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-INT"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-INT-S01",
+      "NLE-HEPHAESTUS-INT-S02",
+      "NLE-HEPHAESTUS-INT-S03",
+      "NLE-HEPHAESTUS-INT-S04",
+      "NLE-HEPHAESTUS-INT-S05",
+      "NLE-HEPHAESTUS-INT-S08",
+      "NLE-HEPHAESTUS-INT-S10",
+      "NLE-HEPHAESTUS-INT-S11"
+    ],
+    "baseline_acceptance": "Falhas 429/500 e webhook repetido não duplicam efeito",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "data-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-DATA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-DATA"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-DATA-S01",
+      "NLE-HEPHAESTUS-DATA-S02",
+      "NLE-HEPHAESTUS-DATA-S03",
+      "NLE-HEPHAESTUS-DATA-S04",
+      "NLE-HEPHAESTUS-DATA-S05",
+      "NLE-HEPHAESTUS-DATA-S06",
+      "NLE-HEPHAESTUS-DATA-S07",
+      "NLE-HEPHAESTUS-DATA-S08",
+      "NLE-HEPHAESTUS-DATA-S09",
+      "NLE-HEPHAESTUS-DATA-S10"
+    ],
+    "baseline_acceptance": "Verificar RLS e recuperação com dados sintéticos",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "llm-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-AI"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-AI"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-AI-S01",
+      "NLE-HEPHAESTUS-AI-S02",
+      "NLE-HEPHAESTUS-AI-S03",
+      "NLE-HEPHAESTUS-AI-S04",
+      "NLE-HEPHAESTUS-AI-S05",
+      "NLE-HEPHAESTUS-AI-S06",
+      "NLE-HEPHAESTUS-AI-S07",
+      "NLE-HEPHAESTUS-AI-S08",
+      "NLE-HEPHAESTUS-AI-S11"
+    ],
+    "baseline_acceptance": "Separar grounding, custo e resistência a injeção",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "workflow-automation",
+    "owners": [
+      "NLE-HEPHAESTUS-AUTO"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-AUTO"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-AUTO-S01",
+      "NLE-HEPHAESTUS-AUTO-S02",
+      "NLE-HEPHAESTUS-AUTO-S03",
+      "NLE-HEPHAESTUS-AUTO-S04",
+      "NLE-HEPHAESTUS-AUTO-S08",
+      "NLE-HEPHAESTUS-AUTO-S09",
+      "NLE-HEPHAESTUS-AUTO-S10"
+    ],
+    "baseline_acceptance": "Reprocessamento não duplica efeitos e segredo não vaza",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "blockchain-architecture",
+    "owners": [
+      "NLE-HEPHAESTUS-BARCH"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-BARCH"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-BARCH-S01",
+      "NLE-HEPHAESTUS-BARCH-S02",
+      "NLE-HEPHAESTUS-BARCH-S03",
+      "NLE-HEPHAESTUS-BARCH-S04",
+      "NLE-HEPHAESTUS-BARCH-S05",
+      "NLE-HEPHAESTUS-BARCH-S06",
+      "NLE-HEPHAESTUS-BARCH-S07",
+      "NLE-HEPHAESTUS-BARCH-S08",
+      "NLE-HEPHAESTUS-BARCH-S09",
+      "NLE-HEPHAESTUS-BARCH-S10",
+      "NLE-HEPHAESTUS-BARCH-S11"
+    ],
+    "baseline_acceptance": "Identificar riscos de bridge, finalidade e oráculo",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "solidity-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-EVM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-EVM"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-EVM-S01",
+      "NLE-HEPHAESTUS-EVM-S02",
+      "NLE-HEPHAESTUS-EVM-S03",
+      "NLE-HEPHAESTUS-EVM-S04",
+      "NLE-HEPHAESTUS-EVM-S05",
+      "NLE-HEPHAESTUS-EVM-S06",
+      "NLE-HEPHAESTUS-EVM-S07",
+      "NLE-HEPHAESTUS-EVM-S08",
+      "NLE-HEPHAESTUS-EVM-S09",
+      "NLE-HEPHAESTUS-EVM-S10",
+      "NLE-HEPHAESTUS-EVM-S11"
+    ],
+    "baseline_acceptance": "Reentrância e acesso indevido falham em rede local",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "non-evm-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-NEVM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-NEVM"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-NEVM-S01",
+      "NLE-HEPHAESTUS-NEVM-S02",
+      "NLE-HEPHAESTUS-NEVM-S03",
+      "NLE-HEPHAESTUS-NEVM-S04",
+      "NLE-HEPHAESTUS-NEVM-S05",
+      "NLE-HEPHAESTUS-NEVM-S06",
+      "NLE-HEPHAESTUS-NEVM-S07",
+      "NLE-HEPHAESTUS-NEVM-S08",
+      "NLE-HEPHAESTUS-NEVM-S09",
+      "NLE-HEPHAESTUS-NEVM-S10",
+      "NLE-HEPHAESTUS-NEVM-S11"
+    ],
+    "baseline_acceptance": "Rejeitar signer incorreto e violação de ownership",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "web3-integrations",
+    "owners": [
+      "NLE-HEPHAESTUS-WINT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-WINT"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-WINT-S01",
+      "NLE-HEPHAESTUS-WINT-S02",
+      "NLE-HEPHAESTUS-WINT-S03",
+      "NLE-HEPHAESTUS-WINT-S04",
+      "NLE-HEPHAESTUS-WINT-S05",
+      "NLE-HEPHAESTUS-WINT-S06",
+      "NLE-HEPHAESTUS-WINT-S07",
+      "NLE-HEPHAESTUS-WINT-S08",
+      "NLE-HEPHAESTUS-WINT-S09",
+      "NLE-HEPHAESTUS-WINT-S10"
+    ],
+    "baseline_acceptance": "Reorg e replay não corrompem estado; sem signing real",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "software-testing",
+    "owners": [
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-QA-S01",
+      "NLE-HEPHAESTUS-QA-S02",
+      "NLE-HEPHAESTUS-QA-S03",
+      "NLE-HEPHAESTUS-QA-S04",
+      "NLE-HEPHAESTUS-QA-S05",
+      "NLE-HEPHAESTUS-QA-S06",
+      "NLE-HEPHAESTUS-QA-S07",
+      "NLE-HEPHAESTUS-QA-S08",
+      "NLE-HEPHAESTUS-QA-S09",
+      "NLE-HEPHAESTUS-QA-S10"
+    ],
+    "baseline_acceptance": "Detectar mutante conhecido e teste instável",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "performance-engineering",
+    "owners": [
+      "NLE-HEPHAESTUS-PERF"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-PERF"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-PERF-S01",
+      "NLE-HEPHAESTUS-PERF-S02",
+      "NLE-HEPHAESTUS-PERF-S03",
+      "NLE-HEPHAESTUS-PERF-S04",
+      "NLE-HEPHAESTUS-PERF-S05",
+      "NLE-HEPHAESTUS-PERF-S06",
+      "NLE-HEPHAESTUS-PERF-S08",
+      "NLE-HEPHAESTUS-PERF-S09"
+    ],
+    "baseline_acceptance": "Detectar regressão com carga e ambiente controlados",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "release-infrastructure",
+    "owners": [
+      "NLE-HEPHAESTUS-DEVOPS"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-DEVOPS"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-DEVOPS-S01",
+      "NLE-HEPHAESTUS-DEVOPS-S02",
+      "NLE-HEPHAESTUS-DEVOPS-S03",
+      "NLE-HEPHAESTUS-DEVOPS-S04",
+      "NLE-HEPHAESTUS-DEVOPS-S05",
+      "NLE-HEPHAESTUS-DEVOPS-S06",
+      "NLE-HEPHAESTUS-DEVOPS-S08",
+      "NLE-HEPHAESTUS-DEVOPS-S10",
+      "NLE-HEPHAESTUS-DEVOPS-S11"
+    ],
+    "baseline_acceptance": "Artefato não verificado não pode ser implantado",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "reliability-operations",
+    "owners": [
+      "NLE-HEPHAESTUS-SRE",
+      "NLE-ATLAS-AOPS"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATLAS-AOPS",
+      "NLE-HEPHAESTUS-SRE"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-SRE-S01",
+      "NLE-HEPHAESTUS-SRE-S02",
+      "NLE-HEPHAESTUS-SRE-S04",
+      "NLE-HEPHAESTUS-SRE-S05",
+      "NLE-HEPHAESTUS-SRE-S06",
+      "NLE-HEPHAESTUS-SRE-S07",
+      "NLE-HEPHAESTUS-SRE-S08",
+      "NLE-HEPHAESTUS-SRE-S09",
+      "NLE-HEPHAESTUS-SRE-S10",
+      "NLE-ATLAS-AOPS-S01",
+      "NLE-ATLAS-AOPS-S02",
+      "NLE-ATLAS-AOPS-S03",
+      "NLE-ATLAS-AOPS-S04",
+      "NLE-ATLAS-AOPS-S05",
+      "NLE-ATLAS-AOPS-S07",
+      "NLE-ATLAS-AOPS-S08",
+      "NLE-ATLAS-AOPS-S09",
+      "NLE-ATLAS-AOPS-S11"
+    ],
+    "baseline_acceptance": "Injetar falha e recuperar sem execução duplicada",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "engineering-governance",
+    "owners": [
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-REL-S01",
+      "NLE-HEPHAESTUS-REL-S02",
+      "NLE-HEPHAESTUS-REL-S03",
+      "NLE-HEPHAESTUS-REL-S04",
+      "NLE-HEPHAESTUS-REL-S10"
+    ],
+    "baseline_acceptance": "HEAD divergente marca contexto STALE",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "sales-strategy",
+    "owners": [
+      "NLE-HERMES-CRO"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HERMES-CRO"
+    ],
+    "assignment_ids": [
+      "NLE-HERMES-CRO-S01",
+      "NLE-HERMES-CRO-S02",
+      "NLE-HERMES-CRO-S03",
+      "NLE-HERMES-CRO-S04",
+      "NLE-HERMES-CRO-S05",
+      "NLE-HERMES-CRO-S06",
+      "NLE-HERMES-CRO-S08",
+      "NLE-HERMES-CRO-S09",
+      "NLE-HERMES-CRO-S10"
+    ],
+    "baseline_acceptance": "Reconciliação de previsão sem inflar receita",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "b2b-prospecting",
+    "owners": [
+      "NLE-HERMES-PROS",
+      "NLE-HERMES-SI"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HERMES-PROS",
+      "NLE-HERMES-SI"
+    ],
+    "assignment_ids": [
+      "NLE-HERMES-PROS-S01",
+      "NLE-HERMES-PROS-S02",
+      "NLE-HERMES-PROS-S03",
+      "NLE-HERMES-PROS-S04",
+      "NLE-HERMES-PROS-S05",
+      "NLE-HERMES-PROS-S06",
+      "NLE-HERMES-PROS-S08",
+      "NLE-HERMES-PROS-S10",
+      "NLE-HERMES-SI-S01",
+      "NLE-HERMES-SI-S02",
+      "NLE-HERMES-SI-S03",
+      "NLE-HERMES-SI-S04",
+      "NLE-HERMES-SI-S05",
+      "NLE-HERMES-SI-S08",
+      "NLE-HERMES-SI-S09",
+      "NLE-HERMES-SI-S10"
+    ],
+    "baseline_acceptance": "Deduplicar e excluir dados não autorizados",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "sales-outreach",
+    "owners": [
+      "NLE-HERMES-OUT",
+      "NLE-HERMES-IN"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HERMES-IN",
+      "NLE-HERMES-OUT"
+    ],
+    "assignment_ids": [
+      "NLE-HERMES-OUT-S01",
+      "NLE-HERMES-OUT-S02",
+      "NLE-HERMES-OUT-S03",
+      "NLE-HERMES-OUT-S04",
+      "NLE-HERMES-OUT-S05",
+      "NLE-HERMES-OUT-S06",
+      "NLE-HERMES-OUT-S07",
+      "NLE-HERMES-OUT-S08",
+      "NLE-HERMES-OUT-S10",
+      "NLE-HERMES-IN-S01",
+      "NLE-HERMES-IN-S02",
+      "NLE-HERMES-IN-S03",
+      "NLE-HERMES-IN-S04",
+      "NLE-HERMES-IN-S05",
+      "NLE-HERMES-IN-S06",
+      "NLE-HERMES-IN-S07",
+      "NLE-HERMES-IN-S08",
+      "NLE-HERMES-IN-S09",
+      "NLE-HERMES-IN-S10"
+    ],
+    "baseline_acceptance": "Opt-out bloqueia novo contato; somente drafts",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "technical-presales",
+    "owners": [
+      "NLE-HERMES-SE"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HERMES-SE"
+    ],
+    "assignment_ids": [
+      "NLE-HERMES-SE-S01",
+      "NLE-HERMES-SE-S02",
+      "NLE-HERMES-SE-S03",
+      "NLE-HERMES-SE-S04",
+      "NLE-HERMES-SE-S05",
+      "NLE-HERMES-SE-S06",
+      "NLE-HERMES-SE-S07",
+      "NLE-HERMES-SE-S08",
+      "NLE-HERMES-SE-S09",
+      "NLE-HERMES-SE-S10"
+    ],
+    "baseline_acceptance": "Detectar promessa inviável e risco omitido",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "consultative-sales",
+    "owners": [
+      "NLE-HERMES-AE",
+      "NLE-HERMES-PART"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HERMES-AE",
+      "NLE-HERMES-PART"
+    ],
+    "assignment_ids": [
+      "NLE-HERMES-AE-S01",
+      "NLE-HERMES-AE-S02",
+      "NLE-HERMES-AE-S03",
+      "NLE-HERMES-AE-S04",
+      "NLE-HERMES-AE-S05",
+      "NLE-HERMES-AE-S06",
+      "NLE-HERMES-AE-S07",
+      "NLE-HERMES-AE-S08",
+      "NLE-HERMES-AE-S09",
+      "NLE-HERMES-AE-S10",
+      "NLE-HERMES-PART-S01",
+      "NLE-HERMES-PART-S02",
+      "NLE-HERMES-PART-S03",
+      "NLE-HERMES-PART-S04",
+      "NLE-HERMES-PART-S05",
+      "NLE-HERMES-PART-S06",
+      "NLE-HERMES-PART-S07",
+      "NLE-HERMES-PART-S08",
+      "NLE-HERMES-PART-S09",
+      "NLE-HERMES-PART-S10"
+    ],
+    "baseline_acceptance": "Identificar conflito e obrigação não aprovada",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "marketing-strategy",
+    "owners": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-BRAND"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-BRAND",
+      "NLE-APOLLO-CMO"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-CMO-S01",
+      "NLE-APOLLO-CMO-S02",
+      "NLE-APOLLO-CMO-S03",
+      "NLE-APOLLO-CMO-S04",
+      "NLE-APOLLO-CMO-S06",
+      "NLE-APOLLO-CMO-S07",
+      "NLE-APOLLO-CMO-S09",
+      "NLE-APOLLO-CMO-S10",
+      "NLE-APOLLO-BRAND-S01",
+      "NLE-APOLLO-BRAND-S02",
+      "NLE-APOLLO-BRAND-S03",
+      "NLE-APOLLO-BRAND-S04",
+      "NLE-APOLLO-BRAND-S05",
+      "NLE-APOLLO-BRAND-S06",
+      "NLE-APOLLO-BRAND-S07",
+      "NLE-APOLLO-BRAND-S08",
+      "NLE-APOLLO-BRAND-S09",
+      "NLE-APOLLO-BRAND-S10"
+    ],
+    "baseline_acceptance": "Validar consistência de marca e alegações",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "content-strategy",
+    "owners": [
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-COPY"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-COPY"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-CONTENT-S01",
+      "NLE-APOLLO-CONTENT-S02",
+      "NLE-APOLLO-CONTENT-S03",
+      "NLE-APOLLO-CONTENT-S04",
+      "NLE-APOLLO-CONTENT-S05",
+      "NLE-APOLLO-CONTENT-S06",
+      "NLE-APOLLO-CONTENT-S07",
+      "NLE-APOLLO-CONTENT-S08",
+      "NLE-APOLLO-CONTENT-S09",
+      "NLE-APOLLO-CONTENT-S10",
+      "NLE-APOLLO-COPY-S01",
+      "NLE-APOLLO-COPY-S02",
+      "NLE-APOLLO-COPY-S03",
+      "NLE-APOLLO-COPY-S04",
+      "NLE-APOLLO-COPY-S05",
+      "NLE-APOLLO-COPY-S06",
+      "NLE-APOLLO-COPY-S07",
+      "NLE-APOLLO-COPY-S08",
+      "NLE-APOLLO-COPY-S09",
+      "NLE-APOLLO-COPY-S10",
+      "NLE-APOLLO-COPY-S11"
+    ],
+    "baseline_acceptance": "Rejeitar prova social inventada e promessa falsa",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "creative-production",
+    "owners": [
+      "NLE-APOLLO-DES",
+      "NLE-APOLLO-VID",
+      "NLE-MUSES-ILL"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-DES",
+      "NLE-APOLLO-VID",
+      "NLE-MUSES-ILL"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-DES-S01",
+      "NLE-APOLLO-DES-S02",
+      "NLE-APOLLO-DES-S03",
+      "NLE-APOLLO-DES-S04",
+      "NLE-APOLLO-DES-S05",
+      "NLE-APOLLO-DES-S06",
+      "NLE-APOLLO-DES-S07",
+      "NLE-APOLLO-DES-S08",
+      "NLE-APOLLO-DES-S10",
+      "NLE-APOLLO-DES-S11",
+      "NLE-APOLLO-VID-S01",
+      "NLE-APOLLO-VID-S02",
+      "NLE-APOLLO-VID-S03",
+      "NLE-APOLLO-VID-S04",
+      "NLE-APOLLO-VID-S05",
+      "NLE-APOLLO-VID-S06",
+      "NLE-APOLLO-VID-S07",
+      "NLE-APOLLO-VID-S08",
+      "NLE-APOLLO-VID-S09",
+      "NLE-APOLLO-VID-S10",
+      "NLE-APOLLO-VID-S11",
+      "NLE-MUSES-ILL-S01",
+      "NLE-MUSES-ILL-S02",
+      "NLE-MUSES-ILL-S03",
+      "NLE-MUSES-ILL-S04",
+      "NLE-MUSES-ILL-S05",
+      "NLE-MUSES-ILL-S06",
+      "NLE-MUSES-ILL-S07",
+      "NLE-MUSES-ILL-S08",
+      "NLE-MUSES-ILL-S09",
+      "NLE-MUSES-ILL-S11"
+    ],
+    "baseline_acceptance": "Detectar overflow, artefato e ativo sem licença",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "social-governance",
+    "owners": [
+      "NLE-APOLLO-SOC"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-SOC"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-SOC-S01",
+      "NLE-APOLLO-SOC-S02",
+      "NLE-APOLLO-SOC-S03",
+      "NLE-APOLLO-SOC-S04",
+      "NLE-APOLLO-SOC-S05",
+      "NLE-APOLLO-SOC-S06",
+      "NLE-APOLLO-SOC-S07",
+      "NLE-APOLLO-SOC-S08",
+      "NLE-APOLLO-SOC-S09",
+      "NLE-APOLLO-SOC-S10"
+    ],
+    "baseline_acceptance": "Bloquear publicação não autorizada e repetitiva",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "instagram-content",
+    "owners": [
+      "NLE-APOLLO-IG"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-IG"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-IG-S01",
+      "NLE-APOLLO-IG-S02",
+      "NLE-APOLLO-IG-S03",
+      "NLE-APOLLO-IG-S04",
+      "NLE-APOLLO-IG-S05",
+      "NLE-APOLLO-IG-S06",
+      "NLE-APOLLO-IG-S07",
+      "NLE-APOLLO-IG-S08",
+      "NLE-APOLLO-IG-S09",
+      "NLE-APOLLO-IG-S10",
+      "NLE-APOLLO-IG-S11"
+    ],
+    "baseline_acceptance": "Validar formato e consentimento; mock de API",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "facebook-content",
+    "owners": [
+      "NLE-APOLLO-FB"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-FB"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-FB-S01",
+      "NLE-APOLLO-FB-S02",
+      "NLE-APOLLO-FB-S03",
+      "NLE-APOLLO-FB-S04",
+      "NLE-APOLLO-FB-S05",
+      "NLE-APOLLO-FB-S06",
+      "NLE-APOLLO-FB-S07",
+      "NLE-APOLLO-FB-S08",
+      "NLE-APOLLO-FB-S09",
+      "NLE-APOLLO-FB-S10",
+      "NLE-APOLLO-FB-S11"
+    ],
+    "baseline_acceptance": "Bloquear grupos não autorizados e spam",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "tiktok-content",
+    "owners": [
+      "NLE-APOLLO-TT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-TT"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-TT-S01",
+      "NLE-APOLLO-TT-S02",
+      "NLE-APOLLO-TT-S03",
+      "NLE-APOLLO-TT-S04",
+      "NLE-APOLLO-TT-S05",
+      "NLE-APOLLO-TT-S06",
+      "NLE-APOLLO-TT-S07",
+      "NLE-APOLLO-TT-S08",
+      "NLE-APOLLO-TT-S09",
+      "NLE-APOLLO-TT-S10",
+      "NLE-APOLLO-TT-S11"
+    ],
+    "baseline_acceptance": "Validar política, formato e publicação simulada",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "pinterest-content",
+    "owners": [
+      "NLE-APOLLO-PIN"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-PIN"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-PIN-S01",
+      "NLE-APOLLO-PIN-S02",
+      "NLE-APOLLO-PIN-S03",
+      "NLE-APOLLO-PIN-S04",
+      "NLE-APOLLO-PIN-S05",
+      "NLE-APOLLO-PIN-S06",
+      "NLE-APOLLO-PIN-S07",
+      "NLE-APOLLO-PIN-S08",
+      "NLE-APOLLO-PIN-S09",
+      "NLE-APOLLO-PIN-S10",
+      "NLE-APOLLO-PIN-S11"
+    ],
+    "baseline_acceptance": "Detectar links quebrados e conteúdo duplicado",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "youtube-content",
+    "owners": [
+      "NLE-APOLLO-YT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-YT"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-YT-S01",
+      "NLE-APOLLO-YT-S02",
+      "NLE-APOLLO-YT-S03",
+      "NLE-APOLLO-YT-S04",
+      "NLE-APOLLO-YT-S05",
+      "NLE-APOLLO-YT-S06",
+      "NLE-APOLLO-YT-S07",
+      "NLE-APOLLO-YT-S08",
+      "NLE-APOLLO-YT-S09",
+      "NLE-APOLLO-YT-S10",
+      "NLE-APOLLO-YT-S11"
+    ],
+    "baseline_acceptance": "Rejeitar alegações enganosas e direitos ausentes",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "linkedin-content",
+    "owners": [
+      "NLE-APOLLO-LI"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-LI"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-LI-S01",
+      "NLE-APOLLO-LI-S02",
+      "NLE-APOLLO-LI-S03",
+      "NLE-APOLLO-LI-S04",
+      "NLE-APOLLO-LI-S05",
+      "NLE-APOLLO-LI-S06",
+      "NLE-APOLLO-LI-S07",
+      "NLE-APOLLO-LI-S08",
+      "NLE-APOLLO-LI-S09",
+      "NLE-APOLLO-LI-S10"
+    ],
+    "baseline_acceptance": "Bloquear coleta indevida e automação não autorizada",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "meta-ads-analysis",
+    "owners": [
+      "NLE-APOLLO-META"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-META"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-META-S01",
+      "NLE-APOLLO-META-S02",
+      "NLE-APOLLO-META-S03",
+      "NLE-APOLLO-META-S04",
+      "NLE-APOLLO-META-S05",
+      "NLE-APOLLO-META-S06",
+      "NLE-APOLLO-META-S07",
+      "NLE-APOLLO-META-S08",
+      "NLE-APOLLO-META-S09",
+      "NLE-APOLLO-META-S10",
+      "NLE-APOLLO-META-S11",
+      "NLE-APOLLO-META-S12",
+      "NLE-APOLLO-META-S13"
+    ],
+    "baseline_acceptance": "Com orçamento zero, nenhuma alteração em campanha real",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "google-ads-analysis",
+    "owners": [
+      "NLE-APOLLO-GOOG"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-GOOG"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-GOOG-S01",
+      "NLE-APOLLO-GOOG-S02",
+      "NLE-APOLLO-GOOG-S03",
+      "NLE-APOLLO-GOOG-S04",
+      "NLE-APOLLO-GOOG-S05",
+      "NLE-APOLLO-GOOG-S06",
+      "NLE-APOLLO-GOOG-S07",
+      "NLE-APOLLO-GOOG-S08",
+      "NLE-APOLLO-GOOG-S09",
+      "NLE-APOLLO-GOOG-S10",
+      "NLE-APOLLO-GOOG-S11",
+      "NLE-APOLLO-GOOG-S12"
+    ],
+    "baseline_acceptance": "Detectar erro de atribuição; bloquear mutações",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "emerging-paid-media",
+    "owners": [
+      "NLE-APOLLO-PAID"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-PAID"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-PAID-S01",
+      "NLE-APOLLO-PAID-S02",
+      "NLE-APOLLO-PAID-S03",
+      "NLE-APOLLO-PAID-S04",
+      "NLE-APOLLO-PAID-S05",
+      "NLE-APOLLO-PAID-S06",
+      "NLE-APOLLO-PAID-S07",
+      "NLE-APOLLO-PAID-S08",
+      "NLE-APOLLO-PAID-S09",
+      "NLE-APOLLO-PAID-S10"
+    ],
+    "baseline_acceptance": "Bloquear ativação e despesas sem aprovação",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "search-optimization",
+    "owners": [
+      "NLE-APOLLO-SEO"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-SEO"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-SEO-S01",
+      "NLE-APOLLO-SEO-S02",
+      "NLE-APOLLO-SEO-S03",
+      "NLE-APOLLO-SEO-S04",
+      "NLE-APOLLO-SEO-S05",
+      "NLE-APOLLO-SEO-S06",
+      "NLE-APOLLO-SEO-S07",
+      "NLE-APOLLO-SEO-S08",
+      "NLE-APOLLO-SEO-S09",
+      "NLE-APOLLO-SEO-S10",
+      "NLE-APOLLO-SEO-S11"
+    ],
+    "baseline_acceptance": "Identificar canonical inválido e página não indexável",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "crm-lifecycle",
+    "owners": [
+      "NLE-APOLLO-CRM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-CRM"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-CRM-S01",
+      "NLE-APOLLO-CRM-S02",
+      "NLE-APOLLO-CRM-S03",
+      "NLE-APOLLO-CRM-S04",
+      "NLE-APOLLO-CRM-S05",
+      "NLE-APOLLO-CRM-S06",
+      "NLE-APOLLO-CRM-S07",
+      "NLE-APOLLO-CRM-S09",
+      "NLE-APOLLO-CRM-S10"
+    ],
+    "baseline_acceptance": "Opt-out, consentimento e deduplicação testados",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "conversion-optimization",
+    "owners": [
+      "NLE-APOLLO-CRO"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-CRO"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-CRO-S01",
+      "NLE-APOLLO-CRO-S02",
+      "NLE-APOLLO-CRO-S05",
+      "NLE-APOLLO-CRO-S06",
+      "NLE-APOLLO-CRO-S07",
+      "NLE-APOLLO-CRO-S09",
+      "NLE-APOLLO-CRO-S10",
+      "NLE-APOLLO-CRO-S11"
+    ],
+    "baseline_acceptance": "Rejeitar inferência sem amostra ou dark pattern",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "marketing-measurement",
+    "owners": [
+      "NLE-APOLLO-MKTDA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-MKTDA"
+    ],
+    "assignment_ids": [
+      "NLE-APOLLO-MKTDA-S01",
+      "NLE-APOLLO-MKTDA-S02",
+      "NLE-APOLLO-MKTDA-S03",
+      "NLE-APOLLO-MKTDA-S04",
+      "NLE-APOLLO-MKTDA-S05",
+      "NLE-APOLLO-MKTDA-S07",
+      "NLE-APOLLO-MKTDA-S08",
+      "NLE-APOLLO-MKTDA-S09",
+      "NLE-APOLLO-MKTDA-S10"
+    ],
+    "baseline_acceptance": "Reconciliar eventos duplicados sem inflar ROAS",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "product-offer",
+    "owners": [
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-OFFER"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-OFFER"
+    ],
+    "assignment_ids": [
+      "NLE-MUSES-CDPO-S01",
+      "NLE-MUSES-CDPO-S02",
+      "NLE-MUSES-CDPO-S03",
+      "NLE-MUSES-CDPO-S05",
+      "NLE-MUSES-CDPO-S06",
+      "NLE-MUSES-CDPO-S07",
+      "NLE-MUSES-CDPO-S08",
+      "NLE-MUSES-CDPO-S09",
+      "NLE-MUSES-OFFER-S01",
+      "NLE-MUSES-OFFER-S02",
+      "NLE-MUSES-OFFER-S03",
+      "NLE-MUSES-OFFER-S04",
+      "NLE-MUSES-OFFER-S05",
+      "NLE-MUSES-OFFER-S06",
+      "NLE-MUSES-OFFER-S07",
+      "NLE-MUSES-OFFER-S08",
+      "NLE-MUSES-OFFER-S09",
+      "NLE-MUSES-OFFER-S11"
+    ],
+    "baseline_acceptance": "Reconciliar taxas, preço e condições sem dark pattern",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "longform-writing",
+    "owners": [
+      "NLE-MUSES-AUTHOR",
+      "NLE-MUSES-EDITOR"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-MUSES-AUTHOR",
+      "NLE-MUSES-EDITOR"
+    ],
+    "assignment_ids": [
+      "NLE-MUSES-AUTHOR-S01",
+      "NLE-MUSES-AUTHOR-S02",
+      "NLE-MUSES-AUTHOR-S03",
+      "NLE-MUSES-AUTHOR-S04",
+      "NLE-MUSES-AUTHOR-S05",
+      "NLE-MUSES-AUTHOR-S06",
+      "NLE-MUSES-AUTHOR-S07",
+      "NLE-MUSES-AUTHOR-S08",
+      "NLE-MUSES-AUTHOR-S09",
+      "NLE-MUSES-AUTHOR-S10",
+      "NLE-MUSES-EDITOR-S01",
+      "NLE-MUSES-EDITOR-S02",
+      "NLE-MUSES-EDITOR-S03",
+      "NLE-MUSES-EDITOR-S04",
+      "NLE-MUSES-EDITOR-S05",
+      "NLE-MUSES-EDITOR-S06",
+      "NLE-MUSES-EDITOR-S07",
+      "NLE-MUSES-EDITOR-S08",
+      "NLE-MUSES-EDITOR-S09"
+    ],
+    "baseline_acceptance": "Detectar citação falsa e conteúdo sem direitos",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "instructional-design",
+    "owners": [
+      "NLE-MUSES-ID"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-MUSES-ID"
+    ],
+    "assignment_ids": [
+      "NLE-MUSES-ID-S01",
+      "NLE-MUSES-ID-S02",
+      "NLE-MUSES-ID-S03",
+      "NLE-MUSES-ID-S04",
+      "NLE-MUSES-ID-S05",
+      "NLE-MUSES-ID-S06",
+      "NLE-MUSES-ID-S07",
+      "NLE-MUSES-ID-S08",
+      "NLE-MUSES-ID-S10",
+      "NLE-MUSES-ID-S11"
+    ],
+    "baseline_acceptance": "Testar alinhamento de objetivos e avaliação",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "editorial-production",
+    "owners": [
+      "NLE-MUSES-EDES"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-MUSES-EDES"
+    ],
+    "assignment_ids": [
+      "NLE-MUSES-EDES-S01",
+      "NLE-MUSES-EDES-S02",
+      "NLE-MUSES-EDES-S03",
+      "NLE-MUSES-EDES-S04",
+      "NLE-MUSES-EDES-S05",
+      "NLE-MUSES-EDES-S06",
+      "NLE-MUSES-EDES-S07",
+      "NLE-MUSES-EDES-S09",
+      "NLE-MUSES-EDES-S10",
+      "NLE-MUSES-EDES-S11"
+    ],
+    "baseline_acceptance": "Validar fontes, paginação, overflow e acessibilidade",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "digital-commerce",
+    "owners": [
+      "NLE-MUSES-ECOM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-MUSES-ECOM"
+    ],
+    "assignment_ids": [
+      "NLE-MUSES-ECOM-S01",
+      "NLE-MUSES-ECOM-S02",
+      "NLE-MUSES-ECOM-S03",
+      "NLE-MUSES-ECOM-S04",
+      "NLE-MUSES-ECOM-S05",
+      "NLE-MUSES-ECOM-S06",
+      "NLE-MUSES-ECOM-S07",
+      "NLE-MUSES-ECOM-S08",
+      "NLE-MUSES-ECOM-S09",
+      "NLE-MUSES-ECOM-S10",
+      "NLE-MUSES-ECOM-S12"
+    ],
+    "baseline_acceptance": "Webhook repetido não duplica compra; zero cobrança real",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "digital-product-testing",
+    "owners": [
+      "NLE-MUSES-DQA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-MUSES-DQA"
+    ],
+    "assignment_ids": [
+      "NLE-MUSES-DQA-S01",
+      "NLE-MUSES-DQA-S02",
+      "NLE-MUSES-DQA-S03",
+      "NLE-MUSES-DQA-S04",
+      "NLE-MUSES-DQA-S06",
+      "NLE-MUSES-DQA-S07",
+      "NLE-MUSES-DQA-S08",
+      "NLE-MUSES-DQA-S09",
+      "NLE-MUSES-DQA-S10",
+      "NLE-MUSES-DQA-S11"
+    ],
+    "baseline_acceptance": "Detectar PDF corrompido, preço divergente e link inválido",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "corporate-finance",
+    "owners": [
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-TREAS"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-TREAS"
+    ],
+    "assignment_ids": [
+      "NLE-PLUTUS-CFO-S01",
+      "NLE-PLUTUS-CFO-S02",
+      "NLE-PLUTUS-CFO-S03",
+      "NLE-PLUTUS-CFO-S04",
+      "NLE-PLUTUS-CFO-S05",
+      "NLE-PLUTUS-CFO-S06",
+      "NLE-PLUTUS-CFO-S07",
+      "NLE-PLUTUS-CFO-S08",
+      "NLE-PLUTUS-CFO-S09",
+      "NLE-PLUTUS-CFO-S10",
+      "NLE-PLUTUS-TREAS-S01",
+      "NLE-PLUTUS-TREAS-S02",
+      "NLE-PLUTUS-TREAS-S03",
+      "NLE-PLUTUS-TREAS-S04",
+      "NLE-PLUTUS-TREAS-S05",
+      "NLE-PLUTUS-TREAS-S06",
+      "NLE-PLUTUS-TREAS-S07",
+      "NLE-PLUTUS-TREAS-S08",
+      "NLE-PLUTUS-TREAS-S09",
+      "NLE-PLUTUS-TREAS-S10"
+    ],
+    "baseline_acceptance": "Reconciliação e bloqueio de pagamento não autorizado",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "financial-controllership",
+    "owners": [
+      "NLE-PLUTUS-CTRL"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PLUTUS-CTRL"
+    ],
+    "assignment_ids": [
+      "NLE-PLUTUS-CTRL-S01",
+      "NLE-PLUTUS-CTRL-S02",
+      "NLE-PLUTUS-CTRL-S03",
+      "NLE-PLUTUS-CTRL-S04",
+      "NLE-PLUTUS-CTRL-S05",
+      "NLE-PLUTUS-CTRL-S06",
+      "NLE-PLUTUS-CTRL-S07",
+      "NLE-PLUTUS-CTRL-S08",
+      "NLE-PLUTUS-CTRL-S09",
+      "NLE-PLUTUS-CTRL-S10"
+    ],
+    "baseline_acceptance": "Detectar duplicidade e inconsistência de competência",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "financial-planning",
+    "owners": [
+      "NLE-PLUTUS-FPA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PLUTUS-FPA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "assignment_ids": [
+      "NLE-PLUTUS-FPA-S01",
+      "NLE-PLUTUS-FPA-S02",
+      "NLE-PLUTUS-FPA-S03",
+      "NLE-PLUTUS-FPA-S04",
+      "NLE-PLUTUS-FPA-S05",
+      "NLE-PLUTUS-FPA-S06",
+      "NLE-PLUTUS-FPA-S07",
+      "NLE-PLUTUS-FPA-S08",
+      "NLE-PLUTUS-FPA-S09",
+      "NLE-PLUTUS-FPA-S10",
+      "NLE-PLUTUS-UNIT-S05",
+      "NLE-PLUTUS-UNIT-S06",
+      "NLE-PLUTUS-UNIT-S07",
+      "NLE-PLUTUS-UNIT-S08",
+      "NLE-PLUTUS-UNIT-S09",
+      "NLE-PLUTUS-UNIT-S10"
+    ],
+    "baseline_acceptance": "Recalcular fórmula e cenários com dados sintéticos",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "ai-finops",
+    "owners": [
+      "NLE-PLUTUS-FINOPS"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PLUTUS-FINOPS"
+    ],
+    "assignment_ids": [
+      "NLE-PLUTUS-FINOPS-S01",
+      "NLE-PLUTUS-FINOPS-S05",
+      "NLE-PLUTUS-FINOPS-S06",
+      "NLE-PLUTUS-FINOPS-S07",
+      "NLE-PLUTUS-FINOPS-S09",
+      "NLE-PLUTUS-FINOPS-S10"
+    ],
+    "baseline_acceptance": "Quota esgotada bloqueia fallback pago",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "investment-research",
+    "owners": [
+      "NLE-POSEIDON-CIO"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-CIO"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-CIO-S01",
+      "NLE-POSEIDON-CIO-S02",
+      "NLE-POSEIDON-CIO-S03",
+      "NLE-POSEIDON-CIO-S04",
+      "NLE-POSEIDON-CIO-S06",
+      "NLE-POSEIDON-CIO-S07",
+      "NLE-POSEIDON-CIO-S08",
+      "NLE-POSEIDON-CIO-S09",
+      "NLE-POSEIDON-CIO-S10"
+    ],
+    "baseline_acceptance": "Rejeitar recomendação sem dados e sem benchmark",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "crypto-research",
+    "owners": [
+      "NLE-POSEIDON-CRYPTO",
+      "NLE-POSEIDON-CHAIN",
+      "NLE-POSEIDON-DEFI"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-CHAIN",
+      "NLE-POSEIDON-CRYPTO",
+      "NLE-POSEIDON-DEFI"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-CRYPTO-S01",
+      "NLE-POSEIDON-CRYPTO-S02",
+      "NLE-POSEIDON-CRYPTO-S03",
+      "NLE-POSEIDON-CRYPTO-S04",
+      "NLE-POSEIDON-CRYPTO-S05",
+      "NLE-POSEIDON-CRYPTO-S06",
+      "NLE-POSEIDON-CRYPTO-S07",
+      "NLE-POSEIDON-CRYPTO-S08",
+      "NLE-POSEIDON-CRYPTO-S09",
+      "NLE-POSEIDON-CRYPTO-S10",
+      "NLE-POSEIDON-CRYPTO-S11",
+      "NLE-POSEIDON-CHAIN-S01",
+      "NLE-POSEIDON-CHAIN-S02",
+      "NLE-POSEIDON-CHAIN-S03",
+      "NLE-POSEIDON-CHAIN-S04",
+      "NLE-POSEIDON-CHAIN-S05",
+      "NLE-POSEIDON-CHAIN-S06",
+      "NLE-POSEIDON-CHAIN-S07",
+      "NLE-POSEIDON-CHAIN-S08",
+      "NLE-POSEIDON-CHAIN-S09",
+      "NLE-POSEIDON-CHAIN-S10",
+      "NLE-POSEIDON-CHAIN-S11",
+      "NLE-POSEIDON-DEFI-S01",
+      "NLE-POSEIDON-DEFI-S02",
+      "NLE-POSEIDON-DEFI-S03",
+      "NLE-POSEIDON-DEFI-S04",
+      "NLE-POSEIDON-DEFI-S05",
+      "NLE-POSEIDON-DEFI-S06",
+      "NLE-POSEIDON-DEFI-S07",
+      "NLE-POSEIDON-DEFI-S08",
+      "NLE-POSEIDON-DEFI-S09",
+      "NLE-POSEIDON-DEFI-S10",
+      "NLE-POSEIDON-DEFI-S11"
+    ],
+    "baseline_acceptance": "Detectar dados antigos, token incorreto e risco de protocolo",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "quantitative-research",
+    "owners": [
+      "NLE-POSEIDON-QR",
+      "NLE-POSEIDON-QD"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-QD",
+      "NLE-POSEIDON-QR"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-QR-S01",
+      "NLE-POSEIDON-QR-S02",
+      "NLE-POSEIDON-QR-S03",
+      "NLE-POSEIDON-QR-S04",
+      "NLE-POSEIDON-QR-S05",
+      "NLE-POSEIDON-QR-S06",
+      "NLE-POSEIDON-QR-S07",
+      "NLE-POSEIDON-QR-S08",
+      "NLE-POSEIDON-QR-S09",
+      "NLE-POSEIDON-QR-S10",
+      "NLE-POSEIDON-QD-S01",
+      "NLE-POSEIDON-QD-S02",
+      "NLE-POSEIDON-QD-S03",
+      "NLE-POSEIDON-QD-S04",
+      "NLE-POSEIDON-QD-S05",
+      "NLE-POSEIDON-QD-S06",
+      "NLE-POSEIDON-QD-S07",
+      "NLE-POSEIDON-QD-S08",
+      "NLE-POSEIDON-QD-S09",
+      "NLE-POSEIDON-QD-S10",
+      "NLE-POSEIDON-QD-S11"
+    ],
+    "baseline_acceptance": "Detectar look-ahead e survivorship em fixture",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "crypto-paper-trading",
+    "owners": [
+      "NLE-POSEIDON-CT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-CT"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-CT-S01",
+      "NLE-POSEIDON-CT-S02",
+      "NLE-POSEIDON-CT-S03",
+      "NLE-POSEIDON-CT-S04",
+      "NLE-POSEIDON-CT-S05",
+      "NLE-POSEIDON-CT-S06",
+      "NLE-POSEIDON-CT-S07",
+      "NLE-POSEIDON-CT-S08",
+      "NLE-POSEIDON-CT-S09",
+      "NLE-POSEIDON-CT-S10",
+      "NLE-POSEIDON-CT-S11"
+    ],
+    "baseline_acceptance": "Bloquear ordem real e modelar spread/slippage",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "forex-paper-trading",
+    "owners": [
+      "NLE-POSEIDON-FX"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-FX"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-FX-S01",
+      "NLE-POSEIDON-FX-S02",
+      "NLE-POSEIDON-FX-S03",
+      "NLE-POSEIDON-FX-S04",
+      "NLE-POSEIDON-FX-S05",
+      "NLE-POSEIDON-FX-S06",
+      "NLE-POSEIDON-FX-S07",
+      "NLE-POSEIDON-FX-S08",
+      "NLE-POSEIDON-FX-S09",
+      "NLE-POSEIDON-FX-S10",
+      "NLE-POSEIDON-FX-S11"
+    ],
+    "baseline_acceptance": "Calcular pip e rejeitar alavancagem fora do limite",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "equity-research",
+    "owners": [
+      "NLE-POSEIDON-EQ"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-EQ"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-EQ-S01",
+      "NLE-POSEIDON-EQ-S02",
+      "NLE-POSEIDON-EQ-S03",
+      "NLE-POSEIDON-EQ-S04",
+      "NLE-POSEIDON-EQ-S05",
+      "NLE-POSEIDON-EQ-S06",
+      "NLE-POSEIDON-EQ-S07",
+      "NLE-POSEIDON-EQ-S08",
+      "NLE-POSEIDON-EQ-S09",
+      "NLE-POSEIDON-EQ-S10"
+    ],
+    "baseline_acceptance": "Reconciliar demonstrações e cenário adverso",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "derivatives-research",
+    "owners": [
+      "NLE-POSEIDON-DERIV"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-DERIV"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-DERIV-S01",
+      "NLE-POSEIDON-DERIV-S02",
+      "NLE-POSEIDON-DERIV-S03",
+      "NLE-POSEIDON-DERIV-S04",
+      "NLE-POSEIDON-DERIV-S05",
+      "NLE-POSEIDON-DERIV-S06",
+      "NLE-POSEIDON-DERIV-S07",
+      "NLE-POSEIDON-DERIV-S08",
+      "NLE-POSEIDON-DERIV-S09",
+      "NLE-POSEIDON-DERIV-S10",
+      "NLE-POSEIDON-DERIV-S11"
+    ],
+    "baseline_acceptance": "Validar limites e paridade em fixture",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "macro-research",
+    "owners": [
+      "NLE-POSEIDON-MACRO",
+      "NLE-POSEIDON-SENT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-MACRO",
+      "NLE-POSEIDON-SENT"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-MACRO-S01",
+      "NLE-POSEIDON-MACRO-S02",
+      "NLE-POSEIDON-MACRO-S03",
+      "NLE-POSEIDON-MACRO-S04",
+      "NLE-POSEIDON-MACRO-S05",
+      "NLE-POSEIDON-MACRO-S06",
+      "NLE-POSEIDON-MACRO-S07",
+      "NLE-POSEIDON-MACRO-S08",
+      "NLE-POSEIDON-MACRO-S09",
+      "NLE-POSEIDON-MACRO-S10",
+      "NLE-POSEIDON-MACRO-S11",
+      "NLE-POSEIDON-SENT-S01",
+      "NLE-POSEIDON-SENT-S02",
+      "NLE-POSEIDON-SENT-S03",
+      "NLE-POSEIDON-SENT-S04",
+      "NLE-POSEIDON-SENT-S05",
+      "NLE-POSEIDON-SENT-S06",
+      "NLE-POSEIDON-SENT-S07",
+      "NLE-POSEIDON-SENT-S08",
+      "NLE-POSEIDON-SENT-S09",
+      "NLE-POSEIDON-SENT-S10"
+    ],
+    "baseline_acceptance": "Detectar fonte falsa e viés temporal",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "portfolio-risk",
+    "owners": [
+      "NLE-POSEIDON-RISK"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-RISK"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-RISK-S01",
+      "NLE-POSEIDON-RISK-S02",
+      "NLE-POSEIDON-RISK-S03",
+      "NLE-POSEIDON-RISK-S04",
+      "NLE-POSEIDON-RISK-S05",
+      "NLE-POSEIDON-RISK-S06",
+      "NLE-POSEIDON-RISK-S07",
+      "NLE-POSEIDON-RISK-S08",
+      "NLE-POSEIDON-RISK-S09",
+      "NLE-POSEIDON-RISK-S10",
+      "NLE-POSEIDON-RISK-S11"
+    ],
+    "baseline_acceptance": "Kill switch e stress excedido bloqueiam operação",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "trading-simulation-systems",
+    "owners": [
+      "NLE-POSEIDON-TSE"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-POSEIDON-TSE"
+    ],
+    "assignment_ids": [
+      "NLE-POSEIDON-TSE-S01",
+      "NLE-POSEIDON-TSE-S02",
+      "NLE-POSEIDON-TSE-S03",
+      "NLE-POSEIDON-TSE-S04",
+      "NLE-POSEIDON-TSE-S06",
+      "NLE-POSEIDON-TSE-S07",
+      "NLE-POSEIDON-TSE-S08",
+      "NLE-POSEIDON-TSE-S09",
+      "NLE-POSEIDON-TSE-S10",
+      "NLE-POSEIDON-TSE-S11"
+    ],
+    "baseline_acceptance": "Rejeitar endpoints reais e duplicação de fills",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "security-governance",
+    "owners": [
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA"
+    ],
+    "assignment_ids": [
+      "NLE-ARGUS-CISO-S01",
+      "NLE-ARGUS-CISO-S03",
+      "NLE-ARGUS-CISO-S06",
+      "NLE-ARGUS-CISO-S07",
+      "NLE-ARGUS-CISO-S09",
+      "NLE-ARGUS-CISO-S10",
+      "NLE-ARGUS-ORA-S01",
+      "NLE-ARGUS-ORA-S02",
+      "NLE-ARGUS-ORA-S03",
+      "NLE-ARGUS-ORA-S04",
+      "NLE-ARGUS-ORA-S05",
+      "NLE-ARGUS-ORA-S06",
+      "NLE-ARGUS-ORA-S08",
+      "NLE-ARGUS-ORA-S09"
+    ],
+    "baseline_acceptance": "Bloquear autoaprovação e privilégio excessivo",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "software-audit",
+    "owners": [
+      "NLE-ARGUS-SWA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-SWA"
+    ],
+    "assignment_ids": [
+      "NLE-ARGUS-SWA-S01",
+      "NLE-ARGUS-SWA-S02",
+      "NLE-ARGUS-SWA-S03",
+      "NLE-ARGUS-SWA-S04",
+      "NLE-ARGUS-SWA-S05",
+      "NLE-ARGUS-SWA-S07",
+      "NLE-ARGUS-SWA-S08",
+      "NLE-ARGUS-SWA-S10",
+      "NLE-ARGUS-SWA-S11"
+    ],
+    "baseline_acceptance": "Detectar regressão e checkpoint promovido sem prova",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "application-security",
+    "owners": [
+      "NLE-ARGUS-APPSEC"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-APPSEC"
+    ],
+    "assignment_ids": [
+      "NLE-ARGUS-APPSEC-S01",
+      "NLE-ARGUS-APPSEC-S02",
+      "NLE-ARGUS-APPSEC-S03",
+      "NLE-ARGUS-APPSEC-S04",
+      "NLE-ARGUS-APPSEC-S05",
+      "NLE-ARGUS-APPSEC-S06",
+      "NLE-ARGUS-APPSEC-S07",
+      "NLE-ARGUS-APPSEC-S08",
+      "NLE-ARGUS-APPSEC-S09",
+      "NLE-ARGUS-APPSEC-S10",
+      "NLE-ARGUS-APPSEC-S11"
+    ],
+    "baseline_acceptance": "Detectar vulnerabilidade plantada sem atingir terceiros",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "smart-contract-audit",
+    "owners": [
+      "NLE-ARGUS-SCA"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-SCA"
+    ],
+    "assignment_ids": [
+      "NLE-ARGUS-SCA-S01",
+      "NLE-ARGUS-SCA-S02",
+      "NLE-ARGUS-SCA-S03",
+      "NLE-ARGUS-SCA-S04",
+      "NLE-ARGUS-SCA-S05",
+      "NLE-ARGUS-SCA-S06",
+      "NLE-ARGUS-SCA-S07",
+      "NLE-ARGUS-SCA-S08",
+      "NLE-ARGUS-SCA-S09",
+      "NLE-ARGUS-SCA-S10",
+      "NLE-ARGUS-SCA-S11"
+    ],
+    "baseline_acceptance": "Encontrar falha plantada e não aceitar autoauditoria",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "agent-security",
+    "owners": [
+      "NLE-ARGUS-AISEC"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC"
+    ],
+    "assignment_ids": [
+      "NLE-ARGUS-AISEC-S02",
+      "NLE-ARGUS-AISEC-S03",
+      "NLE-ARGUS-AISEC-S04",
+      "NLE-ARGUS-AISEC-S05",
+      "NLE-ARGUS-AISEC-S06",
+      "NLE-ARGUS-AISEC-S07",
+      "NLE-ARGUS-AISEC-S09",
+      "NLE-ARGUS-AISEC-S10"
+    ],
+    "baseline_acceptance": "Injeção não exfiltra dados nem amplia permissões",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "privacy-compliance",
+    "owners": [
+      "NLE-ARGUS-PRIV"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV"
+    ],
+    "assignment_ids": [
+      "NLE-ARGUS-PRIV-S02",
+      "NLE-ARGUS-PRIV-S04",
+      "NLE-ARGUS-PRIV-S05",
+      "NLE-ARGUS-PRIV-S06",
+      "NLE-ARGUS-PRIV-S07",
+      "NLE-ARGUS-PRIV-S08",
+      "NLE-ARGUS-PRIV-S10"
+    ],
+    "baseline_acceptance": "Detectar dado pessoal indevido em fixture",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "legal-research",
+    "owners": [
+      "NLE-ARGUS-LEGAL"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL"
+    ],
+    "assignment_ids": [
+      "NLE-ARGUS-LEGAL-S01",
+      "NLE-ARGUS-LEGAL-S02",
+      "NLE-ARGUS-LEGAL-S03",
+      "NLE-ARGUS-LEGAL-S04",
+      "NLE-ARGUS-LEGAL-S05",
+      "NLE-ARGUS-LEGAL-S06",
+      "NLE-ARGUS-LEGAL-S07",
+      "NLE-ARGUS-LEGAL-S08",
+      "NLE-ARGUS-LEGAL-S09",
+      "NLE-ARGUS-LEGAL-S10"
+    ],
+    "baseline_acceptance": "Separar fonte vigente de hipótese; revisão humana",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "service-operations",
+    "owners": [
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-SUP"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-SUP"
+    ],
+    "assignment_ids": [
+      "NLE-ATLAS-COO-S01",
+      "NLE-ATLAS-COO-S03",
+      "NLE-ATLAS-COO-S04",
+      "NLE-ATLAS-COO-S05",
+      "NLE-ATLAS-COO-S06",
+      "NLE-ATLAS-COO-S07",
+      "NLE-ATLAS-COO-S09",
+      "NLE-ATLAS-COO-S10",
+      "NLE-ATLAS-CS-S01",
+      "NLE-ATLAS-CS-S02",
+      "NLE-ATLAS-CS-S03",
+      "NLE-ATLAS-CS-S04",
+      "NLE-ATLAS-CS-S05",
+      "NLE-ATLAS-CS-S06",
+      "NLE-ATLAS-CS-S07",
+      "NLE-ATLAS-CS-S08",
+      "NLE-ATLAS-CS-S09",
+      "NLE-ATLAS-CS-S10",
+      "NLE-ATLAS-SUP-S01",
+      "NLE-ATLAS-SUP-S02",
+      "NLE-ATLAS-SUP-S03",
+      "NLE-ATLAS-SUP-S04",
+      "NLE-ATLAS-SUP-S05",
+      "NLE-ATLAS-SUP-S06",
+      "NLE-ATLAS-SUP-S07",
+      "NLE-ATLAS-SUP-S08",
+      "NLE-ATLAS-SUP-S09",
+      "NLE-ATLAS-SUP-S10"
+    ],
+    "baseline_acceptance": "Incidente crítico escalado; sem revelar dados de outro cliente",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "customer-implementation",
+    "owners": [
+      "NLE-ATLAS-IMP"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATLAS-IMP"
+    ],
+    "assignment_ids": [
+      "NLE-ATLAS-IMP-S01",
+      "NLE-ATLAS-IMP-S02",
+      "NLE-ATLAS-IMP-S03",
+      "NLE-ATLAS-IMP-S04",
+      "NLE-ATLAS-IMP-S05",
+      "NLE-ATLAS-IMP-S06",
+      "NLE-ATLAS-IMP-S08",
+      "NLE-ATLAS-IMP-S09",
+      "NLE-ATLAS-IMP-S10"
+    ],
+    "baseline_acceptance": "Migração simulada preserva integridade e restaura",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "procurement",
+    "owners": [
+      "NLE-ATLAS-PROC"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATLAS-PROC"
+    ],
+    "assignment_ids": [
+      "NLE-ATLAS-PROC-S01",
+      "NLE-ATLAS-PROC-S02",
+      "NLE-ATLAS-PROC-S03",
+      "NLE-ATLAS-PROC-S04",
+      "NLE-ATLAS-PROC-S05",
+      "NLE-ATLAS-PROC-S06",
+      "NLE-ATLAS-PROC-S07",
+      "NLE-ATLAS-PROC-S08",
+      "NLE-ATLAS-PROC-S09",
+      "NLE-ATLAS-PROC-S10"
+    ],
+    "baseline_acceptance": "Bloquear compra e fornecedor sem licença confirmada",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "innovation-strategy",
+    "owners": [
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-TECH"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-TECH"
+    ],
+    "assignment_ids": [
+      "NLE-PROMETHEUS-CIO-S01",
+      "NLE-PROMETHEUS-CIO-S02",
+      "NLE-PROMETHEUS-CIO-S03",
+      "NLE-PROMETHEUS-CIO-S05",
+      "NLE-PROMETHEUS-CIO-S06",
+      "NLE-PROMETHEUS-CIO-S07",
+      "NLE-PROMETHEUS-CIO-S08",
+      "NLE-PROMETHEUS-CIO-S09",
+      "NLE-PROMETHEUS-CIO-S10",
+      "NLE-PROMETHEUS-TECH-S01",
+      "NLE-PROMETHEUS-TECH-S02",
+      "NLE-PROMETHEUS-TECH-S03",
+      "NLE-PROMETHEUS-TECH-S04",
+      "NLE-PROMETHEUS-TECH-S05",
+      "NLE-PROMETHEUS-TECH-S06",
+      "NLE-PROMETHEUS-TECH-S07",
+      "NLE-PROMETHEUS-TECH-S08",
+      "NLE-PROMETHEUS-TECH-S10"
+    ],
+    "baseline_acceptance": "Não promover tecnologia sem evidência e licença",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "market-intelligence",
+    "owners": [
+      "NLE-PROMETHEUS-MARKET"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PROMETHEUS-MARKET"
+    ],
+    "assignment_ids": [
+      "NLE-PROMETHEUS-MARKET-S01",
+      "NLE-PROMETHEUS-MARKET-S02",
+      "NLE-PROMETHEUS-MARKET-S03",
+      "NLE-PROMETHEUS-MARKET-S04",
+      "NLE-PROMETHEUS-MARKET-S05",
+      "NLE-PROMETHEUS-MARKET-S06",
+      "NLE-PROMETHEUS-MARKET-S07",
+      "NLE-PROMETHEUS-MARKET-S09",
+      "NLE-PROMETHEUS-MARKET-S10"
+    ],
+    "baseline_acceptance": "Triangular fonte e evitar tamanho de mercado inventado",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "rapid-prototyping",
+    "owners": [
+      "NLE-PROMETHEUS-PROTO"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PROMETHEUS-PROTO"
+    ],
+    "assignment_ids": [
+      "NLE-PROMETHEUS-PROTO-S01",
+      "NLE-PROMETHEUS-PROTO-S02",
+      "NLE-PROMETHEUS-PROTO-S03",
+      "NLE-PROMETHEUS-PROTO-S04",
+      "NLE-PROMETHEUS-PROTO-S05",
+      "NLE-PROMETHEUS-PROTO-S06",
+      "NLE-PROMETHEUS-PROTO-S07",
+      "NLE-PROMETHEUS-PROTO-S08",
+      "NLE-PROMETHEUS-PROTO-S09",
+      "NLE-PROMETHEUS-PROTO-S10"
+    ],
+    "baseline_acceptance": "Reproduzir build sem deploy externo",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "open-source-due-diligence",
+    "owners": [
+      "NLE-PROMETHEUS-OSINT"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-PROMETHEUS-OSINT"
+    ],
+    "assignment_ids": [
+      "NLE-PROMETHEUS-OSINT-S01",
+      "NLE-PROMETHEUS-OSINT-S02",
+      "NLE-PROMETHEUS-OSINT-S03",
+      "NLE-PROMETHEUS-OSINT-S04",
+      "NLE-PROMETHEUS-OSINT-S05",
+      "NLE-PROMETHEUS-OSINT-S06",
+      "NLE-PROMETHEUS-OSINT-S07",
+      "NLE-PROMETHEUS-OSINT-S08",
+      "NLE-PROMETHEUS-OSINT-S10",
+      "NLE-PROMETHEUS-OSINT-S11"
+    ],
+    "baseline_acceptance": "Rejeitar dependência sem licença e origem verificável",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-source-evidence",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-KM",
+      "NLE-HEPHAESTUS-REL",
+      "NLE-HERMES-PROS",
+      "NLE-MUSES-NICHE",
+      "NLE-POSEIDON-EQ",
+      "NLE-PROMETHEUS-MARKET",
+      "NLE-PROMETHEUS-OSINT",
+      "NLE-PROMETHEUS-TECH"
+    ],
+    "assignment_ids": [
+      "NLE-ATHENA-KM-S06",
+      "NLE-HEPHAESTUS-REL-S11",
+      "NLE-HERMES-PROS-S07",
+      "NLE-MUSES-NICHE-S10",
+      "NLE-POSEIDON-EQ-S11",
+      "NLE-ARGUS-SWA-S06",
+      "NLE-PROMETHEUS-TECH-S09",
+      "NLE-PROMETHEUS-MARKET-S08",
+      "NLE-PROMETHEUS-OSINT-S09"
+    ],
+    "baseline_acceptance": "fonte falsa e referência quebrada devem ser detectadas",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-security-privacy",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-CRM",
+      "NLE-APOLLO-MKTDA",
+      "NLE-ARGUS-AISEC",
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-PRIV",
+      "NLE-HEPHAESTUS-AI",
+      "NLE-HEPHAESTUS-AUTO",
+      "NLE-HEPHAESTUS-DEVOPS"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-AI-S09",
+      "NLE-HEPHAESTUS-AUTO-S07",
+      "NLE-HEPHAESTUS-DEVOPS-S07",
+      "NLE-APOLLO-CRM-S11",
+      "NLE-APOLLO-MKTDA-S11",
+      "NLE-ARGUS-CISO-S04",
+      "NLE-ARGUS-AISEC-S01",
+      "NLE-ARGUS-AISEC-S08",
+      "NLE-ARGUS-AISEC-S11",
+      "NLE-ARGUS-PRIV-S01",
+      "NLE-ARGUS-PRIV-S03",
+      "NLE-ARGUS-PRIV-S09"
+    ],
+    "baseline_acceptance": "tentativa de acesso indevido deve ser negada",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-data-quality",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-MKTDA",
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-KM",
+      "NLE-HEPHAESTUS-DATA",
+      "NLE-HEPHAESTUS-INT",
+      "NLE-HERMES-PROS",
+      "NLE-HERMES-SI"
+    ],
+    "assignment_ids": [
+      "NLE-ATHENA-KM-S07",
+      "NLE-HEPHAESTUS-INT-S09",
+      "NLE-HEPHAESTUS-DATA-S11",
+      "NLE-HERMES-PROS-S09",
+      "NLE-HERMES-SI-S06",
+      "NLE-HERMES-SI-S07",
+      "NLE-APOLLO-MKTDA-S06",
+      "NLE-ARGUS-SWA-S09"
+    ],
+    "baseline_acceptance": "fixture duplicada não pode inflar resultado",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-reliable-workflows",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATLAS-AOPS",
+      "NLE-HEPHAESTUS-AUTO",
+      "NLE-HEPHAESTUS-BE",
+      "NLE-HEPHAESTUS-INT",
+      "NLE-MUSES-ECOM",
+      "NLE-POSEIDON-TSE"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-BE-S07",
+      "NLE-HEPHAESTUS-INT-S06",
+      "NLE-HEPHAESTUS-INT-S07",
+      "NLE-HEPHAESTUS-AUTO-S05",
+      "NLE-HEPHAESTUS-AUTO-S06",
+      "NLE-HEPHAESTUS-AUTO-S11",
+      "NLE-MUSES-ECOM-S11",
+      "NLE-POSEIDON-TSE-S05",
+      "NLE-ATLAS-AOPS-S06"
+    ],
+    "baseline_acceptance": "replay e falha transitória não duplicam efeito",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-capacity-cost",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ATHENA-PMO",
+      "NLE-ATHENA-PORT",
+      "NLE-ATLAS-COO",
+      "NLE-HEPHAESTUS-PERF",
+      "NLE-PLUTUS-FINOPS",
+      "NLE-ZEUS-CEO"
+    ],
+    "assignment_ids": [
+      "NLE-ZEUS-CEO-S09",
+      "NLE-ZEUS-CEO-S11",
+      "NLE-ATHENA-PMO-S01",
+      "NLE-ATHENA-PORT-S05",
+      "NLE-HEPHAESTUS-PERF-S07",
+      "NLE-PLUTUS-FINOPS-S02",
+      "NLE-PLUTUS-FINOPS-S04",
+      "NLE-PLUTUS-FINOPS-S08",
+      "NLE-ATLAS-COO-S02"
+    ],
+    "baseline_acceptance": "quota esgotada bloqueia nova execução",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-experiment-design",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CRM",
+      "NLE-APOLLO-CRO",
+      "NLE-APOLLO-PAID",
+      "NLE-HEPHAESTUS-PERF",
+      "NLE-HERMES-OUT",
+      "NLE-MUSES-CDPO",
+      "NLE-POSEIDON-QR",
+      "NLE-PROMETHEUS-CIO"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-PERF-S10",
+      "NLE-HERMES-OUT-S09",
+      "NLE-APOLLO-CMO-S08",
+      "NLE-APOLLO-PAID-S11",
+      "NLE-APOLLO-CRM-S08",
+      "NLE-APOLLO-CRO-S03",
+      "NLE-APOLLO-CRO-S04",
+      "NLE-APOLLO-CRO-S08",
+      "NLE-MUSES-CDPO-S10",
+      "NLE-POSEIDON-QR-S11",
+      "NLE-PROMETHEUS-CIO-S04"
+    ],
+    "baseline_acceptance": "resultado enviesado não pode ser declarado causal",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-accessibility",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-DES",
+      "NLE-HEPHAESTUS-FE",
+      "NLE-HEPHAESTUS-UX",
+      "NLE-MUSES-DQA",
+      "NLE-MUSES-EDES",
+      "NLE-MUSES-EDITOR",
+      "NLE-MUSES-ID",
+      "NLE-MUSES-ILL"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-UX-S03",
+      "NLE-HEPHAESTUS-FE-S07",
+      "NLE-APOLLO-DES-S09",
+      "NLE-MUSES-EDITOR-S10",
+      "NLE-MUSES-ID-S09",
+      "NLE-MUSES-EDES-S08",
+      "NLE-MUSES-ILL-S10",
+      "NLE-MUSES-DQA-S05"
+    ],
+    "baseline_acceptance": "fixture com barreira de acessibilidade deve falhar",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-incident-recovery",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA",
+      "NLE-ATLAS-AOPS",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-IMP",
+      "NLE-HEPHAESTUS-DEVOPS",
+      "NLE-HEPHAESTUS-SRE",
+      "NLE-ZEUS-CEO"
+    ],
+    "assignment_ids": [
+      "NLE-ZEUS-CEO-S08",
+      "NLE-HEPHAESTUS-DEVOPS-S09",
+      "NLE-HEPHAESTUS-SRE-S03",
+      "NLE-ARGUS-CISO-S05",
+      "NLE-ARGUS-CISO-S11",
+      "NLE-ARGUS-ORA-S10",
+      "NLE-ATLAS-COO-S08",
+      "NLE-ATLAS-IMP-S07",
+      "NLE-ATLAS-AOPS-S10"
+    ],
+    "baseline_acceptance": "falha crítica exige escalonamento e prova de restauração",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-governance-handoff",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-PM",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-ARCH-S08",
+      "NLE-HEPHAESTUS-PM-S10",
+      "NLE-HEPHAESTUS-REL-S05",
+      "NLE-HEPHAESTUS-REL-S06",
+      "NLE-HEPHAESTUS-REL-S07",
+      "NLE-HEPHAESTUS-REL-S08",
+      "NLE-HEPHAESTUS-REL-S09"
+    ],
+    "baseline_acceptance": "aprovação ausente ou SHA divergente impede avanço",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-unit-economics",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-HERMES-CRO",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-OFFER",
+      "NLE-PLUTUS-UNIT",
+      "NLE-PROMETHEUS-BIZ"
+    ],
+    "assignment_ids": [
+      "NLE-HERMES-CRO-S07",
+      "NLE-APOLLO-CMO-S05",
+      "NLE-MUSES-CDPO-S04",
+      "NLE-MUSES-OFFER-S10",
+      "NLE-PLUTUS-UNIT-S01",
+      "NLE-PLUTUS-UNIT-S02",
+      "NLE-PLUTUS-UNIT-S03",
+      "NLE-PLUTUS-UNIT-S04",
+      "NLE-PROMETHEUS-BIZ-S07"
+    ],
+    "baseline_acceptance": "reconciliar margem e taxas em fixture",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-risk-analysis",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-ARGUS-APPSEC",
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PMO",
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-POSEIDON-CIO"
+    ],
+    "assignment_ids": [
+      "NLE-ATHENA-PMO-S04",
+      "NLE-HEPHAESTUS-ARCH-S09",
+      "NLE-POSEIDON-CIO-S05",
+      "NLE-ARGUS-CISO-S02",
+      "NLE-ARGUS-CISO-S08",
+      "NLE-ARGUS-APPSEC-S12",
+      "NLE-ARGUS-ORA-S07"
+    ],
+    "baseline_acceptance": "risco crítico sem tratamento bloqueia avanço",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  },
+  {
+    "package_id": "core-tool-budget",
+    "owners": [
+      "NLE-ATHENA-KM"
+    ],
+    "version_preserved": "0.1.0-proposed",
+    "agent_ids": [
+      "NLE-HEPHAESTUS-AI",
+      "NLE-PLUTUS-FINOPS"
+    ],
+    "assignment_ids": [
+      "NLE-HEPHAESTUS-AI-S10",
+      "NLE-PLUTUS-FINOPS-S03",
+      "NLE-PLUTUS-FINOPS-S11"
+    ],
+    "baseline_acceptance": "modelo indisponível não pode ativar fallback pago",
+    "change_requires": [
+      "candidate evidence",
+      "independent review",
+      "offline regression",
+      "security review",
+      "approved release",
+      "rollback proof"
+    ],
+    "auto_promotion": false,
+    "status": "PROPOSED_NOT_QUALIFIED"
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "id": "NLE-APOLLO-VID",
+  "department": "APOLLO",
+  "role": "Senior Video & Motion Producer",
+  "level": "Senior",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Renderizar arquivos locais;sem publicar ou usar mídia sem licença",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Produzir vídeos verticais, anúncios e peças institucionais",
+  "skills": [
+    "roteiro visual",
+    "storyboard",
+    "motion graphics",
+    "edição",
+    "legendas",
+    "mixagem",
+    "retenção",
+    "short-form",
+    "export codecs",
+    "licenciamento de áudio",
+    "safe zones"
+  ],
+  "tools_candidates": [
+    "FFmpeg",
+    "editor autorizado",
+    "gerador vídeo se disponível",
+    "assets licenciados"
+  ],
+  "kpi_targets_proposed": [
+    "100% exports conforme canal",
+    "100% legendas revisadas",
+    "0 material sem direito"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-VID-Q01",
+      "scenario": "Montar vídeo 30s com legenda sincronizada",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-VID-Q02",
+      "scenario": "validar safe zones e áudio",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-VID-Q03",
+      "scenario": "detectar música sem licença",
+      "status": "NOT_RUN"
+    }
+  ]
+}

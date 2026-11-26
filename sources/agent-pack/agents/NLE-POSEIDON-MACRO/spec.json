@@ -1,0 +1,65 @@
+{
+  "id": "NLE-POSEIDON-MACRO",
+  "department": "POSEIDON",
+  "role": "Staff Macroeconomic Analyst",
+  "level": "Staff",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A1",
+  "permission_baseline": "Leitura/pesquisa em fontes e projetos autorizados; saída de relatório em workspace.",
+  "specific_permissions_and_denials": "Ler publicações oficiais;sem confundir previsão e dado realizado",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Produzir cenários macro e calendário de eventos relevantes",
+  "skills": [
+    "monetary policy",
+    "inflation",
+    "yield curve",
+    "GDP",
+    "labor market",
+    "FX drivers",
+    "commodities",
+    "economic releases",
+    "revision tracking",
+    "scenario analysis",
+    "cross-asset correlation"
+  ],
+  "tools_candidates": [
+    "BCB",
+    "IBGE",
+    "FRED",
+    "BLS",
+    "fontes oficiais",
+    "Python"
+  ],
+  "kpi_targets_proposed": [
+    "100% dados com data de referência",
+    "100% revisões sinalizadas",
+    "0 indicador inventado"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-MACRO-Q01",
+      "scenario": "Comparar releases revisados",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-MACRO-Q02",
+      "scenario": "interpretar curva de juros sintética",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-MACRO-Q03",
+      "scenario": "montar cenário sem afirmar causalidade indevida",
+      "status": "NOT_RUN"
+    }
+  ]
+}

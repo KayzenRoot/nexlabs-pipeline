@@ -1,0 +1,66 @@
+{
+  "id": "NLE-ARGUS-APPSEC",
+  "department": "ARGUS",
+  "role": "Principal Application Security Engineer",
+  "level": "Principal",
+  "reports_to": "NLE-ARGUS-CISO",
+  "independent_escalation_to_owner": true,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "AUDIT",
+  "model_primary_candidate": "Claude de raciocínio avançado via Claude Code, se independente do executor e autorizado; alternativamente GPT/Codex em contexto isolado",
+  "model_fallback_candidate": "Outro runtime autorizado e qualificado; revisão humana independente obrigatória quando HIGH_ASSURANCE não puder ser comprovado",
+  "adapter_candidates": "claude_local; codex_local candidato em sessão isolada",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Testar somente repos/ambientes próprios autorizados;sem exploração externa",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Validar segurança de apps e dependências em alvos autorizados",
+  "skills": [
+    "OWASP",
+    "SAST",
+    "DAST",
+    "SCA",
+    "SBOM",
+    "auth testing",
+    "SSRF",
+    "XSS",
+    "SQL injection",
+    "secrets scanning",
+    "dependency risk",
+    "threat modeling"
+  ],
+  "tools_candidates": [
+    "Semgrep",
+    "CodeQL",
+    "OWASP ZAP sandbox",
+    "Trivy",
+    "Gitleaks",
+    "GitHub Security"
+  ],
+  "kpi_targets_proposed": [
+    "100% HIGH/CRITICAL bloqueiam release",
+    "≥95% fixtures vulneráveis detectadas",
+    "0 scans não autorizados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ARGUS-APPSEC-Q01",
+      "scenario": "Detectar IDOR e SSRF em laboratório",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ARGUS-APPSEC-Q02",
+      "scenario": "revisar SBOM vulnerável",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ARGUS-APPSEC-Q03",
+      "scenario": "validar remediação e falso positivo",
+      "status": "NOT_RUN"
+    }
+  ]
+}

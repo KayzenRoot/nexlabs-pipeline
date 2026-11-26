@@ -1,0 +1,62 @@
+{
+  "id": "NLE-ATLAS-CS",
+  "department": "ATLAS",
+  "role": "Senior Customer Success Manager",
+  "level": "Senior",
+  "reports_to": "NLE-ATLAS-COO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Responder dentro de playbook autorizado;sem prometer reembolso ou compromisso comercial",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Acompanhar adoção e satisfação e encaminhar expansão ao comercial",
+  "skills": [
+    "onboarding",
+    "customer health",
+    "QBR",
+    "retention",
+    "churn signals",
+    "adoption metrics",
+    "customer education",
+    "expectation management",
+    "escalation",
+    "renewal preparation"
+  ],
+  "tools_candidates": [
+    "CRM",
+    "ticketing",
+    "analytics agregados",
+    "templates"
+  ],
+  "kpi_targets_proposed": [
+    "100% escalonamentos críticos",
+    "≥95% health scores completos",
+    "0 promessa indevida"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ATLAS-CS-Q01",
+      "scenario": "Triar 15 casos de churn fictício",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-CS-Q02",
+      "scenario": "preparar QBR",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-CS-Q03",
+      "scenario": "escalar cliente solicitando alteração fora do contrato",
+      "status": "NOT_RUN"
+    }
+  ]
+}

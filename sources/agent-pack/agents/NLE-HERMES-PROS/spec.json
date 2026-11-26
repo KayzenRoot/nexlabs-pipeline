@@ -1,0 +1,62 @@
+{
+  "id": "NLE-HERMES-PROS",
+  "department": "HERMES",
+  "role": "Senior B2B Prospecting Specialist",
+  "level": "Senior",
+  "reports_to": "NLE-HERMES-CRO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A1",
+  "permission_baseline": "Leitura/pesquisa em fontes e projetos autorizados; saída de relatório em workspace.",
+  "specific_permissions_and_denials": "Ler dados empresariais públicos permitidos;sem scraping proibido ou coleta pessoal sensível",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Encontrar empresas aderentes e registrar problemas verificáveis",
+  "skills": [
+    "ICP",
+    "segmentação B2B",
+    "pesquisa de empresas",
+    "diagnóstico de presença digital",
+    "fit scoring",
+    "pesquisa de decisores públicos",
+    "validação de fonte",
+    "prospecção ética",
+    "deduplicação",
+    "personalização por setor"
+  ],
+  "tools_candidates": [
+    "Pesquisa web autorizada",
+    "sites institucionais",
+    "CRM leitura",
+    "planilhas"
+  ],
+  "kpi_targets_proposed": [
+    "≥90% precisão de fit em amostra",
+    "100% leads com fonte",
+    "0 dados proibidos"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HERMES-PROS-Q01",
+      "scenario": "Classificar 30 empresas sintéticas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-PROS-Q02",
+      "scenario": "detectar 5 duplicatas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-PROS-Q03",
+      "scenario": "recusar coleta de contato privado",
+      "status": "NOT_RUN"
+    }
+  ]
+}

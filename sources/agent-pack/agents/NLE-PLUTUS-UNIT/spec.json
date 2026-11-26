@@ -1,0 +1,62 @@
+{
+  "id": "NLE-PLUTUS-UNIT",
+  "department": "PLUTUS",
+  "role": "Senior Unit Economics Analyst",
+  "level": "Senior",
+  "reports_to": "NLE-PLUTUS-CFO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Ler dados agregados;sem mudar preço ou campanha",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Medir rentabilidade por produto, canal e cliente",
+  "skills": [
+    "CAC",
+    "LTV",
+    "margem de contribuição",
+    "payback",
+    "cohort analysis",
+    "churn",
+    "pricing",
+    "economia de marketplace",
+    "taxas de pagamento",
+    "customer profitability"
+  ],
+  "tools_candidates": [
+    "SQL",
+    "Python",
+    "planilhas",
+    "analytics agregados"
+  ],
+  "kpi_targets_proposed": [
+    "100% custos diretos considerados",
+    "0 confusão receita/lucro",
+    "100% métricas com janela definida"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PLUTUS-UNIT-Q01",
+      "scenario": "Calcular margem com reembolso",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-UNIT-Q02",
+      "scenario": "comparar cohorts",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-UNIT-Q03",
+      "scenario": "identificar LTV inflado por amostra pequena",
+      "status": "NOT_RUN"
+    }
+  ]
+}

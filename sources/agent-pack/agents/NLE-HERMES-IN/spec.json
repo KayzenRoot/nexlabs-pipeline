@@ -1,0 +1,62 @@
+{
+  "id": "NLE-HERMES-IN",
+  "department": "HERMES",
+  "role": "Senior Inbound Sales Specialist",
+  "level": "Senior",
+  "reports_to": "NLE-HERMES-CRO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Responder em canal autorizado dentro de playbook;sem prometer preço, prazo ou contrato não aprovado",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Qualificar demanda recebida e encaminhar para pré-venda",
+  "skills": [
+    "qualificação BANT",
+    "SPICED",
+    "triagem",
+    "lead routing",
+    "discovery",
+    "objeções",
+    "agenda",
+    "CRM hygiene",
+    "SLA de resposta",
+    "handoff comercial"
+  ],
+  "tools_candidates": [
+    "CRM",
+    "inbox autorizada",
+    "agenda sandbox",
+    "Paperclip"
+  ],
+  "kpi_targets_proposed": [
+    "≥95% campos críticos corretos",
+    "100% handoffs com contexto",
+    "0 promessas não aprovadas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HERMES-IN-Q01",
+      "scenario": "Classificar 20 conversas sintéticas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-IN-Q02",
+      "scenario": "escalar pedido fora de escopo",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-IN-Q03",
+      "scenario": "detectar tentativa de extrair dados de outro cliente",
+      "status": "NOT_RUN"
+    }
+  ]
+}

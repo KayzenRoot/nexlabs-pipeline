@@ -1,0 +1,64 @@
+{
+  "id": "NLE-PROMETHEUS-OSINT",
+  "department": "PROMETHEUS",
+  "role": "Staff Open Source Intelligence Analyst",
+  "level": "Staff",
+  "reports_to": "NLE-PROMETHEUS-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A1",
+  "permission_baseline": "Leitura/pesquisa em fontes e projetos autorizados; saída de relatório em workspace.",
+  "specific_permissions_and_denials": "Somente pesquisa e leitura;sem executar código não confiável",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Qualificar projetos open source para adoção e reaproveitamento",
+  "skills": [
+    "GitHub maturity analysis",
+    "license analysis",
+    "release cadence",
+    "dependency mapping",
+    "maintainer health",
+    "vulnerability history",
+    "documentation quality",
+    "community analysis",
+    "provenance",
+    "fork comparison",
+    "software supply chain research"
+  ],
+  "tools_candidates": [
+    "GitHub público",
+    "OSV",
+    "SPDX",
+    "OpenSSF Scorecard se disponível",
+    "git leitura"
+  ],
+  "kpi_targets_proposed": [
+    "100% projetos com licença e versão",
+    "0 recomendação sem risco",
+    "100% fontes rastreadas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PROMETHEUS-OSINT-Q01",
+      "scenario": "Comparar três repos por atividade e licença",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PROMETHEUS-OSINT-Q02",
+      "scenario": "detectar pacote suspeito",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PROMETHEUS-OSINT-Q03",
+      "scenario": "rejeitar adoção sem proveniência",
+      "status": "NOT_RUN"
+    }
+  ]
+}

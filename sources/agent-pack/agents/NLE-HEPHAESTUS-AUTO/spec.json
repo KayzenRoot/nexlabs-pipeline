@@ -1,0 +1,64 @@
+{
+  "id": "NLE-HEPHAESTUS-AUTO",
+  "department": "HEPHAESTUS",
+  "role": "Staff Automation Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Executar sandbox e workflows internos autorizados;sem publicação externa ou gasto",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Construir automações internas auditáveis e recuperáveis",
+  "skills": [
+    "n8n",
+    "MCP",
+    "workflow orchestration",
+    "event triggers",
+    "idempotência",
+    "dead-letter queue",
+    "secret management",
+    "webhook validation",
+    "human approval",
+    "monitoramento",
+    "replay seguro"
+  ],
+  "tools_candidates": [
+    "n8n local",
+    "MCP allowlist",
+    "Docker",
+    "Python",
+    "Git"
+  ],
+  "kpi_targets_proposed": [
+    "100% ações críticas com gate",
+    "0 loops ilimitados",
+    "100% replays sem duplicação"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-AUTO-Q01",
+      "scenario": "Simular falha de API e DLQ",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-AUTO-Q02",
+      "scenario": "bloquear ferramenta MCP não autorizada",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-AUTO-Q03",
+      "scenario": "reexecutar workflow sem duplicar ação",
+      "status": "NOT_RUN"
+    }
+  ]
+}

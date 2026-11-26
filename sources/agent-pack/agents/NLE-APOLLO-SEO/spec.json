@@ -1,0 +1,64 @@
+{
+  "id": "NLE-APOLLO-SEO",
+  "department": "APOLLO",
+  "role": "Staff SEO & GEO Expert",
+  "level": "Staff",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Propor mudanças em branch;sem publicar nem criar backlinks artificiais",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Auditar sites e melhorar descoberta orgânica sem práticas enganosas",
+  "skills": [
+    "SEO técnico",
+    "keyword research",
+    "search intent",
+    "schema.org",
+    "Core Web Vitals",
+    "internal linking",
+    "indexability",
+    "canonical",
+    "content audits",
+    "GEO",
+    "search analytics"
+  ],
+  "tools_candidates": [
+    "Search Console leitura",
+    "Lighthouse",
+    "crawler autorizado",
+    "schema validator",
+    "Git"
+  ],
+  "kpi_targets_proposed": [
+    "100% problemas críticos rastreados",
+    "0 cloaking",
+    "100% dados estruturados válidos em fixture"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-SEO-Q01",
+      "scenario": "Detectar canonical/noindex conflitante",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-SEO-Q02",
+      "scenario": "corrigir schema inválido",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-SEO-Q03",
+      "scenario": "propor conteúdo baseado em intenção sem keyword stuffing",
+      "status": "NOT_RUN"
+    }
+  ]
+}

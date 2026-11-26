@@ -1,0 +1,5247 @@
+{
+  "schema": "nexlabs.workflow-plan.v1",
+  "status": "PROPOSED_NOT_EXECUTABLE",
+  "source_lock": {
+    "agent_catalog": {
+      "file": "NexLabs_AI_Enterprise_Agent_Catalog.json",
+      "sha256": "b1ce5e09d1df6c1172d700927d7d65a26ad2626c9b959e11c9c072a96790df12"
+    },
+    "skill_registry": {
+      "file": "registry.json",
+      "sha256": "b9571d8917a991b3b99507cefd1173cd9befb874b9f8e3e93fc879daa0f08f4d"
+    },
+    "agent_bindings": {
+      "file": "agent-bindings.json",
+      "sha256": "c321aa4d868410ccf4a047a3f9608c08c985cba92225ef80855a823beff410a5"
+    },
+    "assignment_matrix": {
+      "file": "assignment-matrix.csv",
+      "sha256": "a975033d1ee0b4d4a6b6d991700c55aead52d8a657f6f221f422e9de93669609"
+    }
+  },
+  "summary": {
+    "workflows": 62,
+    "agents_covered": 105,
+    "packages_eligible": 92,
+    "original_assignments_preserved": 1110,
+    "agent_qualification_tests_preserved": 316,
+    "specific_workflow_scenarios": 62,
+    "common_test_instances_planned": 372,
+    "counts_by_group": {
+      "GOV": 5,
+      "RES": 3,
+      "SAL": 7,
+      "ENG": 13,
+      "DIG": 5,
+      "MKT": 14,
+      "FIN": 4,
+      "QNT": 5,
+      "OPS": 3,
+      "SEC": 3
+    },
+    "counts_by_gate": {
+      "HUMAN_APPROVAL_REQUIRED": 14,
+      "INTERNAL_ONLY": 36,
+      "POLICY_GATED_EXTERNAL": 12
+    },
+    "mapping_rows": 638,
+    "activated": 0,
+    "operational_tests_run": 0
+  },
+  "workflows": [
+    {
+      "id": "NLE-WF-GOV-01",
+      "name": "Estratégia e OKRs",
+      "accountable": "NLE-ZEUS-CEO",
+      "dispatch_agent": "NLE-ZEUS-CEO",
+      "trigger_proposed": "Semanal e mensal",
+      "inputs": "Resultados, caixa e capacidade",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATHENA-STR",
+          "task": "converter objetivos em OKRs",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "executive-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATHENA-PORT",
+          "task": "priorizar portfólio",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "executive-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-CFO",
+          "task": "avaliar orçamento",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "corporate-finance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-ZEUS-CEO",
+          "task": "consolidar decisões",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-incident-recovery",
+            "executive-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "STANDARD",
+      "output": "Plano estratégico versionado",
+      "kpi_proposed": "OKRs com responsável e prazo >=95%; gasto novo=0",
+      "scenario_specific_not_run": "Conflito de recursos deve bloquear compromisso inviável",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "corporate-finance",
+        "executive-strategy",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-GOV-02",
+      "name": "Triagem e despacho",
+      "accountable": "NLE-ATHENA-PMO",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Nova tarefa",
+      "inputs": "Briefing, política e locks",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATHENA-BA",
+          "task": "classificar requisitos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "business-requirements"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATHENA-PMO",
+          "task": "resolver dependências e prioridade",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-risk-analysis",
+            "project-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ZEUS-CEO",
+          "task": "delegar conforme capacidade",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-incident-recovery",
+            "executive-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Issue com dono, dependências e limites",
+      "kpi_proposed": "100% tarefas com dono; duplicatas=0",
+      "scenario_specific_not_run": "Evento duplicado e dependência circular não criam execução",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "business-requirements",
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "executive-strategy",
+        "project-governance",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-GOV-03",
+      "name": "Conhecimento e fontes",
+      "accountable": "NLE-ATHENA-KM",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Mudança de fonte ou entrega",
+      "inputs": "Documentos autorizados e hashes",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATHENA-KM",
+          "task": "indexar e recuperar fontes",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-data-quality",
+            "core-source-evidence",
+            "knowledge-retrieval"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-DATA",
+          "task": "validar metadados e isolamento",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-data-quality",
+            "data-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATHENA-PEX",
+          "task": "analisar lacunas",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "process-excellence"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Índice versionado e trilha de fontes",
+      "kpi_proposed": "100% fontes críticas identificadas; vazamento=0",
+      "scenario_specific_not_run": "Documento de outro cliente não é recuperado",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-data-quality",
+        "core-security-privacy",
+        "core-source-evidence",
+        "data-engineering",
+        "knowledge-retrieval",
+        "privacy-compliance",
+        "process-excellence"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-GOV-04",
+      "name": "Melhoria de processos",
+      "accountable": "NLE-ATHENA-PEX",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Semanal",
+      "inputs": "Logs, tempos, falhas",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATHENA-PEX",
+          "task": "diagnosticar gargalo",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "process-excellence"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-AUTO",
+          "task": "propor automação",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-reliable-workflows",
+            "core-security-privacy",
+            "workflow-automation"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATHENA-PMO",
+          "task": "planejar experimento",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-risk-analysis",
+            "project-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Proposta e teste de processo",
+      "kpi_proposed": "Tempo de ciclo comparado ao baseline; regressões críticas=0",
+      "scenario_specific_not_run": "Falha no experimento restaura fluxo anterior",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-reliable-workflows",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "process-excellence",
+        "project-governance",
+        "security-governance",
+        "workflow-automation"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-GOV-05",
+      "name": "Qualificação de agente e skill",
+      "accountable": "NLE-ATLAS-AOPS",
+      "dispatch_agent": "NLE-ATLAS-AOPS",
+      "trigger_proposed": "Nova versão ou mudança de modelo",
+      "inputs": "Manifesto, hash, licenças, testes",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-PROMETHEUS-OSINT",
+          "task": "verificar origem",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "core-source-evidence",
+            "open-source-due-diligence"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-AI",
+          "task": "testar modelo e skill",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-security-privacy",
+            "core-tool-budget",
+            "llm-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATLAS-AOPS",
+          "task": "validar runtime",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-reliable-workflows",
+            "reliability-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-PLUTUS-FINOPS",
+          "task": "validar quota",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "ai-finops",
+            "core-capacity-cost",
+            "core-tool-budget"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-AISEC",
+      "reviewer_packages": [
+        "agent-security",
+        "core-security-privacy"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Evidence Bundle G01-G05 e SR01-SR06",
+      "kpi_proposed": "100% gates; nota >=90/100; HIGH=0",
+      "scenario_specific_not_run": "Skill adulterada ou executor incompatível não é ativado",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "agent-security",
+        "ai-finops",
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-reliable-workflows",
+        "core-security-privacy",
+        "core-source-evidence",
+        "core-tool-budget",
+        "llm-engineering",
+        "open-source-due-diligence",
+        "reliability-operations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-RES-01",
+      "name": "Pesquisa de mercado",
+      "accountable": "NLE-PROMETHEUS-CIO",
+      "dispatch_agent": "NLE-PROMETHEUS-CIO",
+      "trigger_proposed": "Semanal",
+      "inputs": "Hipóteses e fontes públicas",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-PROMETHEUS-MARKET",
+          "task": "dimensionar mercado",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "core-source-evidence",
+            "market-intelligence"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PROMETHEUS-BIZ",
+          "task": "identificar problemas e oportunidades",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "product-discovery"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PROMETHEUS-CIO",
+          "task": "ranquear hipóteses",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-experiment-design",
+            "innovation-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ATHENA-STR",
+      "reviewer_packages": [
+        "executive-strategy"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Dossiê de oportunidades",
+      "kpi_proposed": "100% claims materiais com fonte; premissas explícitas",
+      "scenario_specific_not_run": "Demanda sem evidência é marcada não validada",
+      "next_candidates": [
+        "NLE-WF-RES-03"
+      ],
+      "eligible_packages_union": [
+        "core-experiment-design",
+        "core-source-evidence",
+        "core-unit-economics",
+        "executive-strategy",
+        "innovation-strategy",
+        "market-intelligence",
+        "product-discovery"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-RES-02",
+      "name": "Radar tecnológico e due diligence",
+      "accountable": "NLE-PROMETHEUS-CIO",
+      "dispatch_agent": "NLE-PROMETHEUS-CIO",
+      "trigger_proposed": "Semanal ou nova tecnologia",
+      "inputs": "Repositórios e docs oficiais",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-PROMETHEUS-TECH",
+          "task": "comparar capacidade",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "core-source-evidence",
+            "innovation-strategy"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PROMETHEUS-OSINT",
+          "task": "avaliar licença e origem",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "core-source-evidence",
+            "open-source-due-diligence"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATLAS-PROC",
+          "task": "comparar custos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "procurement"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-AISEC",
+      "reviewer_packages": [
+        "agent-security",
+        "core-security-privacy"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Relatório de adoção ou rejeição",
+      "kpi_proposed": "100% candidatos com licença/custo conhecidos ou bloqueados",
+      "scenario_specific_not_run": "Dependência sem licença não entra em adoção",
+      "next_candidates": [
+        "NLE-WF-RES-03"
+      ],
+      "eligible_packages_union": [
+        "agent-security",
+        "core-experiment-design",
+        "core-security-privacy",
+        "core-source-evidence",
+        "innovation-strategy",
+        "open-source-due-diligence",
+        "procurement"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-RES-03",
+      "name": "Validação de novo produto",
+      "accountable": "NLE-PROMETHEUS-CIO",
+      "dispatch_agent": "NLE-PROMETHEUS-CIO",
+      "trigger_proposed": "Oportunidade aprovada",
+      "inputs": "Dossiê e limite de recursos",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-PROMETHEUS-BIZ",
+          "task": "formular teste de demanda",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "product-discovery"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PROMETHEUS-PROTO",
+          "task": "criar PoC isolada",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "rapid-prototyping"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-PM",
+          "task": "definir escopo",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "product-discovery"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "simular margem",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ATHENA-PORT",
+      "reviewer_packages": [
+        "core-capacity-cost",
+        "executive-strategy"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Go/no-go proposto e evidências",
+      "kpi_proposed": "Hipóteses testadas; custo incremental=0",
+      "scenario_specific_not_run": "PoC sem demanda não avança automaticamente",
+      "next_candidates": [
+        "NLE-WF-ENG-01",
+        "NLE-WF-DIG-01"
+      ],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-experiment-design",
+        "core-governance-handoff",
+        "core-unit-economics",
+        "executive-strategy",
+        "financial-planning",
+        "innovation-strategy",
+        "product-discovery",
+        "rapid-prototyping"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SAL-01",
+      "name": "ICP e prospecção B2B",
+      "accountable": "NLE-HERMES-CRO",
+      "dispatch_agent": "NLE-HERMES-CRO",
+      "trigger_proposed": "Diário em dias úteis",
+      "inputs": "ICP aprovado e fontes empresariais permitidas",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HERMES-PROS",
+          "task": "pesquisar empresas",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "b2b-prospecting",
+            "core-data-quality",
+            "core-source-evidence"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HERMES-SI",
+          "task": "validar fit e deduplicar",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "b2b-prospecting",
+            "core-data-quality"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HERMES-CRO",
+          "task": "priorizar carteira",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-unit-economics",
+            "sales-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Fila de leads com fonte e finalidade",
+      "kpi_proposed": "100% origem rastreável; duplicatas=0",
+      "scenario_specific_not_run": "Contato suprimido ou dado sensível é excluído da fila",
+      "next_candidates": [
+        "NLE-WF-SAL-02"
+      ],
+      "eligible_packages_union": [
+        "b2b-prospecting",
+        "core-data-quality",
+        "core-security-privacy",
+        "core-source-evidence",
+        "core-unit-economics",
+        "privacy-compliance",
+        "sales-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SAL-02",
+      "name": "Outreach personalizado",
+      "accountable": "NLE-HERMES-CRO",
+      "dispatch_agent": "NLE-HERMES-CRO",
+      "trigger_proposed": "Lead qualificado",
+      "inputs": "Lead permitido e oferta",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HERMES-OUT",
+          "task": "preparar abordagem individual",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-experiment-design",
+            "sales-outreach"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-COPY",
+          "task": "revisar mensagem",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "content-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HERMES-CRO",
+          "task": "validar cadência e relevância",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-unit-economics",
+            "sales-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Rascunhos e fila de envio aprovado",
+      "kpi_proposed": "Taxa de resposta e opt-out; envios sem autorização=0",
+      "scenario_specific_not_run": "Opt-out, limite ou ausência de base válida impede envio",
+      "next_candidates": [
+        "NLE-WF-SAL-04"
+      ],
+      "eligible_packages_union": [
+        "content-strategy",
+        "core-experiment-design",
+        "core-security-privacy",
+        "core-unit-economics",
+        "privacy-compliance",
+        "sales-outreach",
+        "sales-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SAL-03",
+      "name": "Inbound e qualificação",
+      "accountable": "NLE-HERMES-IN",
+      "dispatch_agent": "NLE-HERMES-IN",
+      "trigger_proposed": "Lead recebido por canal autorizado",
+      "inputs": "Mensagem e consentimentos aplicáveis",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HERMES-IN",
+          "task": "classificar intenção e urgência",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "sales-outreach"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HERMES-SI",
+          "task": "verificar duplicidade e fit",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "b2b-prospecting",
+            "core-data-quality"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HERMES-SE",
+          "task": "avaliar necessidade técnica",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "technical-presales"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Lead qualificado ou encerrado",
+      "kpi_proposed": "Tempo de primeira triagem; 100% opt-outs respeitados",
+      "scenario_specific_not_run": "Webhook repetido não duplica lead; resposta externa só por política",
+      "next_candidates": [
+        "NLE-WF-SAL-04"
+      ],
+      "eligible_packages_union": [
+        "b2b-prospecting",
+        "core-data-quality",
+        "core-security-privacy",
+        "privacy-compliance",
+        "sales-outreach",
+        "technical-presales"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SAL-04",
+      "name": "Discovery e pré-venda",
+      "accountable": "NLE-HERMES-CRO",
+      "dispatch_agent": "NLE-HERMES-CRO",
+      "trigger_proposed": "Lead aceito",
+      "inputs": "Briefing e restrições do cliente",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HERMES-SE",
+          "task": "mapear necessidade e estimativa",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "technical-presales"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATHENA-BA",
+          "task": "documentar requisitos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "business-requirements"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-ARCH",
+          "task": "validar arquitetura",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-risk-analysis",
+            "technology-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "estimar margem",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-HEPHAESTUS-CTO",
+      "reviewer_packages": [
+        "technology-strategy"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Escopo preliminar e faixa de esforço",
+      "kpi_proposed": "100% premissas registradas; margem prevista",
+      "scenario_specific_not_run": "Requisito ambíguo impede preço fechado",
+      "next_candidates": [
+        "NLE-WF-SAL-05"
+      ],
+      "eligible_packages_union": [
+        "business-requirements",
+        "core-governance-handoff",
+        "core-risk-analysis",
+        "core-unit-economics",
+        "financial-planning",
+        "sales-strategy",
+        "technical-presales",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SAL-05",
+      "name": "Proposta, negociação e contrato",
+      "accountable": "NLE-HERMES-CRO",
+      "dispatch_agent": "NLE-HERMES-CRO",
+      "trigger_proposed": "Discovery aprovado",
+      "inputs": "Escopo, preço e condições",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HERMES-AE",
+          "task": "redigir proposta",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "consultative-sales"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PLUTUS-FPA",
+          "task": "validar cenários",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ARGUS-LEGAL",
+          "task": "emitir parecer de risco",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "legal-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-HERMES-CRO",
+          "task": "consolidar condições",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-unit-economics",
+            "sales-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Proposta e contrato para assinatura humana",
+      "kpi_proposed": "Win rate; margem; compromissos não autorizados=0",
+      "scenario_specific_not_run": "Mudança de escopo ou preço invalida aprovação",
+      "next_candidates": [
+        "NLE-WF-SAL-07"
+      ],
+      "eligible_packages_union": [
+        "consultative-sales",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-unit-economics",
+        "financial-planning",
+        "legal-research",
+        "sales-strategy",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SAL-06",
+      "name": "Parcerias e canais",
+      "accountable": "NLE-HERMES-CRO",
+      "dispatch_agent": "NLE-HERMES-CRO",
+      "trigger_proposed": "Semanal ou inbound",
+      "inputs": "Candidato e critérios comerciais",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HERMES-PART",
+          "task": "avaliar parceria",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "consultative-sales"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PROMETHEUS-MARKET",
+          "task": "comparar mercado",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "core-source-evidence",
+            "market-intelligence"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "simular comissão",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-LEGAL",
+      "reviewer_packages": [
+        "legal-research"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "STANDARD",
+      "output": "Proposta de parceria sem compromisso",
+      "kpi_proposed": "Pipeline de parceiros; margem incremental",
+      "scenario_specific_not_run": "Comissão não aprovada não é contratada",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "consultative-sales",
+        "core-source-evidence",
+        "core-unit-economics",
+        "financial-planning",
+        "legal-research",
+        "market-intelligence",
+        "sales-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SAL-07",
+      "name": "Handoff para entrega",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Contrato efetivamente aprovado",
+      "inputs": "Contrato, escopo, responsável e aceite",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HERMES-AE",
+          "task": "registrar termos aprovados",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "consultative-sales"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATHENA-PMO",
+          "task": "planejar projeto",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-risk-analysis",
+            "project-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATLAS-IMP",
+          "task": "preparar onboarding",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "customer-implementation"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-ATLAS-CS",
+          "task": "definir plano de sucesso",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "service-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Projeto e onboarding rastreáveis",
+      "kpi_proposed": "100% contratos com handoff; escopo íntegro",
+      "scenario_specific_not_run": "Contrato não assinado bloqueia início contratado",
+      "next_candidates": [
+        "NLE-WF-ENG-01",
+        "NLE-WF-OPS-01"
+      ],
+      "eligible_packages_union": [
+        "consultative-sales",
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "customer-implementation",
+        "project-governance",
+        "security-governance",
+        "service-operations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-01",
+      "name": "Source Pack e arquitetura",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "Novo projeto autorizado",
+      "inputs": "Escopo, checkpoint se existente e decisões",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-PM",
+          "task": "definir produto",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "product-discovery"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATHENA-BA",
+          "task": "refinar requisitos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "business-requirements"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-ARCH",
+          "task": "propor arquitetura e ADRs",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-risk-analysis",
+            "technology-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-HEPHAESTUS-REL",
+          "task": "versionar Source Pack",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-source-evidence",
+            "engineering-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "STANDARD",
+      "output": "Source Pack, DoD e baseline",
+      "kpi_proposed": "100% docs necessários; decisões conflitantes=0",
+      "scenario_specific_not_run": "Checkpoint e ADR conflitantes bloqueiam implementação",
+      "next_candidates": [
+        "NLE-WF-ENG-02"
+      ],
+      "eligible_packages_union": [
+        "business-requirements",
+        "core-data-quality",
+        "core-governance-handoff",
+        "core-risk-analysis",
+        "core-source-evidence",
+        "engineering-governance",
+        "product-discovery",
+        "software-audit",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-02",
+      "name": "Work Order e Context Lock",
+      "accountable": "NLE-ATHENA-PMO",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Incremento necessário",
+      "inputs": "Fontes canônicas e Git base",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-ARCH",
+          "task": "definir arquitetura e critérios",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-risk-analysis",
+            "technology-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-REL",
+          "task": "gerar lock e fingerprints",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-source-evidence",
+            "engineering-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATHENA-PMO",
+          "task": "validar dependências",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-risk-analysis",
+            "project-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "WO com base SHA e preflight",
+      "kpi_proposed": "100% locks válidos e critérios testáveis",
+      "scenario_specific_not_run": "Mudança crítica marca STALE e bloqueia execução",
+      "next_candidates": [
+        "NLE-WF-ENG-03",
+        "NLE-WF-ENG-04",
+        "NLE-WF-ENG-05",
+        "NLE-WF-ENG-06",
+        "NLE-WF-ENG-07",
+        "NLE-WF-ENG-08",
+        "NLE-WF-ENG-09"
+      ],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-data-quality",
+        "core-governance-handoff",
+        "core-risk-analysis",
+        "core-source-evidence",
+        "engineering-governance",
+        "project-governance",
+        "software-audit",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-03",
+      "name": "Frontend e design system",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "WO autorizado",
+      "inputs": "Design, contratos e lock",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-UX",
+          "task": "projetar UI acessível",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "ux-design"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-FE",
+          "task": "implementar em branch isolada",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "frontend-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-QA",
+          "task": "validar comportamento",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "software-testing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Diff, screenshots e testes",
+      "kpi_proposed": "AC atendidos; regressões críticas=0",
+      "scenario_specific_not_run": "Navegação teclado e estados de erro testados",
+      "next_candidates": [
+        "NLE-WF-ENG-10"
+      ],
+      "eligible_packages_union": [
+        "core-accessibility",
+        "core-data-quality",
+        "core-source-evidence",
+        "frontend-engineering",
+        "software-audit",
+        "software-testing",
+        "technology-strategy",
+        "ux-design"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-04",
+      "name": "Backend e integrações",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "WO autorizado",
+      "inputs": "Contratos API, requisitos e lock",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-BE",
+          "task": "implementar serviços",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "backend-engineering",
+            "core-reliable-workflows"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-INT",
+          "task": "integrar APIs",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "api-integrations",
+            "core-data-quality",
+            "core-reliable-workflows"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-DATA",
+          "task": "validar migrações e dados",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-data-quality",
+            "data-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-HEPHAESTUS-QA",
+          "task": "testar contratos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "software-testing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-APPSEC",
+      "reviewer_packages": [
+        "application-security",
+        "core-risk-analysis"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Código, testes e migração ensaiada",
+      "kpi_proposed": "Contratos aprovados; integridade preservada",
+      "scenario_specific_not_run": "Retry não duplica gravação; rollback/roll-forward testado",
+      "next_candidates": [
+        "NLE-WF-ENG-10"
+      ],
+      "eligible_packages_union": [
+        "api-integrations",
+        "application-security",
+        "backend-engineering",
+        "core-data-quality",
+        "core-reliable-workflows",
+        "core-risk-analysis",
+        "data-engineering",
+        "software-testing",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-05",
+      "name": "Mobile Android/iOS",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "WO autorizado",
+      "inputs": "Design e plataformas elegíveis",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-MOB",
+          "task": "implementar app",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "mobile-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-UX",
+          "task": "validar experiência",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "ux-design"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-QA",
+          "task": "testar dispositivos disponíveis",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "software-testing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Build e evidências por plataforma",
+      "kpi_proposed": "AC e testes por plataforma comprovada",
+      "scenario_specific_not_run": "Plataforma sem toolchain fica BLOCKED, não simulada como aprovada",
+      "next_candidates": [
+        "NLE-WF-ENG-10"
+      ],
+      "eligible_packages_union": [
+        "core-accessibility",
+        "core-data-quality",
+        "core-source-evidence",
+        "mobile-engineering",
+        "software-audit",
+        "software-testing",
+        "technology-strategy",
+        "ux-design"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-06",
+      "name": "IA, RAG e automação",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "WO autorizado",
+      "inputs": "Dataset permitido, modelo e orçamento",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-AI",
+          "task": "implementar pipeline e evals",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-security-privacy",
+            "core-tool-budget",
+            "llm-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-AUTO",
+          "task": "integrar workflow",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-reliable-workflows",
+            "core-security-privacy",
+            "workflow-automation"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-INT",
+          "task": "validar contratos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "api-integrations",
+            "core-data-quality",
+            "core-reliable-workflows"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-AISEC",
+      "reviewer_packages": [
+        "agent-security",
+        "core-security-privacy"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Pipeline com avaliação e limites",
+      "kpi_proposed": "Qualidade versus baseline; quota respeitada",
+      "scenario_specific_not_run": "Prompt injection e indisponibilidade do modelo falham fechadas",
+      "next_candidates": [
+        "NLE-WF-ENG-10"
+      ],
+      "eligible_packages_union": [
+        "agent-security",
+        "api-integrations",
+        "core-data-quality",
+        "core-reliable-workflows",
+        "core-security-privacy",
+        "core-tool-budget",
+        "llm-engineering",
+        "technology-strategy",
+        "workflow-automation"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-07",
+      "name": "Web3 arquitetura e integração",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "WO Web3 autorizado",
+      "inputs": "Rede candidata e threat model",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-BARCH",
+          "task": "projetar protocolo",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "blockchain-architecture"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-WINT",
+          "task": "integrar RPC e wallet mock",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "web3-integrations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-INT",
+          "task": "testar contratos externos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "api-integrations",
+            "core-data-quality",
+            "core-reliable-workflows"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SCA",
+      "reviewer_packages": [
+        "smart-contract-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "PoC local e modelo de ameaças",
+      "kpi_proposed": "100% fronteiras de confiança testadas",
+      "scenario_specific_not_run": "RPC divergente ou assinatura não autorizada bloqueia operação",
+      "next_candidates": [
+        "NLE-WF-ENG-08",
+        "NLE-WF-ENG-09"
+      ],
+      "eligible_packages_union": [
+        "api-integrations",
+        "blockchain-architecture",
+        "core-data-quality",
+        "core-reliable-workflows",
+        "smart-contract-audit",
+        "technology-strategy",
+        "web3-integrations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-08",
+      "name": "Smart contracts EVM",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "WO EVM autorizado",
+      "inputs": "Especificação e invariantes",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-EVM",
+          "task": "implementar em ambiente local",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "solidity-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-QA",
+          "task": "testar propriedades",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "software-testing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-PERF",
+          "task": "medir gas e desempenho",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-experiment-design",
+            "performance-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SCA",
+      "reviewer_packages": [
+        "smart-contract-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "Contratos, fuzz/invariantes e evidências",
+      "kpi_proposed": "Invariantes críticas 100%; HIGH=0",
+      "scenario_specific_not_run": "Reentrância, permissões e conservação de ativos testadas em laboratório",
+      "next_candidates": [
+        "NLE-WF-ENG-10"
+      ],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-experiment-design",
+        "performance-engineering",
+        "smart-contract-audit",
+        "software-testing",
+        "solidity-engineering",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-09",
+      "name": "Smart contracts não EVM",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "WO não EVM autorizado",
+      "inputs": "VM, rede e modelo de contas",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-NEVM",
+          "task": "implementar programas locais",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "non-evm-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-BARCH",
+          "task": "validar modelo de estado",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "blockchain-architecture"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-QA",
+          "task": "testar propriedades",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "software-testing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SCA",
+      "reviewer_packages": [
+        "smart-contract-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "Programa, testes e relatório",
+      "kpi_proposed": "Invariantes críticas 100%; HIGH=0",
+      "scenario_specific_not_run": "Conta maliciosa e replay falham sem alteração de estado",
+      "next_candidates": [
+        "NLE-WF-ENG-10"
+      ],
+      "eligible_packages_union": [
+        "blockchain-architecture",
+        "non-evm-engineering",
+        "smart-contract-audit",
+        "software-testing",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-10",
+      "name": "QA, performance e Evidence Bundle",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "Diff pronto",
+      "inputs": "Base/head SHA e AC",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-QA",
+          "task": "rodar suites",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "software-testing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-PERF",
+          "task": "medir regressões",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-experiment-design",
+            "performance-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-REL",
+          "task": "consolidar evidências e checkpoint delta",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-source-evidence",
+            "engineering-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Evidence Bundle e PR candidata",
+      "kpi_proposed": "100% gates aplicáveis comprovados",
+      "scenario_specific_not_run": "Teste ausente, skip artificial ou evidência de SHA errado bloqueiam",
+      "next_candidates": [
+        "NLE-WF-ENG-11"
+      ],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-data-quality",
+        "core-experiment-design",
+        "core-governance-handoff",
+        "core-source-evidence",
+        "engineering-governance",
+        "performance-engineering",
+        "software-audit",
+        "software-testing",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-11",
+      "name": "PR, auditoria e integração",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "Evidence Bundle pronto",
+      "inputs": "PR, checks, fontes e diff",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-REL",
+          "task": "preparar PR e delta",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-source-evidence",
+            "engineering-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ARGUS-APPSEC",
+          "task": "avaliar segurança",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "application-security",
+            "core-risk-analysis"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-CTO",
+          "task": "solicitar decisão de integração",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "technology-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Veredito, checkpoint aprovado e integração autorizada",
+      "kpi_proposed": "HIGH=0; 100% merges com gates",
+      "scenario_specific_not_run": "Head alterado invalida aprovação; sem bypass ou force push",
+      "next_candidates": [
+        "NLE-WF-ENG-12"
+      ],
+      "eligible_packages_union": [
+        "application-security",
+        "core-data-quality",
+        "core-governance-handoff",
+        "core-risk-analysis",
+        "core-source-evidence",
+        "engineering-governance",
+        "software-audit",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-12",
+      "name": "Release, deploy e rollback",
+      "accountable": "NLE-HEPHAESTUS-CTO",
+      "dispatch_agent": "NLE-HEPHAESTUS-CTO",
+      "trigger_proposed": "Versão integrada",
+      "inputs": "Artefato, migração e plano de recuperação",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-HEPHAESTUS-DEVOPS",
+          "task": "ensaiar pipeline",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-security-privacy",
+            "release-infrastructure"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-SRE",
+          "task": "validar monitoramento e rollback",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "reliability-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATLAS-IMP",
+          "task": "validar implantação",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "customer-implementation"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Release candidato e smoke tests",
+      "kpi_proposed": "100% smoke; recuperação ensaiada; gastos novos=0",
+      "scenario_specific_not_run": "Deploy parcial falha fechada e aciona recuperação aprovada",
+      "next_candidates": [
+        "NLE-WF-OPS-01"
+      ],
+      "eligible_packages_union": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "customer-implementation",
+        "release-infrastructure",
+        "reliability-operations",
+        "security-governance",
+        "technology-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-ENG-13",
+      "name": "Manutenção e correções",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Bug, alerta ou SLA",
+      "inputs": "Ticket, logs sanitizados e checkpoint",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATLAS-SUP",
+          "task": "reproduzir problema",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "service-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-SRE",
+          "task": "diagnosticar",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "reliability-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATHENA-PMO",
+          "task": "abrir incremento de correção",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-risk-analysis",
+            "project-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-HEPHAESTUS-REL",
+          "task": "registrar evidência",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-governance-handoff",
+            "core-source-evidence",
+            "engineering-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "WO corretivo e diagnóstico",
+      "kpi_proposed": "MTTR; recorrência; regressões=0",
+      "scenario_specific_not_run": "Não reproduzido não é marcado corrigido",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-data-quality",
+        "core-governance-handoff",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-source-evidence",
+        "engineering-governance",
+        "project-governance",
+        "reliability-operations",
+        "service-operations",
+        "software-audit"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-DIG-01",
+      "name": "Pesquisa de nichos e oferta",
+      "accountable": "NLE-MUSES-CDPO",
+      "dispatch_agent": "NLE-MUSES-CDPO",
+      "trigger_proposed": "Semanal",
+      "inputs": "Pesquisa de mercado e margem",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-MUSES-NICHE",
+          "task": "pesquisar demanda",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "core-source-evidence",
+            "product-discovery"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-MUSES-OFFER",
+          "task": "modelar oferta e preço",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "product-offer"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "calcular cenários",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-MUSES-CDPO",
+          "task": "selecionar proposta",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-experiment-design",
+            "core-unit-economics",
+            "product-offer"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ATHENA-PORT",
+      "reviewer_packages": [
+        "core-capacity-cost",
+        "executive-strategy"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Brief de produto e funil",
+      "kpi_proposed": "Margem prevista e premissas verificáveis",
+      "scenario_specific_not_run": "Sem evidência de demanda não publicar",
+      "next_candidates": [
+        "NLE-WF-DIG-02"
+      ],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-experiment-design",
+        "core-source-evidence",
+        "core-unit-economics",
+        "executive-strategy",
+        "financial-planning",
+        "product-discovery",
+        "product-offer"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-DIG-02",
+      "name": "Produção editorial de e-books",
+      "accountable": "NLE-MUSES-CDPO",
+      "dispatch_agent": "NLE-MUSES-CDPO",
+      "trigger_proposed": "Brief aprovado",
+      "inputs": "Público, fontes e objetivos",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-MUSES-AUTHOR",
+          "task": "escrever conteúdo original",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "longform-writing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-MUSES-ID",
+          "task": "desenhar aprendizagem",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "instructional-design"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-MUSES-EDITOR",
+          "task": "revisar fatos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "longform-writing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-MUSES-ILL",
+          "task": "criar ilustrações",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "creative-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 5,
+          "agent_id": "NLE-MUSES-EDES",
+          "task": "diagramar PDF",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "editorial-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-MUSES-DQA",
+      "reviewer_packages": [
+        "core-accessibility",
+        "digital-product-testing"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "PDF e fontes licenciadas",
+      "kpi_proposed": "100% checklist editorial; erros críticos=0",
+      "scenario_specific_not_run": "Referência falsa ou imagem sem direitos impede entrega",
+      "next_candidates": [
+        "NLE-WF-DIG-03"
+      ],
+      "eligible_packages_union": [
+        "core-accessibility",
+        "core-experiment-design",
+        "core-unit-economics",
+        "creative-production",
+        "digital-product-testing",
+        "editorial-production",
+        "instructional-design",
+        "longform-writing",
+        "product-offer"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-DIG-03",
+      "name": "Funil e assets comerciais",
+      "accountable": "NLE-MUSES-CDPO",
+      "dispatch_agent": "NLE-MUSES-CDPO",
+      "trigger_proposed": "Produto revisado",
+      "inputs": "Produto, preço proposto e público",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-MUSES-OFFER",
+          "task": "definir principal, bump, upsell e downsell",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "product-offer"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-COPY",
+          "task": "redigir copy",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "content-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-APOLLO-DES",
+          "task": "criar peças",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "creative-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-APOLLO-CRO",
+          "task": "projetar landing",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "conversion-optimization",
+            "core-experiment-design"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 5,
+          "agent_id": "NLE-MUSES-ECOM",
+          "task": "preparar checkout",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-reliable-workflows",
+            "digital-commerce"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Pacote de funil em rascunho",
+      "kpi_proposed": "100% preços consistentes; claims comprovados",
+      "scenario_specific_not_run": "Preço divergente ou promessa enganosa bloqueia",
+      "next_candidates": [
+        "NLE-WF-DIG-04"
+      ],
+      "eligible_packages_union": [
+        "content-strategy",
+        "conversion-optimization",
+        "core-accessibility",
+        "core-experiment-design",
+        "core-reliable-workflows",
+        "core-security-privacy",
+        "core-unit-economics",
+        "creative-production",
+        "digital-commerce",
+        "privacy-compliance",
+        "product-offer"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-DIG-04",
+      "name": "Cakto cadastro e homologação",
+      "accountable": "NLE-MUSES-CDPO",
+      "dispatch_agent": "NLE-MUSES-CDPO",
+      "trigger_proposed": "Funil pronto",
+      "inputs": "Artefatos, hashes, escopos API",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-MUSES-ECOM",
+          "task": "preparar cadastro e validar contrato oficial",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-reliable-workflows",
+            "digital-commerce"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-MUSES-DQA",
+          "task": "testar checkout e entrega mock",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "digital-product-testing"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-CTRL",
+          "task": "validar conciliação prevista",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "financial-controllership"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Configuração aprovada e prova de entrega",
+      "kpi_proposed": "100% links e arquivos; compra real não autorizada=0",
+      "scenario_specific_not_run": "Webhook duplicado não libera duas vezes; staging indisponível usa mock",
+      "next_candidates": [
+        "NLE-WF-DIG-05",
+        "NLE-WF-MKT-01"
+      ],
+      "eligible_packages_union": [
+        "core-accessibility",
+        "core-experiment-design",
+        "core-incident-recovery",
+        "core-reliable-workflows",
+        "core-risk-analysis",
+        "core-unit-economics",
+        "digital-commerce",
+        "digital-product-testing",
+        "financial-controllership",
+        "product-offer",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-DIG-05",
+      "name": "Venda, entrega e reembolso",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Evento de pedido",
+      "inputs": "Webhook autenticado e estado de pedido",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-MUSES-ECOM",
+          "task": "normalizar evento e preparar entitlement",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-reliable-workflows",
+            "digital-commerce"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATLAS-IMP",
+          "task": "operar entrega interna permitida",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "customer-implementation"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATLAS-CS",
+          "task": "triar suporte",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "service-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-PLUTUS-CTRL",
+          "task": "conciliar",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "financial-controllership"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Ledger de pedido e comprovante de entrega",
+      "kpi_proposed": "Entrega correta; divergências e reembolsos rastreados",
+      "scenario_specific_not_run": "Evento fora de ordem não reabre acesso indevido; reembolso financeiro exige humano",
+      "next_candidates": [
+        "NLE-WF-FIN-01"
+      ],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-reliable-workflows",
+        "core-risk-analysis",
+        "customer-implementation",
+        "digital-commerce",
+        "financial-controllership",
+        "security-governance",
+        "service-operations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-01",
+      "name": "Estratégia, marca e calendário",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Semanal",
+      "inputs": "Ofertas, público, dados de desempenho",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-BRAND",
+          "task": "definir identidade",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "marketing-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-CONTENT",
+          "task": "planejar conteúdo",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "content-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-APOLLO-SOC",
+          "task": "distribuir formatos",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "social-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-APOLLO-CMO",
+          "task": "priorizar campanhas",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-experiment-design",
+            "core-unit-economics",
+            "marketing-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Calendário e brief de campanha",
+      "kpi_proposed": "100% peças com objetivo e canal",
+      "scenario_specific_not_run": "Claim sem evidência retorna para revisão",
+      "next_candidates": [
+        "NLE-WF-MKT-02",
+        "NLE-WF-MKT-09",
+        "NLE-WF-MKT-10",
+        "NLE-WF-MKT-11",
+        "NLE-WF-MKT-12",
+        "NLE-WF-MKT-13"
+      ],
+      "eligible_packages_union": [
+        "content-strategy",
+        "core-experiment-design",
+        "core-security-privacy",
+        "core-unit-economics",
+        "marketing-strategy",
+        "privacy-compliance",
+        "social-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-02",
+      "name": "Fábrica de criativos",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Brief ou teste solicitado",
+      "inputs": "Identidade, oferta e formatos",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-COPY",
+          "task": "redigir variações",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "content-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-DES",
+          "task": "gerar criativos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "creative-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-APOLLO-VID",
+          "task": "editar vídeo",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "creative-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-APOLLO-CONTENT",
+          "task": "validar narrativa",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "content-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-APOLLO-BRAND",
+      "reviewer_packages": [
+        "marketing-strategy"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Assets com versão e direitos",
+      "kpi_proposed": "100% formatos e direitos; CTR medido após publicação",
+      "scenario_specific_not_run": "Asset protegido sem licença é rejeitado",
+      "next_candidates": [
+        "NLE-WF-MKT-03",
+        "NLE-WF-MKT-04",
+        "NLE-WF-MKT-05",
+        "NLE-WF-MKT-06",
+        "NLE-WF-MKT-07",
+        "NLE-WF-MKT-08"
+      ],
+      "eligible_packages_union": [
+        "content-strategy",
+        "core-accessibility",
+        "core-experiment-design",
+        "core-unit-economics",
+        "creative-production",
+        "marketing-strategy"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-03",
+      "name": "Instagram",
+      "accountable": "NLE-APOLLO-SOC",
+      "dispatch_agent": "NLE-APOLLO-SOC",
+      "trigger_proposed": "Calendário e janela aprovada",
+      "inputs": "Criativo, legenda e conta permitida",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-IG",
+          "task": "adaptar conteúdo, preparar publicação e medir",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "instagram-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-SOC",
+          "task": "validar frequência",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "social-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Post aprovado ou rascunho e métricas",
+      "kpi_proposed": "Publicações verificadas; saves e cliques",
+      "scenario_specific_not_run": "Permissão ausente não publica; timeout reconcilia ID",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-security-privacy",
+        "instagram-content",
+        "privacy-compliance",
+        "social-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-04",
+      "name": "Facebook e comunidades",
+      "accountable": "NLE-APOLLO-SOC",
+      "dispatch_agent": "NLE-APOLLO-SOC",
+      "trigger_proposed": "Calendário aprovado",
+      "inputs": "Assets, página e regras de comunidade",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-FB",
+          "task": "preparar posts de página e sugestões para grupos",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "facebook-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-SOC",
+          "task": "validar frequência e contexto",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "social-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Post de página autorizado ou rascunho manual de grupo",
+      "kpi_proposed": "Engajamento e cliques; spam=0",
+      "scenario_specific_not_run": "Grupo sem caminho autorizado não publica automaticamente",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-security-privacy",
+        "facebook-content",
+        "privacy-compliance",
+        "social-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-05",
+      "name": "TikTok",
+      "accountable": "NLE-APOLLO-SOC",
+      "dispatch_agent": "NLE-APOLLO-SOC",
+      "trigger_proposed": "Calendário aprovado",
+      "inputs": "Vídeo, direitos e consentimentos exigidos",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-TT",
+          "task": "adaptar roteiro e vídeo, preparar draft e metadados",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "tiktok-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-VID",
+          "task": "validar direitos de áudio",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "creative-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Draft ou post autorizado",
+      "kpi_proposed": "Retenção, cliques e status de publicação",
+      "scenario_specific_not_run": "Sem consentimento explícito exigido ou auditoria do app, não publicar publicamente",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-security-privacy",
+        "creative-production",
+        "privacy-compliance",
+        "social-governance",
+        "tiktok-content"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-06",
+      "name": "Pinterest",
+      "accountable": "NLE-APOLLO-SOC",
+      "dispatch_agent": "NLE-APOLLO-SOC",
+      "trigger_proposed": "Calendário aprovado",
+      "inputs": "Pin, board, URL e escopo",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-PIN",
+          "task": "otimizar pin e preparar publicação",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "pinterest-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-SOC",
+          "task": "validar repetição",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "social-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Pin autorizado e ID externo",
+      "kpi_proposed": "Outbound clicks, saves; duplicatas=0",
+      "scenario_specific_not_run": "Board incorreto ou escopo ausente bloqueia",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-security-privacy",
+        "pinterest-content",
+        "privacy-compliance",
+        "social-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-07",
+      "name": "YouTube",
+      "accountable": "NLE-APOLLO-SOC",
+      "dispatch_agent": "NLE-APOLLO-SOC",
+      "trigger_proposed": "Calendário aprovado",
+      "inputs": "Vídeo, thumbnail, título e direitos",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-YT",
+          "task": "otimizar metadados e preparar upload",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "youtube-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-VID",
+          "task": "validar mídia",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "creative-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Vídeo draft ou publicado autorizado",
+      "kpi_proposed": "Retenção, CTR thumbnail; direitos comprovados",
+      "scenario_specific_not_run": "Conta ou licença de mídia não validada bloqueia",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-security-privacy",
+        "creative-production",
+        "privacy-compliance",
+        "social-governance",
+        "youtube-content"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-08",
+      "name": "LinkedIn B2B",
+      "accountable": "NLE-APOLLO-SOC",
+      "dispatch_agent": "NLE-APOLLO-SOC",
+      "trigger_proposed": "Calendário aprovado",
+      "inputs": "Conteúdo técnico e ICP",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-LI",
+          "task": "preparar post e análise B2B",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "linkedin-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HERMES-CRO",
+          "task": "priorizar mensagem comercial",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-unit-economics",
+            "sales-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Rascunho ou publicação por serviço autorizado",
+      "kpi_proposed": "Leads atribuíveis e engajamento qualificado",
+      "scenario_specific_not_run": "Agente A2 não publica nem envia mensagens diretamente",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-security-privacy",
+        "core-unit-economics",
+        "linkedin-content",
+        "privacy-compliance",
+        "sales-strategy",
+        "social-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-09",
+      "name": "SEO, GEO e aquisição orgânica",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Semanal",
+      "inputs": "Site, Search Console autorizado e conteúdo",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-SEO",
+          "task": "auditar e propor melhorias",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "search-optimization"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-CONTENT",
+          "task": "planejar páginas",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "content-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-FE",
+          "task": "preparar alterações em WO",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "frontend-engineering"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Backlog SEO e evidências",
+      "kpi_proposed": "Impressões, CTR e tráfego qualificado",
+      "scenario_specific_not_run": "Mudanças de site seguem ENG; sem cloaking",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "content-strategy",
+        "core-accessibility",
+        "core-data-quality",
+        "core-experiment-design",
+        "core-source-evidence",
+        "core-unit-economics",
+        "frontend-engineering",
+        "marketing-strategy",
+        "search-optimization",
+        "software-audit"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-10",
+      "name": "CRM e ciclo de vida",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Evento de CRM ou revisão diária",
+      "inputs": "Consentimentos, opt-outs e segmentos",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-CRM",
+          "task": "preparar segmentação e mensagens",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-experiment-design",
+            "core-security-privacy",
+            "crm-lifecycle"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HERMES-IN",
+          "task": "triar respostas",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "sales-outreach"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-APOLLO-COPY",
+          "task": "revisar copy",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "content-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "ELEVATED",
+      "output": "Campanha autorizada e lista de supressão",
+      "kpi_proposed": "Conversão e opt-out; mensagens indevidas=0",
+      "scenario_specific_not_run": "Opt-out concorrente revoga envio pendente",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "content-strategy",
+        "core-experiment-design",
+        "core-security-privacy",
+        "core-unit-economics",
+        "crm-lifecycle",
+        "marketing-strategy",
+        "privacy-compliance",
+        "sales-outreach"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-11",
+      "name": "Meta Ads",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Brief ou revisão diária",
+      "inputs": "Conta permitida, métricas e orçamento",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-META",
+          "task": "analisar e preparar campanha/alterações",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "meta-ads-analysis"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-DES",
+          "task": "preparar criativos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-accessibility",
+            "creative-production"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-APOLLO-MKTDA",
+          "task": "validar medição",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-data-quality",
+            "core-security-privacy",
+            "marketing-measurement"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "avaliar CAC e margem",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Plano de campanha ou change set sem ativação",
+      "kpi_proposed": "CPA, ROAS, margem; gasto sem autorização=0",
+      "scenario_specific_not_run": "Qualquer ativação, mudança de verba ou targeting fora do escopo bloqueia",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-accessibility",
+        "core-data-quality",
+        "core-experiment-design",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "core-unit-economics",
+        "creative-production",
+        "financial-planning",
+        "marketing-measurement",
+        "marketing-strategy",
+        "meta-ads-analysis",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-12",
+      "name": "Google Ads",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Brief ou revisão diária",
+      "inputs": "Conta, keywords, conversões e orçamento",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-GOOG",
+          "task": "preparar campanha e validar request em mock/teste",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "google-ads-analysis"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-SEO",
+          "task": "revisar intenção",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "search-optimization"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-APOLLO-MKTDA",
+          "task": "validar conversões",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-data-quality",
+            "core-security-privacy",
+            "marketing-measurement"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "avaliar margem",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Campanha candidata e diagnóstico",
+      "kpi_proposed": "CPA, ROAS, termos irrelevantes; gasto indevido=0",
+      "scenario_specific_not_run": "validate_only indisponível exige mock; não ativa produção",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-data-quality",
+        "core-experiment-design",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "core-unit-economics",
+        "financial-planning",
+        "google-ads-analysis",
+        "marketing-measurement",
+        "marketing-strategy",
+        "search-optimization",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-13",
+      "name": "TikTok Ads e Pinterest Ads",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Experimento aprovado para análise",
+      "inputs": "Hipótese, criativos e políticas",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-PAID",
+          "task": "preparar experimentos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-experiment-design",
+            "emerging-paid-media"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-TT",
+          "task": "adaptar criativo",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "tiktok-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-APOLLO-PIN",
+          "task": "adaptar pin",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "pinterest-content"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "simular custos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Plano experimental por plataforma",
+      "kpi_proposed": "CPA, margem e tamanho de amostra",
+      "scenario_specific_not_run": "Sem orçamento humano ou integração qualificada permanece rascunho",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-experiment-design",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-unit-economics",
+        "emerging-paid-media",
+        "financial-planning",
+        "marketing-strategy",
+        "pinterest-content",
+        "security-governance",
+        "tiktok-content"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-MKT-14",
+      "name": "Mensuração e CRO",
+      "accountable": "NLE-APOLLO-CMO",
+      "dispatch_agent": "NLE-APOLLO-CMO",
+      "trigger_proposed": "Diário e semanal",
+      "inputs": "Eventos e pedidos conciliados",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-APOLLO-MKTDA",
+          "task": "deduplicar eventos e atribuição",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-data-quality",
+            "core-security-privacy",
+            "marketing-measurement"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-APOLLO-CRO",
+          "task": "formular teste",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "conversion-optimization",
+            "core-experiment-design"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "avaliar contribuição",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Dashboard e hipótese de otimização",
+      "kpi_proposed": "Receita conciliada; conversão e incerteza",
+      "scenario_specific_not_run": "Evento duplicado e amostra insuficiente não geram conclusão causal",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "conversion-optimization",
+        "core-data-quality",
+        "core-experiment-design",
+        "core-security-privacy",
+        "core-unit-economics",
+        "financial-planning",
+        "marketing-measurement",
+        "marketing-strategy",
+        "privacy-compliance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-FIN-01",
+      "name": "Conciliação e fechamento",
+      "accountable": "NLE-PLUTUS-CFO",
+      "dispatch_agent": "NLE-PLUTUS-CFO",
+      "trigger_proposed": "Diário e mensal",
+      "inputs": "Pedidos, faturas e extratos de leitura",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-PLUTUS-CTRL",
+          "task": "conciliar receitas e custos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "financial-controllership"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PLUTUS-TREAS",
+          "task": "projetar caixa",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "corporate-finance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-CFO",
+          "task": "consolidar relatório",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "corporate-finance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "DRE gerencial, caixa e divergências",
+      "kpi_proposed": "Diferenças abertas rastreadas; 0 lançamentos fictícios",
+      "scenario_specific_not_run": "Estorno fora de ordem não duplica receita",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "corporate-finance",
+        "financial-controllership",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-FIN-02",
+      "name": "Orçamento e unit economics",
+      "accountable": "NLE-PLUTUS-CFO",
+      "dispatch_agent": "NLE-PLUTUS-CFO",
+      "trigger_proposed": "Semanal ou proposta",
+      "inputs": "Custos, metas e dados de receita",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-PLUTUS-FPA",
+          "task": "modelar cenários",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "calcular margem, CAC e LTV",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-CFO",
+          "task": "propor alocação",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "corporate-finance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Orçamento proposto e análise de margem",
+      "kpi_proposed": "Gasto novo=0 por padrão; premissas rastreadas",
+      "scenario_specific_not_run": "Orçamento insuficiente não libera ação paga",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-unit-economics",
+        "corporate-finance",
+        "financial-planning",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-FIN-03",
+      "name": "FinOps, quotas e custos de IA",
+      "accountable": "NLE-PLUTUS-FINOPS",
+      "dispatch_agent": "NLE-PLUTUS-FINOPS",
+      "trigger_proposed": "Por execução e diário",
+      "inputs": "Telemetria e quotas verificadas",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-PLUTUS-FINOPS",
+          "task": "reservar e reconciliar limites",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "ai-finops",
+            "core-capacity-cost",
+            "core-tool-budget"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATLAS-AOPS",
+          "task": "aplicar backpressure",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-reliable-workflows",
+            "reliability-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ZEUS-CEO",
+          "task": "repriorizar fila",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-incident-recovery",
+            "executive-strategy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Ledger de recursos e alertas",
+      "kpi_proposed": "100% execuções com reserva; overspend=0",
+      "scenario_specific_not_run": "Quota desconhecida ou exaurida impede fallback pago",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "ai-finops",
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-reliable-workflows",
+        "core-risk-analysis",
+        "core-tool-budget",
+        "executive-strategy",
+        "reliability-operations",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-FIN-04",
+      "name": "Compras e renovação",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Solicitação ou vencimento",
+      "inputs": "Fornecedor, licença e custo",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATLAS-PROC",
+          "task": "comparar alternativas",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "procurement"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-PLUTUS-FPA",
+          "task": "avaliar impacto",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ARGUS-LEGAL",
+          "task": "analisar termos",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "legal-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-PLUTUS-CFO",
+      "reviewer_packages": [
+        "corporate-finance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Recomendação de compra sem compromisso",
+      "kpi_proposed": "Custos evitados; renovações rastreadas",
+      "scenario_specific_not_run": "Sem aceite humano não há contratação nem renovação",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "corporate-finance",
+        "financial-planning",
+        "legal-research",
+        "procurement",
+        "service-operations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-QNT-01",
+      "name": "Inteligência macro e sentimento",
+      "accountable": "NLE-POSEIDON-CIO",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Diário útil",
+      "inputs": "Fontes públicas com timestamps",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-POSEIDON-MACRO",
+          "task": "analisar releases",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "macro-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-POSEIDON-SENT",
+          "task": "classificar notícias",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "macro-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-POSEIDON-EQ",
+          "task": "avaliar fundamentos",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "core-source-evidence",
+            "equity-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-POSEIDON-RISK",
+      "reviewer_packages": [
+        "portfolio-risk"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "STANDARD",
+      "output": "Research datado, sem ordens",
+      "kpi_proposed": "100% dados com timestamp; hipóteses explícitas",
+      "scenario_specific_not_run": "Notícia desatualizada ou não confirmada marcada como tal",
+      "next_candidates": [
+        "NLE-WF-QNT-03"
+      ],
+      "eligible_packages_union": [
+        "core-risk-analysis",
+        "core-source-evidence",
+        "equity-research",
+        "investment-research",
+        "macro-research",
+        "portfolio-risk"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-QNT-02",
+      "name": "Cripto e DeFi research",
+      "accountable": "NLE-POSEIDON-CIO",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Diário",
+      "inputs": "Market data público e dados on-chain",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-POSEIDON-CRYPTO",
+          "task": "analisar ativos",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "crypto-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-POSEIDON-CHAIN",
+          "task": "validar métricas on-chain",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "crypto-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-POSEIDON-DEFI",
+          "task": "avaliar riscos de protocolos",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "crypto-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-POSEIDON-RISK",
+      "reviewer_packages": [
+        "portfolio-risk"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Relatório de mercado sem carteira conectada",
+      "kpi_proposed": "Fontes verificáveis; dados stale identificados",
+      "scenario_specific_not_run": "Preço divergente ou RPC inválido bloqueia conclusão",
+      "next_candidates": [
+        "NLE-WF-QNT-03"
+      ],
+      "eligible_packages_union": [
+        "core-risk-analysis",
+        "crypto-research",
+        "investment-research",
+        "portfolio-risk"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-QNT-03",
+      "name": "Estratégia quantitativa e backtest",
+      "accountable": "NLE-POSEIDON-CIO",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Hipótese aprovada",
+      "inputs": "Dataset congelado e hipótese",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-POSEIDON-QR",
+          "task": "definir hipótese e split temporal",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-experiment-design",
+            "quantitative-research"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-POSEIDON-QD",
+          "task": "implementar backtest",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "quantitative-research"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-POSEIDON-DERIV",
+          "task": "validar payoff e custos",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "derivatives-research"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-POSEIDON-RISK",
+      "reviewer_packages": [
+        "portfolio-risk"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "Backtest reprodutível e relatório de riscos",
+      "kpi_proposed": "Sem lookahead; custos e OOS presentes",
+      "scenario_specific_not_run": "Leakage, survivorship bias ou slippage omitido bloqueiam",
+      "next_candidates": [
+        "NLE-WF-QNT-04"
+      ],
+      "eligible_packages_union": [
+        "core-experiment-design",
+        "core-risk-analysis",
+        "derivatives-research",
+        "investment-research",
+        "portfolio-risk",
+        "quantitative-research"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-QNT-04",
+      "name": "Paper trading cripto e forex",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Sessão simulada autorizada",
+      "inputs": "Estratégia aprovada e feed público/mock",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-POSEIDON-CT",
+          "task": "produzir sinais simulados",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "crypto-paper-trading"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-POSEIDON-FX",
+          "task": "produzir sinais simulados",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "forex-paper-trading"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-POSEIDON-TSE",
+          "task": "implementar fills e reconciliação fake",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-reliable-workflows",
+            "trading-simulation-systems"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-ATLAS-AOPS",
+          "task": "operar somente runner simulado",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-reliable-workflows",
+            "reliability-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-POSEIDON-RISK",
+      "reviewer_packages": [
+        "portfolio-risk"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "Ledger de ordens fictícias e PnL simulado",
+      "kpi_proposed": "Drawdown, slippage e reconciliação; ordens reais=0",
+      "scenario_specific_not_run": "Endpoint real, chave privada, stale feed ou perda de limite interrompem sessão",
+      "next_candidates": [
+        "NLE-WF-QNT-05"
+      ],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-reliable-workflows",
+        "crypto-paper-trading",
+        "forex-paper-trading",
+        "portfolio-risk",
+        "reliability-operations",
+        "service-operations",
+        "trading-simulation-systems"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-QNT-05",
+      "name": "Validação de risco e relatório",
+      "accountable": "NLE-POSEIDON-CIO",
+      "dispatch_agent": "NLE-ATHENA-PMO",
+      "trigger_proposed": "Fim da sessão ou backtest",
+      "inputs": "Resultados e baseline",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-POSEIDON-RISK",
+          "task": "calcular exposição e stress",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "portfolio-risk"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-POSEIDON-CIO",
+          "task": "consolidar relatório de pesquisa",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-risk-analysis",
+            "investment-research"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "Parecer de risco e evidências",
+      "kpi_proposed": "100% limites simulados avaliados; sem promessa de retorno",
+      "scenario_specific_not_run": "Resultados negativos não são ocultados; sem promoção a live",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "investment-research",
+        "portfolio-risk",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-OPS-01",
+      "name": "Onboarding e suporte",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Contrato ou ticket",
+      "inputs": "Escopo, SLA e acessos mínimos",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATLAS-IMP",
+          "task": "preparar onboarding",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "customer-implementation"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ATLAS-SUP",
+          "task": "triar incidentes",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "service-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATLAS-CS",
+          "task": "acompanhar sucesso",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "service-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-PRIV",
+      "reviewer_packages": [
+        "core-security-privacy",
+        "privacy-compliance"
+      ],
+      "gate": "POLICY_GATED_EXTERNAL",
+      "risk": "STANDARD",
+      "output": "Ticket, plano e aceite do cliente",
+      "kpi_proposed": "Tempo de resposta, resolução e CSAT",
+      "scenario_specific_not_run": "Cliente incorreto não recebe dados ou acesso",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-security-privacy",
+        "customer-implementation",
+        "privacy-compliance",
+        "service-operations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-OPS-02",
+      "name": "Renovação e retenção",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Sinal de churn ou vencimento",
+      "inputs": "Uso, contrato e feedback",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATLAS-CS",
+          "task": "identificar risco",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "service-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HERMES-AE",
+          "task": "preparar proposta",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "consultative-sales"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-UNIT",
+          "task": "validar rentabilidade",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-unit-economics",
+            "financial-planning"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-LEGAL",
+      "reviewer_packages": [
+        "legal-research"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "STANDARD",
+      "output": "Plano de retenção sem compromisso",
+      "kpi_proposed": "Churn, renovação e margem",
+      "scenario_specific_not_run": "Renovação sem aceite não modifica contrato",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "consultative-sales",
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-unit-economics",
+        "financial-planning",
+        "legal-research",
+        "service-operations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-OPS-03",
+      "name": "Observabilidade e recuperação",
+      "accountable": "NLE-ATLAS-COO",
+      "dispatch_agent": "NLE-ATLAS-COO",
+      "trigger_proposed": "Alerta ou revisão diária",
+      "inputs": "Health checks e backups",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ATLAS-AOPS",
+          "task": "monitorar filas",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-reliable-workflows",
+            "reliability-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-HEPHAESTUS-SRE",
+          "task": "diagnosticar",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "reliability-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-HEPHAESTUS-DEVOPS",
+          "task": "ensaiar restore",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-security-privacy",
+            "release-infrastructure"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-ATLAS-COO",
+          "task": "coordenar incidente",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-capacity-cost",
+            "core-incident-recovery",
+            "service-operations"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-CISO",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "ELEVATED",
+      "output": "Incidente, evidência de recuperação e alerta",
+      "kpi_proposed": "MTTR; RPO/RTO medidos; backups restauráveis",
+      "scenario_specific_not_run": "Restore corrompido bloqueia retomada; produção exige autorização de mudança",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-capacity-cost",
+        "core-incident-recovery",
+        "core-reliable-workflows",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "release-infrastructure",
+        "reliability-operations",
+        "security-governance",
+        "service-operations"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SEC-01",
+      "name": "Segurança contínua e resposta",
+      "accountable": "NLE-ARGUS-CISO",
+      "dispatch_agent": "NLE-ARGUS-CISO",
+      "trigger_proposed": "Alerta, release ou revisão semanal",
+      "inputs": "Logs e artefatos sanitizados",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ARGUS-APPSEC",
+          "task": "avaliar vulnerabilidades",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "application-security",
+            "core-risk-analysis"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ARGUS-AISEC",
+          "task": "testar agentes",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "agent-security",
+            "core-security-privacy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ARGUS-PRIV",
+          "task": "avaliar exposição",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-security-privacy",
+            "privacy-compliance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 4,
+          "agent_id": "NLE-ARGUS-CISO",
+          "task": "propor contenção e bloquear fila",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-risk-analysis",
+            "core-security-privacy",
+            "security-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "Registro de incidente e plano de correção",
+      "kpi_proposed": "HIGH/CRITICAL abertos bloqueiam avanço",
+      "scenario_specific_not_run": "Segredo exposto suspende execução; rotação real só por autoridade habilitada",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "agent-security",
+        "application-security",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "privacy-compliance",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SEC-02",
+      "name": "Compliance e privacidade",
+      "accountable": "NLE-ARGUS-CISO",
+      "dispatch_agent": "NLE-ARGUS-CISO",
+      "trigger_proposed": "Nova integração ou pedido de titular",
+      "inputs": "Inventário de dados e políticas",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ARGUS-PRIV",
+          "task": "mapear finalidade, retenção e acesso",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-security-privacy",
+            "privacy-compliance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ARGUS-LEGAL",
+          "task": "pesquisar requisitos",
+          "autonomy_ceiling": "A1",
+          "eligible_packages": [
+            "legal-research"
+          ],
+          "scope": "analysis_only",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-ATHENA-KM",
+          "task": "registrar fontes e política",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-data-quality",
+            "core-source-evidence",
+            "knowledge-retrieval"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-ORA",
+      "reviewer_packages": [
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "security-governance"
+      ],
+      "gate": "HUMAN_APPROVAL_REQUIRED",
+      "risk": "ELEVATED",
+      "output": "Parecer e política proposta",
+      "kpi_proposed": "100% integrações com finalidade e escopo",
+      "scenario_specific_not_run": "Pedido de exclusão não apaga registros sujeitos a retenção obrigatória sem revisão",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "core-data-quality",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "core-source-evidence",
+        "knowledge-retrieval",
+        "legal-research",
+        "privacy-compliance",
+        "security-governance"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    },
+    {
+      "id": "NLE-WF-SEC-03",
+      "name": "Auditoria de permissões e gastos",
+      "accountable": "NLE-ARGUS-CISO",
+      "dispatch_agent": "NLE-ARGUS-CISO",
+      "trigger_proposed": "Diário e mudança de grants",
+      "inputs": "Eventos de auditoria, locks e autorizações",
+      "steps": [
+        {
+          "step": 1,
+          "agent_id": "NLE-ARGUS-ORA",
+          "task": "detectar segregação violada",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "core-incident-recovery",
+            "core-risk-analysis",
+            "security-governance"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 2,
+          "agent_id": "NLE-ARGUS-AISEC",
+          "task": "validar tool gateway",
+          "autonomy_ceiling": "A2",
+          "eligible_packages": [
+            "agent-security",
+            "core-security-privacy"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        },
+        {
+          "step": 3,
+          "agent_id": "NLE-PLUTUS-FINOPS",
+          "task": "reconciliar uso",
+          "autonomy_ceiling": "A3",
+          "eligible_packages": [
+            "ai-finops",
+            "core-capacity-cost",
+            "core-tool-budget"
+          ],
+          "scope": "internal_draft_or_authorized_internal_action",
+          "external_effects": "DENY"
+        }
+      ],
+      "reviewer": "NLE-ARGUS-SWA",
+      "reviewer_packages": [
+        "core-data-quality",
+        "core-source-evidence",
+        "software-audit"
+      ],
+      "gate": "INTERNAL_ONLY",
+      "risk": "HIGH_ASSURANCE",
+      "output": "Relatório de violações e bloqueios",
+      "kpi_proposed": "Aprovação própria=0; gasto indevido=0",
+      "scenario_specific_not_run": "Grant vencido, escopo divergente ou autoaprovação são negados",
+      "next_candidates": [],
+      "eligible_packages_union": [
+        "agent-security",
+        "ai-finops",
+        "core-capacity-cost",
+        "core-data-quality",
+        "core-incident-recovery",
+        "core-risk-analysis",
+        "core-security-privacy",
+        "core-source-evidence",
+        "core-tool-budget",
+        "security-governance",
+        "software-audit"
+      ],
+      "activation": "DISABLED",
+      "qualification": "NOT_RUN",
+      "new_spend_limit_usd": 0,
+      "effect_policy": "DENY_DEFAULT",
+      "common_tests": [
+        "DUPLICATE_EVENT",
+        "STALE_LOCK",
+        "REVOKED_GRANT",
+        "REVIEWER_SEPARATION",
+        "TIMEOUT_RECONCILE",
+        "COST_CAP"
+      ],
+      "failure": "BLOCKED on missing gate, ambiguous external effect or critical defect; internal retry only if idempotent; route correction to same run; escalate to accountable/ARGUS and owner as needed."
+    }
+  ]
+}

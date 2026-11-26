@@ -1,0 +1,226 @@
+[
+  {
+    "id": "INFRA-Q01",
+    "scenario": "Preflight ARM64",
+    "acceptance": "Verificar digest multiarch, glibc, versão e licença; falha bloqueia instalação",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q02",
+    "scenario": "Baseline RAM",
+    "acceptance": "Teste com carga representativa e MemAvailable >=2GiB, sem OOM",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q03",
+    "scenario": "CPU saturada",
+    "acceptance": "Bloquear novo job pesado, preservar API/DB",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q04",
+    "scenario": "Disco cheio",
+    "acceptance": "Pausar ingestão antes do limite, não apagar outros projetos",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q05",
+    "scenario": "VPN",
+    "acceptance": "Somente peers aprovados acessam painel; revogação nega imediatamente",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q06",
+    "scenario": "Portas públicas",
+    "acceptance": "Scan autorizado confirma DB/MCP/Portainer não expostos",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q07",
+    "scenario": "Auth",
+    "acceptance": "Usuário não autorizado recebe deny em UI e API",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q08",
+    "scenario": "Worker offline",
+    "acceptance": "Desconectar Windows; job permanece durável e reconciliado",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q09",
+    "scenario": "Worker crash",
+    "acceptance": "Lease expirado não causa execução concorrente, fencing comprovado",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q10",
+    "scenario": "Cancelamento",
+    "acceptance": "Confirmar término de processo e tool child antes de reatribuir",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q11",
+    "scenario": "Deduplicação",
+    "acceptance": "Repetir evento e provar uma única transição efetiva",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q12",
+    "scenario": "Efeito desconhecido",
+    "acceptance": "Simular timeout após efeito; bloquear retry até read-back",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q13",
+    "scenario": "Fila cheia",
+    "acceptance": "Backpressure sem perda de jobs aceitos",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q14",
+    "scenario": "Fairness",
+    "acceptance": "Dois tenants progridem sem starvation",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q15",
+    "scenario": "Limite global",
+    "acceptance": "Dois hosts disputam um slot; só um concede lease LLM",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q16",
+    "scenario": "Quota 429",
+    "acceptance": "Suspender chamadas e aguardar reset oficial",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q17",
+    "scenario": "Quota desconhecida",
+    "acceptance": "Sem scheduler; somente piloto supervisionado ou deny",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q18",
+    "scenario": "Custo desconhecido",
+    "acceptance": "Bloquear provider antes da chamada",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q19",
+    "scenario": "Fallback pago",
+    "acceptance": "Simular esgotamento; nenhum endpoint pago acionado",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q20",
+    "scenario": "Login Codex",
+    "acceptance": "Login oficial e read-back; nenhuma cópia de token",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q21",
+    "scenario": "Router",
+    "acceptance": "Desligado por padrão; egress não permitido bloqueado",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q22",
+    "scenario": "Isolamento cliente",
+    "acceptance": "A não recupera B por cache, RLS, graph ou workspace",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q23",
+    "scenario": "Autoedição",
+    "acceptance": "Agente não modifica identidade, políticas, skills aprovadas",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q24",
+    "scenario": "Escalada",
+    "acceptance": "Sem sudo/Docker socket/DB admin; grants revogados negados",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q25",
+    "scenario": "Context Lock",
+    "acceptance": "Mudança crítica durante fila -> STALE",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q26",
+    "scenario": "Backup",
+    "acceptance": "Manifest consistente DB/storage e chave separada",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q27",
+    "scenario": "Restore completo",
+    "acceptance": "RPO/RTO medidos; restauração isolada sem efeitos externos",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q28",
+    "scenario": "Revogação restore",
+    "acceptance": "Tombstones aplicados antes de disponibilizar dados",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q29",
+    "scenario": "Reboot VPS",
+    "acceptance": "Recuperar filas/outbox e evitar duplicação",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q30",
+    "scenario": "Rollback release",
+    "acceptance": "Restaurar versão aprovada e verificar schema compatível",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q31",
+    "scenario": "Reclaim VPS",
+    "acceptance": "Simular perda total; restore independente ou gate BLOCKED",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  },
+  {
+    "id": "INFRA-Q32",
+    "scenario": "CI e custos",
+    "acceptance": "Verificar quotas, sem pipeline pago/segredos em PR não confiável",
+    "status": "NOT_RUN",
+    "fixture": "synthetic or controlled lab; no real client data/paid effects"
+  }
+]

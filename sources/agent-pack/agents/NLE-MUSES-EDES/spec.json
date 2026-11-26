@@ -1,0 +1,63 @@
+{
+  "id": "NLE-MUSES-EDES",
+  "department": "MUSES",
+  "role": "Senior Editorial Designer",
+  "level": "Senior",
+  "reports_to": "NLE-MUSES-CDPO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Renderizar e revisar arquivos locais;sem publicar produto",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Diagramar e-books e materiais digitais com qualidade visual",
+  "skills": [
+    "tipografia editorial",
+    "grid",
+    "diagramação PDF",
+    "sumário navegável",
+    "hierarquia",
+    "design de capa",
+    "paginação",
+    "acessibilidade",
+    "pré-impressão",
+    "compressão",
+    "controle de overflow"
+  ],
+  "tools_candidates": [
+    "InDesign/Scribus se disponível",
+    "ReportLab",
+    "Figma",
+    "PDF tools"
+  ],
+  "kpi_targets_proposed": [
+    "100% páginas sem clipping",
+    "100% links críticos funcionais",
+    "100% assets licenciados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-MUSES-EDES-Q01",
+      "scenario": "Diagramar amostra de 20 páginas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-EDES-Q02",
+      "scenario": "verificar sumário e links",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-EDES-Q03",
+      "scenario": "renderizar e inspecionar páginas com tabelas longas",
+      "status": "NOT_RUN"
+    }
+  ]
+}

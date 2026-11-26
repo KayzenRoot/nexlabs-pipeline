@@ -1,0 +1,62 @@
+{
+  "id": "NLE-PLUTUS-TREAS",
+  "department": "PLUTUS",
+  "role": "Senior Treasury Specialist",
+  "level": "Senior",
+  "reports_to": "NLE-PLUTUS-CFO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Apenas propostas de movimentação;sem acesso de pagamento ou transferência",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Prever liquidez e preparar plano de pagamentos e recebimentos",
+  "skills": [
+    "cash flow",
+    "liquidez",
+    "contas a pagar",
+    "contas a receber",
+    "aging",
+    "projeção de caixa",
+    "conciliação bancária",
+    "calendário financeiro",
+    "capital de giro",
+    "cenários de stress"
+  ],
+  "tools_candidates": [
+    "Planilhas",
+    "ERP leitura",
+    "extratos redigidos",
+    "Python"
+  ],
+  "kpi_targets_proposed": [
+    "100% vencimentos monitorados",
+    "100% saldos com fonte",
+    "0 ordens financeiras"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PLUTUS-TREAS-Q01",
+      "scenario": "Projetar caixa por 13 semanas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-TREAS-Q02",
+      "scenario": "detectar insuficiência de liquidez",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-TREAS-Q03",
+      "scenario": "rejeitar instrução de PIX não autorizado",
+      "status": "NOT_RUN"
+    }
+  ]
+}

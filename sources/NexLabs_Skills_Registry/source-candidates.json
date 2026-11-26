@@ -1,0 +1,182 @@
+[
+  {
+    "id": "PC",
+    "name": "Paperclip",
+    "url": "https://docs.paperclip.ing/reference/skills/",
+    "license_observation": "oficial; licença por artefato",
+    "scope": "company skills e governança; verificar adaptador",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "OA",
+    "name": "OpenAI Skills",
+    "url": "https://github.com/openai/skills",
+    "license_observation": "licença por skill",
+    "scope": "skill-creator e artefatos; verificar disponibilidade/licença",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "ANT",
+    "name": "Anthropic Skills",
+    "url": "https://github.com/anthropics/skills",
+    "license_observation": "mista/por skill; não presumir OSS",
+    "scope": "documentos e criação; revisão individual",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "VER",
+    "name": "Vercel Agent Skills",
+    "url": "https://github.com/vercel-labs/agent-skills",
+    "license_observation": "MIT no repositório",
+    "scope": "React e design web; bloquear deploy",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "SUP",
+    "name": "Supabase Agent Skills",
+    "url": "https://github.com/supabase/agent-skills",
+    "license_observation": "MIT no repositório",
+    "scope": "Postgres e Supabase; somente ambiente local",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "TOB",
+    "name": "Trail of Bits",
+    "url": "https://github.com/trailofbits/skills",
+    "license_observation": "CC-BY-SA-4.0 no repositório",
+    "scope": "auditoria e testes; atribuição e share-alike quando aplicável",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "PASH",
+    "name": "Pashov Audit Group",
+    "url": "https://github.com/pashov/skills",
+    "license_observation": "MIT no repositório",
+    "scope": "Solidity security; fixtures locais",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "MKT",
+    "name": "Marketing Skills (Corey Haines)",
+    "url": "https://github.com/coreyhaines31/marketingskills",
+    "license_observation": "MIT no repositório",
+    "scope": "copy, SEO, CRO, campanhas; comunidade, não fornecedor oficial",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "GOOG",
+    "name": "Google Skills",
+    "url": "https://github.com/google/skills",
+    "license_observation": "verificar por artefato",
+    "scope": "Google Ads e Analytics; leitura ou mocks",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "CG",
+    "name": "CoinGecko Skills",
+    "url": "https://github.com/coingecko/skills",
+    "license_observation": "licença por artefato a confirmar",
+    "scope": "dados de mercado; quotas e termos",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "BIN",
+    "name": "Binance Skills Hub",
+    "url": "https://www.binance.com/en/skills",
+    "license_observation": "licença por skill a confirmar",
+    "scope": "somente dados públicos; excluir skills de ordens e wallets",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "META",
+    "name": "Meta developer docs",
+    "url": "https://developers.facebook.com/docs/",
+    "license_observation": "referência técnica, não pacote de skill",
+    "scope": "Meta Ads/Graph; confirmar versão e permissões",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "TIK",
+    "name": "TikTok developer docs",
+    "url": "https://developers.tiktok.com/",
+    "license_observation": "referência técnica, não pacote de skill",
+    "scope": "API e regras vigentes",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "PIN",
+    "name": "Pinterest developer docs",
+    "url": "https://developers.pinterest.com/",
+    "license_observation": "referência técnica, não pacote de skill",
+    "scope": "API e regras vigentes",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "YT",
+    "name": "YouTube developer docs",
+    "url": "https://developers.google.com/youtube",
+    "license_observation": "referência técnica, não pacote de skill",
+    "scope": "API e regras vigentes",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "LI",
+    "name": "LinkedIn developer docs",
+    "url": "https://learn.microsoft.com/en-us/linkedin/",
+    "license_observation": "referência técnica, não pacote de skill",
+    "scope": "API e regras vigentes",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "CAK",
+    "name": "Cakto docs",
+    "url": "https://docs.cakto.com.br/",
+    "license_observation": "referência candidata, URL a confirmar",
+    "scope": "contratos de integração; mocks",
+    "status": "CANDIDATE_NOT_APPROVED",
+    "commit_sha": null,
+    "content_sha256": null
+  },
+  {
+    "id": "OWN",
+    "name": "NexLabs original",
+    "url": "internal://nexlabs",
+    "license_observation": "licença interna a ratificar",
+    "scope": "autoria própria com fontes técnicas verificadas",
+    "status": "PROPOSED_INTERNAL",
+    "commit_sha": null,
+    "content_sha256": null
+  }
+]

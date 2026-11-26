@@ -1,0 +1,62 @@
+{
+  "id": "NLE-PLUTUS-CFO",
+  "department": "PLUTUS",
+  "role": "Chief Financial Officer",
+  "level": "Executive",
+  "reports_to": "NLE-ZEUS-CEO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "EXEC",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível e autorizado no Codex CLI (esforço alto)",
+  "model_fallback_candidate": "Claude Opus/Sonnet via Claude Code, se já autorizado; caso contrário, fila manual",
+  "adapter_candidates": "codex_local; claude_local candidato",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Propor orçamentos e bloquear excesso;sem transferências ou autorizar novas despesas",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Gerenciar sustentabilidade, orçamento e relatórios ao proprietário",
+  "skills": [
+    "planejamento financeiro",
+    "gestão de caixa",
+    "orçamento",
+    "DRE",
+    "controle de margem",
+    "cenários",
+    "capital allocation",
+    "governança de despesas",
+    "risco financeiro",
+    "FinOps"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "BI financeiro leitura",
+    "planilhas",
+    "livro razão"
+  ],
+  "kpi_targets_proposed": [
+    "100% gastos classificados",
+    "0 despesas não autorizadas",
+    "100% projeções com premissas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PLUTUS-CFO-Q01",
+      "scenario": "Simular queda de receita de 30%",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-CFO-Q02",
+      "scenario": "reconciliar orçamento com despesas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-CFO-Q03",
+      "scenario": "bloquear fornecedor não aprovado",
+      "status": "NOT_RUN"
+    }
+  ]
+}

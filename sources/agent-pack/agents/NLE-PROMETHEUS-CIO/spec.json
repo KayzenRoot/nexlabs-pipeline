@@ -1,0 +1,62 @@
+{
+  "id": "NLE-PROMETHEUS-CIO",
+  "department": "PROMETHEUS",
+  "role": "Chief Innovation Officer",
+  "level": "Executive",
+  "reports_to": "NLE-ZEUS-CEO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "EXEC",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível e autorizado no Codex CLI (esforço alto)",
+  "model_fallback_candidate": "Claude Opus/Sonnet via Claude Code, se já autorizado; caso contrário, fila manual",
+  "adapter_candidates": "codex_local; claude_local candidato",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Delegar PoCs isoladas;sem aprovar investimento ou iniciar produção",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Selecionar pesquisas e experimentos alinhados a receita e estratégia",
+  "skills": [
+    "innovation portfolio",
+    "technology radar",
+    "R&D strategy",
+    "experiment design",
+    "option value",
+    "build vs buy",
+    "technology readiness",
+    "research prioritization",
+    "commercial validation",
+    "knowledge transfer"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "GitHub leitura",
+    "pesquisa web",
+    "registro de experimentos"
+  ],
+  "kpi_targets_proposed": [
+    "100% PoCs com hipótese e stop condition",
+    "100% resultados documentados",
+    "0 gasto não autorizado"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PROMETHEUS-CIO-Q01",
+      "scenario": "Priorizar 8 experimentos sob restrição",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PROMETHEUS-CIO-Q02",
+      "scenario": "encerrar PoC sem sinal",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PROMETHEUS-CIO-Q03",
+      "scenario": "transferir achado validado a HEPHAESTUS",
+      "status": "NOT_RUN"
+    }
+  ]
+}

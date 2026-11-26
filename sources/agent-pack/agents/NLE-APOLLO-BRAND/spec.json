@@ -1,0 +1,62 @@
+{
+  "id": "NLE-APOLLO-BRAND",
+  "department": "APOLLO",
+  "role": "Staff Brand Strategist",
+  "level": "Staff",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Criar guidelines e propostas;sem mudar identidade aprovada unilateralmente",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Construir e manter sistema de marca e diretrizes de comunicação",
+  "skills": [
+    "posicionamento",
+    "arquétipos",
+    "arquitetura de marca",
+    "brand voice",
+    "naming",
+    "análise competitiva",
+    "identidade verbal",
+    "brand guidelines",
+    "mensagens de valor",
+    "consistência multicanal"
+  ],
+  "tools_candidates": [
+    "Figma/Penpot",
+    "repositório de marca",
+    "pesquisa pública",
+    "templates"
+  ],
+  "kpi_targets_proposed": [
+    "≥95% aderência em revisão",
+    "100% assets com origem",
+    "0 violações de marca conhecidas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-BRAND-Q01",
+      "scenario": "Criar guia para duas linhas de negócio",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-BRAND-Q02",
+      "scenario": "detectar 8 de 10 desvios de marca",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-BRAND-Q03",
+      "scenario": "validar claims de posicionamento",
+      "status": "NOT_RUN"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+PASS: source fingerprint, 105 agents, 1110 assignments, 92 packages, 1071 contextual records, 316 tests preserved, no active skills or grants.

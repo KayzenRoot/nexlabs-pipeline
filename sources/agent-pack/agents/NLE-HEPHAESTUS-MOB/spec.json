@@ -1,0 +1,63 @@
+{
+  "id": "NLE-HEPHAESTUS-MOB",
+  "department": "HEPHAESTUS",
+  "role": "Senior Mobile Engineer",
+  "level": "Senior",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Branch e builds de teste;sem distribuição em lojas ou push real",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Implementar aplicativos móveis e validar build e fluxos",
+  "skills": [
+    "Flutter",
+    "React Native",
+    "Android",
+    "iOS",
+    "offline-first",
+    "secure storage",
+    "deep links",
+    "push notifications",
+    "performance mobile",
+    "testes de dispositivo"
+  ],
+  "tools_candidates": [
+    "Flutter SDK",
+    "Android SDK",
+    "Xcode quando disponível",
+    "Git",
+    "emuladores"
+  ],
+  "kpi_targets_proposed": [
+    "100% builds alvo qualificados",
+    "0 segredos em storage inseguro",
+    "100% fluxos críticos cobertos"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-MOB-Q01",
+      "scenario": "Testar sync offline com conflito",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-MOB-Q02",
+      "scenario": "validar deep link malicioso",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-MOB-Q03",
+      "scenario": "gerar build e smoke test nas plataformas disponíveis",
+      "status": "NOT_RUN"
+    }
+  ]
+}

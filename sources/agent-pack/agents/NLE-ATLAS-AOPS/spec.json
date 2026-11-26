@@ -1,0 +1,64 @@
+{
+  "id": "NLE-ATLAS-AOPS",
+  "department": "ATLAS",
+  "role": "Staff Agent Operations Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-ATLAS-COO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Pausar/reiniciar agentes permitidos;sem reconfigurar permissões ou segredos sem gate",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Manter agentes saudáveis e interromper loops ou execuções anômalas",
+  "skills": [
+    "agent health",
+    "heartbeat scheduling",
+    "queue backpressure",
+    "worker isolation",
+    "session recovery",
+    "retry policies",
+    "observability",
+    "run cancellation",
+    "configuration drift",
+    "disaster recovery",
+    "capacity metrics"
+  ],
+  "tools_candidates": [
+    "Paperclip API",
+    "Docker",
+    "Netdata",
+    "logs",
+    "Python"
+  ],
+  "kpi_targets_proposed": [
+    "0 loops ilimitados",
+    "100% runs críticos com trilha",
+    "100% recuperação testada"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ATLAS-AOPS-Q01",
+      "scenario": "Simular 105 agentes com concorrência limitada",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-AOPS-Q02",
+      "scenario": "recuperar run interrompido sem duplicar efeito",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-AOPS-Q03",
+      "scenario": "detectar drift de configuração",
+      "status": "NOT_RUN"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "NLE-HERMES-PART",
+  "department": "HERMES",
+  "role": "Senior Partnership Manager",
+  "level": "Senior",
+  "reports_to": "NLE-HERMES-CRO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Preparar propostas e diligência;sem firmar exclusividade ou comissão",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Prospectar e estruturar parcerias comerciais verificáveis",
+  "skills": [
+    "mapeamento de parceiros",
+    "co-selling",
+    "revenda",
+    "afiliados",
+    "due diligence",
+    "economia de canais",
+    "contratos de parceria",
+    "governança de indicação",
+    "conflito de interesse",
+    "performance de parceiros"
+  ],
+  "tools_candidates": [
+    "CRM",
+    "web pública",
+    "planilhas",
+    "registro de parceiros"
+  ],
+  "kpi_targets_proposed": [
+    "100% parceiros com diligência",
+    "100% com regras de atribuição",
+    "0 compromissos sem aprovação"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HERMES-PART-Q01",
+      "scenario": "Avaliar 5 parceiros fictícios",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-PART-Q02",
+      "scenario": "detectar conflito de interesse",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-PART-Q03",
+      "scenario": "propor comissão com cenário de margem",
+      "status": "NOT_RUN"
+    }
+  ]
+}

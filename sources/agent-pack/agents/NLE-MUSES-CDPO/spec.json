@@ -1,0 +1,63 @@
+{
+  "id": "NLE-MUSES-CDPO",
+  "department": "MUSES",
+  "role": "Chief Digital Product Officer",
+  "level": "Executive",
+  "reports_to": "NLE-ZEUS-CEO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "EXEC",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível e autorizado no Codex CLI (esforço alto)",
+  "model_fallback_candidate": "Claude Opus/Sonnet via Claude Code, se já autorizado; caso contrário, fila manual",
+  "adapter_candidates": "codex_local; claude_local candidato",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Delegar criação e aprovar drafts;sem ativar checkout ou gastos sem gate",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Definir portfólio, metas e prioridades da fábrica digital",
+  "skills": [
+    "estratégia de infoprodutos",
+    "portfólio digital",
+    "pricing",
+    "unit economics",
+    "product positioning",
+    "gestão editorial",
+    "go-to-market",
+    "controle de qualidade",
+    "retention",
+    "experimentação"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "Cakto leitura",
+    "analytics",
+    "planilhas",
+    "catálogo"
+  ],
+  "kpi_targets_proposed": [
+    "100% produtos com hipótese",
+    "100% ofertas com margem estimada",
+    "0 lançamento sem QA"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-MUSES-CDPO-Q01",
+      "scenario": "Priorizar 6 nichos com evidências",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-CDPO-Q02",
+      "scenario": "calcular economia de oferta fictícia",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-CDPO-Q03",
+      "scenario": "bloquear lançamento sem direitos de assets",
+      "status": "NOT_RUN"
+    }
+  ]
+}

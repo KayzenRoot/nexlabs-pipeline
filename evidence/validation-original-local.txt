@@ -1,0 +1,19 @@
+PASS: 6 ZIPs and 364 locked source files, extracted bytes preserved
+PASS: all embedded cross-plan source locks match
+PASS: 105 agents, 316 individual scenarios, 92 packages, 1110 assignments, 1071 contextual competencies, hierarchy and disabled baseline
+PASS: 5 dispatch-only discrepancies preserved; C12 requires correction before runtime
+PASS: 62 workflows, 638 matrix rows, 1110 trace rows, reviewer segregation and gates
+PASS: INT/INFRA/CC bindings and 35 screens, 48/32/59 planned scenarios, resource and cost caps
+PASS: 40 domain WOs, no missing/duplicate IDs, sequential gate
+test_added_source (test_sources.SourceTests.test_added_source) ... ok
+test_bypassed_predecessor (test_sources.SourceTests.test_bypassed_predecessor) ... ok
+test_duplicate_work_order (test_sources.SourceTests.test_duplicate_work_order) ... ok
+test_missing_source (test_sources.SourceTests.test_missing_source) ... ok
+test_tampered_catalog (test_sources.SourceTests.test_tampered_catalog) ... ok
+test_unapproved_activation (test_sources.SourceTests.test_unapproved_activation) ... ok
+test_valid_snapshot (test_sources.SourceTests.test_valid_snapshot) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.696s
+
+OK

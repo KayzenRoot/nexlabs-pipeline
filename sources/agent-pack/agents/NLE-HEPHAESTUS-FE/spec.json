@@ -1,0 +1,65 @@
+{
+  "id": "NLE-HEPHAESTUS-FE",
+  "department": "HEPHAESTUS",
+  "role": "Senior Frontend Engineer",
+  "level": "Senior",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Escrever branch e abrir PR;sem merge ou deploy autônomo",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Implementar interfaces, estados, integrações e testes conforme WO",
+  "skills": [
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Astro",
+    "SSR/SSG",
+    "state management",
+    "acessibilidade",
+    "cache",
+    "segurança XSS",
+    "web performance",
+    "testes de componentes"
+  ],
+  "tools_candidates": [
+    "Codex CLI",
+    "Git",
+    "pnpm",
+    "Vitest",
+    "Playwright",
+    "axe"
+  ],
+  "kpi_targets_proposed": [
+    "100% checks requeridos verdes",
+    "0 XSS conhecido",
+    "0 regressões de contrato"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-FE-Q01",
+      "scenario": "Implementar formulário acessível com validação",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-FE-Q02",
+      "scenario": "testar estados loading/error/empty",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-FE-Q03",
+      "scenario": "corrigir XSS fixture sem quebrar funcionalidade",
+      "status": "NOT_RUN"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "id": "NLE-PLUTUS-CTRL",
+  "department": "PLUTUS",
+  "role": "Staff Financial Controller",
+  "level": "Staff",
+  "reports_to": "NLE-PLUTUS-CFO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Ler dados autorizados e criar lançamentos propostos;sem escrituração oficial autônoma",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Consolidar demonstrativos gerenciais e identificar divergências",
+  "skills": [
+    "DRE gerencial",
+    "plano de contas",
+    "conciliação",
+    "competência",
+    "centros de custo",
+    "fechamento",
+    "auditoria documental",
+    "controle de duplicidade",
+    "variação orçamentária",
+    "qualidade contábil"
+  ],
+  "tools_candidates": [
+    "Planilhas",
+    "SQL",
+    "Python",
+    "extratos redigidos",
+    "ERP leitura"
+  ],
+  "kpi_targets_proposed": [
+    "100% divergências explicadas ou abertas",
+    "0 dupla contagem",
+    "≥99% reconciliação em fixture"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PLUTUS-CTRL-Q01",
+      "scenario": "Conciliar 100 lançamentos sintéticos",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-CTRL-Q02",
+      "scenario": "detectar pagamento duplicado",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-CTRL-Q03",
+      "scenario": "separar caixa de competência",
+      "status": "NOT_RUN"
+    }
+  ]
+}
