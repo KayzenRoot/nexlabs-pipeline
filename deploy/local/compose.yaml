@@ -1,0 +1,11 @@
+# Windows 11 local-first override.
+# Usage:
+#   docker compose --env-file <protected-secrets-file> \
+#     -f deploy/compose.yaml -f deploy/local/compose.yaml up -d
+# The port is bound to loopback only. Never change this to a wildcard bind.
+services:
+  paperclip:
+    ports:
+      - "127.0.0.1:${PAPERCLIP_PORT:-3100}:3100"
+    volumes:
+      - "${PAPERCLIP_DATA_DIR:?PAPERCLIP_DATA_DIR must be set to a persistent path}:/paperclip"

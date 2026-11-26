@@ -40,3 +40,10 @@ Base: 48d3e422313f869992d09b99f0b7e09acd4e1caa (minimal README initialization on
 ### CD-02 completion (2026-11-26)
 O ZIP completo foi localizado, verificado e extraído; 364/364 hashes conferem com o source-lock; os 325 arquivos já versionados foram comparados byte a byte com o lock e preservados. Os 39 ausentes foram adicionados. Documentos candidatos foram substituídos pelas versões completas do pacote e reconciliados com NLE-ADR-BOOT-006/007, CD-01 e CD-02. Context Lock real gerado. Nenhum runtime, deploy, merge ou gasto.
 
+## Checkpoint Delta candidato | NLE-INFRA-WO-001/CD-02 (não promovido)
+- Decisão: NLE-ADR-INFRA-011 (LOCAL FIRST). O proprietário autorizou instalar/validar Paperclip localmente primeiro; VPS, SSH e deploy remoto permanecem fora de escopo.
+- Estado: artefatos de deployment implementados (compose base/local/VPS, imagem pinada por índice multi-arquitetura, scripts PowerShell, testes de contrato, documentação, Context Lock novo). O Context Lock CD-01 anterior foi marcado STALE e preservado em `locks/history/`.
+- Runtime: **BLOCKED_DOCKER_DESKTOP_ABSENT**. Docker Desktop e `docker` CLI não estão instalados; WSL2 existe (Ubuntu-26.04, versão 2) e a virtualização está habilitada. A instalação exige ação administrativa não autorizada e não foi executada.
+- Sem segredos no Git; segredos locais serão gerados fora do repositório em diretório protegido.
+- Nenhum merge, deploy, agente, workflow, heartbeat, efeito externo ou gasto. Promoção somente após auditoria independente APPROVED e autorização do proprietário.
+

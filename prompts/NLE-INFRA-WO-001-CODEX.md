@@ -76,3 +76,6 @@ Compare os relatórios com os critérios do Work Order e do plano de infraestrut
 
 ## Stop condition
 Se não conseguir executar em ambos os hosts, não declare NLE-INFRA-WO-001 concluído. Registre o que foi comprovado, o que ficou UNKNOWN/BLOCKED e pare. Não comece NLE-SR-WO-001, não instale Paperclip e não avance para qualquer outro Work Order.
+
+## Delta CD-02 | LOCAL FIRST (instrução vigente)
+Esta instrução substitui **somente** a proibição de instalação local do CD-01. O proprietário autorizou instalar e validar Paperclip primeiro neste Windows 11, com Docker Desktop/WSL2, antes da VPS. Implemente `deploy/compose.yaml`, `deploy/local/`, `deploy/vps/`, `scripts/windows/` e `tests/deployment/`; use a imagem oficial pinada por digest; acesso exclusivo `127.0.0.1:3100`; segredos fora do Git; PostgreSQL incorporado persistente; backup/restore; preparação Codex por assinatura, sem API key; composição VPS futura com PostgreSQL externo e ARM64. Não acesse a VPS, não faça deploy, não ative agentes, workflows, heartbeats ou efeitos externos, não instale Docker Desktop nem habilite recursos do Windows sem autorização administrativa. Se Docker Desktop/WSL2 não estiver disponível, implemente e teste o que for seguro, marque a instalação de runtime como BLOCKED e apresente a ação exata; não declare Paperclip instalado.

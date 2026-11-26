@@ -1,8 +1,8 @@
-# NLE-INFRA-WO-001 | Read-only infrastructure inventory and compatibility
+# NLE-INFRA-WO-001 | Infrastructure inventory and local-first Paperclip
 
-**Status:** ACTIVE, owner-authorized on 2026-11-26  
-**Risk:** LOW for collection; host evidence remains unqualified until executed  
-**Repository:** KayzenRoot/nexlabs-pipeline  
+**Status:** ACTIVE — **CD-02 LOCAL FIRST**, owner-ratified on 2026-11-26. The CD-01 read-only inventory below is preserved as historical sub-scope; see **Delta CD-02** at the end.
+**Risk:** ELEVATED for local Paperclip installation; runtime is BLOCKED while Docker Desktop is absent.
+**Repository:** KayzenRoot/nexlabs-pipeline
 **Base SHA:** 8321110a2ff29aec90ffc1c384ea21f722de0497  
 **Branch:** work/nle-infra-wo-001
 
@@ -114,3 +114,45 @@ Stop on missing or ambiguous SSH access, unexpected mutation requirement, secret
 
 ## NEXT DEPENDENCY
 After this WO is APPROVED, the canonical backlog's next increment is NLE-SR-WO-001 (registry schema, locks, quarantine and validator), followed by NLE-INFRA-WO-002 (private network, identity, secrets and isolation), NLE-WF-WO-001 (event/authorization/ledger contract), and then NLE-INFRA-WO-003 (Paperclip + PostgreSQL deployment and initial backups). Paperclip installation is deliberately not pulled into this read-only WO.
+
+## Delta CD-02 | LOCAL FIRST (owner-ratified 2026-11-26)
+
+**Decision:** NLE-ADR-INFRA-011. This delta supersedes only the CD-01 prohibition on installing Paperclip locally. The CD-01 read-only inventory and its collectors remain preserved as history/subscope. VPS access, SSH, firewall/NSG/DNS changes, remote deploy, agents, API keys, subscriptions, spend and external effects remain out of scope.
+
+### Objective CD-02
+Install and validate the first functional Paperclip instance **locally on this Windows 11 host**, before any VPS Oracle deployment, with a portable composition prepared for future Ubuntu ARM64 operation. If a prerequisite requires an unauthorized administrative action, stop with the exact action and do not install it.
+
+### Local architecture
+- Windows 11 host; Docker Desktop with WSL2 backend; Linux containers.
+- Official self-hosted Paperclip image `ghcr.io/paperclipai/paperclip:2026.1117.0@sha256:bdf38d10544dc6c831e16dc027f23ad586353ef3be1a1b2c6979e63b956aceb1` (OCI index with `linux/amd64` and `linux/arm64`).
+- Embedded PostgreSQL in the quickstart, persistent under the data mount; no separate PostgreSQL install locally.
+- VPS future: external PostgreSQL 17 pinned by digest, same Paperclip image, private access, independent secrets and logical migration.
+- Access only `http://localhost:3100`; bind must be `127.0.0.1:3100`.
+- Codex CLI via the official Paperclip `codex_local` mechanism, using subscription authentication when the owner authorizes it in the browser; no API key and no copying of personal auth files.
+
+### Security and data
+- Generate `BETTER_AUTH_SECRET` and `PAPERCLIP_TOOL_ACTION_SIGNING_SECRET` with a CSPRNG; store outside Git in a protected persistent directory; never print, log or commit values.
+- `.gitignore` must cover local data, backups, env files, keys and restore artifacts.
+- No `latest` tag without digest; no Cloud image variant; no agent execution; no heartbeats, routines, workflows, external effects, provider API keys or billing changes.
+- Do not use `docker compose down -v` or delete volumes; stop containers gracefully and preserve data.
+
+### Acceptance criteria CD-02
+- AC10: decision, backlog, work order and Context Lock updated; previous lock marked STALE; new lock generated.
+- AC11: portable compose and image lock with immutable index digest and verified `linux/amd64`/`linux/arm64` manifests.
+- AC12: local Windows configuration binds only `127.0.0.1:3100`, with embedded PostgreSQL persistence and healthcheck.
+- AC13: protected local secrets created outside Git; no secret values in repository, logs or evidence.
+- AC14: PowerShell initialization, start, safe stop, status and backup scripts exist and pass offline safety tests; no `down -v`.
+- AC15: Paperclip starts locally, `/api/health` passes, data persists across restart, backup and restore are validated. **BLOCKED if Docker Desktop is absent; do not install it without owner authorization.**
+- AC16: Codex integration prepared using the official mechanism, without API key and without reading/copying personal auth files.
+- AC17: VPS composition prepared with external PostgreSQL 17 pinned digest and ARM64 compatibility; no VPS access, SSH or deploy.
+- AC18: catalog 105/92/1110/1071/62/35 preserved; no agent import, hiring, heartbeat, workflow or external effect.
+- AC19: Source Pack validator, existing tests, deployment tests, secret scan and GitHub CI pass on the exact head; Evidence Bundle, audit and Checkpoint Delta are produced. No merge without independent APPROVED and owner authorization.
+
+### Tests CD-02
+- Static compose/YAML validation, image lock consistency, port bind checks and forbidden-command scans.
+- PowerShell offline self-test: secret file creation/ACL (without printing), backup/restore into an isolated directory, integrity hash, port check.
+- If Docker is available: `docker compose config`, image architecture inspection, start, healthcheck, persistence/restart, backup/restore, localhost-only exposure.
+- `python3 scripts/validate_sources.py`; `python3 -m unittest discover -s tests -v`; GitHub CI `docs-validation`.
+
+### Stop conditions CD-02
+Stop without installing or reconfiguring if Docker Desktop/WSL2 is absent or requires administrator privileges not authorized; the image lacks the required architecture; port 3100 is occupied without a safe alternative; a secret would be exposed; data loss risk; authentication requires human action; a subscription/spend is required; or any HIGH/CRITICAL risk appears.

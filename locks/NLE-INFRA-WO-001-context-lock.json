@@ -1,79 +1,135 @@
 {
   "work_order": "NLE-INFRA-WO-001",
-  "delta": "CD-01",
-  "status": "PREPARED_PENDING_TARGET_EXECUTION",
+  "delta": "CD-02",
+  "status": "IMPLEMENTATION_PREPARED_RUNTIME_BLOCKED_DOCKER_ABSENT",
+  "decision": "NLE-ADR-INFRA-011 (LOCAL FIRST)",
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
-  "head_at_context_capture": "fd6e4295784b040b150a3f9150e50febb3991531",
-  "head_note": "Branch head after redaction correction; Context Lock refreshed immediately after this capture.",
+  "head_at_context_capture": "7e3fd8f71fb283274301cfdab714826c046f2917",
+  "head_note": "Branch head before CD-02 implementation commit; final head is recorded in the CD-02 Evidence Bundle/PR #3 comment, without self-reference.",
+  "previous_context_lock": {
+    "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
+    "status": "STALE",
+    "reason": "Owner changed strategy to LOCAL FIRST under NLE-ADR-INFRA-011."
+  },
+  "host_evidence": {
+    "os": "Microsoft Windows 11 Home Single Language 10.0.26200 build 26200 x64",
+    "cpu_logical": 8,
+    "ram_bytes": 24591810560,
+    "virtualization_firmware_enabled": true,
+    "wsl": {
+      "default_distro": "Ubuntu-26.04",
+      "version": 2,
+      "state": "Stopped"
+    },
+    "docker_desktop_installed": false,
+    "docker_cli_available": false,
+    "docker_daemon_available": false,
+    "port_3100": "FREE",
+    "disk": {
+      "C_free_gib": 29.96,
+      "D_free_gib": 119.87
+    }
+  },
+  "image_lock": {
+    "paperclip": {
+      "tag": "2026.1117.0",
+      "index_digest": "sha256:bdf38d10544dc6c831e16dc027f23ad586353ef3be1a1b2c6979e63b956aceb1",
+      "linux_amd64": "sha256:b2784df63b428a3de231039f03c2a78f582dcf5e35e840685685c8cef28814e2",
+      "linux_arm64": "sha256:84b21aae73c14d482039868c784c2146cfd6d5e2efcc1d86b7e51c60bf0e4134"
+    },
+    "postgres": {
+      "tag": "17-alpine",
+      "index_digest": "sha256:f9cf3e1f0066f0eb0c48707d864f0ac5941e9ff454a072077d97a4d278d07d73",
+      "linux_amd64": "sha256:e80acae3f1109e8e4533618b594918936f2858c63afc7204c4773148a673add8",
+      "linux_arm64": "sha256:e5f8ac607c7d44a0da3a42712a3e978b75fb1757e9f3e1488cd0cca4dbec76e9"
+    }
+  },
+  "security": {
+    "local_bind": "127.0.0.1:3100",
+    "secrets_outside_git": true,
+    "secrets_file": "%NEXLABS_PAPERCLIP_ROOT%/secrets/paperclip.env (created with owner-only ACL; values not recorded)",
+    "secret_names": [
+      "BETTER_AUTH_SECRET",
+      "PAPERCLIP_TOOL_ACTION_SIGNING_SECRET"
+    ],
+    "cloud_image": false,
+    "api_keys_created": false,
+    "agents_activated": false,
+    "external_effects": false
+  },
   "canonical_fingerprints": {
-    "docs/Checkpoint.md": "c5b1de30b541c98c11e3cfa884deec38ba5b3394",
-    "docs/Decisions-Ledger.md": "52bceb4e1140636aadee6740b32bf6964bdc8a68",
-    "docs/Scope.md": "9dc00ca1509728f2d6812daeceaaee2d1db2a2a5",
-    "docs/Definition-of-Done.md": "c3ee3206e1d456045202339616512a0386d00f33",
-    "docs/Architecture.md": "d9f5c2f53dca0d5fc62336fd401419aa2a84b12d",
-    "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
-    "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
-    "docs/Backlog.md": "e3800aa22c3ae2febda17cecdc709a3894934246"
+    "docs/Checkpoint.md": "ae85c685718b543f28c7d4158cf88639a1d81580a713a33db824aeae022461e8",
+    "docs/Decisions-Ledger.md": "07af059db1e75700fcd21fc235a1817f2163864c1a01628ba13edac1eb89f24a",
+    "docs/Backlog.md": "7bc359df7fb3eece35829e1879b7c352c995f8797fea3391804082b630910c1f",
+    "docs/Architecture.md": "9fc38e604e1d837fa8649a0fafdcb677801d5336925111940c2dad29c140fa3c",
+    "docs/Deployment.md": "a483ee400b68500d1e51f4bfadbe8664daf9daa9769e670e966c5f1bcd9da6af",
+    "docs/decisions-index.json": "d75c81f886ca54b0df79344894b2d853a89218198e6fa36f0f6bbd54790713b9",
+    "work-orders/NLE-INFRA-WO-001.md": "a50f083bb9e9c2ad609c3224b6d1d76ea0494388f24436aa9c6c12f81f74f93b",
+    "prompts/NLE-INFRA-WO-001-CODEX.md": "31f1714fe74f1db00c026856c92a3aaa260fc945cdd3542829de4bc9ae7c4e49",
+    "deploy/compose.yaml": "64183169bb8e6e14f9c3af3d13f68dd8125fa88dece3a74ece670cbdd9155f27",
+    "deploy/local/compose.yaml": "5656f89a67df28fc79268e3714d20c7fafe7a4f42019a7159ad2cf79f4952a54",
+    "deploy/vps/compose.yaml": "fdc8128252b3da00a82b8c8266e5a4241cd65ef0ce6f8fd4b7676cbaf5b98285",
+    "deploy/image-lock.json": "bb23e4c2d16baa100a94ad1e7bc73b2d25e7740625d7daeb55ba7669607f055d",
+    "deploy/README.md": "1ed2cc0c0e7b61be35edb4d83d8fe7af715445938c9be1de5e99eb35d33fd96a",
+    "deploy/local/README.md": "5d5c4c8a320305dd410dcdf76c041b741a6b15523fd804395d96baaff09ffe79",
+    "deploy/vps/README.md": "10b619af07f6023373b293665893b8a921f3573cc1220c54665256fe143f9efe",
+    "deploy/local/codex/README.md": "a6141377e7745076872c64f5b2b1c8cbd27283ec200cdf405310d5840dcd18d3",
+    "deploy/local/agents/README.md": "2d0a67f1b92a1c6bd90c349eef41dd2d70926ba4a3aae46300798db1482c9419",
+    ".gitignore": "de4664c6132db2dfdb5436c9a7362c339bab0b55b0b4ac60f444f12fb2dc14b8",
+    "scripts/windows/Paperclip.Common.ps1": "ed5479b8db669fd7ffe8095c8c36e7a20adb0d38504c7e8ab1901285c4ebfebc",
+    "scripts/windows/Initialize-PaperclipSecrets.ps1": "fd85547d14e57ee55c3f9d575bd2f16167c0927f57620c0e5fcead4a8d1ab452",
+    "scripts/windows/Start-Paperclip.ps1": "fa5329aa2ce92808775f91defe2afbb8b7c0a0dde6ac9de250274176641d5651",
+    "scripts/windows/Stop-Paperclip.ps1": "c33f3b59883d517a6fbaf88b69d1f80b2b7f5cf0c4680de53c119111a2713d97",
+    "scripts/windows/Get-PaperclipStatus.ps1": "2732077b850167fe19e87cd0f349e98e2b0eb66578f86b3ce2a4de6d06f10d9e",
+    "scripts/windows/Backup-Paperclip.ps1": "37a613df59bedb59f6e48a916efdf271413d73f315b3a8732e3eda0a8280adf3",
+    "scripts/windows/Restore-Paperclip.ps1": "669fd0d0ad407ed914e767199e86283268f3efaf8be4635bac9b404341ebd8b0",
+    "scripts/windows/Test-PaperclipDeployment.ps1": "dd5da6fac62f5943810c356def622dece06fabb7d402479054a508d64e13b16f",
+    "scripts/windows/README.md": "aee7a7c6458a165bde8c2e877379b1fe865c4e22e6b71d9c3ba70956c865d3a8",
+    "tests/deployment/test_deploy_contract.py": "97e82e875be5ba9c48b59b4ea7dc8309a5f804ecec2a8ac64299e294e305b9fb",
+    "tests/deployment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
+    "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "cf6fb9f736249283cfe8868389bbac8e8a34ed69144e43155f0fc262ba165cae"
   },
-  "source_fingerprints": {
-    "sources/NexLabs_Infrastructure_Plan/README.md": "b352120f77e7483139a35ae143ee63681ea36a2e",
-    "sources/NexLabs_Infrastructure_Plan/infra-qualification.json": "b2d429bd1888a0d500f0737149db083161bf99e5",
-    "sources/NexLabs_Infrastructure_Plan/runtime-policy.json": "c15e761be210f126f3a9aa0de35504a388ab12d4",
-    "sources/NexLabs_Infrastructure_Plan/agent-runtime-bindings.json": "d29044d6bdf5396da82036c52e6ff2cb4a4c7d02",
-    "sources/NexLabs_Infrastructure_Plan/workflow-runtime-bindings.json": "99c2a5f9e662250e1f54c2b8fff3039db5b25b71",
-    "sources/NexLabs_Infrastructure_Plan/skill-runtime-bindings.json": "95b81302e69a6d180eaeea3aef78212b234d0b77",
-    "sources/NexLabs_Infrastructure_Plan/source-lock.json": "1dc82933430725785d6b5f78a81d81593606b661",
-    "sources/NexLabs_Command_Center_Plan/README.md": "ba647ba1e4e20cba3e38d49b4494dad87d3e9101",
-    "sources/NexLabs_Command_Center_Plan/decisions.md": "1c169b20ec395c5f21fd9c642f7c8aef755e2e10",
-    "sources/NexLabs_AI_Enterprise_Catalogo_105_Agentes.md": "1d73a5fdd879cb7719a0d3e843227c150d04fcfd"
-  },
-  "implementation_fingerprints": {
-    "work-orders/NLE-INFRA-WO-001.md": "a268018231d0dd8bb72cb0bc28ffc2b8342556a2",
-    "scripts/infra/collect_vps_inventory.sh": "93668c17f883d5092d9dfafd39a5060f5d2fa5f7",
-    "scripts/infra/collect_windows_inventory.ps1": "02f52d8fcb783927e99e20c73dc35e65d5df3820",
-    "tests/test_infra_inventory.py": "8f4896517d05caaad7a5c3a2fe1794ffc590d214",
-    "prompts/NLE-INFRA-WO-001-CODEX.md": "27c8d956f8b1fe65087aab10c5d6ad8b6caacf56"
-  },
-  "external_reference_state": {
-    "reviewed_on": "2026-11-26",
-    "docker_guide": "https://docs.paperclip.ing/reference/deploy/docker/",
-    "runner_guide": "https://docs.paperclip.ing/reference/adapters/paperclip-runner/",
-    "environments_guide": "https://docs.paperclip.ing/experimental/environments/",
-    "agents_api": "https://docs.paperclip.ing/reference/api/agents/",
-    "qualification": "Documentation reviewed only; no image digest, host compatibility, Paperclip API call or runtime execution has been verified."
-  },
-  "target_inventory": {
-    "oracle_vps": "NOT_RUN",
-    "windows_execution_host": "NOT_RUN",
-    "oci_network_security": "NOT_VERIFIED",
-    "billing_and_quotas": "NOT_VERIFIED",
-    "paperclip_image_digest": "NOT_VERIFIED",
-    "runner_host_compatibility": "NOT_VERIFIED"
+  "tests": {
+    "source_validator": "7 PASS",
+    "python_unittest": "26/26 OK",
+    "powershell_offline_selftest": "29/29 PASS",
+    "compose_yaml_parse": "PASS",
+    "docker_compose_config": "BLOCKED_DOCKER_ABSENT",
+    "paperclip_start_health": "BLOCKED_DOCKER_ABSENT",
+    "persistence_restart": "BLOCKED_DOCKER_ABSENT",
+    "container_backup_restore": "BLOCKED_DOCKER_ABSENT",
+    "localhost_exposure": "STATIC_PASS_RUNTIME_NOT_RUN",
+    "secret_scan": "PASS"
   },
   "governance": {
     "main_protected": true,
     "required_check": "docs-validation",
-    "branch_from_main": true,
     "no_force_push": true,
     "no_bypass": true
   },
   "ci": {
-    "status": "PENDING",
+    "status": "PENDING_AFTER_COMMIT",
     "workflow": "docs-validation"
   },
+  "blockers": [
+    "Docker Desktop is not installed and the docker CLI/daemon is unavailable.",
+    "Installing Docker Desktop or enabling Windows features requires owner-authorized administrative action; this Work Order did not perform it."
+  ],
+  "next_action": "Owner installs/authorizes Docker Desktop with WSL2 backend; then run Start-Paperclip.ps1, health, persistence/restart, backup/restore, and localhost exposure checks; update Evidence Bundle.",
   "audit": "PENDING_INDEPENDENT",
   "merge": false,
   "deploy": "NOT_AUTHORIZED",
   "runtime_activation": false,
   "additional_spend_usd": 0,
   "stale_when": [
-    "main changes from base SHA",
-    "any canonical fingerprint changes",
-    "source-lock or runtime bindings change",
-    "Paperclip release/image digest or official compatibility contract changes",
-    "target host, account, billing or security assumptions change"
+    "base or branch head changes",
+    "canonical fingerprint changes",
+    "Paperclip/PostgreSQL image digest changes",
+    "Docker/WSL2/host state changes",
+    "owner authorization or scope changes"
   ],
   "generated_on": "2026-11-26"
 }

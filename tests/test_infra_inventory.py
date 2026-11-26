@@ -52,7 +52,8 @@ class InfraInventorySafetyTests(unittest.TestCase):
         if not shutil.which("bash"):
             self.skipTest("bash unavailable")
         result = subprocess.run(
-            ["bash", "-n", str(VPS_SCRIPT)],
+            ["bash", "-n", VPS_SCRIPT.relative_to(ROOT).as_posix()],
+            cwd=str(ROOT),
             capture_output=True,
             text=True,
             check=False,

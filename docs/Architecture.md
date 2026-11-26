@@ -12,3 +12,6 @@ M0–M5, claims com proveniência, classificação e validade temporal, ACL ante
 
 ## Command Center
 35 superfícies lógicas, 2 nativas/6 complementadas/27 extensões agrupadas. Obsidian dark, lime/magenta, CSS 3D leve, motion reduzível, WCAG 2.2 AA, React/TypeScript/Vite candidatos. Integração plugin-first condicional segundo documento ratificado; a resposta anterior também propôs sidecar-first. **Não congelar implementação de shell:** CC-WO-001 compara plugin pinado e sidecar privado; ADR de seleção e aprovação antes da implementação. Ambos preservam API oficial, sem fork inicial, sem iframe inseguro, sem duplicação de estado. A rota de fallback sidecar é permitida se plugin não qualificar; não instalar alpha sem autorização.
+
+## Delta LOCAL FIRST | NLE-INFRA-WO-001/CD-02
+O proprietário alterou a ordem de implantação: Paperclip é instalado e validado primeiro neste Windows 11, com Docker Desktop/WSL2 e containers Linux, antes de qualquer uso da VPS Oracle. A mesma imagem oficial multi-arquitetura é pinada por digest; o quickstart local usa PostgreSQL incorporado persistente e acesso exclusivo `127.0.0.1:3100`. A composição VPS futura usa PostgreSQL externo pinado, acesso privado e segredos independentes. O control plane VPS continua candidato, não qualificado; nenhum agente, workflow, heartbeat, efeito externo ou deploy é ativado por este delta.
