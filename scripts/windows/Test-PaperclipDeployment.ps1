@@ -117,6 +117,16 @@ try {
     }
     Check-PaperclipTest 'tamper_detection' ([bool]$tamperDetected)
 
+    $noSidecar = Join-Path $tempRoot 'no-sidecar.zip'
+    [IO.File]::Copy($backup.ArchivePath, $noSidecar, $true)
+    $sidecarRequired = $false
+    try {
+        $null = Expand-PaperclipBackupArchive -ArchivePath $noSidecar -TargetDir (Join-Path $tempRoot 'no-sidecar-restore')
+    } catch {
+        $sidecarRequired = $true
+    }
+    Check-PaperclipTest 'restore_requires_sidecar' ([bool]$sidecarRequired)
+
     $portState = Get-PaperclipPortState -Port 3100
     if ($portState.InUse) {
         $health = Get-PaperclipHealth -Port 3100

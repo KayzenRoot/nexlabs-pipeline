@@ -3,7 +3,7 @@
 **Status:** ACTIVE — **CD-02 LOCAL FIRST**, owner-ratified on 2026-11-26. The CD-01 read-only inventory below is preserved as historical sub-scope; see **Delta CD-02** at the end.
 **Risk:** ELEVATED for local Paperclip installation; runtime is BLOCKED while Docker Desktop is absent.
 **Repository:** KayzenRoot/nexlabs-pipeline
-**Base SHA:** 8321110a2ff29aec90ffc1c384ea21f722de0497  
+**Base SHA:** 8321110a2ff29aec90ffc1c384ea21f722de0497
 **Branch:** work/nle-infra-wo-001
 
 ## OBJECTIVE

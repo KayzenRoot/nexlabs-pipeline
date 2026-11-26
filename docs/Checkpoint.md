@@ -17,7 +17,7 @@ Status: **APPROVED / PROMOTED / SQUASH_MERGED**. Checkpoint Delta CD-04 promovid
 - Sem deploy ou ativação: agentes, skills, workflows, rotinas e efeitos externos continuam desativados/não qualificados.
 - C12 permanece HIGH/runtime gate: cinco discrepâncias dispatch-only exigem correção em WF-WO-001 antes de executar workflows afetados.
 - Riscos residuais: repositório público temporário; conversão futura para privado pendente; required_approving_review_count=0; billing API UNVERIFIED; Socket Security/ECC Tools não são checks obrigatórios.
-- NLE-INFRA-WO-001 **NÃO iniciado**, conforme instrução do proprietário.
+- NLE-INFRA-WO-001 **iniciado sob CD-02 LOCAL FIRST** (NLE-ADR-INFRA-011); implementação preparada, runtime **BLOCKED_DOCKER_DESKTOP_ABSENT**. Ver delta candidato ao final.
 
 ## Veredito
 **NLE-BOOTSTRAP-001: APPROVED, CHECKPOINT PROMOTED, PR #1 SQUASH-MERGED.** Concluído apenas o bootstrap documental/governança. Isso não conclui NexLabs AI Enterprise v1.0, não instala/configura Paperclip, não qualifica runtime, não ativa agentes/skills/workflows e não autoriza deploy, anúncios, trading, mainnet ou gastos.
@@ -44,6 +44,7 @@ O ZIP completo foi localizado, verificado e extraído; 364/364 hashes conferem c
 - Decisão: NLE-ADR-INFRA-011 (LOCAL FIRST). O proprietário autorizou instalar/validar Paperclip localmente primeiro; VPS, SSH e deploy remoto permanecem fora de escopo.
 - Estado: artefatos de deployment implementados (compose base/local/VPS, imagem pinada por índice multi-arquitetura, scripts PowerShell, testes de contrato, documentação, Context Lock novo). O Context Lock CD-01 anterior foi marcado STALE e preservado em `locks/history/`.
 - Runtime: **BLOCKED_DOCKER_DESKTOP_ABSENT**. Docker Desktop e `docker` CLI não estão instalados; WSL2 existe (Ubuntu-26.04, versão 2) e a virtualização está habilitada. A instalação exige ação administrativa não autorizada e não foi executada.
-- Sem segredos no Git; segredos locais serão gerados fora do repositório em diretório protegido.
-- Nenhum merge, deploy, agente, workflow, heartbeat, efeito externo ou gasto. Promoção somente após auditoria independente APPROVED e autorização do proprietário.
+- Auditoria independente: **implementação APPROVED** (agente read-only; achados LOW corrigidos); runtime BLOCKED no pré-requisito Docker. Não é aprovação humana.
+- Sem segredos no Git; os dois segredos locais foram gerados fora do repositório em diretório protegido, com valores não registrados.
+- Nenhum merge, deploy, agente, workflow, heartbeat, efeito externo ou gasto. Promoção/merge somente após autorização do proprietário e validação real de runtime.
 

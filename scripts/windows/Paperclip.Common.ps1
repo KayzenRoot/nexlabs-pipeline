@@ -46,7 +46,11 @@ function Set-OwnerOnlyAcl {
     $user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
     $item = Get-Item -LiteralPath $Path -Force
     $grant = if ($item.PSIsContainer) { "${user}:(OI)(CI)F" } else { "${user}:F" }
-    & icacls $Path /inheritance:r /grant:r $grant 2>&1 | Out-Null
+    & icacls $Path /reset 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "ACL_RESET_FAILED: $Path" }
+    & icacls $Path /inheritance:r 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "ACL_INHERITANCE_REMOVE_FAILED: $Path" }
+    & icacls $Path /grant:r $grant 2>&1 | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "ACL_APPLICATION_FAILED: $Path" }
 }
 
@@ -251,11 +255,11 @@ function Expand-PaperclipBackupArchive {
     )
     if (-not (Test-Path $ArchivePath)) { throw "BACKUP_MISSING: $ArchivePath" }
     $sidecar = "$ArchivePath.sha256"
-    if (Test-Path $sidecar) {
-        $expected = (Get-Content -LiteralPath $sidecar -TotalCount 1).Split(' ')[0].Trim().ToLowerInvariant()
-        $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ArchivePath).Hash.ToLowerInvariant()
-        if ($expected -ne $actual) { throw "BACKUP_HASH_MISMATCH: $ArchivePath" }
-    }
+    if (-not (Test-Path $sidecar)) { throw "BACKUP_SIDECAR_MISSING: $ArchivePath" }
+    $expected = (Get-Content -LiteralPath $sidecar -TotalCount 1).Split(' ')[0].Trim().ToLowerInvariant()
+    if ($expected -notmatch '^[0-9a-f]{64}$') { throw "BACKUP_SIDECAR_INVALID: $ArchivePath" }
+    $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $ArchivePath).Hash.ToLowerInvariant()
+    if ($expected -ne $actual) { throw "BACKUP_HASH_MISMATCH: $ArchivePath" }
     if ((Test-Path $TargetDir) -and @(Get-ChildItem -LiteralPath $TargetDir -Force).Count -gt 0 -and -not $Force) {
         throw "RESTORE_TARGET_NOT_EMPTY: $TargetDir"
     }

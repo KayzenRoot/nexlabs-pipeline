@@ -1,6 +1,6 @@
 # Evidence Bundle | NLE-INFRA-WO-001/CD-02 — LOCAL FIRST
 
-Status: **IMPLEMENTATION_PREPARED_RUNTIME_BLOCKED_DOCKER_ABSENT**
+Status: **IMPLEMENTATION_APPROVED_RUNTIME_BLOCKED_DOCKER_ABSENT**
 Data: 2026-11-26
 Repositório: `KayzenRoot/nexlabs-pipeline`
 Branch: `work/nle-infra-wo-001`
@@ -80,7 +80,8 @@ PostgreSQL externo futuro: `postgres:17-alpine` no índice `sha256:f9cf3e1f0066f
 |---|---|
 | `python scripts/validate_sources.py` | 7 grupos PASS; exit 0 |
 | `python -m unittest discover -s tests -v` | 26/26 OK; exit 0 |
-| `Test-PaperclipDeployment.ps1` offline | 29/29 PASS; exit 0 |
+| `Test-PaperclipDeployment.ps1` offline | 30/30 PASS; exit 0 |
+| Restore com sidecar ausente | FAIL-CLOSED `BACKUP_SIDECAR_MISSING` |
 | Parse YAML dos 3 Compose | PASS; services `paperclip`, `paperclip`, `db+paperclip` |
 | `docker version` | BLOCKED — comando ausente, exit 127 |
 | `docker compose version` | BLOCKED — comando ausente, exit 127 |
@@ -90,7 +91,8 @@ PostgreSQL externo futuro: `postgres:17-alpine` no índice `sha256:f9cf3e1f0066f
 | Porta 3100 | LIVRE |
 | Backup/restore offline | PASS, incluindo sentinelas e detecção de tamper |
 | Exposição | Configuração estática `127.0.0.1:3100`; runtime não executado |
-| `git diff --check` | Limpo |
+| GitHub Actions | run `45845361323`, success no HEAD `6a7aaa2`, job `docs-validation`, labels `["ubuntu-24.04"]`, 26/26 testes |
+| `git diff --check` | Limpo no diff do CD-02 e no range completo após remover whitespace histórico do WO |
 | Source Pack | 364/364 + 6 ZIPs; 105/92/1110/1071/62/35 preservados |
 
 ## 7. AC01–AC19
@@ -103,12 +105,26 @@ Os AC01–AC09 originais do CD-01 são preservados como histórico read-only. O 
 | AC11 Compose portátil e imagem pinada | **PASS** | índice `bdf38d…`, amd64/arm64 verificados, sem `latest` |
 | AC12 local loopback/persistência/health | **PASS estático** | `127.0.0.1:3100`, volume, `/api/health` |
 | AC13 segredos fora do Git/protegidos | **PASS** | 2 secrets, ACL protegida, valores não registrados |
-| AC14 scripts e segurança offline | **PASS** | 29/29 self-test; sem `down -v`, prune ou force-recreate |
+| AC14 scripts e segurança offline | **PASS** | 30/30 self-test; restore fail-closed; sem `down -v`, prune ou force-recreate |
 | AC15 runtime start/health/persistência/restart/backup | **BLOCKED_DOCKER_ABSENT** | Docker Desktop/CLI ausente; nenhuma instalação administrativa executada |
 | AC16 Codex preparado | **PASS documental** | `codex_local`, assinatura, sem API key, sem cópia de auth |
 | AC17 VPS preparada | **PASS documental** | Compose externo PostgreSQL/ARM64; sem SSH/deploy |
 | AC18 catálogo preservado | **PASS** | 105/92/1110/1071/62/35; sem importação/ativação |
-| AC19 testes/CI/auditoria/evidência | **PARTIAL** | testes locais PASS; CI e auditoria registrados após o push |
+| AC19 testes/CI/auditoria/evidência | **PASS*** | 7 PASS + 26/26 CI + 30/30 offline; auditoria independente APPROVED na implementação e BLOCKED no runtime; ver abaixo |
+
+## 7.1 Auditoria independente
+
+Auditoria read-only por agente separado no HEAD `6a7aaa2`:
+
+- **Implementação: APPROVED**, com achados LOW não bloqueantes.
+- **Runtime: BLOCKED** — Docker Desktop/CLI ausente; Paperclip não iniciado; health/persistência não comprovados.
+- Sem achados CRITICAL/HIGH/MEDIUM.
+- LOW-1 trailing whitespace: corrigido no WO; range completo limpo após o commit corretivo.
+- LOW-2 Context Lock não ancorado ao HEAD final/CI: corrigido com `head_audited`, `head_after_implementation`, CI `45845361323` e run de testes.
+- LOW-3 restore fail-open sem sidecar: corrigido para `BACKUP_SIDECAR_MISSING`; self-test cobre.
+- LOW-4 ACL/.gitignore: ACL agora purga ACEs não-owner via `icacls /reset`; `.gitignore` cobre `paperclip.env`, `paperclip-data/`, `restore-test-*` e backups em qualquer raiz.
+- Jev 1.14.0: 6/6 claims verificadas.
+- A auditoria é de agente, **não é aprovação humana**; merge/promoção seguem não autorizados.
 
 ## 8. Bloqueio e ação necessária
 
@@ -127,13 +143,13 @@ Nenhum acesso à VPS, SSH, firewall/NSG/DNS, deploy ou segredo remoto foi execut
 
 ## 9. Checkpoint Delta proposto
 
-**`LOCAL_FIRST_IMPLEMENTATION_PREPARED_RUNTIME_BLOCKED_DOCKER_ABSENT`**
+**`IMPLEMENTATION_APPROVED_RUNTIME_BLOCKED_DOCKER_ABSENT`**
 
-- Decisão LOCAL FIRST registrada; implementação e testes estáticos/offline completos.
+- Decisão LOCAL FIRST registrada; implementação aprovada pela auditoria independente com achados LOW corrigidos; testes estáticos/offline completos.
 - Runtime Paperclip não instalado por ausência de Docker Desktop; bloqueio externo explícito.
 - Nenhuma promoção de checkpoint, merge ou avanço para NLE-SR-WO-001.
-- Próximo WO após APPROVED e runtime validado: **NLE-SR-WO-001** (registry schema, locks, quarentena e validador). Não iniciar.
+- Próximo WO após autorização e runtime validado: **NLE-SR-WO-001** (registry schema, locks, quarentena e validador). Não iniciar.
 
 ## 10. Veredito
 
-**BLOCKED** — exclusivamente no pré-requisito Docker Desktop/WSL2. A implementação está preparada, os testes locais passam e os segredos estão protegidos; o Paperclip não foi iniciado e nenhuma evidência de runtime é declarada.
+**BLOCKED** no runtime, com **implementação APPROVED** pela auditoria independente (agente read-only; não é aprovação humana). O bloqueio é exclusivamente o pré-requisito Docker Desktop/WSL2. A implementação está preparada, os testes locais/CI passam e os segredos estão protegidos; o Paperclip não foi iniciado e nenhuma evidência de health, persistência ou restart de runtime é declarada.
