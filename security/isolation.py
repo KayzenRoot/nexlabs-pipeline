@@ -23,6 +23,15 @@ def _is_link_or_reparse(path: Path) -> bool:
     return path.is_symlink() or bool(getattr(metadata, "st_file_attributes", 0) & 0x400)
 
 
+def _assert_no_link_ancestors(path: Path) -> None:
+    absolute = Path(os.path.abspath(path))
+    require(bool(absolute.anchor), "WORKSPACE_ROOT_INVALID")
+    current = Path(absolute.anchor)
+    for component in absolute.parts[1:]:
+        current = current / component
+        require(not _is_link_or_reparse(current), "WORKSPACE_ROOT_REPARSE_POINT")
+
+
 def resolve_workspace_path(
     root: Path,
     tenant_id: str,
@@ -40,9 +49,9 @@ def resolve_workspace_path(
     require(not relative.is_absolute() and relative.as_posix() == relative_path
             and ".." not in relative.parts and "." not in relative.parts,
             "WORKSPACE_PATH_INVALID")
-    root = Path(root)
-    require(root.exists() and root.is_dir() and not _is_link_or_reparse(root),
-            "WORKSPACE_ROOT_INVALID")
+    root = Path(os.path.abspath(root))
+    _assert_no_link_ancestors(root)
+    require(root.exists() and root.is_dir(), "WORKSPACE_ROOT_INVALID")
     root_resolved = root.resolve(strict=True)
     components = (tenant_id, project_id, task_id, *relative.parts)
     candidate = root

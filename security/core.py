@@ -1,6 +1,7 @@
 """Strict offline policy baseline and deterministic validation."""
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -89,6 +90,10 @@ def read_policy(path: Path = ROOT / "security" / "policy.json") -> dict:
                               SecurityError("NONFINITE_POLICY_NUMBER")))
     except OSError as exc:
         raise SecurityError("POLICY_FILE_UNAVAILABLE") from exc
+
+
+def policy_fingerprint(policy: dict = EXPECTED_POLICY) -> str:
+    return hashlib.sha256(canonical_bytes(policy)).hexdigest()
 
 
 def verify_policy(policy: dict) -> None:
