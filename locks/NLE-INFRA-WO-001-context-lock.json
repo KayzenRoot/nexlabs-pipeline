@@ -5,8 +5,8 @@
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
-  "head_at_context_capture": "75383bde36c692556e692ab4e7258d663252049a",
-  "head_note": "Branch head after collector/test/prompt assets and current-WO backlog reconciliation; Context Lock refreshed immediately after this capture.",
+  "head_at_context_capture": "fd6e4295784b040b150a3f9150e50febb3991531",
+  "head_note": "Branch head after redaction correction; Context Lock refreshed immediately after this capture.",
   "canonical_fingerprints": {
     "docs/Checkpoint.md": "c5b1de30b541c98c11e3cfa884deec38ba5b3394",
     "docs/Decisions-Ledger.md": "52bceb4e1140636aadee6740b32bf6964bdc8a68",
@@ -31,9 +31,9 @@
   },
   "implementation_fingerprints": {
     "work-orders/NLE-INFRA-WO-001.md": "a268018231d0dd8bb72cb0bc28ffc2b8342556a2",
-    "scripts/infra/collect_vps_inventory.sh": "b13411f72d73a6edb9e009981baf5de60b75dc01",
+    "scripts/infra/collect_vps_inventory.sh": "93668c17f883d5092d9dfafd39a5060f5d2fa5f7",
     "scripts/infra/collect_windows_inventory.ps1": "02f52d8fcb783927e99e20c73dc35e65d5df3820",
-    "tests/test_infra_inventory.py": "29d481bed706638c60ebc67fd47022f09f3fe022",
+    "tests/test_infra_inventory.py": "8f4896517d05caaad7a5c3a2fe1794ffc590d214",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "27c8d956f8b1fe65087aab10c5d6ad8b6caacf56"
   },
   "external_reference_state": {
