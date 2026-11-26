@@ -67,10 +67,11 @@ Scope: offline Registry compiler, schemas, policy, locks, quarantine and dry-run
 
 ## 5. Gates
 
-- **SonarCloud:** the initial S8707 failure is addressed; final reanalysis at the correction HEAD is required to confirm 0 issues and the quality gate returning to OK.
-- **ECC:** initial evidence gate passed; rerun at the correction HEAD is required.
-- **CI:** initial `docs-validation` run `45894018049` passed; correction HEAD CI is required.
-- **Independent audit:** first audit produced this Correction Delta; a new read-only audit of the correction HEAD is required before APPROVED.
+- **CI:** initial `docs-validation` run `45894018049` passed; correction HEAD `29a5581` passed run `45895583859` (canonical tests + registry verify + security scan).
+- **SonarCloud:** initial S8707 failure (`security rating 3 ERROR`) is resolved; at `29a5581` the API reports **0 open issues**, quality gate **OK**, and the `SonarCloud Code Analysis` check passes.
+- **ECC:** initial and correction-head Security Evidence gates passed; no scanner-evidence gap.
+- **Socket Security:** pass.
+- **Independent review:** the first independent audit produced this Correction Delta; a new independent read-only review of the correction returned **APPROVED**, no HIGH/CRITICAL findings. Its only MEDIUM advisory was the stale lock status, corrected in this follow-up. Automated claim verification (`jev_verify`) returned 7/7 verified, 0 contradicted. Residual vectors not exhaustively tested: encoded traversal, UNC/drive-relative forms, hardlinks and TOCTOU; these are non-blocking for this offline, local-only compiler but remain hardening notes.
 
 ## 6. Acceptance matrix
 
@@ -79,13 +80,13 @@ Scope: offline Registry compiler, schemas, policy, locks, quarantine and dry-run
 | AC01 baseline lock and original sources | **PASS** — 364/364, validator 7/7 |
 | AC02 manifests, locks, assignments, competencies, links, tests | **PASS** — 92/105/1110/1071/183/316 |
 | AC03 quarantine / no artifact or grant | **PASS** — 17 quarantined + OWN authoring; zero grants |
-| AC04 deterministic/fail-closed/path/link/policy | **PASS after Correction Delta** — outside-root read and Windows junction rejected; 53/53 |
+| AC04 deterministic/fail-closed/path/link/policy | **PASS** — outside-root, CLI traversal and Windows junction rejected; 53/53 |
 | AC05 105 topological paused intents, zero effects, Zeus reconciliation | **PASS** — CEO first with reconcile intent; 0 creates/updates/model calls |
-| AC06 tests, validator, scanner, required CI | **PENDING final correction-HEAD CI** |
-| AC07 independent review of exact head and evidence | **PENDING new independent audit** |
+| AC06 tests, validator, scanner, required CI | **PASS** — 53/53, validator 7/7, scanner 0 findings, CI/Sonar/ECC pass |
+| AC07 independent review of exact head and evidence | **PASS** — new independent review APPROVED after Correction Delta |
 
 ## 7. Verdict
 
-**CORRECTION DELTA APPLIED — PENDING FINAL CI AND NEW INDEPENDENT AUDIT.**
+**APPROVED.**
 
-The initial HIGH security finding (path traversal in the validate CLI), the Windows junction coverage gap and the stale evidence/lock state were corrected. The 50 original tests remain passing; three regressions were added (53/53). The work is not APPROVED until the correction HEAD passes CI/SonarCloud/ECC and a new independent read-only audit confirms it. No merge, checkpoint promotion, agent/skill activation, Paperclip change, VPS access or spend is authorized.
+The initial HIGH path-traversal defect and the Windows junction coverage gap were corrected and regression-tested. The 50 original tests remain passing; three regressions were added (53/53). Canonical counts, 364-file source integrity, determinism, no-model/no-import/no-Paperclip-mutation boundaries, Context Lock fingerprints, CI, SonarCloud and ECC all pass, and the new independent review is APPROVED. No merge, checkpoint promotion, agent/skill activation, Paperclip change, VPS access or spend is authorized by this record.

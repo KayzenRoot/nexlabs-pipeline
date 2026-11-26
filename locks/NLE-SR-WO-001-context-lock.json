@@ -1,7 +1,7 @@
 {
   "work_order": "NLE-SR-WO-001",
   "delta": "CD-01",
-  "status": "CORRECTION_DELTA_APPLIED_PENDING_CI_AND_AUDIT",
+  "status": "APPROVED",
   "base_sha": "05764c3d8e3050ddec9e4b8a010232f150704acb",
   "branch": "work/nle-sr-wo-001",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
@@ -30,9 +30,9 @@
     "registry/schemas/registry-v1.json": "712e0e0bebc17c03a7e41c0a9aa5cba344fd0a1a",
     "registry/schemas/provision-plan-v1.json": "f83ab123b813e4585785bafa87a8eea0cd732b36",
     "tests/test_registry.py": "55d904a8ea5f940b873c246300aa6abb19baca97",
-    "work-orders/NLE-SR-WO-001.md": "cc6bab6c468f967835c5b337c1c06ab8cba0f354",
+    "work-orders/NLE-SR-WO-001.md": "2a6292040675e5893c6c6fd27b255737b8c8a40e",
     ".github/workflows/docs-validation.yml": "137a06448282fb224420cf5037e0016def5e2cc8",
-    "evidence/NLE-SR-WO-001-CD01-AUDIT.md": "c6ee9dab680981705a0cdc623292fc11afba9120"
+    "evidence/NLE-SR-WO-001-CD01-AUDIT.md": "df954cff4c9aa5119da2d5ae55c5c612aa6aeebc"
   },
   "stale_when": [
     "base SHA changes",
@@ -45,16 +45,21 @@
     "initial_run_id": 45894018049,
     "initial_docs_validation": "success",
     "initial_sonar": "failure_S8707_path_traversal",
-    "correction_head": "PENDING_COMMIT",
-    "final": "PENDING_FINAL_CI_SONAR_ECC"
+    "correction_head": "29a5581f3439da2da85c1a4087037f9212d972a7",
+    "correction_run_id": 45895583859,
+    "correction_docs_validation": "success",
+    "correction_sonar": "0_open_issues_quality_gate_OK",
+    "correction_ecc": "PASS",
+    "final_docs_head": "PENDING_COMMIT",
+    "final": "PASS_AT_29A5581_RUN_45895583859; FOLLOW_UP_CI_EXTERNAL"
   },
-  "audit": "INITIAL_AUDIT_CORRECTION_REQUIRED; CORRECTION_DELTA_APPLIED; NEW_AUDIT_PENDING",
+  "audit": "INITIAL_AUDIT_FOUND_S8707; CORRECTION_DELTA_APPLIED; FINAL_CI_SONAR_ECC_PASS; INDEPENDENT_REVIEW_APPROVED",
   "runtime_writes": 0,
   "additional_spend_usd": 0,
   "vps": "NOT_ACCESSED",
   "head_at_context_capture": "c5f7506304abf92508ce2c03aa96e5ebe7b1cdd3",
-  "head_note": "c5f7506 is the initial audited HEAD. This correction/evidence commit follows on the same PR; final head, CI, Sonar and independent audit are verified externally because the lock cannot contain its own commit hash.",
-  "verdict": "CORRECTION_DELTA_APPLIED_PENDING_CI_AND_NEW_AUDIT",
+  "head_note": "c5f7506 is the initially audited HEAD; 29a5581 is the correction head that passed CI, SonarCloud, ECC and an independent review. This documentation/lock follow-up records the final verdict. The follow-up CI is verified externally because the lock cannot contain its own commit hash.",
+  "verdict": "APPROVED",
   "findings": [
     "HIGH S8707: CLI validate accepted an unrestricted path and read_json followed it without containment/link checks; corrected.",
     "MEDIUM: Windows symlink test skipped; real junction regression added and passing.",
@@ -105,10 +110,25 @@
     "registry/schemas/registry-v1.json": "eaed20309c1e77192dcd1ecbc585c1c5ec15f173323b8181b08f863d3095302a",
     "registry/schemas/provision-plan-v1.json": "969c0b934e0b9d0496b212aa83cb730480bd61db3572105c1b6a02f60da5ba54",
     "tests/test_registry.py": "795d0bf14efffc9c83d35fb0e16e03cba4d6a39277b06b69e1c5f8952706c827",
-    "work-orders/NLE-SR-WO-001.md": "c88487a48e2a6c2839536f09ecd0f996396f145b4ad9f8779dedd239d37c8871",
+    "work-orders/NLE-SR-WO-001.md": "ba0f36c159ef0e108485d131984e65b148b77c8dcbb7e347b1baeb06e906c6aa",
     ".github/workflows/docs-validation.yml": "8f405d4bf6776096cb102688b1cb35f51343e4f78108958494c60a5da1a08a4d",
-    "evidence/NLE-SR-WO-001-CD01-AUDIT.md": "4b6e7f2791b300e3fce96d04dac9786f5bb50748d7c3365c178d7cd42f1022de"
+    "evidence/NLE-SR-WO-001-CD01-AUDIT.md": "4be309ad22ec2590264888eac1e591c71a4cb8fe8c936812bd5533fb8885aa2b"
   },
   "fingerprint_status": "SHA256_AND_GIT_BLOB_RECALCULATED; FINAL_COMMIT_EXTERNAL_VERIFICATION_REQUIRED",
-  "next_action": "Push the Correction Delta, verify CI/Sonar/ECC at the correction HEAD, obtain a new independent read-only audit, then report APPROVED only if all gates pass. No merge, runtime change, VPS, spend or next WO."
+  "next_action": "Update PR #5 with the final APPROVED evidence bundle and checkpoint delta. No merge, runtime change, VPS access, agent activation, spend or next WO without separate authorization.",
+  "independent_audit": {
+    "verdict": "APPROVED",
+    "head": "29a5581f3439da2da85c1a4087037f9212d972a7",
+    "scope": "NLE-SR-WO-001/CD-01 Correction Delta",
+    "high_critical_findings": 0,
+    "medium_advisory": "lock status was pre-finalization; corrected in this follow-up",
+    "residual_notes": [
+      "encoded traversal, UNC/drive-relative forms, hardlinks and TOCTOU were not exhaustively tested; non-blocking for the offline local compiler"
+    ],
+    "jev_verify": "7/7 verified, 0 contradicted"
+  },
+  "residual_notes": [
+    "Encoded traversal, UNC/drive-relative forms, hardlinks and TOCTOU were not exhaustively fuzzed; safe_path rejects the covered vectors and the CLI is local-only/offline.",
+    "No runtime import is implemented; this is specification/dry-run only."
+  ]
 }
