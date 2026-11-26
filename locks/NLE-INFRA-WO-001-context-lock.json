@@ -5,8 +5,8 @@
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
-  "head_at_context_capture": "f9b6e4d7ed20081c5ccbf9c2e96fadc63b30ed09",
-  "head_note": "Branch head after collectors, tests, work order and Codex execution prompt; lock refresh follows this capture.",
+  "head_at_context_capture": "75383bde36c692556e692ab4e7258d663252049a",
+  "head_note": "Branch head after collector/test/prompt assets and current-WO backlog reconciliation; Context Lock refreshed immediately after this capture.",
   "canonical_fingerprints": {
     "docs/Checkpoint.md": "c5b1de30b541c98c11e3cfa884deec38ba5b3394",
     "docs/Decisions-Ledger.md": "52bceb4e1140636aadee6740b32bf6964bdc8a68",
@@ -15,7 +15,7 @@
     "docs/Architecture.md": "d9f5c2f53dca0d5fc62336fd401419aa2a84b12d",
     "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
     "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
-    "docs/Backlog.md": "a027231ccd9a77cd815040dfab75006b21665306"
+    "docs/Backlog.md": "e3800aa22c3ae2febda17cecdc709a3894934246"
   },
   "source_fingerprints": {
     "sources/NexLabs_Infrastructure_Plan/README.md": "b352120f77e7483139a35ae143ee63681ea36a2e",
