@@ -1,6 +1,9 @@
 # Scope
-NECESSARY: preserve six original plans and IDs; foundation, governance, native Paperclip, registry, workflow events, Intelligence Hub, security, infrastructure, business domains, 35 UI surfaces, backups, qualification, authorized private deployment and validation.
-IMPORTANT: incremental performance and optional reporting only with evidence.
-FUTURE: HA, scale-out, GPU/cloud, marketplace and unqualified providers require separate ADR/WO.
-OUT OF SCOPE: real trading, mainnet, private keys, paid APIs, new unapproved accounts, public production, changes to critical policies by agents, real test customer data, Facebook group automation bypass, unauthorized spending/ads or Paperclip fork without necessity.
-Bootstrap: documentation and governance only. Public development exception NLE-ADR-BOOT-007; production private. No service or agent activation.
+NECESSARY: preservar os seis planos e seus IDs; fundação, governança, capacidade nativa Paperclip, registry, workflow/eventos, Intelligence Hub, segurança/isolamento, infraestrutura, domínios comerciais, UI 35 superfícies, backups, qualificação, deploy privado e validação. Todas as capacidades descritas nos catálogos são alvo, não grants.
+IMPORTANT: performance além dos limites mínimos, relatórios adicionais, automações avançadas opcionais somente com evidência.
+FUTURE: escala horizontal, HA real, GPU/cloud, marketplace de clientes, novas fontes/modelos, integrações externas não comprovadas. Exigem WO/ADR própria.
+OUT OF SCOPE: trading real, saques, wallets/chaves privadas reais, mainnet, publicação em grupos por bypass, compartilhamento de assinaturas, APIs pagas, contas novas não autorizadas, produção pública, autoalteração de políticas/identidade/permissões, dados reais nos testes, fork do Paperclip sem necessidade demonstrada. Anúncios e ações externas só por gates explícitos; US$0 bloqueia ativação paga neste release salvo novo escopo aprovado.
+Bootstrap: documentação, validação estrutural e governança apenas; nenhum serviço, cadastro de agentes, rotina ou integração ativada. Demais projetos existentes preservam fluxo e decisões.
+
+## Delta CD-02 | NLE-BOOTSTRAP-001
+NLE-ADR-BOOT-007 autoriza exceção temporária de repositório público **somente** para planejamento/desenvolvimento revisado e não sensível durante o bootstrap. Produção permanece privada. Não autoriza dados de clientes, segredos, credenciais, deploy, gasto, anúncios, trading real ou ativação de agentes, skills, rotinas ou integrações.

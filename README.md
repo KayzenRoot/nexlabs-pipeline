@@ -1,22 +1,27 @@
 # NexLabs AI Enterprise | NLE-BOOTSTRAP-001
+Fundação candidata v1.0.0-plan. **Não implantada.** Target: `KayzenRoot/nexlabs-pipeline` (ID 1472951510). Desenvolvimento público temporário autorizado por NLE-ADR-BOOT-007 apenas para material revisado e não sensível; produção permanece privada.
 
-NexLabs Pipeline | KayzenRoot/nexlabs-pipeline | v1.0.0-plan
-**Bootstrap candidate. Partial import. Not deployed.**
+## Estado CD-02
+- Source Pack completo: 364/364 originais e seis ZIPs, com `locks/source-lock.json` (SHA-256 `a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e`).
+- Validador canônico e testes: 7 grupos PASS e 7/7 testes PASS; ver `evidence/validation.txt` e `evidence/NLE-BOOTSTRAP-001-CD02-EVIDENCE.md`.
+- Git: base `48d3e422313f869992d09b99f0b7e09acd4e1caa`, branch `chore/nle-bootstrap-001`, PR #1 draft. Head final no Evidence Bundle.
+- Governança: `main` com PR obrigatório, histórico linear, sem force/delete, squash-only e sem bypass; checks obrigatórios pendentes de CI.
+- CI: NOT_RUN; billing/plano não comprovados, nenhum workflow ativado.
+- Auditoria independente: PENDING. Merge, deploy e ativação de agentes: NÃO AUTORIZADOS.
 
-105 agents, 92 skill packages, 1,110 assignments, 62 workflows and 35 Command Center surfaces. Paperclip is the proposed operating core; ZEUS is the executive orchestrator. All agents and external effects remain disabled.
+## Source Hierarchy
+1. Checkpoint aprovado (`docs/Checkpoint.md`)
+2. Decisions Ledger/ADRs (`docs/Decisions-Ledger.md`)
+3. Scope (`docs/Scope.md`)
+4. Definition of Done (`docs/Definition-of-Done.md`)
+5. Architecture (`docs/Architecture.md`)
+6. Requirements (`docs/Requirements.md`)
+7. Demais documentos, snapshots e fontes externas qualificadas.
+Código, Git, testes e evidências prevalecem sobre memória ou afirmações não comprovadas. Contradições são BLOCKED ou Correction Delta; não sobrescrever decisão aprovada. Este pacote é candidato, não aprovação de implementação.
 
-## Source hierarchy
-1. Approved checkpoint
-2. Decisions Ledger / ADRs
-3. Scope
-4. Definition of Done
-5. Architecture
-6. Requirements
-7. Locked sources and other verified evidence
-
-Git, code, tests and evidence prevail over memory. Preserve approved decisions and stable IDs. See docs/Checkpoint.md and docs/Decisions-Ledger.md. The original planning artifacts in sources/ are immutable; no historical builders may be executed as part of bootstrap.
-
-## Current gate
-The owner's temporary PUBLIC exception applies solely to reviewed planning and development material, not production, client data, credentials or secret-bearing configurations. Public history can be copied permanently. Production remains private. No spend, deployment, agent activation, or financial operation authorized.
-
-325/364 original files are verified via exact Git tree SHA. The original full Source Pack remains the required completion source. The remaining 39 originals and canonical validation files must be imported before independent audit. This repository is not yet a complete Source Pack. See work-orders/NLE-BOOTSTRAP-001.md and prompts/NLE-BOOTSTRAP-001-CODEX.md.
+## Como usar
+- Leia `docs/Checkpoint.md`, `docs/Decisions-Ledger.md`, `docs/Consistency-Audit.md`, `docs/Backlog.md`, `work-orders/NLE-BOOTSTRAP-001.md` e `prompts/NLE-BOOTSTRAP-001-CODEX.md`.
+- Execute `python scripts/validate_sources.py` e `python -m unittest discover -s tests -v` em raiz (Python 3.10+, biblioteca padrão, sem rede).
+- `sources/` contém seis ZIPs intactos, seus arquivos extraídos sem alterações e originais avulsos. Não execute `build.py` antigos: são registros históricos, podem depender de caminhos locais. Não importe SPEC.md como SKILL.md. `locks/source-lock.json` fixa os bytes; `locks/context-lock.json` fixa a base, o lock e os fingerprints canônicos desta execução.
+- `docs/Backlog.md` é sequência única; os 40 IDs de domínio são preservados. Não existe autorização de runtime nem de expansão de escopo por esta entrega.
+- Evidências locais em `evidence/`; CI remoto, revisão independente e merge pendentes. `locks/remote-context-lock.json` e `evidence/remote-import.md` são registros históricos do CD-02 parcial, preservados.

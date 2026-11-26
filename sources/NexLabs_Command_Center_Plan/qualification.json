@@ -1,0 +1,356 @@
+[
+  {
+    "id": "CC-01-AC01",
+    "scope": "CC-01",
+    "test": "Reconciliação de totais; N/A sem fonte; separação simulado/real",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-02-AC01",
+    "scope": "CC-02",
+    "test": "Comando malicioso negado; sem autoaprovação; deduplicação",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-03-AC01",
+    "scope": "CC-03",
+    "test": "105 IDs; 10 diretorias; ausência de ciclos; ARGUS escalada independente",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-04-AC01",
+    "scope": "CC-04",
+    "test": "Diferenciar planejado, cadastrado, qualificado, habilitado e executando",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-05-AC01",
+    "scope": "CC-05",
+    "test": "Sem segundo kanban de escrita; sincronização de IDs",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-06-AC01",
+    "scope": "CC-06",
+    "test": "Rotinas desativadas inicialmente; evento duplicado; bloqueio de quota",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-07-AC01",
+    "scope": "CC-07",
+    "test": "Fontes vencidas; hipóteses não viram fatos",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-08-AC01",
+    "scope": "CC-08",
+    "test": "Dedupe; isolamento; supressão de contato; origem e finalidade",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-09-AC01",
+    "scope": "CC-09",
+    "test": "Preço calculado; contrato não assinado por agente; versões preservadas",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-10-AC01",
+    "scope": "CC-10",
+    "test": "Cliente A não vê B; contrato aprovado antes do handoff",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-11-AC01",
+    "scope": "CC-11",
+    "test": "SHA fresco; bloqueio de next se correção; gates não contornados",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-12-AC01",
+    "scope": "CC-12",
+    "test": "Testes de regressão; sem deploy implícito",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-13-AC01",
+    "scope": "CC-13",
+    "test": "Sem signing, chave privada ou transação real; endereços identificados",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-14-AC01",
+    "scope": "CC-14",
+    "test": "SHA obsoleto invalida aprovação; HIGH/CRITICAL bloqueia",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-15-AC01",
+    "scope": "CC-15",
+    "test": "Período/moeda/atribuição explícitos; sem dupla contagem",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-16-AC01",
+    "scope": "CC-16",
+    "test": "Licença, versão, acessibilidade, arquivo não confiável",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-17-AC01",
+    "scope": "CC-17",
+    "test": "Opt-out, duplicidade; grupos Facebook manual; TikTok consentimento",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-18-AC01",
+    "scope": "CC-18",
+    "test": "Sem ativação ou aumento sem autorização; custos desconhecidos bloqueiam",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-19-AC01",
+    "scope": "CC-19",
+    "test": "Conta teste isolada; aprovação vinculada ao payload; sem gasto",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-20-AC01",
+    "scope": "CC-20",
+    "test": "Sem métricas inventadas; opt-out; escopo por cliente",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-21-AC01",
+    "scope": "CC-21",
+    "test": "Direitos e fontes; arquivos íntegros; revisão editorial",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-22-AC01",
+    "scope": "CC-22",
+    "test": "Assinatura quando disponível; reconciliação; idempotência; sem compra real",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-23-AC01",
+    "scope": "CC-23",
+    "test": "Sem transferências; moeda/competência explícitas; total conciliado",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-24-AC01",
+    "scope": "CC-24",
+    "test": "0 não significa ilimitado; quota desconhecida; sem fallback pago",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-25-AC01",
+    "scope": "CC-25",
+    "test": "Dados atrasados marcados; nenhuma recomendação garantida",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-26-AC01",
+    "scope": "CC-26",
+    "test": "Sem credenciais reais; taxas e slippage; sem look-ahead",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-27-AC01",
+    "scope": "CC-27",
+    "test": "Isolamento em nós/arestas; limites de expansão; proveniência",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-28-AC01",
+    "scope": "CC-28",
+    "test": "ACL antes de retrieval; citações; exclusão derivada; prompt injection",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-29-AC01",
+    "scope": "CC-29",
+    "test": "Sem autoalteração ou publicação; hash incompatível bloqueia",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-30-AC01",
+    "scope": "CC-30",
+    "test": "Holdout; sem autoaprovação; falha HIGH bloqueia",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-31-AC01",
+    "scope": "CC-31",
+    "test": "Host offline; lease expirado; status desconhecido; restauração isolada",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-32-AC01",
+    "scope": "CC-32",
+    "test": "Segregação de clientes; relógio SLA; dados mínimos",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-33-AC01",
+    "scope": "CC-33",
+    "test": "Escalada direta ao dono; nenhum segredo; sem autoelevação",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-34-AC01",
+    "scope": "CC-34",
+    "test": "Replay, expiry, payload alterado, duplo clique, segregação de funções",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-35-AC01",
+    "scope": "CC-35",
+    "test": "Segredos nunca no browser; aumento de capacidade exige aprovação",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-01",
+    "scope": "CROSS",
+    "test": "Acesso direto a ID de outro tenant negado no servidor",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-02",
+    "scope": "CROSS",
+    "test": "Cache e export segregados; revogação invalida leitura",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-03",
+    "scope": "CROSS",
+    "test": "Stream reconectado revalida acesso",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-04",
+    "scope": "CROSS",
+    "test": "CSRF, XSS e CSV formula injection não executam",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-05",
+    "scope": "CROSS",
+    "test": "Payload modificado ou aprovação expirada não executa",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-06",
+    "scope": "CROSS",
+    "test": "Dupla submissão e webhook duplicado não repetem efeito",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-07",
+    "scope": "CROSS",
+    "test": "Sem telemetria de quota confiável não inicia chamada paga",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-08",
+    "scope": "CROSS",
+    "test": "Desconexão Windows conserva fila; reconciliação sem retry cego",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-09",
+    "scope": "CROSS",
+    "test": "Paperclip indisponível exibe stale e bloqueia mutação incerta",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-10",
+    "scope": "CROSS",
+    "test": "Plugin upgrade com capabilities novas exige autorização",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-11",
+    "scope": "CROSS",
+    "test": "Fallback sem plugin mantém acesso nativo sem fork",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-12",
+    "scope": "CROSS",
+    "test": "Redução de movimento desativa efeitos decorativos",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-13",
+    "scope": "CROSS",
+    "test": "320/390/768/1440 px sem overflow da página; toque 44px",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-14",
+    "scope": "CROSS",
+    "test": "Teclado, leitor de tela, contraste real WCAG AA",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-15",
+    "scope": "CROSS",
+    "test": "Bundle e métricas web em perfil documentado",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-16",
+    "scope": "CROSS",
+    "test": "Limites RAM/CPU medidos; serviços existentes preservados",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-17",
+    "scope": "CROSS",
+    "test": "Restore em ambiente isolado com hashes e read-back",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-18",
+    "scope": "CROSS",
+    "test": "Cliente real nunca recebe dados de paper trading",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-19",
+    "scope": "CROSS",
+    "test": "Sem segredo em logs, cache, JS, URL ou export",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-20",
+    "scope": "CROSS",
+    "test": "Owner/agent separation; ARGUS escalada independente",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-21",
+    "scope": "CROSS",
+    "test": "Status PLANNED nunca apresentado como ACTIVE/RUNNING",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-22",
+    "scope": "CROSS",
+    "test": "Grupos Facebook sem auto-publicação presumida",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-23",
+    "scope": "CROSS",
+    "test": "Sem credenciais de negociação real ou mainnet",
+    "status": "NOT_RUN"
+  },
+  {
+    "id": "CC-X-24",
+    "scope": "CROSS",
+    "test": "Fonte ausente retorna N/A; reconciliação financeira",
+    "status": "NOT_RUN"
+  }
+]

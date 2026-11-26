@@ -1,0 +1,29 @@
+{
+  "workflows": 62,
+  "agents_covered": 105,
+  "packages_eligible": 92,
+  "original_assignments_preserved": 1110,
+  "agent_qualification_tests_preserved": 316,
+  "specific_workflow_scenarios": 62,
+  "common_test_instances_planned": 372,
+  "counts_by_group": {
+    "GOV": 5,
+    "RES": 3,
+    "SAL": 7,
+    "ENG": 13,
+    "DIG": 5,
+    "MKT": 14,
+    "FIN": 4,
+    "QNT": 5,
+    "OPS": 3,
+    "SEC": 3
+  },
+  "counts_by_gate": {
+    "HUMAN_APPROVAL_REQUIRED": 14,
+    "INTERNAL_ONLY": 36,
+    "POLICY_GATED_EXTERNAL": 12
+  },
+  "mapping_rows": 638,
+  "activated": 0,
+  "operational_tests_run": 0
+}

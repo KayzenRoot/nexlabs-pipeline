@@ -1,0 +1,462 @@
+[
+  {
+    "id": "CC-01",
+    "title": "Visão executiva",
+    "mode": "EXT",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Paperclip dashboard + projeções CRM, financeiro e runtime",
+    "layout": "KPIs com período, alertas, prioridades e tendências",
+    "actions": "Abrir detalhe e criar solicitação; nenhum gasto",
+    "acceptance": "Reconciliação de totais; N/A sem fonte; separação simulado/real",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-02",
+    "title": "ZEUS Command",
+    "mode": "EXT",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Paperclip tarefas + ledger de comandos",
+    "layout": "Briefing, conversa orientada a tarefas, propostas e timeline",
+    "actions": "Submeter tarefa com escopo e prévia de efeitos; cancelar conforme política",
+    "acceptance": "Comando malicioso negado; sem autoaprovação; deduplicação",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-03",
+    "title": "Organograma",
+    "mode": "NATIVE",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Paperclip agentes e hierarquia + catálogo aprovado",
+    "layout": "Árvore nativa, busca, filtro de diretoria e alternativa em lista",
+    "actions": "Abrir ficha nativa; não criar cadastro paralelo",
+    "acceptance": "105 IDs; 10 diretorias; ausência de ciclos; ARGUS escalada independente",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-04",
+    "title": "Agentes e qualificação",
+    "mode": "AUGMENT",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Paperclip agentes/runs + avaliações NexLabs",
+    "layout": "Ficha, modelo, skills, resultados, capacidade e histórico",
+    "actions": "Pausar via caminho autorizado; abrir avaliação",
+    "acceptance": "Diferenciar planejado, cadastrado, qualificado, habilitado e executando",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-05",
+    "title": "Projetos e tarefas",
+    "mode": "NATIVE",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Paperclip projetos, goals, issues",
+    "layout": "Lista, kanban e detalhe nativos",
+    "actions": "Delegar, comentar e consultar dentro da política",
+    "acceptance": "Sem segundo kanban de escrita; sincronização de IDs",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-06",
+    "title": "Workflows e rotinas",
+    "mode": "AUGMENT",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Paperclip routines/issues + catálogo de 62 workflows",
+    "layout": "Catálogo, dependências, fila e trilha de eventos",
+    "actions": "Preparar ativação; habilitar somente após gates",
+    "acceptance": "Rotinas desativadas inicialmente; evento duplicado; bloqueio de quota",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-07",
+    "title": "Inteligência de mercado",
+    "mode": "EXT",
+    "domains": [
+      "RES"
+    ],
+    "source": "Fontes públicas autorizadas + pesquisas versionadas",
+    "layout": "Radar, hipóteses, evidências, experimentos",
+    "actions": "Criar tarefa de pesquisa ou proposta de validação",
+    "acceptance": "Fontes vencidas; hipóteses não viram fatos",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-08",
+    "title": "CRM e leads",
+    "mode": "EXT",
+    "domains": [
+      "SAL"
+    ],
+    "source": "CRM NexLabs ou existente qualificado",
+    "layout": "Pipeline, lista, contatos, histórico e opt-out",
+    "actions": "Registrar lead, qualificar, preparar contato",
+    "acceptance": "Dedupe; isolamento; supressão de contato; origem e finalidade",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-09",
+    "title": "Oportunidades e propostas",
+    "mode": "EXT",
+    "domains": [
+      "SAL"
+    ],
+    "source": "CRM + catálogo serviços + precificação",
+    "layout": "Funil, propostas, margem estimada e versões",
+    "actions": "Gerar proposta, pedir revisão, solicitar aprovação",
+    "acceptance": "Preço calculado; contrato não assinado por agente; versões preservadas",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-10",
+    "title": "Clientes e onboarding",
+    "mode": "EXT",
+    "domains": [
+      "SAL",
+      "OPS"
+    ],
+    "source": "CRM + projetos Paperclip + suporte",
+    "layout": "Conta, projetos, contratos referenciados, onboarding e SLA",
+    "actions": "Criar handoff aprovado; abrir chamado",
+    "acceptance": "Cliente A não vê B; contrato aprovado antes do handoff",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-11",
+    "title": "Software Factory",
+    "mode": "EXT",
+    "domains": [
+      "ENG"
+    ],
+    "source": "GitHub + Paperclip + Source Pack",
+    "layout": "Portfólio, WOs, gates, PRs, CI e evidências",
+    "actions": "Criar solicitação WO; abrir PR original; pedir auditoria",
+    "acceptance": "SHA fresco; bloqueio de next se correção; gates não contornados",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-12",
+    "title": "Web2 e Mobile",
+    "mode": "EXT",
+    "domains": [
+      "ENG"
+    ],
+    "source": "GitHub + tarefas e evidências",
+    "layout": "Projetos Web2/mobile, build, versões e testes",
+    "actions": "Abrir WO ou evidência; preparar release",
+    "acceptance": "Testes de regressão; sem deploy implícito",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-13",
+    "title": "Web3 Studio",
+    "mode": "EXT",
+    "domains": [
+      "ENG"
+    ],
+    "source": "GitHub + auditorias, dados públicos de chain",
+    "layout": "Contratos, chain, auditorias, invariantes e simulação",
+    "actions": "Abrir revisão e simulação; mainnet bloqueada",
+    "acceptance": "Sem signing, chave privada ou transação real; endereços identificados",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-14",
+    "title": "QA e releases",
+    "mode": "EXT",
+    "domains": [
+      "ENG"
+    ],
+    "source": "CI GitHub + ledger de evidências",
+    "layout": "Checks, cobertura, artefatos, rollback e DoD",
+    "actions": "Solicitar auditoria, preparar release; merge via política",
+    "acceptance": "SHA obsoleto invalida aprovação; HIGH/CRITICAL bloqueia",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-15",
+    "title": "Marketing Overview",
+    "mode": "EXT",
+    "domains": [
+      "MKT"
+    ],
+    "source": "Eventos analíticos e conectores autorizados",
+    "layout": "Funil, canais, CAC/CPA/ROAS, atribuição",
+    "actions": "Solicitar investigação e experimento",
+    "acceptance": "Período/moeda/atribuição explícitos; sem dupla contagem",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-16",
+    "title": "Creative Studio",
+    "mode": "EXT",
+    "domains": [
+      "MKT",
+      "DIG"
+    ],
+    "source": "Artefatos versionados + briefs",
+    "layout": "Biblioteca, briefing, prévia, direitos e revisão",
+    "actions": "Gerar rascunho; aprovar material conforme política",
+    "acceptance": "Licença, versão, acessibilidade, arquivo não confiável",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-17",
+    "title": "Social Hub",
+    "mode": "EXT",
+    "domains": [
+      "MKT"
+    ],
+    "source": "APIs de plataformas aprovadas + ledger editorial",
+    "layout": "Calendário, canais, filas, rascunhos e histórico",
+    "actions": "Preparar publicação; publicar apenas via caminho autorizado",
+    "acceptance": "Opt-out, duplicidade; grupos Facebook manual; TikTok consentimento",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-18",
+    "title": "Meta Ads",
+    "mode": "EXT",
+    "domains": [
+      "MKT"
+    ],
+    "source": "Meta Marketing API autorizada",
+    "layout": "Contas/campanhas, criativos, pixel, CPA e ROAS",
+    "actions": "Preparar campanha/alteração; solicitar aprovação",
+    "acceptance": "Sem ativação ou aumento sem autorização; custos desconhecidos bloqueiam",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-19",
+    "title": "Google Ads",
+    "mode": "EXT",
+    "domains": [
+      "MKT"
+    ],
+    "source": "Google Ads API autorizada",
+    "layout": "Campanhas, termos, conversões e orçamento",
+    "actions": "Preparar alterações; validar em teste quando suportado",
+    "acceptance": "Conta teste isolada; aprovação vinculada ao payload; sem gasto",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-20",
+    "title": "SEO e CRM Marketing",
+    "mode": "EXT",
+    "domains": [
+      "MKT"
+    ],
+    "source": "Métricas autorizadas, CRM e conteúdo",
+    "layout": "Pesquisa, páginas, funis, atribuição e jornadas",
+    "actions": "Criar rascunhos de melhoria; respeitar consentimento",
+    "acceptance": "Sem métricas inventadas; opt-out; escopo por cliente",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-21",
+    "title": "Digital Products Studio",
+    "mode": "EXT",
+    "domains": [
+      "DIG"
+    ],
+    "source": "Catálogo próprio + arquivos versionados",
+    "layout": "Produtos, edição, qualidade, capas e oferta",
+    "actions": "Preparar versão e revisão; gerar artefato",
+    "acceptance": "Direitos e fontes; arquivos íntegros; revisão editorial",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-22",
+    "title": "Checkout e vendas digitais",
+    "mode": "EXT",
+    "domains": [
+      "DIG"
+    ],
+    "source": "Cakto API/webhooks qualificados",
+    "layout": "Ofertas, checkout, vendas, entrega, reembolso",
+    "actions": "Preparar configuração; entrega autorizada; reembolso com aprovação",
+    "acceptance": "Assinatura quando disponível; reconciliação; idempotência; sem compra real",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-23",
+    "title": "Financeiro corporativo",
+    "mode": "EXT",
+    "domains": [
+      "FIN"
+    ],
+    "source": "Ledger contábil/financeiro autorizado",
+    "layout": "Caixa, DRE gerencial, despesas, margens e conciliação",
+    "actions": "Importar registro validado; propor orçamento",
+    "acceptance": "Sem transferências; moeda/competência explícitas; total conciliado",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-24",
+    "title": "FinOps e quotas",
+    "mode": "AUGMENT",
+    "domains": [
+      "FIN"
+    ],
+    "source": "Paperclip costs + gateway + telemetria legítima",
+    "layout": "Uso por modelo, agente, projeto, limites e alertas",
+    "actions": "Propor limite; bloquear execução via política",
+    "acceptance": "0 não significa ilimitado; quota desconhecida; sem fallback pago",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-25",
+    "title": "Market Intelligence",
+    "mode": "EXT",
+    "domains": [
+      "QNT"
+    ],
+    "source": "Dados públicos licenciados e datados",
+    "layout": "Cripto, ações, forex, DeFi e macro",
+    "actions": "Criar pesquisa e hipótese",
+    "acceptance": "Dados atrasados marcados; nenhuma recomendação garantida",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-26",
+    "title": "Trading Lab",
+    "mode": "EXT",
+    "domains": [
+      "QNT"
+    ],
+    "source": "Backtests + ledger simulado isolado",
+    "layout": "Curvas, trades fictícios, risco e experimentos",
+    "actions": "Executar simulação aprovada; interromper",
+    "acceptance": "Sem credenciais reais; taxas e slippage; sem look-ahead",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-27",
+    "title": "Knowledge Graph",
+    "mode": "EXT",
+    "domains": [
+      "GOV",
+      "RES"
+    ],
+    "source": "Intelligence Hub PostgreSQL",
+    "layout": "Grafo filtrado, expansão e lista acessível",
+    "actions": "Navegar fontes; propor relação",
+    "acceptance": "Isolamento em nós/arestas; limites de expansão; proveniência",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-28",
+    "title": "Memória e RAG",
+    "mode": "EXT",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Intelligence Hub",
+    "layout": "Busca, trechos, escopo, validade e propostas",
+    "actions": "Buscar; propor lição; solicitar correção/exclusão",
+    "acceptance": "ACL antes de retrieval; citações; exclusão derivada; prompt injection",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-29",
+    "title": "Skills Registry",
+    "mode": "AUGMENT",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Paperclip skills + GitHub registry",
+    "layout": "92 pacotes, versões, hashes, bindings e gates",
+    "actions": "Abrir skill; propor versão; solicitar qualificação",
+    "acceptance": "Sem autoalteração ou publicação; hash incompatível bloqueia",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-30",
+    "title": "Benchmarks e Learning",
+    "mode": "EXT",
+    "domains": [
+      "GOV"
+    ],
+    "source": "Evaluation Engine + evidence bundles",
+    "layout": "Avaliações, baseline/candidate, regressões e promoção",
+    "actions": "Agendar teste permitido; pedir promoção/rollback",
+    "acceptance": "Holdout; sem autoaprovação; falha HIGH bloqueia",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-31",
+    "title": "Infraestrutura e filas",
+    "mode": "EXT",
+    "domains": [
+      "OPS"
+    ],
+    "source": "Netdata + gateway/runtime + backups",
+    "layout": "Hosts, recursos, filas, quotas, saúde e recuperação",
+    "actions": "Solicitar diagnóstico; pausa controlada; restauração aprovada",
+    "acceptance": "Host offline; lease expirado; status desconhecido; restauração isolada",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-32",
+    "title": "Atendimento e operações",
+    "mode": "EXT",
+    "domains": [
+      "OPS"
+    ],
+    "source": "Tickets/projetos Paperclip + CRM",
+    "layout": "SLA, tickets, onboarding, retenção e runbooks",
+    "actions": "Criar ticket e escalonar",
+    "acceptance": "Segregação de clientes; relógio SLA; dados mínimos",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-33",
+    "title": "Security Center",
+    "mode": "EXT",
+    "domains": [
+      "SEC"
+    ],
+    "source": "ARGUS ledger + controles de segurança",
+    "layout": "Incidentes, permissões, riscos e auditoria",
+    "actions": "Conter via política; solicitar mudança crítica",
+    "acceptance": "Escalada direta ao dono; nenhum segredo; sem autoelevação",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-34",
+    "title": "Approvals & Inbox",
+    "mode": "AUGMENT",
+    "domains": [
+      "SEC",
+      "GOV"
+    ],
+    "source": "Paperclip approvals + policy ledger",
+    "layout": "Fila nativa e dossiê de risco, diff, impacto, prazo",
+    "actions": "Aprovar/rejeitar com reautenticação quando aplicável",
+    "acceptance": "Replay, expiry, payload alterado, duplo clique, segregação de funções",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  },
+  {
+    "id": "CC-35",
+    "title": "Configuração e integrações",
+    "mode": "AUGMENT",
+    "domains": [
+      "SEC",
+      "OPS"
+    ],
+    "source": "Paperclip settings/connections + policy gateway",
+    "layout": "Conexões mascaradas, estados, preflight e versões",
+    "actions": "Solicitar conexão/revogação; gestão pelo dono",
+    "acceptance": "Segredos nunca no browser; aumento de capacidade exige aprovação",
+    "status": "PROPOSED_NOT_IMPLEMENTED"
+  }
+]

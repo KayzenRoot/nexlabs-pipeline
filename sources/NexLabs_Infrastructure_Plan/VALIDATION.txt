@@ -1,0 +1,2 @@
+PASS: catalog IDs, autonomy ceilings, model profiles, skill versions, workflow risks/gates, 1110 assignment IDs, all disabled; 32 test scenarios specified; RAM/disk sums verified.
+NOT RUN: all infrastructure, model, security, backup and operational tests. No changes to hosts or GitHub.

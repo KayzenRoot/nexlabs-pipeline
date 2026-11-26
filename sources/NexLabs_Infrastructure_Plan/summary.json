@@ -1,0 +1,19 @@
+{
+  "agents": 105,
+  "skills": 92,
+  "workflows": 62,
+  "assignments": 1110,
+  "profiles": {
+    "EXEC": 13,
+    "RESEARCH": 18,
+    "ENG": 27,
+    "CREATIVE": 22,
+    "QUANT": 16,
+    "AUDIT": 9
+  },
+  "infra_test_scenarios": 32,
+  "operational_tests_run": 0,
+  "enabled_agents": 0,
+  "new_spend_usd": 0,
+  "status": "STRUCTURAL_VALIDATION_ONLY"
+}

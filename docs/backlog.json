@@ -1,0 +1,362 @@
+[
+  {
+    "id": "NLE-INFRA-WO-001",
+    "title": "Inventário e compatibilidade read-only",
+    "risk": "LOW",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-BOOTSTRAP-001",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-001",
+    "title": "Registry schema, locks, quarentena e validador",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-001",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INFRA-WO-002",
+    "title": "Rede privada, identidade, secrets e isolamento",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-001",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-001",
+    "title": "Contrato de eventos, autorização e ledger",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-002",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INFRA-WO-003",
+    "title": "Paperclip e PostgreSQL privado, backups iniciais",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-001",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INFRA-WO-004",
+    "title": "Codex oficial, worker Windows, cancelamento",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-003",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INFRA-WO-005",
+    "title": "Fila/quotas/FinOps, 9Router opcional",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-004",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-002",
+    "title": "12 core packages, harness e tool gateway",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-005",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-001",
+    "title": "Foundation schemas, ACL, adapters e fixtures",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-002",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INFRA-WO-006",
+    "title": "Recursos do Intelligence Hub e Registry",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-001",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-002",
+    "title": "Ingestão, proveniência, retenção e embeddings",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-006",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-003",
+    "title": "RAG híbrido e Context Pack",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-002",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-004",
+    "title": "Grafo temporal e ACL de caminhos",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-003",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-005",
+    "title": "Memória, feedback, evolução de skills",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-004",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-006",
+    "title": "Evaluation/FinOps e benchmarks",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-005",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-001",
+    "title": "Preflight SDK, plugin vs sidecar, design system",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-006",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-003",
+    "title": "Skills engenharia/governança piloto",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-CC-WO-001",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-004",
+    "title": "Skills comerciais/marketing piloto",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-003",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-005",
+    "title": "Skills digitais e checkout mock",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-004",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-006",
+    "title": "Demais competências corporativas, pesquisa e segurança",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-005",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-007",
+    "title": "Skills Web3 e finanças em laboratório",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-006",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-002",
+    "title": "Dispatcher Paperclip, GOV/SEC/FIN piloto",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-007",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-002",
+    "title": "Shell, dashboard, ZEUS, integração nativa",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-002",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-003",
+    "title": "Software Factory e GitHub teste",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-CC-WO-002",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-004",
+    "title": "Pesquisa, B2B, CRM e orgânico mock",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-003",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-003",
+    "title": "CRM/vendas/clientes e Software Factory",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-004",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-005",
+    "title": "E-books, checkout, entrega e conciliação",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-CC-WO-003",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-006",
+    "title": "Paid media read-only e dry-run",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-005",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-004",
+    "title": "Marketing, ads, social, e-books",
+    "risk": "ELEVATED",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-006",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-007",
+    "title": "Finanças corporativas e paper trading",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-CC-WO-004",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-005",
+    "title": "Finanças/FinOps/trading simulado",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-007",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-007",
+    "title": "Integração bindings completos 105/92/62",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-CC-WO-005",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-006",
+    "title": "Intelligence Center, skills e benchmarks",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-007",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INFRA-WO-007",
+    "title": "Monitoramento, restore, recuperação",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-CC-WO-006",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-007",
+    "title": "Infra, security, approvals e mobile",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-007",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-SR-WO-008",
+    "title": "Qualificação dos 105 agentes e rollback",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-CC-WO-007",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-WF-WO-008",
+    "title": "Operações e qualificação ponta a ponta",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-SR-WO-008",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INT-WO-008",
+    "title": "Red team, recovery e qualificação INT",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-WF-WO-008",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-INFRA-WO-008",
+    "title": "Qualificação infraestrutura e rollout controlado",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INT-WO-008",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  },
+  {
+    "id": "NLE-CC-WO-008",
+    "title": "Qualificação integrada UI e release gate",
+    "risk": "HIGH_ASSURANCE",
+    "classification": "NECESSARY",
+    "previous_gate": "NLE-INFRA-WO-008",
+    "status": "NOT_STARTED",
+    "original_scope_preserved": true
+  }
+]

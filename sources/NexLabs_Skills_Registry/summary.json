@@ -1,0 +1,16 @@
+{
+  "agents": 105,
+  "original_assignments": 1110,
+  "distinct_original_labels": 996,
+  "contextual_competency_records": 1071,
+  "packages": 92,
+  "domain_packages": 80,
+  "shared_packages": 12,
+  "shared_assignments": 101,
+  "agent_package_links": 183,
+  "original_agent_tests": 316,
+  "source_sha256": "b1ce5e09d1df6c1172d700927d7d65a26ad2626c9b959e11c9c072a96790df12",
+  "source_candidates": 17,
+  "qualified": 0,
+  "implemented": 0
+}

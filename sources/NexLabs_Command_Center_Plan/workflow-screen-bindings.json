@@ -1,0 +1,1533 @@
+[
+  {
+    "workflow_id": "NLE-WF-GOV-01",
+    "name": "Estratégia e OKRs",
+    "primary_screen": "CC-01",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PORT",
+      "NLE-ATHENA-STR",
+      "NLE-PLUTUS-CFO",
+      "NLE-ZEUS-CEO"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "corporate-finance",
+      "executive-strategy",
+      "security-governance"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-02",
+    "name": "Triagem e despacho",
+    "primary_screen": "CC-02",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-BA",
+      "NLE-ATHENA-PMO",
+      "NLE-ZEUS-CEO"
+    ],
+    "package_ids": [
+      "business-requirements",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "executive-strategy",
+      "project-governance",
+      "security-governance"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-03",
+    "name": "Conhecimento e fontes",
+    "primary_screen": "CC-28",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-ATHENA-KM",
+      "NLE-ATHENA-PEX",
+      "NLE-ATHENA-PMO",
+      "NLE-HEPHAESTUS-DATA"
+    ],
+    "package_ids": [
+      "core-data-quality",
+      "core-security-privacy",
+      "core-source-evidence",
+      "data-engineering",
+      "knowledge-retrieval",
+      "privacy-compliance",
+      "process-excellence"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-04",
+    "name": "Melhoria de processos",
+    "primary_screen": "CC-06",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PEX",
+      "NLE-ATHENA-PMO",
+      "NLE-HEPHAESTUS-AUTO"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "process-excellence",
+      "project-governance",
+      "security-governance",
+      "workflow-automation"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-05",
+    "name": "Qualificação de agente e skill",
+    "primary_screen": "CC-30",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ATLAS-AOPS",
+      "NLE-HEPHAESTUS-AI",
+      "NLE-PLUTUS-FINOPS",
+      "NLE-PROMETHEUS-OSINT"
+    ],
+    "package_ids": [
+      "agent-security",
+      "ai-finops",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-security-privacy",
+      "core-source-evidence",
+      "core-tool-budget",
+      "llm-engineering",
+      "open-source-due-diligence",
+      "reliability-operations"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-RES-01",
+    "name": "Pesquisa de mercado",
+    "primary_screen": "CC-07",
+    "agent_ids": [
+      "NLE-ATHENA-STR",
+      "NLE-PROMETHEUS-BIZ",
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-MARKET"
+    ],
+    "package_ids": [
+      "core-experiment-design",
+      "core-source-evidence",
+      "core-unit-economics",
+      "executive-strategy",
+      "innovation-strategy",
+      "market-intelligence",
+      "product-discovery"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-RES-02",
+    "name": "Radar tecnológico e due diligence",
+    "primary_screen": "CC-07",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ATLAS-PROC",
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-OSINT",
+      "NLE-PROMETHEUS-TECH"
+    ],
+    "package_ids": [
+      "agent-security",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-source-evidence",
+      "innovation-strategy",
+      "open-source-due-diligence",
+      "procurement"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-RES-03",
+    "name": "Validação de novo produto",
+    "primary_screen": "CC-07",
+    "agent_ids": [
+      "NLE-ATHENA-PORT",
+      "NLE-HEPHAESTUS-PM",
+      "NLE-PLUTUS-UNIT",
+      "NLE-PROMETHEUS-BIZ",
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-PROTO"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-experiment-design",
+      "core-governance-handoff",
+      "core-unit-economics",
+      "executive-strategy",
+      "financial-planning",
+      "innovation-strategy",
+      "product-discovery",
+      "rapid-prototyping"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-01",
+    "name": "ICP e prospecção B2B",
+    "primary_screen": "CC-08",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-PROS",
+      "NLE-HERMES-SI"
+    ],
+    "package_ids": [
+      "b2b-prospecting",
+      "core-data-quality",
+      "core-security-privacy",
+      "core-source-evidence",
+      "core-unit-economics",
+      "privacy-compliance",
+      "sales-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-02",
+    "name": "Outreach personalizado",
+    "primary_screen": "CC-08",
+    "agent_ids": [
+      "NLE-APOLLO-COPY",
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-OUT"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "privacy-compliance",
+      "sales-outreach",
+      "sales-strategy"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-03",
+    "name": "Inbound e qualificação",
+    "primary_screen": "CC-08",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-IN",
+      "NLE-HERMES-SE",
+      "NLE-HERMES-SI"
+    ],
+    "package_ids": [
+      "b2b-prospecting",
+      "core-data-quality",
+      "core-security-privacy",
+      "privacy-compliance",
+      "sales-outreach",
+      "technical-presales"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-04",
+    "name": "Discovery e pré-venda",
+    "primary_screen": "CC-09",
+    "agent_ids": [
+      "NLE-ATHENA-BA",
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-SE",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "business-requirements",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "financial-planning",
+      "sales-strategy",
+      "technical-presales",
+      "technology-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-05",
+    "name": "Proposta, negociação e contrato",
+    "primary_screen": "CC-09",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-ARGUS-ORA",
+      "NLE-HERMES-AE",
+      "NLE-HERMES-CRO",
+      "NLE-PLUTUS-FPA"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "financial-planning",
+      "legal-research",
+      "sales-strategy",
+      "security-governance"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-06",
+    "name": "Parcerias e canais",
+    "primary_screen": "CC-09",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-PART",
+      "NLE-PLUTUS-UNIT",
+      "NLE-PROMETHEUS-MARKET"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-source-evidence",
+      "core-unit-economics",
+      "financial-planning",
+      "legal-research",
+      "market-intelligence",
+      "sales-strategy"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-07",
+    "name": "Handoff para entrega",
+    "primary_screen": "CC-10",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PMO",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-IMP",
+      "NLE-HERMES-AE"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "customer-implementation",
+      "project-governance",
+      "security-governance",
+      "service-operations"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-01",
+    "name": "Source Pack e arquitetura",
+    "primary_screen": "CC-11",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-BA",
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-PM",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "business-requirements",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "product-discovery",
+      "software-audit",
+      "technology-strategy"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-02",
+    "name": "Work Order e Context Lock",
+    "primary_screen": "CC-11",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-PMO",
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "project-governance",
+      "software-audit",
+      "technology-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-03",
+    "name": "Frontend e design system",
+    "primary_screen": "CC-12",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-FE",
+      "NLE-HEPHAESTUS-QA",
+      "NLE-HEPHAESTUS-UX"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-data-quality",
+      "core-source-evidence",
+      "frontend-engineering",
+      "software-audit",
+      "software-testing",
+      "technology-strategy",
+      "ux-design"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-04",
+    "name": "Backend e integrações",
+    "primary_screen": "CC-12",
+    "agent_ids": [
+      "NLE-ARGUS-APPSEC",
+      "NLE-HEPHAESTUS-BE",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-DATA",
+      "NLE-HEPHAESTUS-INT",
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "package_ids": [
+      "api-integrations",
+      "application-security",
+      "backend-engineering",
+      "core-data-quality",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "data-engineering",
+      "software-testing",
+      "technology-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-05",
+    "name": "Mobile Android/iOS",
+    "primary_screen": "CC-12",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-MOB",
+      "NLE-HEPHAESTUS-QA",
+      "NLE-HEPHAESTUS-UX"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-data-quality",
+      "core-source-evidence",
+      "mobile-engineering",
+      "software-audit",
+      "software-testing",
+      "technology-strategy",
+      "ux-design"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-06",
+    "name": "IA, RAG e automação",
+    "primary_screen": "CC-12",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-HEPHAESTUS-AI",
+      "NLE-HEPHAESTUS-AUTO",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-INT"
+    ],
+    "package_ids": [
+      "agent-security",
+      "api-integrations",
+      "core-data-quality",
+      "core-reliable-workflows",
+      "core-security-privacy",
+      "core-tool-budget",
+      "llm-engineering",
+      "technology-strategy",
+      "workflow-automation"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-07",
+    "name": "Web3 arquitetura e integração",
+    "primary_screen": "CC-13",
+    "agent_ids": [
+      "NLE-ARGUS-SCA",
+      "NLE-HEPHAESTUS-BARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-INT",
+      "NLE-HEPHAESTUS-WINT"
+    ],
+    "package_ids": [
+      "api-integrations",
+      "blockchain-architecture",
+      "core-data-quality",
+      "core-reliable-workflows",
+      "smart-contract-audit",
+      "technology-strategy",
+      "web3-integrations"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-08",
+    "name": "Smart contracts EVM",
+    "primary_screen": "CC-13",
+    "agent_ids": [
+      "NLE-ARGUS-SCA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-EVM",
+      "NLE-HEPHAESTUS-PERF",
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-experiment-design",
+      "performance-engineering",
+      "smart-contract-audit",
+      "software-testing",
+      "solidity-engineering",
+      "technology-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-09",
+    "name": "Smart contracts não EVM",
+    "primary_screen": "CC-13",
+    "agent_ids": [
+      "NLE-ARGUS-SCA",
+      "NLE-HEPHAESTUS-BARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-NEVM",
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "package_ids": [
+      "blockchain-architecture",
+      "non-evm-engineering",
+      "smart-contract-audit",
+      "software-testing",
+      "technology-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-10",
+    "name": "QA, performance e Evidence Bundle",
+    "primary_screen": "CC-14",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-PERF",
+      "NLE-HEPHAESTUS-QA",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-governance-handoff",
+      "core-source-evidence",
+      "engineering-governance",
+      "performance-engineering",
+      "software-audit",
+      "software-testing",
+      "technology-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-11",
+    "name": "PR, auditoria e integração",
+    "primary_screen": "CC-14",
+    "agent_ids": [
+      "NLE-ARGUS-APPSEC",
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "application-security",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "software-audit",
+      "technology-strategy"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-12",
+    "name": "Release, deploy e rollback",
+    "primary_screen": "CC-14",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATLAS-IMP",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-DEVOPS",
+      "NLE-HEPHAESTUS-SRE"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "customer-implementation",
+      "release-infrastructure",
+      "reliability-operations",
+      "security-governance",
+      "technology-strategy"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-13",
+    "name": "Manutenção e correções",
+    "primary_screen": "CC-11",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-PMO",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-SUP",
+      "NLE-HEPHAESTUS-REL",
+      "NLE-HEPHAESTUS-SRE"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "project-governance",
+      "reliability-operations",
+      "service-operations",
+      "software-audit"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-01",
+    "name": "Pesquisa de nichos e oferta",
+    "primary_screen": "CC-21",
+    "agent_ids": [
+      "NLE-ATHENA-PORT",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-NICHE",
+      "NLE-MUSES-OFFER",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-experiment-design",
+      "core-source-evidence",
+      "core-unit-economics",
+      "executive-strategy",
+      "financial-planning",
+      "product-discovery",
+      "product-offer"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-02",
+    "name": "Produção editorial de e-books",
+    "primary_screen": "CC-21",
+    "agent_ids": [
+      "NLE-MUSES-AUTHOR",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-DQA",
+      "NLE-MUSES-EDES",
+      "NLE-MUSES-EDITOR",
+      "NLE-MUSES-ID",
+      "NLE-MUSES-ILL"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-experiment-design",
+      "core-unit-economics",
+      "creative-production",
+      "digital-product-testing",
+      "editorial-production",
+      "instructional-design",
+      "longform-writing",
+      "product-offer"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-03",
+    "name": "Funil e assets comerciais",
+    "primary_screen": "CC-16",
+    "agent_ids": [
+      "NLE-APOLLO-COPY",
+      "NLE-APOLLO-CRO",
+      "NLE-APOLLO-DES",
+      "NLE-ARGUS-PRIV",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-ECOM",
+      "NLE-MUSES-OFFER"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "conversion-optimization",
+      "core-accessibility",
+      "core-experiment-design",
+      "core-reliable-workflows",
+      "core-security-privacy",
+      "core-unit-economics",
+      "creative-production",
+      "digital-commerce",
+      "privacy-compliance",
+      "product-offer"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-04",
+    "name": "Cakto cadastro e homologação",
+    "primary_screen": "CC-22",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-DQA",
+      "NLE-MUSES-ECOM",
+      "NLE-PLUTUS-CTRL"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "digital-commerce",
+      "digital-product-testing",
+      "financial-controllership",
+      "product-offer",
+      "security-governance"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-05",
+    "name": "Venda, entrega e reembolso",
+    "primary_screen": "CC-22",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-IMP",
+      "NLE-MUSES-ECOM",
+      "NLE-PLUTUS-CTRL"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "customer-implementation",
+      "digital-commerce",
+      "financial-controllership",
+      "security-governance",
+      "service-operations"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-01",
+    "name": "Estratégia, marca e calendário",
+    "primary_screen": "CC-15",
+    "agent_ids": [
+      "NLE-APOLLO-BRAND",
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "marketing-strategy",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-02",
+    "name": "Fábrica de criativos",
+    "primary_screen": "CC-16",
+    "agent_ids": [
+      "NLE-APOLLO-BRAND",
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-COPY",
+      "NLE-APOLLO-DES",
+      "NLE-APOLLO-VID"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-accessibility",
+      "core-experiment-design",
+      "core-unit-economics",
+      "creative-production",
+      "marketing-strategy"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-03",
+    "name": "Instagram",
+    "primary_screen": "CC-17",
+    "agent_ids": [
+      "NLE-APOLLO-IG",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "instagram-content",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-04",
+    "name": "Facebook e comunidades",
+    "primary_screen": "CC-17",
+    "agent_ids": [
+      "NLE-APOLLO-FB",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "facebook-content",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-05",
+    "name": "TikTok",
+    "primary_screen": "CC-17",
+    "agent_ids": [
+      "NLE-APOLLO-SOC",
+      "NLE-APOLLO-TT",
+      "NLE-APOLLO-VID",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "creative-production",
+      "privacy-compliance",
+      "social-governance",
+      "tiktok-content"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-06",
+    "name": "Pinterest",
+    "primary_screen": "CC-17",
+    "agent_ids": [
+      "NLE-APOLLO-PIN",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "pinterest-content",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-07",
+    "name": "YouTube",
+    "primary_screen": "CC-17",
+    "agent_ids": [
+      "NLE-APOLLO-SOC",
+      "NLE-APOLLO-VID",
+      "NLE-APOLLO-YT",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "creative-production",
+      "privacy-compliance",
+      "social-governance",
+      "youtube-content"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-08",
+    "name": "LinkedIn B2B",
+    "primary_screen": "CC-17",
+    "agent_ids": [
+      "NLE-APOLLO-LI",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-CRO"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "core-unit-economics",
+      "linkedin-content",
+      "privacy-compliance",
+      "sales-strategy",
+      "social-governance"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-09",
+    "name": "SEO, GEO e aquisição orgânica",
+    "primary_screen": "CC-20",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-SEO",
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-FE"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-accessibility",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-source-evidence",
+      "core-unit-economics",
+      "frontend-engineering",
+      "marketing-strategy",
+      "search-optimization",
+      "software-audit"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-10",
+    "name": "CRM e ciclo de vida",
+    "primary_screen": "CC-20",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-COPY",
+      "NLE-APOLLO-CRM",
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-IN"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "crm-lifecycle",
+      "marketing-strategy",
+      "privacy-compliance",
+      "sales-outreach"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-11",
+    "name": "Meta Ads",
+    "primary_screen": "CC-18",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-DES",
+      "NLE-APOLLO-META",
+      "NLE-APOLLO-MKTDA",
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-unit-economics",
+      "creative-production",
+      "financial-planning",
+      "marketing-measurement",
+      "marketing-strategy",
+      "meta-ads-analysis",
+      "security-governance"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-12",
+    "name": "Google Ads",
+    "primary_screen": "CC-19",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-GOOG",
+      "NLE-APOLLO-MKTDA",
+      "NLE-APOLLO-SEO",
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-data-quality",
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-unit-economics",
+      "financial-planning",
+      "google-ads-analysis",
+      "marketing-measurement",
+      "marketing-strategy",
+      "search-optimization",
+      "security-governance"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-13",
+    "name": "TikTok Ads e Pinterest Ads",
+    "primary_screen": "CC-15",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-PAID",
+      "NLE-APOLLO-PIN",
+      "NLE-APOLLO-TT",
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "emerging-paid-media",
+      "financial-planning",
+      "marketing-strategy",
+      "pinterest-content",
+      "security-governance",
+      "tiktok-content"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-14",
+    "name": "Mensuração e CRO",
+    "primary_screen": "CC-15",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CRO",
+      "NLE-APOLLO-MKTDA",
+      "NLE-ARGUS-PRIV",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "conversion-optimization",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "financial-planning",
+      "marketing-measurement",
+      "marketing-strategy",
+      "privacy-compliance"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-01",
+    "name": "Conciliação e fechamento",
+    "primary_screen": "CC-23",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-CTRL",
+      "NLE-PLUTUS-TREAS"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "corporate-finance",
+      "financial-controllership",
+      "security-governance"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-02",
+    "name": "Orçamento e unit economics",
+    "primary_screen": "CC-23",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-FPA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "corporate-finance",
+      "financial-planning",
+      "security-governance"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-03",
+    "name": "FinOps, quotas e custos de IA",
+    "primary_screen": "CC-24",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATLAS-AOPS",
+      "NLE-PLUTUS-FINOPS",
+      "NLE-ZEUS-CEO"
+    ],
+    "package_ids": [
+      "ai-finops",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-tool-budget",
+      "executive-strategy",
+      "reliability-operations",
+      "security-governance"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-04",
+    "name": "Compras e renovação",
+    "primary_screen": "CC-23",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-PROC",
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-FPA"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "corporate-finance",
+      "financial-planning",
+      "legal-research",
+      "procurement",
+      "service-operations"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-01",
+    "name": "Inteligência macro e sentimento",
+    "primary_screen": "CC-25",
+    "agent_ids": [
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-EQ",
+      "NLE-POSEIDON-MACRO",
+      "NLE-POSEIDON-RISK",
+      "NLE-POSEIDON-SENT"
+    ],
+    "package_ids": [
+      "core-risk-analysis",
+      "core-source-evidence",
+      "equity-research",
+      "investment-research",
+      "macro-research",
+      "portfolio-risk"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-02",
+    "name": "Cripto e DeFi research",
+    "primary_screen": "CC-25",
+    "agent_ids": [
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CHAIN",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-CRYPTO",
+      "NLE-POSEIDON-DEFI",
+      "NLE-POSEIDON-RISK"
+    ],
+    "package_ids": [
+      "core-risk-analysis",
+      "crypto-research",
+      "investment-research",
+      "portfolio-risk"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-03",
+    "name": "Estratégia quantitativa e backtest",
+    "primary_screen": "CC-26",
+    "agent_ids": [
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-DERIV",
+      "NLE-POSEIDON-QD",
+      "NLE-POSEIDON-QR",
+      "NLE-POSEIDON-RISK"
+    ],
+    "package_ids": [
+      "core-experiment-design",
+      "core-risk-analysis",
+      "derivatives-research",
+      "investment-research",
+      "portfolio-risk",
+      "quantitative-research"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-04",
+    "name": "Paper trading cripto e forex",
+    "primary_screen": "CC-26",
+    "agent_ids": [
+      "NLE-ATLAS-AOPS",
+      "NLE-ATLAS-COO",
+      "NLE-POSEIDON-CT",
+      "NLE-POSEIDON-FX",
+      "NLE-POSEIDON-RISK",
+      "NLE-POSEIDON-TSE"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "crypto-paper-trading",
+      "forex-paper-trading",
+      "portfolio-risk",
+      "reliability-operations",
+      "service-operations",
+      "trading-simulation-systems"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-05",
+    "name": "Validação de risco e relatório",
+    "primary_screen": "CC-26",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-RISK"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "investment-research",
+      "portfolio-risk",
+      "security-governance"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-OPS-01",
+    "name": "Onboarding e suporte",
+    "primary_screen": "CC-32",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-IMP",
+      "NLE-ATLAS-SUP"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-security-privacy",
+      "customer-implementation",
+      "privacy-compliance",
+      "service-operations"
+    ],
+    "gate": "POLICY_GATED_EXTERNAL",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-OPS-02",
+    "name": "Renovação e retenção",
+    "primary_screen": "CC-32",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-HERMES-AE",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-unit-economics",
+      "financial-planning",
+      "legal-research",
+      "service-operations"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "STANDARD",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-OPS-03",
+    "name": "Observabilidade e recuperação",
+    "primary_screen": "CC-31",
+    "agent_ids": [
+      "NLE-ARGUS-CISO",
+      "NLE-ATLAS-AOPS",
+      "NLE-ATLAS-COO",
+      "NLE-HEPHAESTUS-DEVOPS",
+      "NLE-HEPHAESTUS-SRE"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "release-infrastructure",
+      "reliability-operations",
+      "security-governance",
+      "service-operations"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SEC-01",
+    "name": "Segurança contínua e resposta",
+    "primary_screen": "CC-33",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ARGUS-APPSEC",
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "agent-security",
+      "application-security",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "privacy-compliance",
+      "security-governance"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SEC-02",
+    "name": "Compliance e privacidade",
+    "primary_screen": "CC-33",
+    "agent_ids": [
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-LEGAL",
+      "NLE-ARGUS-ORA",
+      "NLE-ARGUS-PRIV",
+      "NLE-ATHENA-KM"
+    ],
+    "package_ids": [
+      "core-data-quality",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-source-evidence",
+      "knowledge-retrieval",
+      "legal-research",
+      "privacy-compliance",
+      "security-governance"
+    ],
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "risk": "ELEVATED",
+    "activation": "DISABLED"
+  },
+  {
+    "workflow_id": "NLE-WF-SEC-03",
+    "name": "Auditoria de permissões e gastos",
+    "primary_screen": "CC-34",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA",
+      "NLE-ARGUS-SWA",
+      "NLE-PLUTUS-FINOPS"
+    ],
+    "package_ids": [
+      "agent-security",
+      "ai-finops",
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-source-evidence",
+      "core-tool-budget",
+      "security-governance",
+      "software-audit"
+    ],
+    "gate": "INTERNAL_ONLY",
+    "risk": "HIGH_ASSURANCE",
+    "activation": "DISABLED"
+  }
+]

@@ -1,0 +1,4537 @@
+[
+  {
+    "workflow_id": "NLE-WF-GOV-01",
+    "name": "Estratégia e OKRs",
+    "risk": "STANDARD",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-ZEUS-CEO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PORT",
+      "NLE-ATHENA-STR",
+      "NLE-PLUTUS-CFO",
+      "NLE-ZEUS-CEO"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "corporate-finance",
+      "executive-strategy",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATHENA-STR",
+        "task": "converter objetivos em OKRs",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "executive-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATHENA-PORT",
+        "task": "priorizar portfólio",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "executive-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-CFO",
+        "task": "avaliar orçamento",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "corporate-finance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-ZEUS-CEO",
+        "task": "consolidar decisões",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-incident-recovery",
+          "executive-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-02",
+    "name": "Triagem e despacho",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATHENA-PMO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-BA",
+      "NLE-ATHENA-PMO",
+      "NLE-ZEUS-CEO"
+    ],
+    "package_ids": [
+      "business-requirements",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "executive-strategy",
+      "project-governance",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATHENA-BA",
+        "task": "classificar requisitos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "business-requirements"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATHENA-PMO",
+        "task": "resolver dependências e prioridade",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-risk-analysis",
+          "project-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ZEUS-CEO",
+        "task": "delegar conforme capacidade",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-incident-recovery",
+          "executive-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-03",
+    "name": "Conhecimento e fontes",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATHENA-KM",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-ATHENA-KM",
+      "NLE-ATHENA-PEX",
+      "NLE-ATHENA-PMO",
+      "NLE-HEPHAESTUS-DATA"
+    ],
+    "package_ids": [
+      "core-data-quality",
+      "core-security-privacy",
+      "core-source-evidence",
+      "data-engineering",
+      "knowledge-retrieval",
+      "privacy-compliance",
+      "process-excellence"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATHENA-KM",
+        "task": "indexar e recuperar fontes",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-data-quality",
+          "core-source-evidence",
+          "knowledge-retrieval"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-DATA",
+        "task": "validar metadados e isolamento",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-data-quality",
+          "data-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATHENA-PEX",
+        "task": "analisar lacunas",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "process-excellence"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-04",
+    "name": "Melhoria de processos",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATHENA-PEX",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PEX",
+      "NLE-ATHENA-PMO",
+      "NLE-HEPHAESTUS-AUTO"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "process-excellence",
+      "project-governance",
+      "security-governance",
+      "workflow-automation"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATHENA-PEX",
+        "task": "diagnosticar gargalo",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "process-excellence"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-AUTO",
+        "task": "propor automação",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-reliable-workflows",
+          "core-security-privacy",
+          "workflow-automation"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATHENA-PMO",
+        "task": "planejar experimento",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-risk-analysis",
+          "project-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-GOV-05",
+    "name": "Qualificação de agente e skill",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-ATLAS-AOPS",
+    "reviewer": "NLE-ARGUS-AISEC",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ATLAS-AOPS",
+      "NLE-HEPHAESTUS-AI",
+      "NLE-PLUTUS-FINOPS",
+      "NLE-PROMETHEUS-OSINT"
+    ],
+    "package_ids": [
+      "agent-security",
+      "ai-finops",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-security-privacy",
+      "core-source-evidence",
+      "core-tool-budget",
+      "llm-engineering",
+      "open-source-due-diligence",
+      "reliability-operations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-PROMETHEUS-OSINT",
+        "task": "verificar origem",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "core-source-evidence",
+          "open-source-due-diligence"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-AI",
+        "task": "testar modelo e skill",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-security-privacy",
+          "core-tool-budget",
+          "llm-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATLAS-AOPS",
+        "task": "validar runtime",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-reliable-workflows",
+          "reliability-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-PLUTUS-FINOPS",
+        "task": "validar quota",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "ai-finops",
+          "core-capacity-cost",
+          "core-tool-budget"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-RES-01",
+    "name": "Pesquisa de mercado",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-PROMETHEUS-CIO",
+    "reviewer": "NLE-ATHENA-STR",
+    "agent_ids": [
+      "NLE-ATHENA-STR",
+      "NLE-PROMETHEUS-BIZ",
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-MARKET"
+    ],
+    "package_ids": [
+      "core-experiment-design",
+      "core-source-evidence",
+      "core-unit-economics",
+      "executive-strategy",
+      "innovation-strategy",
+      "market-intelligence",
+      "product-discovery"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-PROMETHEUS-MARKET",
+        "task": "dimensionar mercado",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "core-source-evidence",
+          "market-intelligence"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PROMETHEUS-BIZ",
+        "task": "identificar problemas e oportunidades",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "product-discovery"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PROMETHEUS-CIO",
+        "task": "ranquear hipóteses",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-experiment-design",
+          "innovation-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P3",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-RES-02",
+    "name": "Radar tecnológico e due diligence",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-PROMETHEUS-CIO",
+    "reviewer": "NLE-ARGUS-AISEC",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ATLAS-PROC",
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-OSINT",
+      "NLE-PROMETHEUS-TECH"
+    ],
+    "package_ids": [
+      "agent-security",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-source-evidence",
+      "innovation-strategy",
+      "open-source-due-diligence",
+      "procurement"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-PROMETHEUS-TECH",
+        "task": "comparar capacidade",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "core-source-evidence",
+          "innovation-strategy"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PROMETHEUS-OSINT",
+        "task": "avaliar licença e origem",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "core-source-evidence",
+          "open-source-due-diligence"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATLAS-PROC",
+        "task": "comparar custos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "procurement"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P3",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-RES-03",
+    "name": "Validação de novo produto",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-PROMETHEUS-CIO",
+    "reviewer": "NLE-ATHENA-PORT",
+    "agent_ids": [
+      "NLE-ATHENA-PORT",
+      "NLE-HEPHAESTUS-PM",
+      "NLE-PLUTUS-UNIT",
+      "NLE-PROMETHEUS-BIZ",
+      "NLE-PROMETHEUS-CIO",
+      "NLE-PROMETHEUS-PROTO"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-experiment-design",
+      "core-governance-handoff",
+      "core-unit-economics",
+      "executive-strategy",
+      "financial-planning",
+      "innovation-strategy",
+      "product-discovery",
+      "rapid-prototyping"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-PROMETHEUS-BIZ",
+        "task": "formular teste de demanda",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "product-discovery"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PROMETHEUS-PROTO",
+        "task": "criar PoC isolada",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "rapid-prototyping"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-PM",
+        "task": "definir escopo",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "product-discovery"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "simular margem",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P3",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-01",
+    "name": "ICP e prospecção B2B",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HERMES-CRO",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-PROS",
+      "NLE-HERMES-SI"
+    ],
+    "package_ids": [
+      "b2b-prospecting",
+      "core-data-quality",
+      "core-security-privacy",
+      "core-source-evidence",
+      "core-unit-economics",
+      "privacy-compliance",
+      "sales-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HERMES-PROS",
+        "task": "pesquisar empresas",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "b2b-prospecting",
+          "core-data-quality",
+          "core-source-evidence"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HERMES-SI",
+        "task": "validar fit e deduplicar",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "b2b-prospecting",
+          "core-data-quality"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HERMES-CRO",
+        "task": "priorizar carteira",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-unit-economics",
+          "sales-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-02",
+    "name": "Outreach personalizado",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-HERMES-CRO",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-COPY",
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-OUT"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "privacy-compliance",
+      "sales-outreach",
+      "sales-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HERMES-OUT",
+        "task": "preparar abordagem individual",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-experiment-design",
+          "sales-outreach"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-COPY",
+        "task": "revisar mensagem",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "content-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HERMES-CRO",
+        "task": "validar cadência e relevância",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-unit-economics",
+          "sales-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-03",
+    "name": "Inbound e qualificação",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-HERMES-IN",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-IN",
+      "NLE-HERMES-SE",
+      "NLE-HERMES-SI"
+    ],
+    "package_ids": [
+      "b2b-prospecting",
+      "core-data-quality",
+      "core-security-privacy",
+      "privacy-compliance",
+      "sales-outreach",
+      "technical-presales"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HERMES-IN",
+        "task": "classificar intenção e urgência",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "sales-outreach"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HERMES-SI",
+        "task": "verificar duplicidade e fit",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "b2b-prospecting",
+          "core-data-quality"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HERMES-SE",
+        "task": "avaliar necessidade técnica",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "technical-presales"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-04",
+    "name": "Discovery e pré-venda",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HERMES-CRO",
+    "reviewer": "NLE-HEPHAESTUS-CTO",
+    "agent_ids": [
+      "NLE-ATHENA-BA",
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-SE",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "business-requirements",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "financial-planning",
+      "sales-strategy",
+      "technical-presales",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HERMES-SE",
+        "task": "mapear necessidade e estimativa",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "technical-presales"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATHENA-BA",
+        "task": "documentar requisitos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "business-requirements"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-ARCH",
+        "task": "validar arquitetura",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-risk-analysis",
+          "technology-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "estimar margem",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-05",
+    "name": "Proposta, negociação e contrato",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-HERMES-CRO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-ARGUS-ORA",
+      "NLE-HERMES-AE",
+      "NLE-HERMES-CRO",
+      "NLE-PLUTUS-FPA"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "financial-planning",
+      "legal-research",
+      "sales-strategy",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HERMES-AE",
+        "task": "redigir proposta",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "consultative-sales"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PLUTUS-FPA",
+        "task": "validar cenários",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ARGUS-LEGAL",
+        "task": "emitir parecer de risco",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "legal-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-HERMES-CRO",
+        "task": "consolidar condições",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-unit-economics",
+          "sales-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-06",
+    "name": "Parcerias e canais",
+    "risk": "STANDARD",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-HERMES-CRO",
+    "reviewer": "NLE-ARGUS-LEGAL",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-HERMES-CRO",
+      "NLE-HERMES-PART",
+      "NLE-PLUTUS-UNIT",
+      "NLE-PROMETHEUS-MARKET"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-source-evidence",
+      "core-unit-economics",
+      "financial-planning",
+      "legal-research",
+      "market-intelligence",
+      "sales-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HERMES-PART",
+        "task": "avaliar parceria",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "consultative-sales"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PROMETHEUS-MARKET",
+        "task": "comparar mercado",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "core-source-evidence",
+          "market-intelligence"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "simular comissão",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SAL-07",
+    "name": "Handoff para entrega",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PMO",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-IMP",
+      "NLE-HERMES-AE"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "customer-implementation",
+      "project-governance",
+      "security-governance",
+      "service-operations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HERMES-AE",
+        "task": "registrar termos aprovados",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "consultative-sales"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATHENA-PMO",
+        "task": "planejar projeto",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-risk-analysis",
+          "project-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATLAS-IMP",
+        "task": "preparar onboarding",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "customer-implementation"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-ATLAS-CS",
+        "task": "definir plano de sucesso",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "service-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-01",
+    "name": "Source Pack e arquitetura",
+    "risk": "STANDARD",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-BA",
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-PM",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "business-requirements",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "product-discovery",
+      "software-audit",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-PM",
+        "task": "definir produto",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "product-discovery"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATHENA-BA",
+        "task": "refinar requisitos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "business-requirements"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-ARCH",
+        "task": "propor arquitetura e ADRs",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-risk-analysis",
+          "technology-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-HEPHAESTUS-REL",
+        "task": "versionar Source Pack",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-source-evidence",
+          "engineering-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-02",
+    "name": "Work Order e Context Lock",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATHENA-PMO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-PMO",
+      "NLE-HEPHAESTUS-ARCH",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "project-governance",
+      "software-audit",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-ARCH",
+        "task": "definir arquitetura e critérios",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-risk-analysis",
+          "technology-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-REL",
+        "task": "gerar lock e fingerprints",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-source-evidence",
+          "engineering-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATHENA-PMO",
+        "task": "validar dependências",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-risk-analysis",
+          "project-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-03",
+    "name": "Frontend e design system",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-FE",
+      "NLE-HEPHAESTUS-QA",
+      "NLE-HEPHAESTUS-UX"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-data-quality",
+      "core-source-evidence",
+      "frontend-engineering",
+      "software-audit",
+      "software-testing",
+      "technology-strategy",
+      "ux-design"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-UX",
+        "task": "projetar UI acessível",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "ux-design"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-FE",
+        "task": "implementar em branch isolada",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "frontend-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-QA",
+        "task": "validar comportamento",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "software-testing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-04",
+    "name": "Backend e integrações",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-APPSEC",
+    "agent_ids": [
+      "NLE-ARGUS-APPSEC",
+      "NLE-HEPHAESTUS-BE",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-DATA",
+      "NLE-HEPHAESTUS-INT",
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "package_ids": [
+      "api-integrations",
+      "application-security",
+      "backend-engineering",
+      "core-data-quality",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "data-engineering",
+      "software-testing",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-BE",
+        "task": "implementar serviços",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "backend-engineering",
+          "core-reliable-workflows"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-INT",
+        "task": "integrar APIs",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "api-integrations",
+          "core-data-quality",
+          "core-reliable-workflows"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-DATA",
+        "task": "validar migrações e dados",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-data-quality",
+          "data-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-HEPHAESTUS-QA",
+        "task": "testar contratos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "software-testing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-05",
+    "name": "Mobile Android/iOS",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-MOB",
+      "NLE-HEPHAESTUS-QA",
+      "NLE-HEPHAESTUS-UX"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-data-quality",
+      "core-source-evidence",
+      "mobile-engineering",
+      "software-audit",
+      "software-testing",
+      "technology-strategy",
+      "ux-design"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-MOB",
+        "task": "implementar app",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "mobile-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-UX",
+        "task": "validar experiência",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "ux-design"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-QA",
+        "task": "testar dispositivos disponíveis",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "software-testing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-06",
+    "name": "IA, RAG e automação",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-AISEC",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-HEPHAESTUS-AI",
+      "NLE-HEPHAESTUS-AUTO",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-INT"
+    ],
+    "package_ids": [
+      "agent-security",
+      "api-integrations",
+      "core-data-quality",
+      "core-reliable-workflows",
+      "core-security-privacy",
+      "core-tool-budget",
+      "llm-engineering",
+      "technology-strategy",
+      "workflow-automation"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-AI",
+        "task": "implementar pipeline e evals",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-security-privacy",
+          "core-tool-budget",
+          "llm-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-AUTO",
+        "task": "integrar workflow",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-reliable-workflows",
+          "core-security-privacy",
+          "workflow-automation"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-INT",
+        "task": "validar contratos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "api-integrations",
+          "core-data-quality",
+          "core-reliable-workflows"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-07",
+    "name": "Web3 arquitetura e integração",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SCA",
+    "agent_ids": [
+      "NLE-ARGUS-SCA",
+      "NLE-HEPHAESTUS-BARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-INT",
+      "NLE-HEPHAESTUS-WINT"
+    ],
+    "package_ids": [
+      "api-integrations",
+      "blockchain-architecture",
+      "core-data-quality",
+      "core-reliable-workflows",
+      "smart-contract-audit",
+      "technology-strategy",
+      "web3-integrations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-BARCH",
+        "task": "projetar protocolo",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "blockchain-architecture"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-WINT",
+        "task": "integrar RPC e wallet mock",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "web3-integrations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-INT",
+        "task": "testar contratos externos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "api-integrations",
+          "core-data-quality",
+          "core-reliable-workflows"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-08",
+    "name": "Smart contracts EVM",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SCA",
+    "agent_ids": [
+      "NLE-ARGUS-SCA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-EVM",
+      "NLE-HEPHAESTUS-PERF",
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-experiment-design",
+      "performance-engineering",
+      "smart-contract-audit",
+      "software-testing",
+      "solidity-engineering",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-EVM",
+        "task": "implementar em ambiente local",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "solidity-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-QA",
+        "task": "testar propriedades",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "software-testing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-PERF",
+        "task": "medir gas e desempenho",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-experiment-design",
+          "performance-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-09",
+    "name": "Smart contracts não EVM",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SCA",
+    "agent_ids": [
+      "NLE-ARGUS-SCA",
+      "NLE-HEPHAESTUS-BARCH",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-NEVM",
+      "NLE-HEPHAESTUS-QA"
+    ],
+    "package_ids": [
+      "blockchain-architecture",
+      "non-evm-engineering",
+      "smart-contract-audit",
+      "software-testing",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-NEVM",
+        "task": "implementar programas locais",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "non-evm-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-BARCH",
+        "task": "validar modelo de estado",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "blockchain-architecture"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-QA",
+        "task": "testar propriedades",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "software-testing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-10",
+    "name": "QA, performance e Evidence Bundle",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-PERF",
+      "NLE-HEPHAESTUS-QA",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-governance-handoff",
+      "core-source-evidence",
+      "engineering-governance",
+      "performance-engineering",
+      "software-audit",
+      "software-testing",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-QA",
+        "task": "rodar suites",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "software-testing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-PERF",
+        "task": "medir regressões",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-experiment-design",
+          "performance-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-REL",
+        "task": "consolidar evidências e checkpoint delta",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-source-evidence",
+          "engineering-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-11",
+    "name": "PR, auditoria e integração",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-APPSEC",
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-REL"
+    ],
+    "package_ids": [
+      "application-security",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "software-audit",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-REL",
+        "task": "preparar PR e delta",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-source-evidence",
+          "engineering-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ARGUS-APPSEC",
+        "task": "avaliar segurança",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "application-security",
+          "core-risk-analysis"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-CTO",
+        "task": "solicitar decisão de integração",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "technology-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-12",
+    "name": "Release, deploy e rollback",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-HEPHAESTUS-CTO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATLAS-IMP",
+      "NLE-HEPHAESTUS-CTO",
+      "NLE-HEPHAESTUS-DEVOPS",
+      "NLE-HEPHAESTUS-SRE"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "customer-implementation",
+      "release-infrastructure",
+      "reliability-operations",
+      "security-governance",
+      "technology-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-HEPHAESTUS-DEVOPS",
+        "task": "ensaiar pipeline",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-security-privacy",
+          "release-infrastructure"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-SRE",
+        "task": "validar monitoramento e rollback",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "reliability-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATLAS-IMP",
+        "task": "validar implantação",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "customer-implementation"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-ENG-13",
+    "name": "Manutenção e correções",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-SWA",
+      "NLE-ATHENA-PMO",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-SUP",
+      "NLE-HEPHAESTUS-REL",
+      "NLE-HEPHAESTUS-SRE"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-governance-handoff",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-source-evidence",
+      "engineering-governance",
+      "project-governance",
+      "reliability-operations",
+      "service-operations",
+      "software-audit"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATLAS-SUP",
+        "task": "reproduzir problema",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "service-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-SRE",
+        "task": "diagnosticar",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "reliability-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATHENA-PMO",
+        "task": "abrir incremento de correção",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-risk-analysis",
+          "project-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-HEPHAESTUS-REL",
+        "task": "registrar evidência",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-governance-handoff",
+          "core-source-evidence",
+          "engineering-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-01",
+    "name": "Pesquisa de nichos e oferta",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-MUSES-CDPO",
+    "reviewer": "NLE-ATHENA-PORT",
+    "agent_ids": [
+      "NLE-ATHENA-PORT",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-NICHE",
+      "NLE-MUSES-OFFER",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-experiment-design",
+      "core-source-evidence",
+      "core-unit-economics",
+      "executive-strategy",
+      "financial-planning",
+      "product-discovery",
+      "product-offer"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-MUSES-NICHE",
+        "task": "pesquisar demanda",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "core-source-evidence",
+          "product-discovery"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-MUSES-OFFER",
+        "task": "modelar oferta e preço",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "product-offer"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "calcular cenários",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-MUSES-CDPO",
+        "task": "selecionar proposta",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-experiment-design",
+          "core-unit-economics",
+          "product-offer"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-02",
+    "name": "Produção editorial de e-books",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-MUSES-CDPO",
+    "reviewer": "NLE-MUSES-DQA",
+    "agent_ids": [
+      "NLE-MUSES-AUTHOR",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-DQA",
+      "NLE-MUSES-EDES",
+      "NLE-MUSES-EDITOR",
+      "NLE-MUSES-ID",
+      "NLE-MUSES-ILL"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-experiment-design",
+      "core-unit-economics",
+      "creative-production",
+      "digital-product-testing",
+      "editorial-production",
+      "instructional-design",
+      "longform-writing",
+      "product-offer"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-MUSES-AUTHOR",
+        "task": "escrever conteúdo original",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "longform-writing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-MUSES-ID",
+        "task": "desenhar aprendizagem",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "instructional-design"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-MUSES-EDITOR",
+        "task": "revisar fatos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "longform-writing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-MUSES-ILL",
+        "task": "criar ilustrações",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "creative-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 5,
+        "agent_id": "NLE-MUSES-EDES",
+        "task": "diagramar PDF",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "editorial-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-03",
+    "name": "Funil e assets comerciais",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-MUSES-CDPO",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-COPY",
+      "NLE-APOLLO-CRO",
+      "NLE-APOLLO-DES",
+      "NLE-ARGUS-PRIV",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-ECOM",
+      "NLE-MUSES-OFFER"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "conversion-optimization",
+      "core-accessibility",
+      "core-experiment-design",
+      "core-reliable-workflows",
+      "core-security-privacy",
+      "core-unit-economics",
+      "creative-production",
+      "digital-commerce",
+      "privacy-compliance",
+      "product-offer"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-MUSES-OFFER",
+        "task": "definir principal, bump, upsell e downsell",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "product-offer"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-COPY",
+        "task": "redigir copy",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "content-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-APOLLO-DES",
+        "task": "criar peças",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "creative-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-APOLLO-CRO",
+        "task": "projetar landing",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "conversion-optimization",
+          "core-experiment-design"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 5,
+        "agent_id": "NLE-MUSES-ECOM",
+        "task": "preparar checkout",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-reliable-workflows",
+          "digital-commerce"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-04",
+    "name": "Cakto cadastro e homologação",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-MUSES-CDPO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-MUSES-CDPO",
+      "NLE-MUSES-DQA",
+      "NLE-MUSES-ECOM",
+      "NLE-PLUTUS-CTRL"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "digital-commerce",
+      "digital-product-testing",
+      "financial-controllership",
+      "product-offer",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-MUSES-ECOM",
+        "task": "preparar cadastro e validar contrato oficial",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-reliable-workflows",
+          "digital-commerce"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-MUSES-DQA",
+        "task": "testar checkout e entrega mock",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "digital-product-testing"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-CTRL",
+        "task": "validar conciliação prevista",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "financial-controllership"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-DIG-05",
+    "name": "Venda, entrega e reembolso",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-IMP",
+      "NLE-MUSES-ECOM",
+      "NLE-PLUTUS-CTRL"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "customer-implementation",
+      "digital-commerce",
+      "financial-controllership",
+      "security-governance",
+      "service-operations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-MUSES-ECOM",
+        "task": "normalizar evento e preparar entitlement",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-reliable-workflows",
+          "digital-commerce"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATLAS-IMP",
+        "task": "operar entrega interna permitida",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "customer-implementation"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATLAS-CS",
+        "task": "triar suporte",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "service-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-PLUTUS-CTRL",
+        "task": "conciliar",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "financial-controllership"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-01",
+    "name": "Estratégia, marca e calendário",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-BRAND",
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "marketing-strategy",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-BRAND",
+        "task": "definir identidade",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "marketing-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-CONTENT",
+        "task": "planejar conteúdo",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "content-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-APOLLO-SOC",
+        "task": "distribuir formatos",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "social-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-APOLLO-CMO",
+        "task": "priorizar campanhas",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-experiment-design",
+          "core-unit-economics",
+          "marketing-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-02",
+    "name": "Fábrica de criativos",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-APOLLO-BRAND",
+    "agent_ids": [
+      "NLE-APOLLO-BRAND",
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-COPY",
+      "NLE-APOLLO-DES",
+      "NLE-APOLLO-VID"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-accessibility",
+      "core-experiment-design",
+      "core-unit-economics",
+      "creative-production",
+      "marketing-strategy"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-COPY",
+        "task": "redigir variações",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "content-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-DES",
+        "task": "gerar criativos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "creative-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-APOLLO-VID",
+        "task": "editar vídeo",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "creative-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-APOLLO-CONTENT",
+        "task": "validar narrativa",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "content-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-03",
+    "name": "Instagram",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-APOLLO-SOC",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-IG",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "instagram-content",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-IG",
+        "task": "adaptar conteúdo, preparar publicação e medir",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "instagram-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-SOC",
+        "task": "validar frequência",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "social-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-04",
+    "name": "Facebook e comunidades",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-APOLLO-SOC",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-FB",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "facebook-content",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-FB",
+        "task": "preparar posts de página e sugestões para grupos",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "facebook-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-SOC",
+        "task": "validar frequência e contexto",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "social-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-05",
+    "name": "TikTok",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-APOLLO-SOC",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-SOC",
+      "NLE-APOLLO-TT",
+      "NLE-APOLLO-VID",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "creative-production",
+      "privacy-compliance",
+      "social-governance",
+      "tiktok-content"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-TT",
+        "task": "adaptar roteiro e vídeo, preparar draft e metadados",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "tiktok-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-VID",
+        "task": "validar direitos de áudio",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "creative-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-06",
+    "name": "Pinterest",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-APOLLO-SOC",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-PIN",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "pinterest-content",
+      "privacy-compliance",
+      "social-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-PIN",
+        "task": "otimizar pin e preparar publicação",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "pinterest-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-SOC",
+        "task": "validar repetição",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "social-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-07",
+    "name": "YouTube",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-APOLLO-SOC",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-SOC",
+      "NLE-APOLLO-VID",
+      "NLE-APOLLO-YT",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "creative-production",
+      "privacy-compliance",
+      "social-governance",
+      "youtube-content"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-YT",
+        "task": "otimizar metadados e preparar upload",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "youtube-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-VID",
+        "task": "validar mídia",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "creative-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-08",
+    "name": "LinkedIn B2B",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-APOLLO-SOC",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-LI",
+      "NLE-APOLLO-SOC",
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-CRO"
+    ],
+    "package_ids": [
+      "core-security-privacy",
+      "core-unit-economics",
+      "linkedin-content",
+      "privacy-compliance",
+      "sales-strategy",
+      "social-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-LI",
+        "task": "preparar post e análise B2B",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "linkedin-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HERMES-CRO",
+        "task": "priorizar mensagem comercial",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-unit-economics",
+          "sales-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-09",
+    "name": "SEO, GEO e aquisição orgânica",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CONTENT",
+      "NLE-APOLLO-SEO",
+      "NLE-ARGUS-SWA",
+      "NLE-HEPHAESTUS-FE"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-accessibility",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-source-evidence",
+      "core-unit-economics",
+      "frontend-engineering",
+      "marketing-strategy",
+      "search-optimization",
+      "software-audit"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-SEO",
+        "task": "auditar e propor melhorias",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "search-optimization"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-CONTENT",
+        "task": "planejar páginas",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "content-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-FE",
+        "task": "preparar alterações em WO",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "frontend-engineering"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-10",
+    "name": "CRM e ciclo de vida",
+    "risk": "ELEVATED",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-COPY",
+      "NLE-APOLLO-CRM",
+      "NLE-ARGUS-PRIV",
+      "NLE-HERMES-IN"
+    ],
+    "package_ids": [
+      "content-strategy",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "crm-lifecycle",
+      "marketing-strategy",
+      "privacy-compliance",
+      "sales-outreach"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-CRM",
+        "task": "preparar segmentação e mensagens",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-experiment-design",
+          "core-security-privacy",
+          "crm-lifecycle"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HERMES-IN",
+        "task": "triar respostas",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "sales-outreach"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-APOLLO-COPY",
+        "task": "revisar copy",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "content-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-11",
+    "name": "Meta Ads",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-DES",
+      "NLE-APOLLO-META",
+      "NLE-APOLLO-MKTDA",
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-accessibility",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-unit-economics",
+      "creative-production",
+      "financial-planning",
+      "marketing-measurement",
+      "marketing-strategy",
+      "meta-ads-analysis",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-META",
+        "task": "analisar e preparar campanha/alterações",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "meta-ads-analysis"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-DES",
+        "task": "preparar criativos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-accessibility",
+          "creative-production"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-APOLLO-MKTDA",
+        "task": "validar medição",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-data-quality",
+          "core-security-privacy",
+          "marketing-measurement"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "avaliar CAC e margem",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-12",
+    "name": "Google Ads",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-GOOG",
+      "NLE-APOLLO-MKTDA",
+      "NLE-APOLLO-SEO",
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-data-quality",
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-unit-economics",
+      "financial-planning",
+      "google-ads-analysis",
+      "marketing-measurement",
+      "marketing-strategy",
+      "search-optimization",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-GOOG",
+        "task": "preparar campanha e validar request em mock/teste",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "google-ads-analysis"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-SEO",
+        "task": "revisar intenção",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "search-optimization"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-APOLLO-MKTDA",
+        "task": "validar conversões",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-data-quality",
+          "core-security-privacy",
+          "marketing-measurement"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "avaliar margem",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-13",
+    "name": "TikTok Ads e Pinterest Ads",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-PAID",
+      "NLE-APOLLO-PIN",
+      "NLE-APOLLO-TT",
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-experiment-design",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "emerging-paid-media",
+      "financial-planning",
+      "marketing-strategy",
+      "pinterest-content",
+      "security-governance",
+      "tiktok-content"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-PAID",
+        "task": "preparar experimentos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-experiment-design",
+          "emerging-paid-media"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-TT",
+        "task": "adaptar criativo",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "tiktok-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-APOLLO-PIN",
+        "task": "adaptar pin",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "pinterest-content"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "simular custos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-MKT-14",
+    "name": "Mensuração e CRO",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-APOLLO-CMO",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-APOLLO-CMO",
+      "NLE-APOLLO-CRO",
+      "NLE-APOLLO-MKTDA",
+      "NLE-ARGUS-PRIV",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "conversion-optimization",
+      "core-data-quality",
+      "core-experiment-design",
+      "core-security-privacy",
+      "core-unit-economics",
+      "financial-planning",
+      "marketing-measurement",
+      "marketing-strategy",
+      "privacy-compliance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-APOLLO-MKTDA",
+        "task": "deduplicar eventos e atribuição",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-data-quality",
+          "core-security-privacy",
+          "marketing-measurement"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-APOLLO-CRO",
+        "task": "formular teste",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "conversion-optimization",
+          "core-experiment-design"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "avaliar contribuição",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-01",
+    "name": "Conciliação e fechamento",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-PLUTUS-CFO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-CTRL",
+      "NLE-PLUTUS-TREAS"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "corporate-finance",
+      "financial-controllership",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-PLUTUS-CTRL",
+        "task": "conciliar receitas e custos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "financial-controllership"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PLUTUS-TREAS",
+        "task": "projetar caixa",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "corporate-finance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-CFO",
+        "task": "consolidar relatório",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "corporate-finance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-02",
+    "name": "Orçamento e unit economics",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-PLUTUS-CFO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-FPA",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-unit-economics",
+      "corporate-finance",
+      "financial-planning",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-PLUTUS-FPA",
+        "task": "modelar cenários",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "calcular margem, CAC e LTV",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-CFO",
+        "task": "propor alocação",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "corporate-finance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-03",
+    "name": "FinOps, quotas e custos de IA",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-PLUTUS-FINOPS",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATLAS-AOPS",
+      "NLE-PLUTUS-FINOPS",
+      "NLE-ZEUS-CEO"
+    ],
+    "package_ids": [
+      "ai-finops",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-tool-budget",
+      "executive-strategy",
+      "reliability-operations",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-PLUTUS-FINOPS",
+        "task": "reservar e reconciliar limites",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "ai-finops",
+          "core-capacity-cost",
+          "core-tool-budget"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATLAS-AOPS",
+        "task": "aplicar backpressure",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-reliable-workflows",
+          "reliability-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ZEUS-CEO",
+        "task": "repriorizar fila",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-incident-recovery",
+          "executive-strategy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-FIN-04",
+    "name": "Compras e renovação",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-PLUTUS-CFO",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-PROC",
+      "NLE-PLUTUS-CFO",
+      "NLE-PLUTUS-FPA"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "corporate-finance",
+      "financial-planning",
+      "legal-research",
+      "procurement",
+      "service-operations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATLAS-PROC",
+        "task": "comparar alternativas",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "procurement"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-PLUTUS-FPA",
+        "task": "avaliar impacto",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ARGUS-LEGAL",
+        "task": "analisar termos",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "legal-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-01",
+    "name": "Inteligência macro e sentimento",
+    "risk": "STANDARD",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-POSEIDON-CIO",
+    "reviewer": "NLE-POSEIDON-RISK",
+    "agent_ids": [
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-EQ",
+      "NLE-POSEIDON-MACRO",
+      "NLE-POSEIDON-RISK",
+      "NLE-POSEIDON-SENT"
+    ],
+    "package_ids": [
+      "core-risk-analysis",
+      "core-source-evidence",
+      "equity-research",
+      "investment-research",
+      "macro-research",
+      "portfolio-risk"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-POSEIDON-MACRO",
+        "task": "analisar releases",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "macro-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-POSEIDON-SENT",
+        "task": "classificar notícias",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "macro-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-POSEIDON-EQ",
+        "task": "avaliar fundamentos",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "core-source-evidence",
+          "equity-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P3",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": true
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-02",
+    "name": "Cripto e DeFi research",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-POSEIDON-CIO",
+    "reviewer": "NLE-POSEIDON-RISK",
+    "agent_ids": [
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CHAIN",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-CRYPTO",
+      "NLE-POSEIDON-DEFI",
+      "NLE-POSEIDON-RISK"
+    ],
+    "package_ids": [
+      "core-risk-analysis",
+      "crypto-research",
+      "investment-research",
+      "portfolio-risk"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-POSEIDON-CRYPTO",
+        "task": "analisar ativos",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "crypto-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-POSEIDON-CHAIN",
+        "task": "validar métricas on-chain",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "crypto-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-POSEIDON-DEFI",
+        "task": "avaliar riscos de protocolos",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "crypto-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P3",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": true
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-03",
+    "name": "Estratégia quantitativa e backtest",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-POSEIDON-CIO",
+    "reviewer": "NLE-POSEIDON-RISK",
+    "agent_ids": [
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-DERIV",
+      "NLE-POSEIDON-QD",
+      "NLE-POSEIDON-QR",
+      "NLE-POSEIDON-RISK"
+    ],
+    "package_ids": [
+      "core-experiment-design",
+      "core-risk-analysis",
+      "derivatives-research",
+      "investment-research",
+      "portfolio-risk",
+      "quantitative-research"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-POSEIDON-QR",
+        "task": "definir hipótese e split temporal",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-experiment-design",
+          "quantitative-research"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-POSEIDON-QD",
+        "task": "implementar backtest",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "quantitative-research"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-POSEIDON-DERIV",
+        "task": "validar payoff e custos",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "derivatives-research"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": true
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-04",
+    "name": "Paper trading cripto e forex",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-POSEIDON-RISK",
+    "agent_ids": [
+      "NLE-ATLAS-AOPS",
+      "NLE-ATLAS-COO",
+      "NLE-POSEIDON-CT",
+      "NLE-POSEIDON-FX",
+      "NLE-POSEIDON-RISK",
+      "NLE-POSEIDON-TSE"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "crypto-paper-trading",
+      "forex-paper-trading",
+      "portfolio-risk",
+      "reliability-operations",
+      "service-operations",
+      "trading-simulation-systems"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-POSEIDON-CT",
+        "task": "produzir sinais simulados",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "crypto-paper-trading"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-POSEIDON-FX",
+        "task": "produzir sinais simulados",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "forex-paper-trading"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-POSEIDON-TSE",
+        "task": "implementar fills e reconciliação fake",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-reliable-workflows",
+          "trading-simulation-systems"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-ATLAS-AOPS",
+        "task": "operar somente runner simulado",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-reliable-workflows",
+          "reliability-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": true
+  },
+  {
+    "workflow_id": "NLE-WF-QNT-05",
+    "name": "Validação de risco e relatório",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-POSEIDON-CIO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-ORA",
+      "NLE-ATHENA-PMO",
+      "NLE-POSEIDON-CIO",
+      "NLE-POSEIDON-RISK"
+    ],
+    "package_ids": [
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "investment-research",
+      "portfolio-risk",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-POSEIDON-RISK",
+        "task": "calcular exposição e stress",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "portfolio-risk"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-POSEIDON-CIO",
+        "task": "consolidar relatório de pesquisa",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-risk-analysis",
+          "investment-research"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P1",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": true
+  },
+  {
+    "workflow_id": "NLE-WF-OPS-01",
+    "name": "Onboarding e suporte",
+    "risk": "STANDARD",
+    "gate": "POLICY_GATED_EXTERNAL",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-ARGUS-PRIV",
+    "agent_ids": [
+      "NLE-ARGUS-PRIV",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-ATLAS-IMP",
+      "NLE-ATLAS-SUP"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-security-privacy",
+      "customer-implementation",
+      "privacy-compliance",
+      "service-operations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATLAS-IMP",
+        "task": "preparar onboarding",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "customer-implementation"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ATLAS-SUP",
+        "task": "triar incidentes",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "service-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATLAS-CS",
+        "task": "acompanhar sucesso",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "service-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-OPS-02",
+    "name": "Renovação e retenção",
+    "risk": "STANDARD",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-ARGUS-LEGAL",
+    "agent_ids": [
+      "NLE-ARGUS-LEGAL",
+      "NLE-ATLAS-COO",
+      "NLE-ATLAS-CS",
+      "NLE-HERMES-AE",
+      "NLE-PLUTUS-UNIT"
+    ],
+    "package_ids": [
+      "consultative-sales",
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-unit-economics",
+      "financial-planning",
+      "legal-research",
+      "service-operations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATLAS-CS",
+        "task": "identificar risco",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "service-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HERMES-AE",
+        "task": "preparar proposta",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "consultative-sales"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-UNIT",
+        "task": "validar rentabilidade",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-unit-economics",
+          "financial-planning"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-OPS-03",
+    "name": "Observabilidade e recuperação",
+    "risk": "ELEVATED",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ATLAS-COO",
+    "reviewer": "NLE-ARGUS-CISO",
+    "agent_ids": [
+      "NLE-ARGUS-CISO",
+      "NLE-ATLAS-AOPS",
+      "NLE-ATLAS-COO",
+      "NLE-HEPHAESTUS-DEVOPS",
+      "NLE-HEPHAESTUS-SRE"
+    ],
+    "package_ids": [
+      "core-capacity-cost",
+      "core-incident-recovery",
+      "core-reliable-workflows",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "release-infrastructure",
+      "reliability-operations",
+      "security-governance",
+      "service-operations"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ATLAS-AOPS",
+        "task": "monitorar filas",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-reliable-workflows",
+          "reliability-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-HEPHAESTUS-SRE",
+        "task": "diagnosticar",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "reliability-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-HEPHAESTUS-DEVOPS",
+        "task": "ensaiar restore",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-security-privacy",
+          "release-infrastructure"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-ATLAS-COO",
+        "task": "coordenar incidente",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-capacity-cost",
+          "core-incident-recovery",
+          "service-operations"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P0",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SEC-01",
+    "name": "Segurança contínua e resposta",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ARGUS-CISO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ARGUS-APPSEC",
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA",
+      "NLE-ARGUS-PRIV"
+    ],
+    "package_ids": [
+      "agent-security",
+      "application-security",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "privacy-compliance",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ARGUS-APPSEC",
+        "task": "avaliar vulnerabilidades",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "application-security",
+          "core-risk-analysis"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ARGUS-AISEC",
+        "task": "testar agentes",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "agent-security",
+          "core-security-privacy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ARGUS-PRIV",
+        "task": "avaliar exposição",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-security-privacy",
+          "privacy-compliance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 4,
+        "agent_id": "NLE-ARGUS-CISO",
+        "task": "propor contenção e bloquear fila",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-risk-analysis",
+          "core-security-privacy",
+          "security-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P0",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SEC-02",
+    "name": "Compliance e privacidade",
+    "risk": "ELEVATED",
+    "gate": "HUMAN_APPROVAL_REQUIRED",
+    "accountable": "NLE-ARGUS-CISO",
+    "reviewer": "NLE-ARGUS-ORA",
+    "agent_ids": [
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-LEGAL",
+      "NLE-ARGUS-ORA",
+      "NLE-ARGUS-PRIV",
+      "NLE-ATHENA-KM"
+    ],
+    "package_ids": [
+      "core-data-quality",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-source-evidence",
+      "knowledge-retrieval",
+      "legal-research",
+      "privacy-compliance",
+      "security-governance"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ARGUS-PRIV",
+        "task": "mapear finalidade, retenção e acesso",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-security-privacy",
+          "privacy-compliance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ARGUS-LEGAL",
+        "task": "pesquisar requisitos",
+        "autonomy_ceiling": "A1",
+        "eligible_packages": [
+          "legal-research"
+        ],
+        "scope": "analysis_only",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-ATHENA-KM",
+        "task": "registrar fontes e política",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-data-quality",
+          "core-source-evidence",
+          "knowledge-retrieval"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P2",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  },
+  {
+    "workflow_id": "NLE-WF-SEC-03",
+    "name": "Auditoria de permissões e gastos",
+    "risk": "HIGH_ASSURANCE",
+    "gate": "INTERNAL_ONLY",
+    "accountable": "NLE-ARGUS-CISO",
+    "reviewer": "NLE-ARGUS-SWA",
+    "agent_ids": [
+      "NLE-ARGUS-AISEC",
+      "NLE-ARGUS-CISO",
+      "NLE-ARGUS-ORA",
+      "NLE-ARGUS-SWA",
+      "NLE-PLUTUS-FINOPS"
+    ],
+    "package_ids": [
+      "agent-security",
+      "ai-finops",
+      "core-capacity-cost",
+      "core-data-quality",
+      "core-incident-recovery",
+      "core-risk-analysis",
+      "core-security-privacy",
+      "core-source-evidence",
+      "core-tool-budget",
+      "security-governance",
+      "software-audit"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "agent_id": "NLE-ARGUS-ORA",
+        "task": "detectar segregação violada",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "core-incident-recovery",
+          "core-risk-analysis",
+          "security-governance"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 2,
+        "agent_id": "NLE-ARGUS-AISEC",
+        "task": "validar tool gateway",
+        "autonomy_ceiling": "A2",
+        "eligible_packages": [
+          "agent-security",
+          "core-security-privacy"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      },
+      {
+        "step": 3,
+        "agent_id": "NLE-PLUTUS-FINOPS",
+        "task": "reconciliar uso",
+        "autonomy_ceiling": "A3",
+        "eligible_packages": [
+          "ai-finops",
+          "core-capacity-cost",
+          "core-tool-budget"
+        ],
+        "scope": "internal_draft_or_authorized_internal_action",
+        "external_effects": "DENY"
+      }
+    ],
+    "priority_candidate": "P0",
+    "activation": "DISABLED",
+    "qualification": "NOT_RUN",
+    "external_effects": "DENY_DEFAULT",
+    "new_spend_usd": 0,
+    "context_lock_required": true,
+    "reconcile_before_retry": true,
+    "simulation_only": false
+  }
+]
