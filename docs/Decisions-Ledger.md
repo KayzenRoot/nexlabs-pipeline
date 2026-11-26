@@ -25,3 +25,7 @@ NLE-ADR-BOOT-006 — RATIFIED_DIRECTION: o proprietário indicou `nexlabs-pipeli
 | NLE-ADR-BOOT-007 | RATIFIED_DIRECTION | O proprietário autoriza repositório público temporário para planejamento/desenvolvimento revisado e não sensível, substituindo o gate private-only durante esta fase; produção privada permanece. Sem dados de clientes, segredos ou credenciais no Git. Sem aprovação de deploy ou gasto. |
 
 NLE-ADR-BOOT-007 é um delta estreito e explicitamente autorizado pelo proprietário. Ele supersede a exigência de repositório privado do CD-01 **somente** para material revisado e não sensível durante o bootstrap; não autoriza produção pública, dados reais, segredos, deploy, gasto ou ativação de agentes. NLE-ADR-BOOT-006 e todas as decisões anteriores permanecem preservadas. A conversão futura para privado não apaga cópias públicas anteriores. Nenhuma aprovação de implementação é inferida.
+
+
+## Registro de execução | NLE-BOOTSTRAP-001/CD-04 (não é nova ADR)
+Em 2026-11-26, após Round 2 independente APPROVED e autorização explícita do proprietário, PR #1 foi squash-merged. HEAD aprovado `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0`; merge commit e read-back da `main`: `301905ac0f9eb6ddeb2338c9caa74a8516858a50`. O checkpoint foi promovido sem alterar decisões de arquitetura. Riscos residuais: repositório público temporário (NLE-ADR-BOOT-007), billing API UNVERIFIED, GitHub approving review count=0, runtime não qualificado e C12 aberto. Nenhuma despesa, deploy ou ativação autorizada. NLE-INFRA-WO-001 não iniciado.

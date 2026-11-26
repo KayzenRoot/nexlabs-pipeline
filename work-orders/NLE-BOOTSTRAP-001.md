@@ -38,3 +38,12 @@ Stop on unknown target, billing, governance, access, conflicting approved decisi
 - Proveniência do pacote original (ZIP/SHA-256/source-lock) e estado Git remoto (repo/base/branch/PR/HEAD/CI) são documentados separadamente em `docs/Provenance.md`.
 - O HEAD auditado é registrado em `locks/context-lock.json`; o HEAD final e os logs ficam no Evidence Bundle, sem hash autorreferente.
 - Auditoria independente Round 1: **CORRECTION REQUIRED** (H1–H3/M1–M2); correções aplicadas; **Round 2 PENDING**. Sem merge, promoção de checkpoint ou avanço para NLE-INFRA-WO-001 até Round 2 APPROVED e autorização do proprietário.
+
+
+## Delta CD-04 | promoção do checkpoint e squash merge (2026-11-26)
+- Source Check fresco confirmou PR #1 aberta, draft, mergeable, base `48d3e422313f869992d09b99f0b7e09acd4e1caa`, HEAD `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0`; CI `docs-validation` success no mesmo HEAD; Round 2 APPROVED; zero review threads abertos.
+- PR #1 foi marcada Ready for review e integrada via squash com expected_head_sha `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0`. GitHub retornou merged=true e merge commit `301905ac0f9eb6ddeb2338c9caa74a8516858a50`.
+- Read-back: PR #1 closed/merged; branch `main` protected=true, commit atual `301905ac0f9eb6ddeb2338c9caa74a8516858a50`; required check `docs-validation`; ruleset `main-bootstrap-protection` ativo e sem bypass. Endpoint completo de branch protection retornou 403 para a integração; o endpoint da branch confirmou proteção/check e as evidências CD-03 preservam os detalhes restantes.
+- Checkpoint Delta CD-04 promove o estado canônico após merge, preservando HEAD auditado, merge SHA e riscos residuais. Atualização documental, sem alterações em `sources/`.
+- US$0 adicional; billing API não lida. Repositório continua público sob NLE-ADR-BOOT-007; sem deploy, ativação ou efeitos externos.
+- NLE-INFRA-WO-001 não iniciado, conforme ordem do proprietário.
