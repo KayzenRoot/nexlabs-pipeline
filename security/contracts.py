@@ -86,6 +86,7 @@ class ApprovalEnvelope:
     actor_id: str
     approver_id: str
     approver_kind: str
+    approver_role: str
     action: str
     target_id: str
     tenant_id: str

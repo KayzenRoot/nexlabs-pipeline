@@ -35,6 +35,7 @@ EXPECTED_POLICY = {
     "approvals": {
         "required_for": ["HIGH_ASSURANCE"],
         "approver_kind": "human",
+        "authorized_roles": ["OWNER", "AUTHORIZED_REVIEWER"],
         "self_approval": False,
         "binds": ["actor_id", "action", "target_id", "tenant_id", "payload_sha256", "policy_sha256",
                   "evidence_refs", "max_spend_usd", "nonce", "issued_at", "expires_at"],
