@@ -17,7 +17,7 @@ Status: **APPROVED / PROMOTED / SQUASH_MERGED**. Checkpoint Delta CD-04 promovid
 - Sem deploy ou ativação: agentes, skills, workflows, rotinas e efeitos externos continuam desativados/não qualificados.
 - C12 permanece HIGH/runtime gate: cinco discrepâncias dispatch-only exigem correção em WF-WO-001 antes de executar workflows afetados.
 - Riscos residuais: repositório público temporário; conversão futura para privado pendente; required_approving_review_count=0; billing API UNVERIFIED; Socket Security/ECC Tools não são checks obrigatórios.
-- NLE-INFRA-WO-001 **iniciado sob CD-02 LOCAL FIRST** (NLE-ADR-INFRA-011); implementação preparada, runtime **BLOCKED_DOCKER_DESKTOP_ABSENT**. Ver delta candidato ao final.
+- NLE-INFRA-WO-001 **em CD-03 LOCAL FIRST** (NLE-ADR-INFRA-011); runtime healthy reportado pelo executor; proprietário confirma claim e Codex por assinatura; auditoria independente pós-claim e correções pendentes. Ver deltas candidatos ao final.
 
 ## Veredito
 **NLE-BOOTSTRAP-001: APPROVED, CHECKPOINT PROMOTED, PR #1 SQUASH-MERGED.** Concluído apenas o bootstrap documental/governança. Isso não conclui NexLabs AI Enterprise v1.0, não instala/configura Paperclip, não qualifica runtime, não ativa agentes/skills/workflows e não autoriza deploy, anúncios, trading, mainnet ou gastos.
@@ -48,3 +48,8 @@ O ZIP completo foi localizado, verificado e extraído; 364/364 hashes conferem c
 - Sem segredos no Git; os dois segredos locais foram gerados fora do repositório em diretório protegido, com valores não registrados.
 - Nenhum merge, deploy VPS, agente, workflow, heartbeat, efeito externo ou gasto. Promoção/merge somente após claim do proprietário, Codex autorizado e auditoria final.
 
+
+## Checkpoint Delta candidato | NLE-INFRA-WO-001/CD-03 (não promovido)
+- Proprietário confirma claim e autenticação Codex por assinatura; read-back independente do Windows pendente.
+- Correção de isolamento do restore em candidato; testes comportamentais no Windows e CI exato exigidos. SonarCloud e ECC pendentes de resolução/evidência; ver evidence/NLE-INFRA-WO-001-CD03-AUDIT.md.
+- Sem merge, promoção, início de SR-WO-001, acesso à VPS ou gasto. Integração somente após APPROVED.

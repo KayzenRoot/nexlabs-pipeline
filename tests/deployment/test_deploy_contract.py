@@ -104,6 +104,10 @@ class DeployContractTests(unittest.TestCase):
         ):
             self.assertIn(marker, common)
         self.assertNotIn("-DestinationPath $TargetDir -Force", common)
+        self.assertLess(
+            common.index("Set-OwnerOnlyAcl -Path $TargetDir"),
+            common.index("Expand-Archive -LiteralPath $ArchivePath"),
+        )
 
     def test_no_secret_values_committed(self):
         patterns = (

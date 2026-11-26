@@ -6,8 +6,8 @@
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
-  "head_at_context_capture": "feafa8c0f807c28beae1aed1424f79c941fee874",
-  "head_note": "CD-03 remote source check anchored to feafa8c; this correction commit is a new candidate, not the previously audited head. Recompute all canonical fingerprints and record exact final CI and independent audit before approval.",
+  "head_at_context_capture": "28cfe934638d97c656cb7ec050e6a5235221136f",
+  "head_note": "28cfe934 first correction CI success; canonical Git blob identities capture the following candidate content, excluding self-referential lock. Final head and CI must be verified externally.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -69,9 +69,9 @@
     "no_bypass": true
   },
   "ci": {
-    "status": "PENDING_CD03",
-    "previous_head_sha": "feafa8c0f807c28beae1aed1424f79c941fee874",
-    "previous_run_id": 45875741872,
+    "status": "PENDING_FINAL_CD03",
+    "previous_head_sha": "28cfe934638d97c656cb7ec050e6a5235221136f",
+    "previous_run_id": 45877720820,
     "previous_conclusion": "success",
     "workflow": "docs-validation"
   },
@@ -104,7 +104,8 @@
     "Anchored lock to audited/corrective heads and recorded CI run 45845361323.",
     "Restore now fails closed when the SHA-256 sidecar is missing.",
     "ACL now purges non-owner explicit ACEs via icacls reset; .gitignore covers arbitrary paperclip.env/data/backup paths.",
-    "CD-03 candidate: forbid force restore, enforce fresh isolated direct-child restore-test target and reject reparse ancestors; add behavioral and static regression tests."
+    "CD-03 candidate: forbid force restore, enforce fresh isolated direct-child restore-test target and reject reparse ancestors; add behavioral and static regression tests.",
+    "CD-03 follow-up: protected restore ACL before archive extraction and checkpoint candidate reconciled; exact Git blob identities captured for current critical files."
   ],
   "head_corrective": "8f6af9ebda0799d8395af64609574788a8586a2f",
   "head_runtime_validation": "8f6af9ebda0799d8395af64609574788a8586a2f",
@@ -226,7 +227,7 @@
     "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
     "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "cf6fb9f736249283cfe8868389bbac8e8a34ed69144e43155f0fc262ba165cae"
   },
-  "fingerprint_status": "STALE_CD02_FINGERPRINTS_PRESERVED; RECOMPUTE_SHA256_BEFORE_CD03_APPROVAL",
+  "fingerprint_status": "CD03_GIT_BLOB_IDENTITIES_CAPTURED; HISTORICAL_SHA256_NOT_CURRENT; FINAL_SHA256_RECALCULATION_AND_INDEPENDENT_READBACK_REQUIRED",
   "owner_authorization": {
     "claim": "CONFIRMED_BY_OWNER",
     "codex_subscription_auth": "CONFIRMED_BY_OWNER",
@@ -234,5 +235,45 @@
     "next_work_order": "SR-WO-001_ONLY_AFTER_MERGE_READBACK",
     "vps": "NO_ACCESS",
     "additional_spend_usd": 0
+  },
+  "canonical_git_blob_fingerprints": {
+    "docs/Checkpoint.md": "583980453ef18c8cb8c63f46cf760c22479f31d2",
+    "docs/Decisions-Ledger.md": "2f36e4ae40ba9db7b1240cbbe88bf1970fd920bf",
+    "docs/Backlog.md": "50417aba4b59229d6f97b2f79fb558c85ba3c007",
+    "docs/Architecture.md": "6b22865933fa7a3c81ec913dacf96137237cae85",
+    "docs/Deployment.md": "10ee582e223f459d345c79c5972800baa2d2b058",
+    "docs/decisions-index.json": "460e93919dc8e9c63b0251c90f198c87a12285af",
+    "work-orders/NLE-INFRA-WO-001.md": "37c2e6860231e7ae993b631572c6af9d0dbee8d1",
+    "prompts/NLE-INFRA-WO-001-CODEX.md": "06981c4cb469b8066eeec173331c2d544f547166",
+    "deploy/compose.yaml": "409f4684560ce8306781a984760cf7d78a80b193",
+    "deploy/local/compose.yaml": "009ee029a27523730a40770c72c922cfc5b3c77b",
+    "deploy/vps/compose.yaml": "1a593cf9dc4510d6ef50f82a651929c1eb8301c3",
+    "deploy/image-lock.json": "80b935aaf033bb75b812d56f228084e6eec72770",
+    "deploy/README.md": "950483fb3028f96d2dc04b25095b2e706ba446ec",
+    "deploy/local/README.md": "9ec78aabaccfbb30353e528147771473360633ec",
+    "deploy/vps/README.md": "3a01a21f0dd06dc9458dfd0da8d9aa97e7253752",
+    "deploy/local/codex/README.md": "13b30d7820b8eed1d0a4f27efbf5dd51e4b5db75",
+    "deploy/local/agents/README.md": "51a91511324d92625778c8643d68039de3d81f85",
+    ".gitignore": "da350420ffea028508f85017649d56d42533bd1c",
+    "scripts/windows/Paperclip.Common.ps1": "ee983a2c14a10d0f17d6536960996b675f102f17",
+    "scripts/windows/Initialize-PaperclipSecrets.ps1": "7f11a0387fc5abbdd876cd5716143f8273b4200b",
+    "scripts/windows/Start-Paperclip.ps1": "93f7708b0cfe309c85ce6ef6e24170de10a67e83",
+    "scripts/windows/Stop-Paperclip.ps1": "3c8a018c981422bcb57c01ae8a9390eac1698491",
+    "scripts/windows/Get-PaperclipStatus.ps1": "2f886ca7e024811e1ccef0638993b0f0649da56d",
+    "scripts/windows/Backup-Paperclip.ps1": "bb439bb61303ae6cf2e67ca636d81ff262b86ce2",
+    "scripts/windows/Restore-Paperclip.ps1": "53a9eb01d3dc506531c70c31f0dde6206334686f",
+    "scripts/windows/Test-PaperclipDeployment.ps1": "a84e5e6d531b0e561a48bf2c05b7fe6b2bfa38dd",
+    "scripts/windows/README.md": "3d12861b20821311ffc5d864fba1e53e2c0e0616",
+    "tests/deployment/test_deploy_contract.py": "061f964b268dde0446e8e408ec400a1517894ff6",
+    "tests/deployment/__init__.py": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+    "tests/test_infra_inventory.py": "ee2fe01e5d2a623fe67e9ff9ccd6dcd75db3b392",
+    "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "9ba17d376fe01d2eaf31a4d2073fa5b25fc20b00",
+    "README.md": "fd4178aaabe2e9babbe7691c4b4a875ca1734e9e",
+    "docs/Scope.md": "9dc00ca1509728f2d6812daeceaaee2d1db2a2a5",
+    "docs/Definition-of-Done.md": "c3ee3206e1d456045202339616512a0386d00f33",
+    "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
+    "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
+    "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "81b1a5317466b45a19df23e25d7da406b74899e1"
   }
 }

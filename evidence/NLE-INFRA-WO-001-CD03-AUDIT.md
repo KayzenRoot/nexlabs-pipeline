@@ -9,3 +9,5 @@ Other review items: verify full backup includes hidden files and authenticates c
 Context Lock CD-02 preinstall fields and old tests are retained as historical only; current runtime fields are attributed to executor/owner reports. SHA-256 fingerprints must be recomputed against corrected final candidate and verified before audit. Do not expose raw host/credential data. Confirm Docker Desktop free eligibility and no paid API/runner.
 
 Verdict: CORRECTION REQUIRED / RUNTIME AUDIT PENDING. No merge, checkpoint promotion, agent activation, VPS access, paid services or next WO. User authorization for merge is conditional on APPROVED and read-back.
+
+First correction candidate 28cfe934: CI 45877720820 SUCCESS (static Linux CI, not host runtime). Follow-up candidate applies owner-only ACL before extraction and refreshes the checkpoint candidate; final CI and Windows tests remain required. Context Lock uses exact Git blob identities for current content; prior SHA-256 values are retained as historical, requiring local recalculation for final audit.

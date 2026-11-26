@@ -321,6 +321,7 @@ function Expand-PaperclipBackupArchive {
     }
     # No -Force: directory creation must fail if it already exists.
     New-Item -ItemType Directory -Path $TargetDir -ErrorAction Stop | Out-Null
+    Set-OwnerOnlyAcl -Path $TargetDir
     Expand-Archive -LiteralPath $ArchivePath -DestinationPath $TargetDir
     return $TargetDir
 }
