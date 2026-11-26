@@ -7,7 +7,7 @@
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
   "head_at_context_capture": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
-  "head_note": "b7f447d is the CD-03 source-check HEAD; 0fca04a is the correction commit that passed CI and reduced SonarCloud open issues to 0. The security-gate/evidence commit is appended to the same PR. Canonical SHA-256/Git-blob identities capture this tree; final head and CI are verified externally because the lock cannot contain its own commit hash.",
+  "head_note": "b7f447d is the CD-03 source-check HEAD; 0fca04a is the correction commit; d77b4e4 is the security-gate commit that passed CI and the ECC scanner-evidence gate. The final evidence commit is appended to the same PR. Canonical SHA-256/Git-blob identities capture this tree; final head and CI are verified externally because the lock cannot contain its own commit hash.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -51,7 +51,7 @@
     "agents_activated": false,
     "external_effects": false,
     "agent_rows_paused": 1,
-    "security_regression_scan": "PASS_437_FILES_0_FINDINGS"
+    "security_regression_scan": "PASS_439_FILES_0_FINDINGS"
   },
   "tests": {
     "previous_source_validator": "7 groups PASS at CD-02",
@@ -63,7 +63,7 @@
     "docker_compose_config": "PASS_EXIT_0",
     "post_claim_runtime": "PASS_FRESH_HOST_READBACK",
     "restore_regressions": "PASS_43_OF_43",
-    "security_regression_scan": "PASS_437_FILES_0_FINDINGS"
+    "security_regression_scan": "PASS_439_FILES_0_FINDINGS"
   },
   "governance": {
     "main_protected": true,
@@ -72,14 +72,17 @@
     "no_bypass": true
   },
   "ci": {
-    "status": "PASS_AT_0FCA04A_RUN_45882771191; FINAL_SECURITY_GATE_RUN_PENDING",
+    "status": "PASS_AT_D77B4E4_RUN_45883295413; FINAL_EVIDENCE_COMMIT_RUN_PENDING",
     "previous_head_sha": "28cfe934638d97c656cb7ec050e6a5235221136f",
     "previous_run_id": 45877720820,
     "previous_conclusion": "success",
     "workflow": "docs-validation",
     "correction_head_sha": "0fca04a0ee5a451dd39a8755148f77ed344e09d4",
     "correction_run_id": 45882771191,
-    "correction_conclusion": "success"
+    "correction_conclusion": "success",
+    "security_gate_head_sha": "d77b4e4dbb00c89274500db04f13525a9819f4d2",
+    "security_gate_run_id": 45883295413,
+    "security_gate_conclusion": "success"
   },
   "blockers": [
     "Codex subscription authentication is not valid at runtime; AC16 unmet",
@@ -261,13 +264,13 @@
     "additional_spend_usd": 0
   },
   "canonical_git_blob_fingerprints": {
-    "docs/Checkpoint.md": "1cb7346a53d2ed593cb9565151ce34a71d5095aa",
+    "docs/Checkpoint.md": "ac03439f19e46c1cbcc29c382c0d716ce1e1df33",
     "docs/Decisions-Ledger.md": "2f36e4ae40ba9db7b1240cbbe88bf1970fd920bf",
     "docs/Backlog.md": "a2b9d69f74c095dcb376bc55428a667e3c55578d",
     "docs/Architecture.md": "6b22865933fa7a3c81ec913dacf96137237cae85",
     "docs/Deployment.md": "11b63e481c86bb8bcdd3007f6745e3cb9ea95b51",
     "docs/decisions-index.json": "460e93919dc8e9c63b0251c90f198c87a12285af",
-    "work-orders/NLE-INFRA-WO-001.md": "c3136ff8294673f464b949f84e309624e33f729c",
+    "work-orders/NLE-INFRA-WO-001.md": "440b8113a5eac54e5a395de7f658d0b6dcea66a7",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "06981c4cb469b8066eeec173331c2d544f547166",
     "deploy/compose.yaml": "409f4684560ce8306781a984760cf7d78a80b193",
     "deploy/local/compose.yaml": "009ee029a27523730a40770c72c922cfc5b3c77b",
@@ -291,7 +294,7 @@
     "scripts/windows/README.md": "3d12861b20821311ffc5d864fba1e53e2c0e0616",
     "scripts/infra/collect_windows_inventory.ps1": "94cd9d8d3891f17f76eb377faeedf179fbcec694",
     "scripts/infra/collect_vps_inventory.sh": "cc52f530ad4789cd28255327995691a074ce93c7",
-    "scripts/security/scan_repository.py": "670eb9b24b12b8d5eda5d7cf95d66a38d7e47ddc",
+    "scripts/security/scan_repository.py": "5a17104235d7617ac20eb809873f472a7bb4311e",
     "tests/deployment/test_deploy_contract.py": "8d855450ba458a1792588c6bbcac7c30cd697752",
     "tests/deployment/__init__.py": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
     "tests/test_infra_inventory.py": "ee2fe01e5d2a623fe67e9ff9ccd6dcd75db3b392",
@@ -303,21 +306,23 @@
     "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
     "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
     "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "70d7970c510358b4be72c186e87f382daeb539e7",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "21e0205a2005c68d6717312da228cf6390c577ed"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "e03e2bb0d079f17b35de5dc99f0221e9f9d058e8",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "5ffde2155fd1b682d3305d1129f12e042210a59f"
   },
   "verdict": "NOT_APPROVED_BLOCKED_CODEX_AUTH",
   "sonar": {
     "open_issues_at_start": 10,
     "fixes": "APPLIED_INDIVIDUALLY",
-    "final_api_readback": "PASS_TOTAL_0_QUALITY_GATE_OK_AT_0FCA04A; FINAL_REANALYSIS_PENDING"
+    "final_api_readback": "PASS_TOTAL_0_AT_0FCA04A; NEW_S6353_AT_D77B4E4_FIXED; FINAL_REANALYSIS_PENDING",
+    "new_scanner_issue": "AaIZUJIeG8sBJogj31Sh python:S6353 fixed with \\w classes"
   },
   "ecc": {
     "alert": "SECURITY_EVIDENCE_REQUESTED",
     "evidence_file": "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md",
     "permissions_expanded": false,
-    "status": "ACTION_REQUIRED_AT_0FCA04A; SECURITY_GATE_ADDED; FINAL_READBACK_PENDING",
-    "security_gate": "scripts/security/scan_repository.py"
+    "status": "PASS_AT_D77B4E4_42_CHANGED_FILES; CHECK_PUBLICATION_UNAVAILABLE",
+    "security_gate": "scripts/security/scan_repository.py",
+    "result": "No security-sensitive scanner-evidence gap detected"
   },
   "docker_eligibility": {
     "plan": "personal",
@@ -327,13 +332,13 @@
     "commercial_size_attestation": "OWNER_ATTESTATION_REQUIRED"
   },
   "canonical_fingerprints_sha256": {
-    "docs/Checkpoint.md": "a15ebab07d07cfa28f0fb89e390caeec448dbbf853df75ee79c838cc005653e2",
+    "docs/Checkpoint.md": "293a157d08a8d9df714896ac74826a98fbf8b3a69171f6a9f00da0a922d4b0c8",
     "docs/Decisions-Ledger.md": "07af059db1e75700fcd21fc235a1817f2163864c1a01628ba13edac1eb89f24a",
     "docs/Backlog.md": "52e32dbae8a72f00f0fa3d0eb41771877c95f54f9b27561818653b8d69def57e",
     "docs/Architecture.md": "9fc38e604e1d837fa8649a0fafdcb677801d5336925111940c2dad29c140fa3c",
     "docs/Deployment.md": "bd921537a08a5d00f857511ec27e85d0a047d0c926eb24c3a09e2dc7b3e32743",
     "docs/decisions-index.json": "d75c81f886ca54b0df79344894b2d853a89218198e6fa36f0f6bbd54790713b9",
-    "work-orders/NLE-INFRA-WO-001.md": "d1706e9e4b12469c7bdb08f21e311414eab4448a1d5be535469f6e62e9a5740d",
+    "work-orders/NLE-INFRA-WO-001.md": "2f0473b4ee42a3d5e56db98a53ebdbc83ce710c7bf4ddfee9a099ea4bb01ed9f",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "31f1714fe74f1db00c026856c92a3aaa260fc945cdd3542829de4bc9ae7c4e49",
     "deploy/compose.yaml": "a88ba00caa17915b96510c7a4ec33ee1fd33a8fd3db3d8291721b64514d5eb66",
     "deploy/local/compose.yaml": "5656f89a67df28fc79268e3714d20c7fafe7a4f42019a7159ad2cf79f4952a54",
@@ -357,7 +362,7 @@
     "scripts/windows/README.md": "aee7a7c6458a165bde8c2e877379b1fe865c4e22e6b71d9c3ba70956c865d3a8",
     "scripts/infra/collect_windows_inventory.ps1": "22f8adf831214778e5d0ae02c4da5cf17bf26dcd77e56f8511ed5d8fd91ba97f",
     "scripts/infra/collect_vps_inventory.sh": "85bdb80dd3a1d5de2e4b55e1110840d462429f77100a89a9fecf90d0b899b604",
-    "scripts/security/scan_repository.py": "73df7938e1397ead853f7b1f19a2cfcc2b31b287e65d9d04ad70a270977c3f69",
+    "scripts/security/scan_repository.py": "f53bf9f8cc1e80af3ef59c5543089c62a290e66c01b10a2e9b1cdd5cd2bd0f9e",
     "tests/deployment/test_deploy_contract.py": "30e79e6e108568e8ae78b07d0396a1fceb73f7bde0a03e82ed36e2d8ef9e1673",
     "tests/deployment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
@@ -369,7 +374,7 @@
     "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
     "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94",
     "locks/source-lock.json": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "0bca8d86684fc9d95e6be3a414c1ebf661a643156dabd40e1229a8df48c6106d",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "486b495d263e3801e715351df4c597b80196299af43f0ee6624d31cd17ce0ec0"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "5e597890282001ccdd330f326b1c67717377fde8bf6fbe6e0ef0454437049930",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "4f64900684447356bef9b470a20e0a4c5a5f910af6ae4576674634b569c1722b"
   }
 }

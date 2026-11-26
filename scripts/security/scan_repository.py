@@ -20,10 +20,10 @@ SKIP_SUFFIXES = {
 }
 SECRET_PATTERNS = (
     ("private_key", re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |PGP )?PRIVATE KEY-----")),
-    ("github_token", re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{50,})\b")),
-    ("openai_key", re.compile(r"\bsk-[A-Za-z0-9]{20,}\b")),
+    ("github_token", re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_\w{50,})\b")),
+    ("openai_key", re.compile(r"\bsk-\w{20,}\b")),
     ("aws_access_key", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
-    ("slack_token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b")),
+    ("slack_token", re.compile(r"\bxox[baprs]-[\w-]{10,}\b")),
     ("credential_url", re.compile(r"https?://[^/\s:@]+:[^/\s:@]+@")),
     ("paperclip_secret_value", re.compile(
         r"(?:BETTER_AUTH_SECRET|PAPERCLIP_TOOL_ACTION_SIGNING_SECRET)\s*=\s*[0-9a-fA-F]{32,}"

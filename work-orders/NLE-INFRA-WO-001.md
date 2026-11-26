@@ -160,7 +160,7 @@ Docker Desktop 4.100.1 was installed from the official installer (SHA-256 `98b24
 ### CD-03 final runtime qualification | 2026-11-26
 - Claim: **PASS** via `bootstrapStatus=ready`.
 - Container identity, pinned image, healthy state and loopback bind: **PASS**.
-- Restore isolation, hidden-file backup, container identity and SonarCloud corrections: **PASS** (Python 29/29, PowerShell 43/43, validator 7/7, Compose config exit 0).
+- Restore isolation, hidden-file backup, container identity and SonarCloud corrections: **PASS** (Python 34/34, PowerShell 43/43, validator 7/7, Compose config exit 0, security scan 439 files/0 findings, CI run `45883295413` success).
 - **AC16: NOT MET.** Codex subscription authentication is not valid at runtime: `codex login status` returns "Not logged in", all 3 `codex_local` auth sessions are `cancelled` with null result/connection/grant, `ai_subscription_connections=0`, and no auth file exists in the container. One default agent (`Zeus`) exists paused from the claim and has run no tasks. No API key was created and no auth file was copied.
 - Verdict: **NOT APPROVED — BLOCKED ON CODEX AUTHENTICATION**. Owner must complete a successful Codex login through the Paperclip UI. No merge, checkpoint promotion, VPS access, agent execution or next Work Order.
 

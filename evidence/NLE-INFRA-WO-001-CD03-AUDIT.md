@@ -64,7 +64,7 @@ Consequence: **AC16 is not met**. No agent task was executed, no API key was cre
 | `docker compose ... config --quiet` (base + local) | exit 0 |
 | `bash -n scripts/infra/collect_vps_inventory.sh` | PASS |
 | PowerShell parser, all `scripts/windows/*.ps1` | 0 errors |
-| `python scripts/security/scan_repository.py` | 437 tracked files, **0 findings** |
+| `python scripts/security/scan_repository.py` | 439 tracked files, **0 findings** |
 | Git diff check | clean (no whitespace errors) |
 
 The PowerShell suite covers existing targets, active directories, external paths, `-Force`, missing/tampered sidecars, hidden files, nested hidden directories and a real Windows junction (`RESTORE_ROOT_REPARSE_POINT`), plus live-data immutability (`live_sentinel_unchanged`). Static assertions are not presented as runtime proof; the runtime backup/restore was executed separately.
@@ -78,8 +78,8 @@ The PowerShell suite covers existing targets, active directories, external paths
 
 ## 7. SonarCloud and ECC
 
-- The public SonarCloud API initially returned 10 open issues for PR #3. Each has a code-level fix in this candidate. At correction commit `0fca04a`, the API returns **total=0**, the quality gate is **OK**, and the `SonarCloud Code Analysis` check passes. No issue was excluded or marked false-positive.
-- ECC Tools raised a predictive `action_required` alert on `deploy/local/agents/README.md`. At `0fca04a` the bot still reported 1 security-sensitive path without scanner evidence, so the response was strengthened with a deterministic security regression gate: `scripts/security/scan_repository.py` plus a CI step. It scans tracked text for private keys, provider tokens, credential-bearing URLs and committed Paperclip secrets, rejects tracked runtime/secret paths, prints no matched values and uses only the existing `contents: read` permission. The pre-existing PowerShell/secret/ACL/runtime checks remain as focused evidence. Final ECC read-back is pending the security-gate commit.
+- The public SonarCloud API initially returned 10 open issues for PR #3. Each has a code-level fix in this candidate. At correction commit `0fca04a`, the API returned **total=0**, the quality gate was **OK**, and the `SonarCloud Code Analysis` check passed. At security-gate commit `d77b4e4`, SonarCloud reported one new issue (`python:S6353`, concise character class) in the newly added scanner; it was fixed individually with `\w` character classes. No issue was excluded or marked false-positive. Final API read-back is pending the evidence commit.
+- ECC Tools raised a predictive `action_required` alert on `deploy/local/agents/README.md`. The deterministic security regression gate (`scripts/security/scan_repository.py` plus CI step) added at `d77b4e4` was accepted: the ECC Security Evidence gate reports **success** — “No security-sensitive scanner-evidence gap detected”, 42 changed files scanned. The scanner checks tracked text for private keys, provider tokens, credential-bearing URLs and committed Paperclip secrets, rejects tracked runtime/secret paths, prints no matched values and uses only the existing `contents: read` permission. Check publication remains unavailable because the ECC app lacks Checks: write; no permission was expanded.
 
 ## 8. Context Lock
 
@@ -100,4 +100,4 @@ The PowerShell suite covers existing targets, active directories, external paths
 
 **NOT APPROVED — BLOCKED ON CODEX AUTHENTICATION.**
 
-The infrastructure corrections, restore isolation, hidden-file backup coverage, container identity checks, local bind, claim read-back and test suite pass. Correction commit `0fca04a` passed `docs-validation` (run `45882771191`) and SonarCloud reports 0 open issues with an OK gate. The runtime does not have valid Codex subscription authentication, so AC16 is unmet and no agent execution can be qualified. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record. Final CI, ECC read-back and independent audit apply to the security-gate/evidence commits appended to the same PR.
+The infrastructure corrections, restore isolation, hidden-file backup coverage, container identity checks, local bind, claim read-back and test suite pass. Security-gate commit `d77b4e4` passed `docs-validation` (run `45883295413`, 34/34 tests plus security scan) and the ECC Security Evidence gate. SonarCloud reports the original 10 issues resolved; one new scanner issue was fixed and is rechecked at the final evidence commit. The runtime does not have valid Codex subscription authentication, so AC16 is unmet and no agent execution can be qualified. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record.
