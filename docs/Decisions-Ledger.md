@@ -16,8 +16,8 @@ Fonte de ratificação: mensagens explícitas do proprietário nesta conversa. N
 | NLE-ADR-BOOT-005 | PROPOSED | Planejamento não concede execução, acesso externo, gasto ou promoção de skill |
 Não alterar snapshots de ADRs. Índice individual em decisions-index.json; o plano ratificado estabelece direção, parâmetros candidatos continuam condicionados. SR/WF são fontes solicitadas, sem ratificação explícita anterior comprovada de todos ADRs. Auditoria bootstrap deve validar e pedir resolução das decisões propostas que bloqueiem o próximo WO. Nenhuma ADR prévia sobrescrita.
 
-## Delta de destino | NLE-BOOTSTRAP-001/CD-01
-NLE-ADR-BOOT-006 — RATIFIED_DIRECTION: o proprietário indicou `nexlabs-pipeline`; Source Check autenticado identifica `KayzenRoot/nexlabs-pipeline`. Substitui apenas o destino histórico `NexLabsTech/nexlabs-enterprise`. A exigência de repositório privado permanece. Integração e implementação não aprovadas; sem criação de outro repo.
+## Delta de destino | NLE-BOOTSTRAP-001/CD-01 (histórico)
+NLE-ADR-BOOT-006 — RATIFIED_DIRECTION: o proprietário indicou `nexlabs-pipeline`; Source Check autenticado identifica `KayzenRoot/nexlabs-pipeline`. Substitui apenas o destino histórico `NexLabsTech/nexlabs-enterprise`. A exigência de repositório privado permanece (posteriormente limitada por NLE-ADR-BOOT-007 **somente** para desenvolvimento revisado e não sensível; produção privada). Integração e implementação não aprovadas; sem criação de outro repo.
 
 ## Delta de visibilidade | NLE-BOOTSTRAP-001/CD-02
 | ID | Estado | Decisão / restrição |

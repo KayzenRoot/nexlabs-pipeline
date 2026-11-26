@@ -9,8 +9,8 @@ D01 105 identidades qualificadas e 92 pacotes reais versionados, 1110 atribuiç�
 - B02: 364/364 originais, seis ZIPs e fingerprints SHA-256 conferem; 105/92/1110/62/35 e 1.071 registros preservados. **PASS.**
 - B03: decisões ratificadas e hierarquia preservadas; propostas não convertidas em aprovação. **PASS.**
 - B04: Source Pack completo e 40 WOs de domínio no backlog, sem duplicação. **PASS.**
-- B05: Context Lock real, validação local 7/7 + 7/7 PASS e CI gratuita **EM QUALIFICAÇÃO** no runner padrão `ubuntu-24.04`. **PENDING_FIRST_RUN.**
-- B06: proteção da `main` e squash-only com read-back; check `docs-validation` será exigido após a primeira execução bem-sucedida. **PARTIAL/PENDING.**
-- B07: Evidence Bundle e auditoria independente **PENDING**, sem APPROVED. **PENDING.**
-- B08: merge squash **NOT_DONE**; somente após APPROVED e read-back. **PENDING.**
-Conclusão: bootstrap **não integrado**. Pendências: primeira execução de CI, read-back do check obrigatório e auditoria independente. Nenhuma aprovação de implementação, runtime, deploy ou gasto é inferida.
+- B05: Context Lock real, validação local 7/7 + 7/7 PASS e CI gratuita **PASS** no runner padrão `ubuntu-24.04` (run `45826789668`, HEAD `668a77e`). **PASS.**
+- B06: proteção da `main` e squash-only com read-back; check obrigatório `docs-validation` configurado após sucesso e lido de volta (app_id `15368`, `strict=true`). **PASS.**
+- B07: Evidence Bundle corrigido; auditoria Round 1 **CORRECTION REQUIRED** (H1–H3/M1–M2), correções aplicadas; **Round 2 PENDING**. **PENDING_REAUDIT.**
+- B08: merge squash **NOT_DONE**; somente após Round 2 APPROVED e autorização do proprietário. **PENDING.**
+Conclusão: bootstrap **não integrado**. Pendência: CI no commit corretivo e reauditoria Round 2. Nenhuma aprovação de implementação, runtime, deploy ou gasto é inferida.

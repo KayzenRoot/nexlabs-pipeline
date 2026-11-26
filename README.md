@@ -3,12 +3,12 @@ Fundação candidata v1.0.0-plan. **Não implantada.** Target: `KayzenRoot/nexla
 
 ## Estado CD-03
 - Source Pack completo: 364/364 originais e seis ZIPs, com `locks/source-lock.json` (SHA-256 `a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e`).
-- Validador canônico e testes: 7 grupos PASS e 7/7 testes PASS em execução local; CI remota em qualificação.
-- Git: base `48d3e422313f869992d09b99f0b7e09acd4e1caa`, branch `chore/nle-bootstrap-001`, PR #1 draft. HEAD auditado em `locks/context-lock.json`; HEAD final no Evidence Bundle.
-- Governança: `main` com PR obrigatório, histórico linear, sem force/delete, squash-only e sem bypass; check obrigatório `docs-validation` em qualificação.
-- CI: workflow mínimo `docs-validation`, runner padrão `ubuntu-24.04`, sem secrets, cache, artefatos ou deploy; primeira execução pendente.
+- Validador canônico e testes: 7 grupos PASS e 7/7 testes PASS em execução local e em CI.
+- Git: base `48d3e422313f869992d09b99f0b7e09acd4e1caa`, branch `chore/nle-bootstrap-001`, PR #1 draft. HEAD auditado `668a77eb5683254018476cdeb02dcfdfcbbc6ca6` em `locks/context-lock.json`; HEAD final no Evidence Bundle.
+- Governança: `main` com PR obrigatório, histórico linear, sem force/delete, squash-only e sem bypass; check obrigatório `docs-validation` (`app_id=15368`, `strict=true`) configurado e lido de volta.
+- CI: workflow `docs-validation`, runner padrão `ubuntu-24.04`, sem secrets, cache, artefatos ou deploy; run `45826789668` **success** no HEAD auditado, 7 grupos PASS e 7/7 testes OK.
 - Proveniência e estado Git separados em `docs/Provenance.md`.
-- Auditoria independente: PENDING. Merge, deploy e ativação de agentes: NÃO AUTORIZADOS.
+- Auditoria independente Round 1: **CORRECTION REQUIRED** (H1–H3/M1–M2); correções aplicadas; **Round 2 PENDING** — ver `evidence/NLE-BOOTSTRAP-001-CD03-AUDIT-ROUND1.md` e `evidence/NLE-BOOTSTRAP-001-CD03-AUDIT.md`. Merge, deploy e ativação de agentes: NÃO AUTORIZADOS.
 
 ## Source Hierarchy
 1. Checkpoint aprovado (`docs/Checkpoint.md`)
