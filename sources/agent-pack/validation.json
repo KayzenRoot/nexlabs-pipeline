@@ -1,0 +1,32 @@
+{
+  "structural_validation": "PASS",
+  "summary": {
+    "agents": 105,
+    "departments_excluding_ceo": 10,
+    "skill_assignments": 1110,
+    "specific_tests": 316,
+    "common_gates": 5,
+    "counts_by_department": {
+      "ZEUS": 1,
+      "ATHENA": 6,
+      "HEPHAESTUS": 20,
+      "HERMES": 8,
+      "APOLLO": 20,
+      "MUSES": 10,
+      "PLUTUS": 6,
+      "POSEIDON": 14,
+      "ARGUS": 8,
+      "ATLAS": 6,
+      "PROMETHEUS": 6
+    },
+    "counts_by_level": {
+      "Executive": 11,
+      "Principal": 16,
+      "Senior": 34,
+      "Staff": 44
+    }
+  },
+  "runtime_validation": "NOT_RUN",
+  "skill_implementation": "NOT_STARTED",
+  "agent_activation": "NOT_STARTED"
+}

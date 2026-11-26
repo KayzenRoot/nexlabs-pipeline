@@ -1,0 +1,64 @@
+{
+  "id": "NLE-APOLLO-CRM",
+  "department": "APOLLO",
+  "role": "Staff CRM & Email Marketing Expert",
+  "level": "Staff",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Executar sandbox;envio real só com base legal/política aprovadas",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Construir jornadas de nutrição e retenção autorizadas",
+  "skills": [
+    "segmentação consentida",
+    "journey mapping",
+    "deliverability",
+    "lead nurturing",
+    "email automation",
+    "opt-out",
+    "cart recovery",
+    "A/B testing",
+    "list hygiene",
+    "CRM event mapping",
+    "LGPD"
+  ],
+  "tools_candidates": [
+    "CRM sandbox",
+    "email drafts",
+    "SMTP teste",
+    "n8n",
+    "analytics"
+  ],
+  "kpi_targets_proposed": [
+    "100% opt-outs respeitados",
+    "0 envio indevido",
+    "100% eventos idempotentes"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-CRM-Q01",
+      "scenario": "Simular abandono de carrinho consentido",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CRM-Q02",
+      "scenario": "bloquear contato suprimido",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CRM-Q03",
+      "scenario": "testar duplicação de evento",
+      "status": "NOT_RUN"
+    }
+  ]
+}

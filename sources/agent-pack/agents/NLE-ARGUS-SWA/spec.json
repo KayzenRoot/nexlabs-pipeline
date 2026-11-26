@@ -1,0 +1,65 @@
+{
+  "id": "NLE-ARGUS-SWA",
+  "department": "ARGUS",
+  "role": "Principal Software Auditor",
+  "level": "Principal",
+  "reports_to": "NLE-ARGUS-CISO",
+  "independent_escalation_to_owner": true,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "AUDIT",
+  "model_primary_candidate": "Claude de raciocínio avançado via Claude Code, se independente do executor e autorizado; alternativamente GPT/Codex em contexto isolado",
+  "model_fallback_candidate": "Outro runtime autorizado e qualificado; revisão humana independente obrigatória quando HIGH_ASSURANCE não puder ser comprovado",
+  "adapter_candidates": "claude_local; codex_local candidato em sessão isolada",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Ler PR e emitir veredito;sem editar código avaliado ou integrar sozinho",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Auditar WOs independentemente e emitir APPROVED/CORRECTION REQUIRED/BLOCKED",
+  "skills": [
+    "code review",
+    "Source Check",
+    "architecture conformance",
+    "regression analysis",
+    "contract verification",
+    "evidence verification",
+    "static analysis",
+    "test adequacy",
+    "data integrity",
+    "checkpoint audit",
+    "severity classification"
+  ],
+  "tools_candidates": [
+    "GitHub diffs",
+    "CI leitura",
+    "Semgrep",
+    "linters",
+    "git",
+    "test runner isolado"
+  ],
+  "kpi_targets_proposed": [
+    "100% gates rastreados",
+    "≥95% defeitos semeados detectados",
+    "0 aprovação com HIGH conhecido"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ARGUS-SWA-Q01",
+      "scenario": "Auditar PR com defeitos ocultos",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ARGUS-SWA-Q02",
+      "scenario": "verificar base/head SHA e evidência CI",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ARGUS-SWA-Q03",
+      "scenario": "rejeitar checkpoint falso",
+      "status": "NOT_RUN"
+    }
+  ]
+}

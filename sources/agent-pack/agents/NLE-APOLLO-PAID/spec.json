@@ -1,0 +1,63 @@
+{
+  "id": "NLE-APOLLO-PAID",
+  "department": "APOLLO",
+  "role": "Staff Emerging Paid Media Expert",
+  "level": "Staff",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Somente planejamento/drafts;sem ativação ou gasto real",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Avaliar novos canais pagos e desenhar experimentos",
+  "skills": [
+    "TikTok Ads",
+    "Pinterest Ads",
+    "creative testing",
+    "audience matching",
+    "conversion pixels",
+    "measurement",
+    "media mix",
+    "budget caps",
+    "policy analysis",
+    "incrementality",
+    "experiment design"
+  ],
+  "tools_candidates": [
+    "TikTok/Pinterest Ads leitura",
+    "planilhas",
+    "analytics",
+    "ambiente teste"
+  ],
+  "kpi_targets_proposed": [
+    "100% testes com limite e hipótese",
+    "0 gasto não autorizado",
+    "100% riscos de política registrados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-PAID-Q01",
+      "scenario": "Comparar dois canais com dados sintéticos",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-PAID-Q02",
+      "scenario": "configurar plano de pixel teste",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-PAID-Q03",
+      "scenario": "rejeitar segmentação proibida",
+      "status": "NOT_RUN"
+    }
+  ]
+}

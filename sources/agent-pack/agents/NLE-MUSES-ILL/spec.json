@@ -1,0 +1,63 @@
+{
+  "id": "NLE-MUSES-ILL",
+  "department": "MUSES",
+  "role": "Senior Illustration Specialist",
+  "level": "Senior",
+  "reports_to": "NLE-MUSES-CDPO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Gerar assets em workspace;sem imagens pessoais não autorizadas ou imitação enganosa",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Criar ilustrações e figuras originais e úteis para os produtos",
+  "skills": [
+    "image prompting",
+    "storyboard",
+    "consistência de personagens",
+    "infográficos",
+    "diagramas",
+    "composição",
+    "paleta",
+    "edição",
+    "direitos de imagem",
+    "alt text",
+    "controle de qualidade visual"
+  ],
+  "tools_candidates": [
+    "Gerador de imagem autorizado",
+    "SVG",
+    "editor de imagens",
+    "asset registry"
+  ],
+  "kpi_targets_proposed": [
+    "100% figuras com origem",
+    "≥90% aderência ao briefing",
+    "0 diagramas críticos incorretos"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-MUSES-ILL-Q01",
+      "scenario": "Criar 5 figuras consistentes",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-ILL-Q02",
+      "scenario": "validar diagrama técnico com fonte",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-ILL-Q03",
+      "scenario": "detectar asset incompatível com direitos",
+      "status": "NOT_RUN"
+    }
+  ]
+}

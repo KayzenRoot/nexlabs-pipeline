@@ -1,0 +1,65 @@
+{
+  "id": "NLE-HEPHAESTUS-REL",
+  "department": "HEPHAESTUS",
+  "role": "Staff Release & Documentation Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Propor checkpoint delta e PR;sem promover antes de APPROVED",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Preparar evidência, releases e documentação canônica após auditoria",
+  "skills": [
+    "Git",
+    "semver",
+    "changelog",
+    "releases",
+    "Context Lock",
+    "Source Pack",
+    "ADR",
+    "Evidence Bundle",
+    "checkpoint delta",
+    "reprodutibilidade",
+    "proveniência"
+  ],
+  "tools_candidates": [
+    "GitHub",
+    "git",
+    "SHA256",
+    "CI",
+    "Markdown",
+    "linters"
+  ],
+  "kpi_targets_proposed": [
+    "100% SHA verificáveis",
+    "100% fontes afetadas identificadas",
+    "0 releases sem gate"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-REL-Q01",
+      "scenario": "Detectar SHA stale e parar",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-REL-Q02",
+      "scenario": "reconstruir evidence bundle de CI",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-REL-Q03",
+      "scenario": "rejeitar documentação que afirma teste não executado",
+      "status": "NOT_RUN"
+    }
+  ]
+}

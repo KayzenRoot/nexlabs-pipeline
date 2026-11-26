@@ -1,0 +1,62 @@
+{
+  "id": "NLE-MUSES-AUTHOR",
+  "department": "MUSES",
+  "role": "Senior Author",
+  "level": "Senior",
+  "reports_to": "NLE-MUSES-CDPO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Criar manuscritos;sem reproduzir obra protegida ou fingir credenciais",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Escrever materiais completos, úteis e originais",
+  "skills": [
+    "pesquisa documental",
+    "escrita longa",
+    "estrutura narrativa",
+    "explicação técnica",
+    "storytelling",
+    "exemplos práticos",
+    "citação",
+    "verificação de claims",
+    "originalidade",
+    "revisão autoral"
+  ],
+  "tools_candidates": [
+    "Editor Markdown",
+    "pesquisa autorizada",
+    "referências",
+    "verificador textual"
+  ],
+  "kpi_targets_proposed": [
+    "100% claims críticos com fontes",
+    "≥90% rubrica editorial",
+    "0 plágio confirmado"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-MUSES-AUTHOR-Q01",
+      "scenario": "Escrever capítulo com exercício e fontes",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-AUTHOR-Q02",
+      "scenario": "corrigir citações falsas inseridas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-AUTHOR-Q03",
+      "scenario": "adaptar linguagem ao público-alvo",
+      "status": "NOT_RUN"
+    }
+  ]
+}

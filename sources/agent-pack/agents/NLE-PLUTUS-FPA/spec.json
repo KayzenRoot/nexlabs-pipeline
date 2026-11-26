@@ -1,0 +1,62 @@
+{
+  "id": "NLE-PLUTUS-FPA",
+  "department": "PLUTUS",
+  "role": "Staff FP&A Specialist",
+  "level": "Staff",
+  "reports_to": "NLE-PLUTUS-CFO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Modelar cenários sem modificar orçamento aprovado",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Construir orçamento e projeções com incerteza explícita",
+  "skills": [
+    "budgeting",
+    "rolling forecast",
+    "variance analysis",
+    "scenario planning",
+    "driver-based modeling",
+    "break-even",
+    "capital budgeting",
+    "sensitivity",
+    "financial storytelling",
+    "model audit"
+  ],
+  "tools_candidates": [
+    "Python",
+    "planilhas",
+    "BI",
+    "SQL"
+  ],
+  "kpi_targets_proposed": [
+    "100% premissas rastreáveis",
+    "0 fórmula crítica incorreta",
+    "100% cenários reconciliados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PLUTUS-FPA-Q01",
+      "scenario": "Criar forecast de 12 meses",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-FPA-Q02",
+      "scenario": "calcular break-even",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-FPA-Q03",
+      "scenario": "testar sensibilidade de CAC e receita",
+      "status": "NOT_RUN"
+    }
+  ]
+}

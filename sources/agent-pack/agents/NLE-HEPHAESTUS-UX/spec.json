@@ -1,0 +1,63 @@
+{
+  "id": "NLE-HEPHAESTUS-UX",
+  "department": "HEPHAESTUS",
+  "role": "Staff UX/UI Designer",
+  "level": "Staff",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Editar arquivos de design autorizados;sem publicar ou enviar dados de clientes",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Criar fluxos, protótipos e especificações acessíveis",
+  "skills": [
+    "design systems",
+    "tokens",
+    "WCAG",
+    "design responsivo",
+    "prototipagem",
+    "fluxos de interação",
+    "heurísticas",
+    "design mobile",
+    "testes de usabilidade",
+    "handoff a engenharia"
+  ],
+  "tools_candidates": [
+    "Figma se conectado",
+    "Penpot",
+    "SVG",
+    "axe",
+    "Playwright"
+  ],
+  "kpi_targets_proposed": [
+    "0 violações críticas WCAG automatizadas",
+    "100% estados essenciais",
+    "≥90% tarefas de teste concluídas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-UX-Q01",
+      "scenario": "Projetar dashboard com estados vazios e erro",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-UX-Q02",
+      "scenario": "validar contraste e teclado",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-UX-Q03",
+      "scenario": "entregar tokens e componentes consistentes",
+      "status": "NOT_RUN"
+    }
+  ]
+}

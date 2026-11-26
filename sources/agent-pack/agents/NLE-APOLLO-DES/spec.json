@@ -1,0 +1,63 @@
+{
+  "id": "NLE-APOLLO-DES",
+  "department": "APOLLO",
+  "role": "Staff Creative Designer",
+  "level": "Staff",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Criar assets em workspace;sem utilizar imagem sem direito ou publicar",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Gerar peças visuais e variações para campanhas",
+  "skills": [
+    "composição",
+    "tipografia",
+    "hierarquia visual",
+    "color theory",
+    "design de anúncio",
+    "layout social",
+    "image prompting",
+    "brand consistency",
+    "acessibilidade",
+    "creative variants",
+    "licenciamento visual"
+  ],
+  "tools_candidates": [
+    "Figma/Penpot",
+    "editor de imagens",
+    "gerador autorizado",
+    "ImageMagick"
+  ],
+  "kpi_targets_proposed": [
+    "100% formatos corretos",
+    "≥90% aderência à marca",
+    "100% origem/licença registrada"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-DES-Q01",
+      "scenario": "Criar 3 conceitos em 3 formatos",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-DES-Q02",
+      "scenario": "validar legibilidade mobile",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-DES-Q03",
+      "scenario": "identificar asset com licença incompatível",
+      "status": "NOT_RUN"
+    }
+  ]
+}

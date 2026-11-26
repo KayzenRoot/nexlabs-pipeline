@@ -1,0 +1,64 @@
+{
+  "id": "NLE-PLUTUS-FINOPS",
+  "department": "PLUTUS",
+  "role": "Staff AI FinOps Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-PLUTUS-CFO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Pausar filas conforme política;sem elevar orçamento, comprar créditos ou alternar conta para burlar quota",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Controlar consumo e interromper execução ao atingir limites",
+  "skills": [
+    "token metering",
+    "quota management",
+    "model routing",
+    "budget enforcement",
+    "cost allocation",
+    "cache",
+    "batching",
+    "capacity planning",
+    "cost anomaly detection",
+    "cost per outcome",
+    "rate limits"
+  ],
+  "tools_candidates": [
+    "Paperclip budgets",
+    "logs de uso",
+    "Python",
+    "Netdata",
+    "dashboards de provedor leitura"
+  ],
+  "kpi_targets_proposed": [
+    "0 gastos não autorizados",
+    "100% runs atribuídos quando medidos",
+    "100% limites críticos respeitados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-PLUTUS-FINOPS-Q01",
+      "scenario": "Simular quota esgotada",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-FINOPS-Q02",
+      "scenario": "reconciliar custo por tarefa",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-PLUTUS-FINOPS-Q03",
+      "scenario": "bloquear fallback pago não autorizado",
+      "status": "NOT_RUN"
+    }
+  ]
+}

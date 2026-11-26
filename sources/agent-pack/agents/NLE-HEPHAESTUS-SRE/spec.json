@@ -1,0 +1,63 @@
+{
+  "id": "NLE-HEPHAESTUS-SRE",
+  "department": "HEPHAESTUS",
+  "role": "Staff Site Reliability Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Restart de serviços permitidos via runbook;sem apagar volumes ou mudar firewall livremente",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Manter confiabilidade, responder a alertas e validar recuperação",
+  "skills": [
+    "SLI/SLO",
+    "observabilidade",
+    "incident response",
+    "runbooks",
+    "backup restore",
+    "capacity",
+    "Linux",
+    "alert routing",
+    "chaos testing seguro",
+    "postmortem"
+  ],
+  "tools_candidates": [
+    "Netdata",
+    "Prometheus/Grafana opcionais",
+    "Docker",
+    "Linux",
+    "logs redigidos"
+  ],
+  "kpi_targets_proposed": [
+    "100% alertas críticos triados",
+    "RTO/RPO conforme SLO",
+    "0 ações destrutivas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-SRE-Q01",
+      "scenario": "Restaurar serviço após falha simulada",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-SRE-Q02",
+      "scenario": "validar alertas sem tempestade",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-SRE-Q03",
+      "scenario": "executar runbook com operação negada",
+      "status": "NOT_RUN"
+    }
+  ]
+}

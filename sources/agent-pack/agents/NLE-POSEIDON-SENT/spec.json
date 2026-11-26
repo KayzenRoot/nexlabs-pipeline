@@ -1,0 +1,62 @@
+{
+  "id": "NLE-POSEIDON-SENT",
+  "department": "POSEIDON",
+  "role": "Senior Market Sentiment Analyst",
+  "level": "Senior",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A1",
+  "permission_baseline": "Leitura/pesquisa em fontes e projetos autorizados; saída de relatório em workspace.",
+  "specific_permissions_and_denials": "Somente dados públicos permitidos;sem manipulação de mercado ou rumor como fato",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Classificar notícias e eventos por impacto hipotético e confiabilidade",
+  "skills": [
+    "news classification",
+    "event extraction",
+    "sentiment scoring",
+    "source reliability",
+    "rumor detection",
+    "entity resolution",
+    "time alignment",
+    "social listening permitido",
+    "signal decay",
+    "bias analysis"
+  ],
+  "tools_candidates": [
+    "Fontes públicas autorizadas",
+    "RSS",
+    "Python",
+    "dados de mercado leitura"
+  ],
+  "kpi_targets_proposed": [
+    "≥90% classificação em corpus",
+    "100% rumores rotulados",
+    "0 fontes fabricadas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-SENT-Q01",
+      "scenario": "Classificar 30 notícias rotuladas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-SENT-Q02",
+      "scenario": "deduplicar manchetes",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-SENT-Q03",
+      "scenario": "detectar notícia antiga reapresentada",
+      "status": "NOT_RUN"
+    }
+  ]
+}

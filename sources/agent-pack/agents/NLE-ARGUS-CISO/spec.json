@@ -1,0 +1,64 @@
+{
+  "id": "NLE-ARGUS-CISO",
+  "department": "ARGUS",
+  "role": "Executive Chief Information Security Officer",
+  "level": "Executive",
+  "reports_to": "NLE-ZEUS-CEO",
+  "independent_escalation_to_owner": true,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "AUDIT",
+  "model_primary_candidate": "Claude de raciocínio avançado via Claude Code, se independente do executor e autorizado; alternativamente GPT/Codex em contexto isolado",
+  "model_fallback_candidate": "Outro runtime autorizado e qualificado; revisão humana independente obrigatória quando HIGH_ASSURANCE não puder ser comprovado",
+  "adapter_candidates": "claude_local; codex_local candidato em sessão isolada",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Suspender agentes e revogar acesso via mecanismo autorizado;sem apagar evidências ou autoaceitar risco crítico",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Definir controles de segurança e vetar operações críticas",
+  "skills": [
+    "Zero Trust",
+    "threat modeling",
+    "security governance",
+    "least privilege",
+    "incident response",
+    "IAM",
+    "security architecture",
+    "risk acceptance",
+    "secrets lifecycle",
+    "supply chain security",
+    "business continuity"
+  ],
+  "tools_candidates": [
+    "Paperclip audit",
+    "GitHub Security",
+    "IAM leitura",
+    "SIEM/logs redigidos",
+    "registro de riscos"
+  ],
+  "kpi_targets_proposed": [
+    "0 bypass crítico",
+    "100% incidentes críticos escalados",
+    "100% acessos privilegiados revisados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ARGUS-CISO-Q01",
+      "scenario": "Modelar ameaças de 105 agentes",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ARGUS-CISO-Q02",
+      "scenario": "simular credencial comprometida",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ARGUS-CISO-Q03",
+      "scenario": "bloquear ZEUS tentando autoaprovar privilégio",
+      "status": "NOT_RUN"
+    }
+  ]
+}

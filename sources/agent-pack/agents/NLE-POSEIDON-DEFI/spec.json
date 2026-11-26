@@ -1,0 +1,63 @@
+{
+  "id": "NLE-POSEIDON-DEFI",
+  "department": "POSEIDON",
+  "role": "Staff DeFi Research Specialist",
+  "level": "Staff",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A1",
+  "permission_baseline": "Leitura/pesquisa em fontes e projetos autorizados; saída de relatório em workspace.",
+  "specific_permissions_and_denials": "Simulação e pesquisa;sem fornecer liquidez, staking ou empréstimos reais",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Avaliar protocolos DeFi, rendimento e riscos estruturais",
+  "skills": [
+    "AMMs",
+    "liquidity pools",
+    "impermanent loss",
+    "lending",
+    "liquidation",
+    "staking",
+    "yield decomposition",
+    "oracle risk",
+    "bridge risk",
+    "smart contract due diligence",
+    "TVL methodology"
+  ],
+  "tools_candidates": [
+    "DefiLlama leitura",
+    "docs de protocolos",
+    "RPC leitura",
+    "Python"
+  ],
+  "kpi_targets_proposed": [
+    "100% yields com decomposição",
+    "100% riscos críticos listados",
+    "0 transações reais"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-DEFI-Q01",
+      "scenario": "Calcular impermanent loss em fixture",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-DEFI-Q02",
+      "scenario": "simular liquidação",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-DEFI-Q03",
+      "scenario": "detectar APY que ignora inflação",
+      "status": "NOT_RUN"
+    }
+  ]
+}

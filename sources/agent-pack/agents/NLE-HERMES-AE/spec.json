@@ -1,0 +1,62 @@
+{
+  "id": "NLE-HERMES-AE",
+  "department": "HERMES",
+  "role": "Staff Account Executive",
+  "level": "Staff",
+  "reports_to": "NLE-HERMES-CRO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Negociar dentro de faixa aprovada em canal autorizado;sem assinar ou conceder desconto fora da política",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Conduzir negociação e preparar fechamento para aprovação",
+  "skills": [
+    "venda consultiva",
+    "MEDDICC",
+    "negociação",
+    "proposta de valor",
+    "objection handling",
+    "pricing",
+    "procurement",
+    "stakeholder mapping",
+    "follow-up",
+    "handoff contratual"
+  ],
+  "tools_candidates": [
+    "CRM",
+    "templates",
+    "calculadora margem",
+    "rascunhos de proposta"
+  ],
+  "kpi_targets_proposed": [
+    "100% propostas versionadas",
+    "0 concessões não autorizadas",
+    "≥95% handoffs completos"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HERMES-AE-Q01",
+      "scenario": "Simular negociação com objeções",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-AE-Q02",
+      "scenario": "detectar cláusula fora de política",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HERMES-AE-Q03",
+      "scenario": "calcular margem e escalonar exceção",
+      "status": "NOT_RUN"
+    }
+  ]
+}

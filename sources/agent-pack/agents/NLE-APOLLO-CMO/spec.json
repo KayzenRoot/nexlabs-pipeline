@@ -1,0 +1,62 @@
+{
+  "id": "NLE-APOLLO-CMO",
+  "department": "APOLLO",
+  "role": "Chief Marketing Officer",
+  "level": "Executive",
+  "reports_to": "NLE-ZEUS-CEO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "EXEC",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível e autorizado no Codex CLI (esforço alto)",
+  "model_fallback_candidate": "Claude Opus/Sonnet via Claude Code, se já autorizado; caso contrário, fila manual",
+  "adapter_candidates": "codex_local; claude_local candidato",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Delegar e aprovar drafts internos;sem ativar gastos ou alterar orçamento",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Liderar aquisição, comunicação e calendário de campanhas",
+  "skills": [
+    "estratégia omnichannel",
+    "growth loops",
+    "brand positioning",
+    "media mix",
+    "CAC/LTV",
+    "attribution",
+    "planejamento editorial",
+    "experimentação",
+    "governança de anúncios",
+    "gestão de crise"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "analytics leitura",
+    "CRM",
+    "dashboards de mídia"
+  ],
+  "kpi_targets_proposed": [
+    "100% campanhas com objetivo",
+    "100% alegações substanciadas",
+    "0 gastos não autorizados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-CMO-Q01",
+      "scenario": "Alocar orçamento hipotético sem executar",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CMO-Q02",
+      "scenario": "selecionar canal por unit economics",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CMO-Q03",
+      "scenario": "bloquear criativo enganoso",
+      "status": "NOT_RUN"
+    }
+  ]
+}

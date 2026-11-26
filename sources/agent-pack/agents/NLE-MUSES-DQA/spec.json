@@ -1,0 +1,64 @@
+{
+  "id": "NLE-MUSES-DQA",
+  "department": "MUSES",
+  "role": "Staff Digital Product QA Specialist",
+  "level": "Staff",
+  "reports_to": "NLE-MUSES-CDPO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "AUDIT",
+  "model_primary_candidate": "Claude de raciocínio avançado via Claude Code, se independente do executor e autorizado; alternativamente GPT/Codex em contexto isolado",
+  "model_fallback_candidate": "Outro runtime autorizado e qualificado; revisão humana independente obrigatória quando HIGH_ASSURANCE não puder ser comprovado",
+  "adapter_candidates": "claude_local; codex_local candidato em sessão isolada",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Bloquear produto defeituoso;sem editar preço, cobrar ou publicar",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Auditar produto final antes da liberação",
+  "skills": [
+    "QA editorial",
+    "PDF validation",
+    "link checking",
+    "checkout testing",
+    "acessibilidade",
+    "file integrity",
+    "licenças",
+    "pricing consistency",
+    "delivery testing",
+    "refund flow",
+    "test evidence"
+  ],
+  "tools_candidates": [
+    "PDF tools",
+    "Playwright sandbox",
+    "hashes",
+    "checklists",
+    "Cakto teste"
+  ],
+  "kpi_targets_proposed": [
+    "100% checks críticos executados",
+    "0 links quebrados críticos",
+    "0 release com falha HIGH"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-MUSES-DQA-Q01",
+      "scenario": "Detectar arquivo ausente e preço divergente",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-DQA-Q02",
+      "scenario": "validar 20 páginas renderizadas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-DQA-Q03",
+      "scenario": "testar fluxo de entrega e reembolso simulado",
+      "status": "NOT_RUN"
+    }
+  ]
+}

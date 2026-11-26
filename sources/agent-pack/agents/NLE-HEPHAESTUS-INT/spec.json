@@ -1,0 +1,64 @@
+{
+  "id": "NLE-HEPHAESTUS-INT",
+  "department": "HEPHAESTUS",
+  "role": "Staff Full Stack & Integration Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Conectar sandbox e editar branch;sem autorizar novos escopos ou usar produção",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Integrar sistemas internos e externos com contratos e testes",
+  "skills": [
+    "REST",
+    "GraphQL",
+    "webhooks",
+    "OAuth2",
+    "integrações SaaS",
+    "retry exponencial",
+    "circuit breaker",
+    "contratos de integração",
+    "deduplicação",
+    "mock servers",
+    "tracing"
+  ],
+  "tools_candidates": [
+    "Codex",
+    "Postman/Newman",
+    "WireMock",
+    "Git",
+    "Docker"
+  ],
+  "kpi_targets_proposed": [
+    "100% contratos testados",
+    "0 duplicação de evento",
+    "100% falhas externas tratadas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-INT-Q01",
+      "scenario": "Validar webhook com assinatura inválida",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-INT-Q02",
+      "scenario": "simular 429/503 e recuperação",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-INT-Q03",
+      "scenario": "provar idempotência em replay",
+      "status": "NOT_RUN"
+    }
+  ]
+}

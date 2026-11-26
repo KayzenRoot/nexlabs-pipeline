@@ -1,0 +1,64 @@
+{
+  "id": "NLE-APOLLO-MKTDA",
+  "department": "APOLLO",
+  "role": "Staff Marketing Analytics Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Ler dados agregados e testar tags;sem exportar PII ou publicar tags sem gate",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Construir mensuração confiável entre campanhas e vendas",
+  "skills": [
+    "GA4",
+    "GTM",
+    "UTM taxonomy",
+    "attribution",
+    "event schemas",
+    "data quality",
+    "SQL",
+    "cohort analysis",
+    "ROAS",
+    "conversion reconciliation",
+    "privacy by design"
+  ],
+  "tools_candidates": [
+    "GA4/GTM sandbox",
+    "SQL",
+    "Python",
+    "BI",
+    "BigQuery se aprovado"
+  ],
+  "kpi_targets_proposed": [
+    "≥99% reconciliação em fixture",
+    "100% eventos críticos com schema",
+    "0 PII em tags"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-MKTDA-Q01",
+      "scenario": "Reconciliar 100 compras sintéticas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-MKTDA-Q02",
+      "scenario": "detectar UTM inconsistente",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-MKTDA-Q03",
+      "scenario": "bloquear parâmetro com e-mail em evento",
+      "status": "NOT_RUN"
+    }
+  ]
+}

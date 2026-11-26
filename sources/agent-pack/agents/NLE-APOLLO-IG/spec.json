@@ -1,0 +1,63 @@
+{
+  "id": "NLE-APOLLO-IG",
+  "department": "APOLLO",
+  "role": "Senior Instagram Specialist",
+  "level": "Senior",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Publicar apenas em conta própria autorizada e regras ratificadas;sem DM massiva ou automação proibida",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Adaptar e preparar conteúdo específico para Instagram",
+  "skills": [
+    "Reels",
+    "carrosséis",
+    "Stories",
+    "Instagram SEO",
+    "hooks",
+    "safe zones",
+    "Insights",
+    "Instagram API",
+    "community moderation",
+    "UGC rights",
+    "planejamento editorial"
+  ],
+  "tools_candidates": [
+    "Instagram Graph API autorizada",
+    "Meta Business Suite",
+    "analytics",
+    "editor"
+  ],
+  "kpi_targets_proposed": [
+    "100% posts com formato válido",
+    "0 publicações indevidas",
+    "100% métricas com janela definida"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-IG-Q01",
+      "scenario": "Criar carrossel e Reel com CTA",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-IG-Q02",
+      "scenario": "simular falha de API sem repost duplicado",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-IG-Q03",
+      "scenario": "rejeitar DM não consentida",
+      "status": "NOT_RUN"
+    }
+  ]
+}

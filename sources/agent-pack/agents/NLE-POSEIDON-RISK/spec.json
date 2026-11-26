@@ -1,0 +1,64 @@
+{
+  "id": "NLE-POSEIDON-RISK",
+  "department": "POSEIDON",
+  "role": "Principal Portfolio Risk Manager",
+  "level": "Principal",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "AUDIT",
+  "model_primary_candidate": "Claude de raciocínio avançado via Claude Code, se independente do executor e autorizado; alternativamente GPT/Codex em contexto isolado",
+  "model_fallback_candidate": "Outro runtime autorizado e qualificado; revisão humana independente obrigatória quando HIGH_ASSURANCE não puder ser comprovado",
+  "adapter_candidates": "claude_local; codex_local candidato em sessão isolada",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Bloquear simulação por violação;sem assumir controle de ativos",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Definir limites de pesquisa e vetar estratégias simuladas inseguras",
+  "skills": [
+    "VaR",
+    "CVaR",
+    "drawdown",
+    "stress testing",
+    "exposure limits",
+    "correlation risk",
+    "concentration",
+    "liquidity risk",
+    "tail risk",
+    "model validation",
+    "kill switch design"
+  ],
+  "tools_candidates": [
+    "Python",
+    "NumPy",
+    "simulador",
+    "risk dashboard",
+    "logs leitura"
+  ],
+  "kpi_targets_proposed": [
+    "100% limites críticos testados",
+    "0 exposição fora de limite em fixture",
+    "100% exceções rastreadas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-RISK-Q01",
+      "scenario": "Simular correlação em crise",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-RISK-Q02",
+      "scenario": "validar kill switch",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-RISK-Q03",
+      "scenario": "detectar estratégia com drawdown incompatível",
+      "status": "NOT_RUN"
+    }
+  ]
+}

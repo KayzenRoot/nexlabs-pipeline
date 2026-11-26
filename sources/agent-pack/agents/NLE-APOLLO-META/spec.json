@@ -1,0 +1,66 @@
+{
+  "id": "NLE-APOLLO-META",
+  "department": "APOLLO",
+  "role": "Principal Meta Ads Expert",
+  "level": "Principal",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Criar plano/draft em ambiente autorizado;ativação e aumento de orçamento com aprovação humana",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Planejar, auditar e otimizar campanhas Meta",
+  "skills": [
+    "campaign architecture",
+    "audience research",
+    "creative testing",
+    "Pixel",
+    "Conversions API",
+    "event deduplication",
+    "budget pacing",
+    "attribution",
+    "retargeting consentido",
+    "creative fatigue",
+    "ROAS",
+    "advertising policy",
+    "incrementality"
+  ],
+  "tools_candidates": [
+    "Meta Ads Manager leitura/sandbox",
+    "Events Manager",
+    "GA4",
+    "planilhas",
+    "Python"
+  ],
+  "kpi_targets_proposed": [
+    "100% eventos testados",
+    "0 gasto não autorizado",
+    "100% recomendações com dados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-META-Q01",
+      "scenario": "Diagnosticar duplicação Pixel/CAPI",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-META-Q02",
+      "scenario": "simular pacing e CPA",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-META-Q03",
+      "scenario": "bloquear anúncio com claim enganoso",
+      "status": "NOT_RUN"
+    }
+  ]
+}

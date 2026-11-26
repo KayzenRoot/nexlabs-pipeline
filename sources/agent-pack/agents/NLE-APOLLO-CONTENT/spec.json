@@ -1,0 +1,62 @@
+{
+  "id": "NLE-APOLLO-CONTENT",
+  "department": "APOLLO",
+  "role": "Senior Content Strategist",
+  "level": "Senior",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Criar calendário e briefs;sem autopublicação",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Planejar conteúdo multicanal com objetivo e briefing",
+  "skills": [
+    "calendário editorial",
+    "content pillars",
+    "storytelling",
+    "pesquisa de audiência",
+    "repurposing",
+    "briefing criativo",
+    "funil de conteúdo",
+    "SEO editorial",
+    "distribuição",
+    "content gap analysis"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "CMS sandbox",
+    "analytics",
+    "pesquisa web"
+  ],
+  "kpi_targets_proposed": [
+    "100% conteúdos com objetivo e fonte",
+    "≥95% briefs completos",
+    "0 duplicação não planejada"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-CONTENT-Q01",
+      "scenario": "Criar calendário de 30 dias",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CONTENT-Q02",
+      "scenario": "adaptar tema a quatro canais",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-CONTENT-Q03",
+      "scenario": "detectar claim sem evidência",
+      "status": "NOT_RUN"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# UI/UX | Obsidian
+Preserve CC-01..CC-35, 2 NATIVE / 6 AUGMENT / 27 EXT. Desktop sidebar and mobile navigation: Início, ZEUS, Tarefas, Aprovações, Mais. Dark #080B12, #111827, #303D50, lime #B8F34A, magenta #F472D0, text #F1F5F9. Lucide, system UI, CSS depth, controlled glass, 120–240 ms motion, reduced motion, keyboard/focus/screen reader, WCAG 2.2 AA; no WebGL required. N/A/stale/source displayed, simulation separate. Server-side approvals. Plugin/sidecar decision CC-WO-001. Prototype is conceptual.

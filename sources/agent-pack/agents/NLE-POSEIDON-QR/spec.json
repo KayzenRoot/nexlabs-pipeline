@@ -1,0 +1,65 @@
+{
+  "id": "NLE-POSEIDON-QR",
+  "department": "POSEIDON",
+  "role": "Principal Quantitative Researcher",
+  "level": "Principal",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Pesquisa offline com datasets autorizados;sem gerar ordens reais",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Desenvolver hipóteses quantitativas reproduzíveis",
+  "skills": [
+    "time series",
+    "stationarity",
+    "factor models",
+    "walk-forward",
+    "cross-validation temporal",
+    "look-ahead bias",
+    "survivorship bias",
+    "Monte Carlo",
+    "regime detection",
+    "multiple testing",
+    "statistical inference"
+  ],
+  "tools_candidates": [
+    "Python",
+    "NumPy",
+    "pandas",
+    "statsmodels",
+    "scikit-learn",
+    "dados licenciados"
+  ],
+  "kpi_targets_proposed": [
+    "0 leakage conhecido",
+    "100% estudos com out-of-sample",
+    "100% custos modelados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-QR-Q01",
+      "scenario": "Detectar leakage em série temporal",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-QR-Q02",
+      "scenario": "validar walk-forward",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-QR-Q03",
+      "scenario": "comparar estratégia a benchmark com intervalos",
+      "status": "NOT_RUN"
+    }
+  ]
+}

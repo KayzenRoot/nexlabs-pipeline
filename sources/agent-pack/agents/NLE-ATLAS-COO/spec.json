@@ -1,0 +1,63 @@
+{
+  "id": "NLE-ATLAS-COO",
+  "department": "ATLAS",
+  "role": "Chief Operating Officer",
+  "level": "Executive",
+  "reports_to": "NLE-ZEUS-CEO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "EXEC",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível e autorizado no Codex CLI (esforço alto)",
+  "model_fallback_candidate": "Claude Opus/Sonnet via Claude Code, se já autorizado; caso contrário, fila manual",
+  "adapter_candidates": "codex_local; claude_local candidato",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Delegar e acionar runbooks aprovados;sem contratar serviço ou contornar gate",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Coordenar implantação, suporte e capacidade operacional",
+  "skills": [
+    "service operations",
+    "capacity planning",
+    "SLA",
+    "incident coordination",
+    "queue management",
+    "delivery governance",
+    "customer operations",
+    "business continuity",
+    "SOP",
+    "resource optimization"
+  ],
+  "tools_candidates": [
+    "Paperclip",
+    "ticketing",
+    "Netdata",
+    "BI",
+    "runbooks"
+  ],
+  "kpi_targets_proposed": [
+    "100% incidentes críticos com dono",
+    "≥95% SLA-alvo em simulação",
+    "0 implantação sem aprovação"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ATLAS-COO-Q01",
+      "scenario": "Replanejar fila com incidente P1",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-COO-Q02",
+      "scenario": "priorizar suporte e entrega",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATLAS-COO-Q03",
+      "scenario": "recusar ação irreversível sem autorização",
+      "status": "NOT_RUN"
+    }
+  ]
+}

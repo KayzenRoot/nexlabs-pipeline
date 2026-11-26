@@ -1,0 +1,65 @@
+{
+  "id": "NLE-POSEIDON-TSE",
+  "department": "POSEIDON",
+  "role": "Staff Trading Systems Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Credenciais somente read-only ou demo;bloquear egress para execução real",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Construir infraestrutura de trading exclusivamente simulada",
+  "skills": [
+    "market data ingestion",
+    "order state machine",
+    "paper execution",
+    "reconciliation",
+    "idempotent orders",
+    "fills",
+    "latency monitoring",
+    "exchange adapters",
+    "risk gates",
+    "kill switches",
+    "recovery"
+  ],
+  "tools_candidates": [
+    "Python",
+    "WebSocket público",
+    "mock exchange",
+    "pytest",
+    "Git",
+    "Docker"
+  ],
+  "kpi_targets_proposed": [
+    "0 ordens reais",
+    "100% fills reconciliados",
+    "100% bloqueios de risco testados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-TSE-Q01",
+      "scenario": "Simular partial fills e reconnect",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-TSE-Q02",
+      "scenario": "reconciliar após restart",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-TSE-Q03",
+      "scenario": "provar endpoint real inacessível no ambiente",
+      "status": "NOT_RUN"
+    }
+  ]
+}

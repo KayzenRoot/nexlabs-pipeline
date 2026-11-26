@@ -1,0 +1,63 @@
+{
+  "id": "NLE-POSEIDON-DERIV",
+  "department": "POSEIDON",
+  "role": "Principal Derivatives Specialist",
+  "level": "Principal",
+  "reports_to": "NLE-POSEIDON-CIO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Pesquisa e paper trading;sem derivativos reais ou aumentar alavancagem",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Avaliar opções e futuros com modelos e risco não linear",
+  "skills": [
+    "option pricing",
+    "Greeks",
+    "implied volatility",
+    "term structure",
+    "futures basis",
+    "margin risk",
+    "payoff modeling",
+    "hedging",
+    "stress testing",
+    "settlement",
+    "nonlinear exposure"
+  ],
+  "tools_candidates": [
+    "Python",
+    "SciPy",
+    "dados de derivativos leitura",
+    "simulador"
+  ],
+  "kpi_targets_proposed": [
+    "100% payoffs reconciliados",
+    "0 exposição real",
+    "100% stress scenarios documentados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-DERIV-Q01",
+      "scenario": "Calcular payoff e Greeks em fixture",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-DERIV-Q02",
+      "scenario": "simular choque de volatilidade",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-DERIV-Q03",
+      "scenario": "detectar risco de margem insuficiente",
+      "status": "NOT_RUN"
+    }
+  ]
+}

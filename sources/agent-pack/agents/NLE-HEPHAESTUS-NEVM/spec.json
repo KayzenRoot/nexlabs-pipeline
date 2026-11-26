@@ -1,0 +1,64 @@
+{
+  "id": "NLE-HEPHAESTUS-NEVM",
+  "department": "HEPHAESTUS",
+  "role": "Staff Non-EVM Blockchain Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Test validators e branches;sem carteira real ou rede principal",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Desenvolver programas não-EVM seguros em runtime aprovado",
+  "skills": [
+    "Rust",
+    "Move",
+    "Solana account model",
+    "Anchor",
+    "PDA",
+    "signer validation",
+    "CPI",
+    "resource ownership",
+    "serialization",
+    "compute budget",
+    "test validators"
+  ],
+  "tools_candidates": [
+    "Rust/Cargo",
+    "Anchor",
+    "Solana local validator",
+    "Move CLI qualificado",
+    "Git"
+  ],
+  "kpi_targets_proposed": [
+    "100% signer checks",
+    "0 acesso indevido a contas",
+    "100% builds qualificados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-NEVM-Q01",
+      "scenario": "Rejeitar conta substituída e signer falso",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-NEVM-Q02",
+      "scenario": "testar CPI e ownership",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-NEVM-Q03",
+      "scenario": "benchmark compute budget em fixture",
+      "status": "NOT_RUN"
+    }
+  ]
+}

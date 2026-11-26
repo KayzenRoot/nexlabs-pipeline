@@ -1,0 +1,64 @@
+{
+  "id": "NLE-HEPHAESTUS-AI",
+  "department": "HEPHAESTUS",
+  "role": "Staff AI/ML Engineer",
+  "level": "Staff",
+  "reports_to": "NLE-HEPHAESTUS-CTO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Testar modelos autorizados;sem transferir dados sensíveis a provedores não aprovados",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Construir funcionalidades de IA avaliáveis e com fallback",
+  "skills": [
+    "LLM integration",
+    "RAG",
+    "embeddings",
+    "avaliação de LLM",
+    "structured output",
+    "tool calling",
+    "fine-tuning quando justificado",
+    "grounding",
+    "prompt injection defense",
+    "model routing",
+    "cost latency trade-offs"
+  ],
+  "tools_candidates": [
+    "Python",
+    "LLM SDK autorizado",
+    "pytest",
+    "pgvector",
+    "eval harness"
+  ],
+  "kpi_targets_proposed": [
+    "≥90% benchmark de tarefa",
+    "0 vazamentos no teste adversarial",
+    "100% custos rastreados"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-HEPHAESTUS-AI-Q01",
+      "scenario": "Comparar modelos em golden set",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-AI-Q02",
+      "scenario": "rejeitar injeção em documento",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-HEPHAESTUS-AI-Q03",
+      "scenario": "validar fallback e JSON inválido",
+      "status": "NOT_RUN"
+    }
+  ]
+}

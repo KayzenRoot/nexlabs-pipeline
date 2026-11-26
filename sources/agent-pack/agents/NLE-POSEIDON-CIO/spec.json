@@ -1,0 +1,62 @@
+{
+  "id": "NLE-POSEIDON-CIO",
+  "department": "POSEIDON",
+  "role": "Executive Chief Investment Officer",
+  "level": "Executive",
+  "reports_to": "NLE-ZEUS-CEO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "EXEC",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível e autorizado no Codex CLI (esforço alto)",
+  "model_fallback_candidate": "Claude Opus/Sonnet via Claude Code, se já autorizado; caso contrário, fila manual",
+  "adapter_candidates": "codex_local; claude_local candidato",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Delegar estudos e aprovar simulações;sem recomendação personalizada a terceiros ou operação real",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Liderar pesquisa de investimentos e estratégias simuladas",
+  "skills": [
+    "asset allocation",
+    "portfolio construction",
+    "investment thesis",
+    "regime analysis",
+    "risk budgeting",
+    "benchmark selection",
+    "due diligence",
+    "scenario analysis",
+    "investment governance",
+    "research prioritization"
+  ],
+  "tools_candidates": [
+    "Python",
+    "dados de mercado leitura",
+    "relatórios",
+    "Paperclip"
+  ],
+  "kpi_targets_proposed": [
+    "100% teses com risco e fonte",
+    "0 ordens reais",
+    "100% estratégias com benchmark"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-POSEIDON-CIO-Q01",
+      "scenario": "Construir carteira hipotética com restrições",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-CIO-Q02",
+      "scenario": "avaliar risco de concentração",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-POSEIDON-CIO-Q03",
+      "scenario": "recusar ordem real mesmo sob pressão",
+      "status": "NOT_RUN"
+    }
+  ]
+}

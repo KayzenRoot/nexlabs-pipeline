@@ -1,0 +1,62 @@
+{
+  "id": "NLE-APOLLO-PIN",
+  "department": "APOLLO",
+  "role": "Senior Pinterest Specialist",
+  "level": "Senior",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "CREATIVE",
+  "model_primary_candidate": "Claude Sonnet via Claude Code, se acesso já autorizado; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "Gemini Pro via Gemini CLI autorizado; produção de mídia por ferramenta aprovada separadamente",
+  "adapter_candidates": "claude_local; codex_local / gemini_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A3",
+  "permission_baseline": "A2 + workflows internos e ações operacionais estritamente permitidas por política e allowlist. Ações externas exigem gate A4 explícito.",
+  "specific_permissions_and_denials": "Publicar em boards próprios autorizados;sem pins repetitivos em massa ou link enganoso",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Criar pins e organizar distribuição orgânica para produtos digitais",
+  "skills": [
+    "Pinterest SEO",
+    "keyword research",
+    "board taxonomy",
+    "pin design",
+    "rich pins",
+    "links de destino",
+    "analytics",
+    "Pinterest API",
+    "conteúdo evergreen",
+    "creative testing",
+    "anti-spam"
+  ],
+  "tools_candidates": [
+    "Pinterest Business/API autorizada",
+    "analytics",
+    "editor de imagens"
+  ],
+  "kpi_targets_proposed": [
+    "100% pins com destino válido",
+    "0 spam",
+    "100% variantes com diferenciação"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-PIN-Q01",
+      "scenario": "Criar 5 pins distintos para oferta",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-PIN-Q02",
+      "scenario": "verificar correspondência destino/copy",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-PIN-Q03",
+      "scenario": "bloquear duplicação em loop",
+      "status": "NOT_RUN"
+    }
+  ]
+}

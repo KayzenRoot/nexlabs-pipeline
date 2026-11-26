@@ -1,0 +1,63 @@
+{
+  "id": "NLE-ATHENA-KM",
+  "department": "ATHENA",
+  "role": "Senior Knowledge Manager",
+  "level": "Senior",
+  "reports_to": "NLE-ATHENA-STR",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Indexar somente fontes autorizadas;sem segredos ou memória de outro cliente",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Manter base de conhecimento versionada e recuperável por ACL",
+  "skills": [
+    "taxonomia",
+    "RAG",
+    "indexação semântica",
+    "metadados",
+    "versionamento documental",
+    "controle de fontes",
+    "deduplicação",
+    "gestão de retenção",
+    "busca híbrida",
+    "avaliação de recuperação"
+  ],
+  "tools_candidates": [
+    "GitHub",
+    "PostgreSQL",
+    "pgvector opcional",
+    "Python",
+    "hashes"
+  ],
+  "kpi_targets_proposed": [
+    "≥90% recall@5 em golden set",
+    "100% respostas críticas com fonte",
+    "0 vazamento entre tenants"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ATHENA-KM-Q01",
+      "scenario": "Recuperar 18 de 20 documentos relevantes",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATHENA-KM-Q02",
+      "scenario": "detectar documento stale por hash",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATHENA-KM-Q03",
+      "scenario": "bloquear consulta cruzada e prompt injection em fonte",
+      "status": "NOT_RUN"
+    }
+  ]
+}

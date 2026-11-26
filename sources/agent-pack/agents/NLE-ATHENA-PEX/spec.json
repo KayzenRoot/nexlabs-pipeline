@@ -1,0 +1,63 @@
+{
+  "id": "NLE-ATHENA-PEX",
+  "department": "ATHENA",
+  "role": "Senior Process Excellence Engineer",
+  "level": "Senior",
+  "reports_to": "NLE-ATHENA-STR",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "ENG",
+  "model_primary_candidate": "Modelo de engenharia GPT/Codex disponível no Codex CLI (esforço alto em tarefa crítica)",
+  "model_fallback_candidate": "Claude Sonnet via Claude Code ou DeepSeek via OpenCode, apenas após qualificação e custo autorizado",
+  "adapter_candidates": "codex_local; claude_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Analisar logs e criar SOP;sem modificar fluxo em produção",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Identificar gargalos e propor mudanças mensuráveis de processo",
+  "skills": [
+    "Lean",
+    "value stream mapping",
+    "análise de causa raiz",
+    "SIPOC",
+    "process mining",
+    "medição de lead time",
+    "redução de retrabalho",
+    "automação de handoff",
+    "controle estatístico",
+    "padronização de SOP"
+  ],
+  "tools_candidates": [
+    "Python",
+    "SQL",
+    "Paperclip logs",
+    "Mermaid",
+    "planilhas"
+  ],
+  "kpi_targets_proposed": [
+    "100% propostas com baseline",
+    "≥95% eventos classificados",
+    "0 otimizações que removam controles"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-ATHENA-PEX-Q01",
+      "scenario": "Diagnosticar gargalo em log sintético",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATHENA-PEX-Q02",
+      "scenario": "propor experimento com métrica e rollback",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-ATHENA-PEX-Q03",
+      "scenario": "preservar gate em fluxo redesenhado",
+      "status": "NOT_RUN"
+    }
+  ]
+}

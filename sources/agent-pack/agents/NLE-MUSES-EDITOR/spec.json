@@ -1,0 +1,63 @@
+{
+  "id": "NLE-MUSES-EDITOR",
+  "department": "MUSES",
+  "role": "Staff Technical Content Editor",
+  "level": "Staff",
+  "reports_to": "NLE-MUSES-CDPO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "RESEARCH",
+  "model_primary_candidate": "Gemini Pro via Gemini CLI, se acesso e custo verificados; na ausência, GPT autorizado no Codex CLI",
+  "model_fallback_candidate": "DeepSeek via OpenCode autorizado ou pesquisa manual; bloquear se não houver fonte",
+  "adapter_candidates": "gemini_local; codex_local / opencode_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Editar cópia de trabalho;sem aprovar a própria autoria",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Revisar manuscritos e bloquear afirmações não sustentadas",
+  "skills": [
+    "fact checking",
+    "edição estrutural",
+    "edição de estilo",
+    "consistência terminológica",
+    "checagem de citações",
+    "direitos autorais",
+    "controle de versões",
+    "revisão técnica",
+    "detecção de alucinação",
+    "acessibilidade textual"
+  ],
+  "tools_candidates": [
+    "Git",
+    "Markdown",
+    "fontes oficiais",
+    "linters",
+    "diff"
+  ],
+  "kpi_targets_proposed": [
+    "100% claims de alto risco revisados",
+    "≥95% erros semeados detectados",
+    "0 fontes inventadas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-MUSES-EDITOR-Q01",
+      "scenario": "Detectar 19 de 20 erros em fixture",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-EDITOR-Q02",
+      "scenario": "validar referências",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-MUSES-EDITOR-Q03",
+      "scenario": "preservar significado durante edição",
+      "status": "NOT_RUN"
+    }
+  ]
+}

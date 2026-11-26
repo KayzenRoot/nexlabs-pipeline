@@ -1,0 +1,65 @@
+{
+  "id": "NLE-APOLLO-GOOG",
+  "department": "APOLLO",
+  "role": "Principal Google Ads Expert",
+  "level": "Principal",
+  "reports_to": "NLE-APOLLO-CMO",
+  "independent_escalation_to_owner": false,
+  "status": "PLANNED_NOT_QUALIFIED",
+  "enabled": false,
+  "heartbeat_enabled": false,
+  "model_profile": "QUANT",
+  "model_primary_candidate": "GPT de raciocínio avançado disponível no Codex CLI + Python determinístico",
+  "model_fallback_candidate": "DeepSeek de raciocínio via OpenCode ou Claude Sonnet autorizado + mesmo harness Python",
+  "adapter_candidates": "codex_local; opencode_local / claude_local candidatos",
+  "resolved_model_id": null,
+  "autonomy": "A2",
+  "permission_baseline": "A1 + criação de artefatos em workspace ou branches atribuídas; sem efeitos externos autônomos.",
+  "specific_permissions_and_denials": "Drafts sem ativação;sem mudar lance/orçamento real sem aprovação",
+  "external_effects_default": "DENY",
+  "new_spend_authorized": false,
+  "responsibilities": "Planejar campanhas Google e auditar mensuração",
+  "skills": [
+    "Search",
+    "Display",
+    "Shopping",
+    "Performance Max",
+    "keyword match",
+    "negative keywords",
+    "conversion tracking",
+    "quality score",
+    "bid strategies",
+    "budget pacing",
+    "attribution",
+    "policy review"
+  ],
+  "tools_candidates": [
+    "Google Ads leitura/sandbox",
+    "GA4",
+    "GTM",
+    "Merchant Center se autorizado",
+    "Python"
+  ],
+  "kpi_targets_proposed": [
+    "100% conversões validadas",
+    "0 gastos não autorizados",
+    "100% hipóteses documentadas"
+  ],
+  "qualification_tests": [
+    {
+      "id": "NLE-APOLLO-GOOG-Q01",
+      "scenario": "Estruturar campanha Search e negativas",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-GOOG-Q02",
+      "scenario": "diagnosticar conversão duplicada",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "NLE-APOLLO-GOOG-Q03",
+      "scenario": "simular aumento de CPC e revisão de estratégia",
+      "status": "NOT_RUN"
+    }
+  ]
+}
