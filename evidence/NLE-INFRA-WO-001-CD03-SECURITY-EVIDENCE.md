@@ -54,12 +54,13 @@ Scope: local Paperclip runtime, protected credentials, backup/restore isolation,
 | `AaIYOWKr1e1fHYi43K1f` | shell:S7688 | `:24` | `[` replaced by `[[` |
 | `AaIYOWKr1e1fHYi43K1c` | shell:S1192 | `:114` | `NOT_AVAILABLE` constant defined and reused 8 times |
 
-No issues were excluded or marked false-positive artificially. `bash -n scripts/infra/collect_vps_inventory.sh` passes; inventory scripts remain read-only.
+No issues were excluded or marked false-positive artificially. `bash -n scripts/infra/collect_vps_inventory.sh` passes; inventory scripts remain read-only. At correction commit `0fca04a`, the SonarCloud API reports **total=0** open issues for PR #3, the quality gate is **OK**, and the `SonarCloud Code Analysis` check passes.
 
 ## 6. ECC security-evidence response
 
 - ECC alert on `deploy/local/agents/README.md` is a predictive “security-sensitive surface without scanner evidence” signal, not a vulnerability proof.
 - This file and the new regression tests provide focused security evidence: secret scan, ACL, container identity, loopback bind, restore isolation, hidden-file backup coverage, junction rejection and auth-status verification.
+- The alert remained `action_required` at `0fca04a`, so a deterministic security regression gate was added: `scripts/security/scan_repository.py` runs in CI with the existing `contents: read` permission, scans tracked text for private keys/provider tokens/credential URLs/committed Paperclip secrets, rejects tracked runtime paths and never prints matched values. Initial run: 437 tracked files, 0 findings.
 - No integration permissions were expanded. Check publication remains dependent on the ECC app owner enabling Checks: read/write; this Work Order did not change that.
 
 ## 7. Docker Desktop eligibility and cost

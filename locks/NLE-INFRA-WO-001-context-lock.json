@@ -7,7 +7,7 @@
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
   "head_at_context_capture": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
-  "head_note": "b7f447d is the CD-03 source-check HEAD. The corrections and this evidence are appended to the same PR; canonical SHA-256/Git-blob identities capture this corrected working tree. The final evidence commit hash and exact CI run are verified externally after push; the lock cannot contain its own commit hash.",
+  "head_note": "b7f447d is the CD-03 source-check HEAD; 0fca04a is the correction commit that passed CI and reduced SonarCloud open issues to 0. The security-gate/evidence commit is appended to the same PR. Canonical SHA-256/Git-blob identities capture this tree; final head and CI are verified externally because the lock cannot contain its own commit hash.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -50,7 +50,8 @@
     "api_keys_created": false,
     "agents_activated": false,
     "external_effects": false,
-    "agent_rows_paused": 1
+    "agent_rows_paused": 1,
+    "security_regression_scan": "PASS_437_FILES_0_FINDINGS"
   },
   "tests": {
     "previous_source_validator": "7 groups PASS at CD-02",
@@ -58,10 +59,11 @@
     "previous_powershell": "30/30 at CD-02",
     "previous_runtime_health": "HTTP 200 executor reported",
     "previous_backup_restore": "PASS executor reported pre-claim",
-    "current_cd03": "validator 7/7 PASS; Python 29/29 OK; PowerShell 43/43 PASS; compose config exit 0; bash -n PASS; PowerShell parser 0 errors",
+    "current_cd03": "validator 7/7 PASS; Python 34/34 OK; PowerShell 43/43 PASS; compose config exit 0; bash -n PASS; PowerShell parser 0 errors; security scan 437 files/0 findings",
     "docker_compose_config": "PASS_EXIT_0",
     "post_claim_runtime": "PASS_FRESH_HOST_READBACK",
-    "restore_regressions": "PASS_43_OF_43"
+    "restore_regressions": "PASS_43_OF_43",
+    "security_regression_scan": "PASS_437_FILES_0_FINDINGS"
   },
   "governance": {
     "main_protected": true,
@@ -70,11 +72,14 @@
     "no_bypass": true
   },
   "ci": {
-    "status": "PENDING_FINAL_CD03_HEAD",
+    "status": "PASS_AT_0FCA04A_RUN_45882771191; FINAL_SECURITY_GATE_RUN_PENDING",
     "previous_head_sha": "28cfe934638d97c656cb7ec050e6a5235221136f",
     "previous_run_id": 45877720820,
     "previous_conclusion": "success",
-    "workflow": "docs-validation"
+    "workflow": "docs-validation",
+    "correction_head_sha": "0fca04a0ee5a451dd39a8755148f77ed344e09d4",
+    "correction_run_id": 45882771191,
+    "correction_conclusion": "success"
   },
   "blockers": [
     "Codex subscription authentication is not valid at runtime; AC16 unmet",
@@ -274,7 +279,7 @@
     "deploy/local/codex/README.md": "13b30d7820b8eed1d0a4f27efbf5dd51e4b5db75",
     "deploy/local/agents/README.md": "51a91511324d92625778c8643d68039de3d81f85",
     ".gitignore": "da350420ffea028508f85017649d56d42533bd1c",
-    ".github/workflows/docs-validation.yml": "0c3e71cc76fd510100205d55616ab51021ffed60",
+    ".github/workflows/docs-validation.yml": "93a312f51d9c466c45dc9fde53e313a30b377d15",
     "scripts/windows/Paperclip.Common.ps1": "4c60f08f7f31407fd21cf863caf48b2db447a316",
     "scripts/windows/Initialize-PaperclipSecrets.ps1": "7f11a0387fc5abbdd876cd5716143f8273b4200b",
     "scripts/windows/Start-Paperclip.ps1": "358f9e2f3f4f31f7f0bdf51e3906574ff67f62ce",
@@ -286,9 +291,11 @@
     "scripts/windows/README.md": "3d12861b20821311ffc5d864fba1e53e2c0e0616",
     "scripts/infra/collect_windows_inventory.ps1": "94cd9d8d3891f17f76eb377faeedf179fbcec694",
     "scripts/infra/collect_vps_inventory.sh": "cc52f530ad4789cd28255327995691a074ce93c7",
+    "scripts/security/scan_repository.py": "670eb9b24b12b8d5eda5d7cf95d66a38d7e47ddc",
     "tests/deployment/test_deploy_contract.py": "8d855450ba458a1792588c6bbcac7c30cd697752",
     "tests/deployment/__init__.py": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
     "tests/test_infra_inventory.py": "ee2fe01e5d2a623fe67e9ff9ccd6dcd75db3b392",
+    "tests/test_security_scan.py": "44dafd528d1d7b7e266bad6c63521c88eab649b9",
     "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "9ba17d376fe01d2eaf31a4d2073fa5b25fc20b00",
     "README.md": "fd4178aaabe2e9babbe7691c4b4a875ca1734e9e",
     "docs/Scope.md": "9dc00ca1509728f2d6812daeceaaee2d1db2a2a5",
@@ -296,19 +303,21 @@
     "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
     "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
     "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "15d8d9d6b43cada65dae27bcccd07d53c1299dda",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "7dbf2467a0310993d018805833561e1797841031"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "70d7970c510358b4be72c186e87f382daeb539e7",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "21e0205a2005c68d6717312da228cf6390c577ed"
   },
   "verdict": "NOT_APPROVED_BLOCKED_CODEX_AUTH",
   "sonar": {
     "open_issues_at_start": 10,
     "fixes": "APPLIED_INDIVIDUALLY",
-    "final_api_readback": "PENDING_PUSHED_HEAD"
+    "final_api_readback": "PASS_TOTAL_0_QUALITY_GATE_OK_AT_0FCA04A; FINAL_REANALYSIS_PENDING"
   },
   "ecc": {
     "alert": "SECURITY_EVIDENCE_REQUESTED",
     "evidence_file": "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md",
-    "permissions_expanded": false
+    "permissions_expanded": false,
+    "status": "ACTION_REQUIRED_AT_0FCA04A; SECURITY_GATE_ADDED; FINAL_READBACK_PENDING",
+    "security_gate": "scripts/security/scan_repository.py"
   },
   "docker_eligibility": {
     "plan": "personal",
@@ -336,7 +345,7 @@
     "deploy/local/codex/README.md": "a6141377e7745076872c64f5b2b1c8cbd27283ec200cdf405310d5840dcd18d3",
     "deploy/local/agents/README.md": "2d0a67f1b92a1c6bd90c349eef41dd2d70926ba4a3aae46300798db1482c9419",
     ".gitignore": "c46658c9045932d921107b03b09126deba959dfdd23d38f0c59365a8bd6f84fc",
-    ".github/workflows/docs-validation.yml": "7002255da60ce33ffad2c0652a540b1111549d784bb7084d183e30dae0e65548",
+    ".github/workflows/docs-validation.yml": "d8388be32e3bfcd8e4b3764b1662a945842c8505928c42036de4781bfafb4977",
     "scripts/windows/Paperclip.Common.ps1": "f13b5972700c13a3fd17182888a05bc653a1083b7f0fac52b6d0c7856f26b778",
     "scripts/windows/Initialize-PaperclipSecrets.ps1": "fd85547d14e57ee55c3f9d575bd2f16167c0927f57620c0e5fcead4a8d1ab452",
     "scripts/windows/Start-Paperclip.ps1": "1c0e4d577c64c5a63c5351625164acf2aadcc7877874db41ed753d524a5c21cc",
@@ -348,9 +357,11 @@
     "scripts/windows/README.md": "aee7a7c6458a165bde8c2e877379b1fe865c4e22e6b71d9c3ba70956c865d3a8",
     "scripts/infra/collect_windows_inventory.ps1": "22f8adf831214778e5d0ae02c4da5cf17bf26dcd77e56f8511ed5d8fd91ba97f",
     "scripts/infra/collect_vps_inventory.sh": "85bdb80dd3a1d5de2e4b55e1110840d462429f77100a89a9fecf90d0b899b604",
+    "scripts/security/scan_repository.py": "73df7938e1397ead853f7b1f19a2cfcc2b31b287e65d9d04ad70a270977c3f69",
     "tests/deployment/test_deploy_contract.py": "30e79e6e108568e8ae78b07d0396a1fceb73f7bde0a03e82ed36e2d8ef9e1673",
     "tests/deployment/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "tests/test_infra_inventory.py": "27f411070f8e117bfedadb483433c6dd7c625345d3dab0e92591e4b5801180db",
+    "tests/test_security_scan.py": "4975d114ed3cb737e25b2809c7d9919606ada19d3373ba0c4a2ce682c1381f3b",
     "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json": "cf6fb9f736249283cfe8868389bbac8e8a34ed69144e43155f0fc262ba165cae",
     "README.md": "6acf8c5468ca06e3522f5acdac3139980efa9720d364a5837b08602ef6a49e75",
     "docs/Scope.md": "e3ac2829657b98802fd902e64ad5628fe4529eadaeda66673d956f472a7bb877",
@@ -358,7 +369,7 @@
     "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
     "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94",
     "locks/source-lock.json": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "2dbbbc8c5a2d103caa35a9a95047290124eef52e6b28f71def53da686dd991a9",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "8c2abc0ea8f31aab23e82c88fc7d6d13238f1b075fb4deaf588b6dcf0b3ab0d9"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "0bca8d86684fc9d95e6be3a414c1ebf661a643156dabd40e1229a8df48c6106d",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "486b495d263e3801e715351df4c597b80196299af43f0ee6624d31cd17ce0ec0"
   }
 }

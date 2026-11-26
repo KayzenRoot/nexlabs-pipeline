@@ -30,3 +30,5 @@ jobs:
         run: python3 scripts/validate_sources.py
       - name: Run canonical tests
         run: python3 -m unittest discover -s tests -v
+      - name: Security regression scan
+        run: python3 scripts/security/scan_repository.py
