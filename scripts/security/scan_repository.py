@@ -20,7 +20,7 @@ SKIP_SUFFIXES = {
 }
 SECRET_PATTERNS = (
     ("private_key", re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |PGP )?PRIVATE KEY-----")),
-    ("github_token", re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_\w{50,})\b")),
+    ("github_token", re.compile(r"\b(?:gh[pousr]_\w{36,}|github_pat_\w{50,})\b")),
     ("openai_key", re.compile(r"\bsk-\w{20,}\b")),
     ("aws_access_key", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
     ("slack_token", re.compile(r"\bxox[baprs]-[\w-]{10,}\b")),
