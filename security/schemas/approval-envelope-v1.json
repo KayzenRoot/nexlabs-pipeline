@@ -12,6 +12,13 @@
     "action",
     "target_id",
     "tenant_id",
+    "project_id",
+    "task_id",
+    "workflow_id",
+    "skill_id",
+    "host_id",
+    "provider_id",
+    "risk",
     "payload_sha256",
     "policy_sha256",
     "evidence_refs",
@@ -41,6 +48,32 @@
     },
     "tenant_id": {
       "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "workflow_id": {
+      "type": "string"
+    },
+    "skill_id": {
+      "type": "string"
+    },
+    "host_id": {
+      "type": "string"
+    },
+    "provider_id": {
+      "type": "string"
+    },
+    "risk": {
+      "enum": [
+        "LOW",
+        "STANDARD",
+        "ELEVATED",
+        "HIGH_ASSURANCE"
+      ]
     },
     "payload_sha256": {
       "type": "string",

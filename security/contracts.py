@@ -90,6 +90,13 @@ class ApprovalEnvelope:
     action: str
     target_id: str
     tenant_id: str
+    project_id: str
+    task_id: str
+    workflow_id: str
+    skill_id: str
+    host_id: str
+    provider_id: str
+    risk: str
     payload_sha256: str
     policy_sha256: str
     evidence_refs: tuple[str, ...]

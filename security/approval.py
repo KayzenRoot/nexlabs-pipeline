@@ -11,7 +11,7 @@ from typing import Protocol
 
 from .contracts import (
     AccessRequest, ApprovalEnvelope, SecurityError, as_decimal, require,
-    require_hash, require_id, require_utc,
+    require_hash, require_id, require_utc, RISKS,
 )
 
 NONCE = re.compile(r"^[A-Za-z0-9_-]{22,128}$")
@@ -27,6 +27,13 @@ def canonical_approval_bytes(envelope: ApprovalEnvelope) -> bytes:
         "action": envelope.action,
         "target_id": envelope.target_id,
         "tenant_id": envelope.tenant_id,
+        "project_id": envelope.project_id,
+        "task_id": envelope.task_id,
+        "workflow_id": envelope.workflow_id,
+        "skill_id": envelope.skill_id,
+        "host_id": envelope.host_id,
+        "provider_id": envelope.provider_id,
+        "risk": envelope.risk,
         "payload_sha256": envelope.payload_sha256,
         "policy_sha256": envelope.policy_sha256,
         "evidence_refs": list(envelope.evidence_refs),
@@ -89,8 +96,11 @@ def verify_approval(
     """Raise SecurityError unless the approval is valid and its nonce is consumed."""
     require(isinstance(envelope, ApprovalEnvelope), "APPROVAL_REQUIRED")
     for value in (envelope.approval_id, envelope.actor_id, envelope.approver_id,
-                  envelope.action, envelope.target_id, envelope.tenant_id):
+                  envelope.action, envelope.target_id, envelope.tenant_id,
+                  envelope.project_id, envelope.task_id, envelope.workflow_id,
+                  envelope.skill_id, envelope.host_id, envelope.provider_id):
         require_id(value, "APPROVAL_FIELD_INVALID")
+    require(envelope.risk in RISKS, "APPROVAL_RISK_INVALID")
     require(envelope.approver_kind == "human", "APPROVER_MUST_BE_HUMAN")
     require(envelope.approver_role in {"OWNER", "AUTHORIZED_REVIEWER"},
             "APPROVER_ROLE_NOT_AUTHORIZED")
@@ -99,6 +109,13 @@ def verify_approval(
     require(envelope.action == request.action, "APPROVAL_ACTION_MISMATCH")
     require(envelope.target_id == request.target_id, "APPROVAL_TARGET_MISMATCH")
     require(envelope.tenant_id == request.tenant_id, "APPROVAL_TENANT_MISMATCH")
+    require(envelope.project_id == request.project_id, "APPROVAL_PROJECT_MISMATCH")
+    require(envelope.task_id == request.task_id, "APPROVAL_TASK_MISMATCH")
+    require(envelope.workflow_id == request.workflow_id, "APPROVAL_WORKFLOW_MISMATCH")
+    require(envelope.skill_id == request.skill_id, "APPROVAL_SKILL_MISMATCH")
+    require(envelope.host_id == request.host_id, "APPROVAL_HOST_MISMATCH")
+    require(envelope.provider_id == request.provider_id, "APPROVAL_PROVIDER_MISMATCH")
+    require(envelope.risk == request.risk, "APPROVAL_RISK_MISMATCH")
     require_hash(envelope.payload_sha256)
     require_hash(envelope.policy_sha256)
     require(envelope.payload_sha256 == request.payload_sha256, "APPROVAL_PAYLOAD_MISMATCH")

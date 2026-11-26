@@ -7,10 +7,16 @@ from ipaddress import IPv4Address, IPv6Address, IPv4Network, IPv6Network
 
 from .contracts import require, require_id, SecurityError
 
-IPV4_PRIVATE = tuple(ipaddress.ip_network(value) for value in (
-    "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8",
-))
-IPV6_PRIVATE = tuple(ipaddress.ip_network(value) for value in ("fc00::/7", "::1/128"))
+IPV4_PRIVATE = (
+    IPv4Network((0x0A000000, 8)),
+    IPv4Network((0xAC100000, 12)),
+    IPv4Network((0xC0A80000, 16)),
+    IPv4Network((0x7F000000, 8)),
+)
+IPV6_PRIVATE = (
+    IPv6Network((0xFC00 << 112, 7)),
+    IPv6Network((1, 128)),
+)
 
 
 @dataclass(frozen=True)

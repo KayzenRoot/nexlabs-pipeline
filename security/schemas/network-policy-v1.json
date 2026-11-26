@@ -19,6 +19,7 @@
       "type": "array",
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "peer_id",
           "address",
@@ -48,6 +49,7 @@
       "type": "array",
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "service_id",
           "bind_address",

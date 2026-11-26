@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import hashlib
 import hmac
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -67,6 +68,9 @@ def fixture_approval(request=None, **changes):
         approver_id="human-owner", approver_kind="human", approver_role="OWNER",
         action=request.action,
         target_id=request.target_id, tenant_id=request.tenant_id,
+        project_id=request.project_id, task_id=request.task_id,
+        workflow_id=request.workflow_id, skill_id=request.skill_id,
+        host_id=request.host_id, provider_id=request.provider_id, risk=request.risk,
         payload_sha256=request.payload_sha256, policy_sha256=request.policy_sha256,
         evidence_refs=("evidence-001",), max_spend_usd=Decimal("0"),
         nonce="0123456789abcdefghijklmnopqrstuv", issued_at=NOW - timedelta(minutes=1),
@@ -118,6 +122,11 @@ class AuthorizationTests(unittest.TestCase):
             fixture_grant(request, issued_at=NOW + timedelta(seconds=1)),
         ):
             self.assertFalse(authorize(request, [grant]).allowed)
+
+    def test_invalid_grant_is_skipped_before_a_valid_grant(self):
+        request = fixture_request()
+        revoked = fixture_grant(request, revoked=True)
+        self.assertTrue(authorize(request, [revoked, fixture_grant(request)]).allowed)
 
     def test_stale_principal_and_cross_tenant_deny(self):
         request = fixture_request()
@@ -189,6 +198,30 @@ class AuthorizationTests(unittest.TestCase):
                           approval_signature=sign(envelope),
                           verifier=HmacSha256TestVerifier(KEY), nonce_store=InMemoryNonceStore())
         self.assertTrue(result.allowed)
+
+    def test_high_assurance_approval_is_bound_to_full_request_scope(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        base = fixture_approval(request)
+        changes = {
+            "project_id": "other-project",
+            "task_id": "other-task",
+            "workflow_id": "other-workflow",
+            "skill_id": "other-skill",
+            "host_id": "other-host",
+            "provider_id": "other-provider",
+            "risk": "ELEVATED",
+        }
+        for field, value in changes.items():
+            with self.subTest(field=field):
+                envelope = replace(base, **{field: value})
+                result = authorize(
+                    request, [fixture_grant(request)], approval=envelope,
+                    approval_signature=sign(envelope),
+                    verifier=HmacSha256TestVerifier(KEY),
+                    nonce_store=InMemoryNonceStore(),
+                )
+                self.assertFalse(result.allowed)
+                self.assertIn("APPROVAL_", result.reason)
 
     def test_high_assurance_without_approval_denies(self):
         request = fixture_request("HIGH_ASSURANCE")
@@ -278,18 +311,29 @@ class NetworkPolicyTests(unittest.TestCase):
 
     def test_public_default_wildcard_and_invalid_networks_deny(self):
         for cidr in ("8.8.8.0/24", "0.0.0.0/0", "::/0", "10.8.0.1/24", "not-a-cidr"):
-            with self.subTest(cidr=cidr), self.assertRaises(SecurityError):
-                validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
+            with self.subTest(cidr=cidr):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
         for address in ("0.0.0.0", "::", "8.8.8.8", "fe80::1"):
-            with self.subTest(address=address), self.assertRaises(SecurityError):
-                validate_network_policy(NetworkPolicy(
-                    services=(ServiceBinding("svc", address, 443, "PRIVATE"),)
-                ))
+            with self.subTest(address=address):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(
+                        services=(ServiceBinding("svc", address, 443, "PRIVATE"),)
+                    ))
 
     def test_special_purpose_reserved_and_cgnat_ranges_are_not_private_allowlists(self):
         for cidr in ("192.0.0.0/24", "100.64.0.0/10", "198.18.0.0/15"):
-            with self.subTest(cidr=cidr), self.assertRaises(SecurityError):
-                validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
+            with self.subTest(cidr=cidr):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
+
+    def test_rfc1918_and_ula_ranges_remain_accepted_after_literal_refactor(self):
+        policy = NetworkPolicy(
+            allowed_cidrs=("10.1.0.0/16", "172.16.0.0/12", "192.168.0.0/16",
+                           "127.0.0.0/8", "fd00:1234::/64"),
+            services=(ServiceBinding("loopback", "127.0.0.1", 3100, "LOOPBACK"),),
+        )
+        validate_network_policy(policy)
 
     def test_peer_must_be_inside_allowlist(self):
         policy = NetworkPolicy(
@@ -311,19 +355,24 @@ class NetworkPolicyTests(unittest.TestCase):
         peer = NetworkPeer("peer-a", "10.8.0.2", ("10.8.0.2/32",), "keyref-a")
         for peers in ((peer, peer),
                       (peer, NetworkPeer("peer-b", "10.8.0.3", ("10.8.0.3/32",), "keyref-a"))):
-            with self.subTest(peers=peers), self.assertRaises(SecurityError):
-                validate_network_policy(NetworkPolicy(allowed_cidrs=("10.8.0.0/24",), peers=peers))
+            with self.subTest(peers=peers):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(
+                        allowed_cidrs=("10.8.0.0/24",), peers=peers
+                    ))
 
     def test_invalid_ports_and_exposure_mismatch_deny(self):
         for port in (0, -1, 65536, True):
-            with self.subTest(port=port), self.assertRaises(SecurityError):
-                validate_network_policy(NetworkPolicy(
-                    services=(ServiceBinding("svc", "10.8.0.1", port, "PRIVATE"),)
-                ))
+            with self.subTest(port=port):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(
+                        services=(ServiceBinding("svc", "10.8.0.1", port, "PRIVATE"),)
+                    ))
+        mismatch = NetworkPolicy(
+            services=(ServiceBinding("svc", "127.0.0.1", 3100, "PRIVATE"),)
+        )
         with self.assertRaises(SecurityError):
-            validate_network_policy(NetworkPolicy(
-                services=(ServiceBinding("svc", "127.0.0.1", 3100, "PRIVATE"),)
-            ))
+            validate_network_policy(mismatch)
 
 
 class SecretReferenceTests(unittest.TestCase):
@@ -342,26 +391,27 @@ class SecretReferenceTests(unittest.TestCase):
                     allowed_purposes=frozenset({"paperclip-auth"}))
         with self.assertRaisesRegex(SecurityError, "SECRET_PROVIDER_NOT_APPROVED"):
             validate_secret_ref(self.ref, **args)
+        cross_tenant = {**args, "allowed_providers": frozenset({"windows-os-store"}),
+                        "tenant_id": "tenant-2"}
         with self.assertRaisesRegex(SecurityError, "SECRET_TENANT_MISMATCH"):
-            validate_secret_ref(self.ref, **{**args, "allowed_providers": frozenset({"windows-os-store"}),
-                                             "tenant_id": "tenant-2"})
+            validate_secret_ref(self.ref, **cross_tenant)
 
     def test_latest_secret_version_denied(self):
         ref = replace(self.ref, version="latest")
+        args = dict(tenant_id="tenant-1", project_id="project-1",
+                    allowed_providers=frozenset({"windows-os-store"}),
+                    allowed_purposes=frozenset({"paperclip-auth"}))
         with self.assertRaisesRegex(SecurityError, "SECRET_VERSION_NOT_PINNED"):
-            validate_secret_ref(ref, tenant_id="tenant-1", project_id="project-1",
-                                allowed_providers=frozenset({"windows-os-store"}),
-                                allowed_purposes=frozenset({"paperclip-auth"}))
+            validate_secret_ref(ref, **args)
 
     def test_secret_purpose_and_project_are_exact(self):
+        base = dict(tenant_id="tenant-1", project_id="project-1",
+                    allowed_providers=frozenset({"windows-os-store"}),
+                    allowed_purposes=frozenset({"paperclip-auth"}))
         with self.assertRaises(SecurityError):
-            validate_secret_ref(self.ref, tenant_id="tenant-1", project_id="project-2",
-                                allowed_providers=frozenset({"windows-os-store"}),
-                                allowed_purposes=frozenset({"paperclip-auth"}))
+            validate_secret_ref(self.ref, **{**base, "project_id": "project-2"})
         with self.assertRaises(SecurityError):
-            validate_secret_ref(self.ref, tenant_id="tenant-1", project_id="project-1",
-                                allowed_providers=frozenset({"windows-os-store"}),
-                                allowed_purposes=frozenset({"other-purpose"}))
+            validate_secret_ref(self.ref, **{**base, "allowed_purposes": frozenset({"other-purpose"})})
 
 
 class WorkspaceIsolationTests(unittest.TestCase):
@@ -382,8 +432,9 @@ class WorkspaceIsolationTests(unittest.TestCase):
             root = Path(tmp)
             (root / "tenant-1" / "project-1" / "task-1").mkdir(parents=True)
             for value in ("../other/file", "/etc/passwd", "C:/secret.txt", "a\\..\\secret"):
-                with self.subTest(value=value), self.assertRaises(SecurityError):
-                    resolve_workspace_path(root, "tenant-1", "project-1", "task-1", value)
+                with self.subTest(value=value):
+                    with self.assertRaises(SecurityError):
+                        resolve_workspace_path(root, "tenant-1", "project-1", "task-1", value)
 
     def test_symlink_ancestor_of_workspace_root_denied(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -449,6 +500,42 @@ class PolicyTests(unittest.TestCase):
         changed = dict(EXPECTED_POLICY)
         changed["policy_epoch"] = 2
         self.assertNotEqual(policy_fingerprint(changed), POLICY)
+
+
+class SchemaContractTests(unittest.TestCase):
+    ROOT = Path(__file__).resolve().parents[1]
+
+    def schema(self, filename):
+        return json.loads((self.ROOT / "security" / "schemas" / filename).read_text(encoding="utf-8"))
+
+    def assert_schema_matches(self, filename, contract):
+        document = self.schema(filename)
+        fields = set(contract.__dataclass_fields__)
+        self.assertEqual(set(document["required"]), fields)
+        self.assertEqual(set(document["properties"]), fields)
+        self.assertFalse(document["additionalProperties"])
+
+    def test_approval_schema_matches_contract_and_policy_binding(self):
+        self.assert_schema_matches("approval-envelope-v1.json", ApprovalEnvelope)
+        self.assertEqual(set(EXPECTED_POLICY["approvals"]["binds"]),
+                         set(ApprovalEnvelope.__dataclass_fields__))
+
+    def test_grant_schema_matches_contract(self):
+        self.assert_schema_matches("grant-v1.json", Grant)
+
+    def test_secret_ref_schema_matches_contract(self):
+        self.assert_schema_matches("secret-ref-v1.json", SecretRef)
+
+    def test_network_schema_and_nested_objects_match_contract(self):
+        document = self.schema("network-policy-v1.json")
+        self.assertFalse(document["additionalProperties"])
+        self.assertEqual(set(document["required"]), set(NetworkPolicy.__dataclass_fields__))
+        peer = document["properties"]["peers"]["items"]
+        service = document["properties"]["services"]["items"]
+        self.assertFalse(peer["additionalProperties"])
+        self.assertFalse(service["additionalProperties"])
+        self.assertEqual(set(peer["required"]), set(NetworkPeer.__dataclass_fields__))
+        self.assertEqual(set(service["required"]), set(ServiceBinding.__dataclass_fields__))
 
 
 if __name__ == "__main__":
