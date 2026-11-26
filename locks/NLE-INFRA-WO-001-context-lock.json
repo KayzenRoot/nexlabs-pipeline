@@ -1,0 +1,78 @@
+{
+  "work_order": "NLE-INFRA-WO-001",
+  "delta": "CD-01",
+  "status": "PREPARED_PENDING_TARGET_EXECUTION",
+  "repository": "KayzenRoot/nexlabs-pipeline",
+  "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
+  "branch": "work/nle-infra-wo-001",
+  "head_at_context_capture": "c9d375ab5783e29deaf257a80b2500e26b2b0d18",
+  "head_note": "Head after initial collector scripts, safety tests and work order; Context Lock itself is added immediately after this capture.",
+  "canonical_fingerprints": {
+    "docs/Checkpoint.md": "c5b1de30b541c98c11e3cfa884deec38ba5b3394",
+    "docs/Decisions-Ledger.md": "52bceb4e1140636aadee6740b32bf6964bdc8a68",
+    "docs/Scope.md": "9dc00ca1509728f2d6812daeceaaee2d1db2a2a5",
+    "docs/Definition-of-Done.md": "c3ee3206e1d456045202339616512a0386d00f33",
+    "docs/Architecture.md": "d9f5c2f53dca0d5fc62336fd401419aa2a84b12d",
+    "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
+    "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
+    "docs/Backlog.md": "a027231ccd9a77cd815040dfab75006b21665306"
+  },
+  "source_fingerprints": {
+    "sources/NexLabs_Infrastructure_Plan/README.md": "b352120f77e7483139a35ae143ee63681ea36a2e",
+    "sources/NexLabs_Infrastructure_Plan/infra-qualification.json": "b2d429bd1888a0d500f0737149db083161bf99e5",
+    "sources/NexLabs_Infrastructure_Plan/runtime-policy.json": "c15e761be210f126f3a9aa0de35504a388ab12d4",
+    "sources/NexLabs_Infrastructure_Plan/agent-runtime-bindings.json": "d29044d6bdf5396da82036c52e6ff2cb4a4c7d02",
+    "sources/NexLabs_Infrastructure_Plan/workflow-runtime-bindings.json": "99c2a5f9e662250e1f54c2b8fff3039db5b25b71",
+    "sources/NexLabs_Infrastructure_Plan/skill-runtime-bindings.json": "95b81302e69a6d180eaeea3aef78212b234d0b77",
+    "sources/NexLabs_Infrastructure_Plan/source-lock.json": "1dc82933430725785d6b5f78a81d81593606b661",
+    "sources/NexLabs_Command_Center_Plan/README.md": "ba647ba1e4e20cba3e38d49b4494dad87d3e9101",
+    "sources/NexLabs_Command_Center_Plan/decisions.md": "1c169b20ec395c5f21fd9c642f7c8aef755e2e10",
+    "sources/NexLabs_AI_Enterprise_Catalogo_105_Agentes.md": "1d73a5fdd879cb7719a0d3e843227c150d04fcfd"
+  },
+  "implementation_fingerprints": {
+    "work-orders/NLE-INFRA-WO-001.md": "a268018231d0dd8bb72cb0bc28ffc2b8342556a2",
+    "scripts/infra/collect_vps_inventory.sh": "b13411f72d73a6edb9e009981baf5de60b75dc01",
+    "scripts/infra/collect_windows_inventory.ps1": "02f52d8fcb783927e99e20c73dc35e65d5df3820",
+    "tests/test_infra_inventory.py": "29d481bed706638c60ebc67fd47022f09f3fe022"
+  },
+  "external_reference_state": {
+    "reviewed_on": "2026-11-26",
+    "docker_guide": "https://docs.paperclip.ing/reference/deploy/docker/",
+    "runner_guide": "https://docs.paperclip.ing/reference/adapters/paperclip-runner/",
+    "environments_guide": "https://docs.paperclip.ing/experimental/environments/",
+    "agents_api": "https://docs.paperclip.ing/reference/api/agents/",
+    "qualification": "Documentation reviewed only; no image digest, host compatibility, Paperclip API call or runtime execution has been verified."
+  },
+  "target_inventory": {
+    "oracle_vps": "NOT_RUN",
+    "windows_execution_host": "NOT_RUN",
+    "oci_network_security": "NOT_VERIFIED",
+    "billing_and_quotas": "NOT_VERIFIED",
+    "paperclip_image_digest": "NOT_VERIFIED",
+    "runner_host_compatibility": "NOT_VERIFIED"
+  },
+  "governance": {
+    "main_protected": true,
+    "required_check": "docs-validation",
+    "branch_from_main": true,
+    "no_force_push": true,
+    "no_bypass": true
+  },
+  "ci": {
+    "status": "PENDING",
+    "workflow": "docs-validation"
+  },
+  "audit": "PENDING_INDEPENDENT",
+  "merge": false,
+  "deploy": "NOT_AUTHORIZED",
+  "runtime_activation": false,
+  "additional_spend_usd": 0,
+  "stale_when": [
+    "main changes from base SHA",
+    "any canonical fingerprint changes",
+    "source-lock or runtime bindings change",
+    "Paperclip release/image digest or official compatibility contract changes",
+    "target host, account, billing or security assumptions change"
+  ],
+  "generated_on": "2026-11-26"
+}
