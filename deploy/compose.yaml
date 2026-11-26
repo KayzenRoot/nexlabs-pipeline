@@ -1,0 +1,26 @@
+# Portable Paperclip base composition.
+# Use with deploy/local/compose.yaml for Windows local-first, or
+# deploy/vps/compose.yaml for the future Oracle Ubuntu ARM64 VPS.
+# The image is pinned by immutable multi-platform digest in deploy/image-lock.json.
+name: nexlabs-paperclip
+
+services:
+  paperclip:
+    image: ${PAPERCLIP_IMAGE:-ghcr.io/paperclipai/paperclip:2026.1117.0@sha256:bdf38d10544dc6c831e16dc027f23ad586353ef3be1a1b2c6979e63b956aceb1}
+    restart: unless-stopped
+    stop_grace_period: 90s
+    pids_limit: 2048
+    environment:
+      HOST: "0.0.0.0"
+      PAPERCLIP_HOME: "/paperclip"
+      PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
+      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private"
+      PAPERCLIP_PUBLIC_URL: "${PAPERCLIP_PUBLIC_URL:-http://localhost:3100}"
+      BETTER_AUTH_SECRET: "${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET must be set}"
+      PAPERCLIP_TOOL_ACTION_SIGNING_SECRET: "${PAPERCLIP_TOOL_ACTION_SIGNING_SECRET:?PAPERCLIP_TOOL_ACTION_SIGNING_SECRET must be set}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3100/api/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 300s

@@ -29,3 +29,10 @@ NLE-ADR-BOOT-007 é um delta estreito e explicitamente autorizado pelo propriet�
 
 ## Registro de execução | NLE-BOOTSTRAP-001/CD-04 (não é nova ADR)
 Em 2026-11-26, após Round 2 independente APPROVED e autorização explícita do proprietário, PR #1 foi squash-merged. HEAD aprovado `a1c7eee9b3cb37ed3a2f778facd17b6355ff90a0`; merge commit e read-back da `main`: `301905ac0f9eb6ddeb2338c9caa74a8516858a50`. O checkpoint foi promovido sem alterar decisões de arquitetura. Riscos residuais: repositório público temporário (NLE-ADR-BOOT-007), billing API UNVERIFIED, GitHub approving review count=0, runtime não qualificado e C12 aberto. Nenhuma despesa, deploy ou ativação autorizada. NLE-INFRA-WO-001 não iniciado.
+
+## Delta LOCAL FIRST | NLE-INFRA-WO-001/CD-02
+| ID | Estado | Decisão / restrição |
+|---|---|---|
+| NLE-ADR-INFRA-011 | RATIFIED_DIRECTION | O proprietário aprova LOCAL FIRST: instalar e validar Paperclip neste Windows 11 antes de qualquer implantação na VPS Oracle. Docker Desktop com backend WSL2, containers Linux, imagem oficial pinada por digest, acesso somente `127.0.0.1:3100`, PostgreSQL incorporado com persistência, configuração preparada para PostgreSQL externo e ARM64 na VPS futura. Sem acesso/SSH/deploy na VPS, sem API keys, sem agentes, sem heartbeats/workflows/efeitos externos e sem gasto. |
+
+NLE-ADR-INFRA-011 é uma mudança de estratégia explicitamente autorizada pelo proprietário. Ela supersede **somente** a proibição de instalação local contida no NLE-INFRA-WO-001/CD-01 read-only; o inventário read-only permanece preservado como subescopo histórico. A implantação na VPS, o acesso remoto, a qualificação de runtime e a ativação de agentes continuam fora de escopo. Nenhuma decisão anterior é apagada ou reinterpretada além deste delta.

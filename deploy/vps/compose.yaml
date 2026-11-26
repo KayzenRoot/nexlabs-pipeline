@@ -1,0 +1,31 @@
+# Future Oracle Ubuntu ARM64 VPS override. Do not run from this Windows host.
+# Access remains private; the port is published on loopback only and must be
+# reached through the future WireGuard/reverse-proxy design, never the public IP.
+# The external PostgreSQL is pinned by immutable multi-platform digest.
+services:
+  db:
+    image: ${POSTGRES_IMAGE:-postgres:17-alpine@sha256:f9cf3e1f0066f0eb0c48707d864f0ac5941e9ff454a072077d97a4d278d07d73}
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER:-paperclip}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in the VPS secret file}"
+      POSTGRES_DB: "${POSTGRES_DB:-paperclip}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-paperclip} -d ${POSTGRES_DB:-paperclip}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - "${POSTGRES_DATA_DIR:?POSTGRES_DATA_DIR must be set}:/var/lib/postgresql/data"
+
+  paperclip:
+    ports:
+      - "127.0.0.1:${PAPERCLIP_PORT:-3100}:3100"
+    volumes:
+      - "${PAPERCLIP_DATA_DIR:?PAPERCLIP_DATA_DIR must be set}:/paperclip"
+    environment:
+      DATABASE_URL: "${DATABASE_URL:?DATABASE_URL must be set for external PostgreSQL}"
+      PAPERCLIP_PUBLIC_URL: "${PAPERCLIP_PUBLIC_URL:-http://127.0.0.1:3100}"
+    depends_on:
+      db:
+        condition: service_healthy

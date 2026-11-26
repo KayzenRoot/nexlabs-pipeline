@@ -250,5 +250,11 @@
     "plan": "NLE-BOOTSTRAP-001/CD-02",
     "status": "RATIFIED_DIRECTION",
     "implementation_approved": false
+  },
+  {
+    "id": "NLE-ADR-INFRA-011",
+    "plan": "NLE-INFRA-WO-001/CD-02",
+    "status": "RATIFIED_DIRECTION",
+    "implementation_approved": false
   }
 ]

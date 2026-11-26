@@ -7,3 +7,20 @@ __pycache__/
 *.key
 .venv/
 node_modules/
+
+# Local-first Paperclip runtime artifacts (must stay outside Git)
+deploy/**/data/
+deploy/**/backups/
+deploy/**/restore-test-*/
+deploy/**/secrets/
+deploy/**/paperclip.env
+deploy/**/*.zip
+deploy/**/*.tar
+deploy/**/*.tar.gz
+deploy/**/*.dump
+paperclip-data/
+**/paperclip.env
+**/paperclip-data/
+**/restore-test-*/
+**/paperclip-data-*.zip
+**/paperclip-data-*.zip.sha256
