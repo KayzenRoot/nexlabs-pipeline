@@ -64,3 +64,7 @@ APPROVED / CORRECTION REQUIRED / BLOCKED. Distinguish offline contract proof fro
 
 ## STOP CONDITION
 Any HIGH/CRITICAL, failed test/check, stale Context Lock, source drift, unapproved ADR dependency, nonzero spend, secret exposure, network/VPS/runtime mutation or missing independent review blocks merge and all subsequent WOs.
+
+
+## Executor evidence (not approval) | 2026-11-26
+Candidate HEAD before evidence refresh: `cbb82ad3d9ac6c6ab3f3dc79dc116a48b6a22149`; CI run 45899962882 SUCCESS. Linux 91 tests (2 platform skips); Windows 38/38 including junction; source validator and Registry pass; scanner 471/0; Socket and ECC evidence pass. SonarCloud Quality Gate passed, but 11 new issues remain open, 0 Security Hotspots and 0.0% coverage on new code. Their severity/rule details are not yet retrieved, so AC08 and independent AC09 remain pending. No merge, checkpoint promotion or next WO. See `evidence/NLE-INFRA-WO-002-CD01-EXECUTION.md`.
