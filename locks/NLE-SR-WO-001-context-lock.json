@@ -1,0 +1,37 @@
+{
+  "work_order": "NLE-SR-WO-001",
+  "delta": "CD-01",
+  "status": "CANDIDATE_PENDING_CI_AND_INDEPENDENT_AUDIT",
+  "base_sha": "05764c3d8e3050ddec9e4b8a010232f150704acb",
+  "branch": "work/nle-sr-wo-001",
+  "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
+  "canonical_git_blob_fingerprints": {
+    "docs/Checkpoint.md": "88b102aaa9d30622bc6965ea9b245d03fea504fd",
+    "docs/Decisions-Ledger.md": "31c681ad5e91fcfea8bb2cfea88acac7d25c2f2e",
+    "docs/Scope.md": "9dc00ca1509728f2d6812daeceaaee2d1db2a2a5",
+    "docs/Definition-of-Done.md": "c3ee3206e1d456045202339616512a0386d00f33",
+    "docs/Architecture.md": "6b22865933fa7a3c81ec913dacf96137237cae85",
+    "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
+    "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
+    "docs/Backlog.md": "69747d92f0e2ab4b97092a4b2f8fdff555c48c11",
+    "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
+    "sources/NexLabs_Skills_Registry/README.md": "10bd0bab6bc5d64ed6d1e053213a63251aadeb18",
+    "sources/NexLabs_Skills_Registry/registry.json": "2b39e1bc892a191f95abbffe00512bf0985f6ff9",
+    "sources/NexLabs_Skills_Registry/agent-bindings.json": "ed7efd111c12268f7d4837a9e41498888c34b4f2",
+    "sources/NexLabs_Skills_Registry/assignment-matrix.csv": "c2abbe964da582fbbc550ad9ade078b65744668a",
+    "sources/NexLabs_Skills_Registry/source-candidates.json": "f28847792548cc5cef3fe87b66f6f1a6053ffb6e",
+    "sources/NexLabs_AI_Enterprise_Agent_Catalog.json": "eb71d65daaaebd8dcf1ce3e93e53084fd0d3e75b",
+    "scripts/validate_sources.py": "3ce0d19aa907df5b7d9099154d59601588a978c1"
+  },
+  "stale_when": [
+    "base SHA changes",
+    "canonical Git blob changes",
+    "source-lock bytes change",
+    "policy or approved scope changes"
+  ],
+  "ci": "PENDING",
+  "audit": "PENDING_INDEPENDENT",
+  "runtime_writes": 0,
+  "additional_spend_usd": 0,
+  "vps": "NOT_ACCESSED"
+}

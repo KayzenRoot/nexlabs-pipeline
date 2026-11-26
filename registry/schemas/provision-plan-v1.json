@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexlabs:provision-dry-run:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "mode",
+    "registry_sha256",
+    "policy",
+    "agent_intents",
+    "runtime_inventory_verified",
+    "actual_creates",
+    "actual_updates",
+    "actual_model_calls",
+    "blocking_gates"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexlabs.provision-dry-run.v1"
+    },
+    "mode": {
+      "const": "DRY_RUN_ONLY"
+    },
+    "registry_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "policy": {
+      "type": "object"
+    },
+    "agent_intents": {
+      "type": "array",
+      "minItems": 105,
+      "maxItems": 105,
+      "items": {
+        "type": "object",
+        "required": [
+          "canonical_id",
+          "enabled",
+          "heartbeat_enabled",
+          "runtime_id",
+          "skill_imports",
+          "credential_grants",
+          "tool_grants",
+          "external_effects",
+          "max_additional_spend_usd"
+        ],
+        "properties": {
+          "canonical_id": {
+            "type": "string"
+          },
+          "enabled": {
+            "const": false
+          },
+          "heartbeat_enabled": {
+            "const": false
+          },
+          "runtime_id": {
+            "type": "null"
+          },
+          "skill_imports": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "credential_grants": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "tool_grants": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "external_effects": {
+            "const": "DENY"
+          },
+          "max_additional_spend_usd": {
+            "const": 0
+          }
+        }
+      }
+    },
+    "runtime_inventory_verified": {
+      "const": false
+    },
+    "actual_creates": {
+      "const": 0
+    },
+    "actual_updates": {
+      "const": 0
+    },
+    "actual_model_calls": {
+      "const": 0
+    },
+    "blocking_gates": {
+      "type": "array"
+    }
+  }
+}
