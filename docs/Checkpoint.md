@@ -2,7 +2,13 @@
 
 Status: **APPROVED / PROMOTED / SQUASH_MERGED**. Checkpoint Delta CD-04 promovido após Round 2 APPROVED, autorização explícita do proprietário, squash merge e read-back da `main`.
 
-## Estado canônico atual
+## Estado integrado | NLE-INFRA-WO-001/CD-03 — 2026-11-26
+- **APPROVED / SQUASH_MERGED / CHECKPOINT PROMOTED após integração deste delta documental.** PR #3 merged; HEAD aprovado `14d258a13503cf29dca9baeb31a5b5ada2d500ac`; squash/read-back `28a40b0f6ddf3b4dee5f2663ec96639a74cc49fd`; árvore do merge idêntica ao HEAD aprovado (`d917d854b4962ccdb0894318d4ad41a362876e7c`). CI final 45893169254 success; 364/364 originais inalterados; 44 fingerprints Git conferidos; SHA-256 44/44 reportados pelo auditor local. Auditoria independente: https://github.com/KayzenRoot/nexlabs-pipeline/pull/3#issuecomment-7203032835; HEAD de auditoria 51dbfeb, delta final exclusivamente documental, conferido no GitHub.
+- LOCAL FIRST (NLE-ADR-INFRA-011): instalação Windows 11 healthy, loopback, claim e AC16 PASS por conexão gerenciada de assinatura. Validador 7 grupos PASS, Python 34/34, PowerShell 43/43 reportados; SonarCloud 0 novas issues e ECC Security Evidence passou por comentário (publicação de check indisponível). Docker elegibilidade gratuita atestada; billing API não consultada. Nenhum acesso VPS, compra ou execução de agente.
+- Riscos residuais: backup pré-auth não prova recuperação da conexão atual; novo backup frio protegido obrigatório antes de depender de recuperação autenticada. Conexão compartilhada exige grants mínimos antes de qualquer ativação; Zeus default pausado (zero tarefas); reconciliar com identidade canônica, não duplicar. C12 permanece gate HIGH de runtime. Repositório público temporário; sem credenciais/dados privados nos novos arquivos; não autoriza produção.
+- Próximo NECESSARY: NLE-SR-WO-001, schema/locks/quarentena/validator e provisionador offline dry-run, sem gravação em Paperclip ou chamadas de modelo. Somente após integração/read-back deste delta.
+
+## Histórico do bootstrap (estado anterior)
 - Repositório: `KayzenRoot/nexlabs-pipeline`, ID `1472951510`, branch `main`, visibilidade **PUBLIC temporária** sob NLE-ADR-BOOT-007; produção permanece privada. Não alterar visibilidade neste delta.
 - Base: `48d3e422313f869992d09b99f0b7e09acd4e1caa`.
 - PR #1: merged/closed via squash. https://github.com/KayzenRoot/nexlabs-pipeline/pull/1
@@ -17,7 +23,7 @@ Status: **APPROVED / PROMOTED / SQUASH_MERGED**. Checkpoint Delta CD-04 promovid
 - Sem deploy ou ativação: agentes, skills, workflows, rotinas e efeitos externos continuam desativados/não qualificados.
 - C12 permanece HIGH/runtime gate: cinco discrepâncias dispatch-only exigem correção em WF-WO-001 antes de executar workflows afetados.
 - Riscos residuais: repositório público temporário; conversão futura para privado pendente; required_approving_review_count=0; billing API UNVERIFIED; Socket Security/ECC Tools não são checks obrigatórios.
-- NLE-INFRA-WO-001 **em CD-03 LOCAL FIRST** (NLE-ADR-INFRA-011); runtime local validado, claim **PASS** (`bootstrapStatus=ready`) e autenticação Codex por assinatura **PASS** via conexão gerenciada no vault do Paperclip, com AC16 atendido. CD-03 corrigiu restore isolation, cobertura de backup, identidade do container, achados SonarCloud e evidência ECC; CI `45892550947` e auditoria independente **APPROVED** no HEAD `51dbfeb`; documentação final em push. Sem merge. Ver delta candidato ao final.
+- Histórico de CD-03: proposta posteriormente integrada na PR #3; ver estado integrado acima.
 
 ## Veredito
 **NLE-BOOTSTRAP-001: APPROVED, CHECKPOINT PROMOTED, PR #1 SQUASH-MERGED.** Concluído apenas o bootstrap documental/governança. Isso não conclui NexLabs AI Enterprise v1.0, não instala/configura Paperclip, não qualifica runtime, não ativa agentes/skills/workflows e não autoriza deploy, anúncios, trading, mainnet ou gastos.
