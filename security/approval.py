@@ -112,7 +112,13 @@ def verify_approval(
     require_utc(request.now)
     require(envelope.issued_at <= request.now < envelope.expires_at,
             "APPROVAL_EXPIRED_OR_NOT_YET_VALID")
-    require(verifier.verify(canonical_approval_bytes(envelope), signature_hex),
-            "APPROVAL_SIGNATURE_INVALID")
-    require(nonce_store.consume(envelope.nonce, envelope.expires_at, request.now),
-            "APPROVAL_REPLAY")
+    try:
+        signature_valid = verifier.verify(canonical_approval_bytes(envelope), signature_hex)
+    except Exception as exc:
+        raise SecurityError("APPROVAL_VERIFIER_ERROR") from exc
+    require(signature_valid, "APPROVAL_SIGNATURE_INVALID")
+    try:
+        nonce_consumed = nonce_store.consume(envelope.nonce, envelope.expires_at, request.now)
+    except Exception as exc:
+        raise SecurityError("APPROVAL_NONCE_STORE_ERROR") from exc
+    require(nonce_consumed, "APPROVAL_REPLAY")

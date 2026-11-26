@@ -38,6 +38,8 @@ def authorize(
     request: AccessRequest,
     grants: Iterable[Grant],
     *,
+    current_policy_sha256: str,
+    current_policy_epoch: int,
     approval: ApprovalEnvelope | None = None,
     approval_signature: str | None = None,
     verifier: SignatureVerifier | None = None,
@@ -58,9 +60,17 @@ def authorize(
         require(request.risk in RISKS, "RISK_UNKNOWN")
         require_hash(request.policy_sha256)
         require_hash(request.payload_sha256)
-        require(isinstance(request.policy_epoch, int) and request.policy_epoch > 0,
+        require_hash(current_policy_sha256)
+        require(type(current_policy_epoch) is int and current_policy_epoch > 0,
                 "POLICY_EPOCH_INVALID")
-        require(actor.policy_epoch == request.policy_epoch, "PRINCIPAL_POLICY_STALE")
+        require(type(request.policy_epoch) is int and request.policy_epoch > 0,
+                "POLICY_EPOCH_INVALID")
+        require(type(actor.policy_epoch) is int and actor.policy_epoch > 0,
+                "PRINCIPAL_POLICY_EPOCH_INVALID")
+        require(request.policy_sha256 == current_policy_sha256
+                and request.policy_epoch == current_policy_epoch,
+                "REQUEST_POLICY_STALE")
+        require(actor.policy_epoch == current_policy_epoch, "PRINCIPAL_POLICY_STALE")
         require(actor.tenant_id == request.tenant_id, "TENANT_ISOLATION_DENY")
         require(actor.project_id == request.project_id, "PROJECT_ISOLATION_DENY")
         require(actor.host_id == request.host_id, "HOST_BINDING_DENY")
@@ -74,7 +84,11 @@ def authorize(
             if not isinstance(grant, Grant):
                 continue
             try:
-                require(not grant.revoked, "GRANT_REVOKED")
+                require_id(grant.grant_id, "GRANT_ID_INVALID")
+                require(type(grant.revoked) is bool and not grant.revoked, "GRANT_REVOKED")
+                require(type(grant.policy_epoch) is int
+                        and grant.policy_epoch == current_policy_epoch, "GRANT_POLICY_STALE")
+                require_hash(grant.policy_sha256)
                 require_utc(grant.issued_at)
                 require_utc(grant.expires_at)
                 require(grant.issued_at <= request.now < grant.expires_at, "GRANT_EXPIRED")
@@ -94,6 +108,6 @@ def authorize(
             verify_approval(approval, approval_signature, verifier, nonce_store, request)
 
         return AccessDecision(True, "AUTHORIZED_INTERNAL_ONLY", selected.grant_id)
-    except (SecurityError, AttributeError, TypeError) as exc:
+    except Exception as exc:
         reason = str(exc) if isinstance(exc, SecurityError) else "INVALID_REQUEST"
         return _deny(reason)
