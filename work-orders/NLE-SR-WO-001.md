@@ -31,3 +31,7 @@ STOP CONDITION: failed check or unresolved HIGH/CRITICAL, stale lock, new spend,
 ## Correction Delta CD-01.1 | 2026-11-26
 
 The first independent audit passed the 50 existing tests and all canonical counts, but found a HIGH security defect: the `validate` CLI passed an unrestricted path to `read_json`, allowing path traversal/outside-root reads, and SonarCloud failed with `pythonsecurity:S8707`. It also noted that the Windows symlink test skipped and the Context Lock/PR evidence were stale. The correction confines `read_json`/CLI validation to repository-relative regular files, rejects symlinks/junctions/reparse points and outside-root paths, converts missing components to controlled `RegistryError`s, and adds outside-root, CLI rejection and real Windows junction regressions. Revalidation: **53/53 tests**, validator 7/7, Windows CLI `verify/build/plan/validate` PASS, determinism unchanged. Correction HEAD `29a5581` passes CI run `45895583859`, SonarCloud 0 issues/gate OK and ECC; a new independent review returned **APPROVED** with no HIGH/CRITICAL findings. **CD-01 APPROVED**; no runtime, Paperclip, model, import, VPS, merge, next WO or spend effect.
+
+
+## Estado final | 2026-11-26
+**APPROVED / SQUASH_MERGED.** PR #5 merged at `126de4d059915abf55eb03fa51e53c0bc8ab0cd9`; audited HEAD `043a8d1263112367ad2a826a65e6e0eaf1fc5490`; CI `45896646408` success; AC01–AC07 PASS. Scope strictly offline; no Paperclip, VPS, agent, skill import, model or spend effect. See `evidence/NLE-SR-WO-001-CD01-AUDIT.md` and Checkpoint.
