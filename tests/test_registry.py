@@ -1,10 +1,16 @@
 """Behavioral regression tests for the offline registry compiler."""
+import contextlib
 import copy
+import io
 import json
+import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
+from registry.__main__ import main
 from registry.core import (
     CEO, EXPECTED_POLICY, RegistryError, ROOT, SOURCE_LOCK, build,
     canonical_bytes, index, provision_plan, read_json, safe_path, sha256,
@@ -140,10 +146,50 @@ class RegistryTests(unittest.TestCase):
             p = Path(tmp) / "candidate.json"
             p.write_text('{"enabled":false,"enabled":true}', encoding="utf-8")
             with self.assertRaises(RegistryError):
-                read_json(p)
+                read_json(p, Path(tmp))
             p.write_text('{"value":NaN}', encoding="utf-8")
             with self.assertRaises(RegistryError):
-                read_json(p)
+                read_json(p, Path(tmp))
+
+    def test_read_json_rejects_outside_root_and_missing_path(self):
+        with tempfile.TemporaryDirectory() as allowed, tempfile.TemporaryDirectory() as outside:
+            root = Path(allowed)
+            document = Path(outside) / "candidate.json"
+            document.write_text('{"schema":"anything"}', encoding="utf-8")
+            with self.assertRaisesRegex(RegistryError, "UNSAFE_DOCUMENT_PATH"):
+                read_json(document, root)
+            with self.assertRaisesRegex(RegistryError, "DOCUMENT_NOT_FOUND"):
+                read_json(root / "missing.json", root)
+
+    def test_cli_validate_rejects_path_outside_root(self):
+        with tempfile.TemporaryDirectory() as outside:
+            document = Path(outside) / "candidate.json"
+            document.write_text('{"schema":"anything"}', encoding="utf-8")
+            stderr = io.StringIO()
+            with patch("sys.argv", ["registry", "validate", str(document)]):
+                with contextlib.redirect_stderr(stderr):
+                    self.assertEqual(main(), 1)
+            self.assertIn("REGISTRY_REJECTED RegistryError", stderr.getvalue())
+
+    @unittest.skipUnless(os.name == "nt", "Windows junction regression")
+    def test_windows_reparse_junction_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "target"
+            target.mkdir()
+            junction = root / "junction"
+            created = subprocess.run(
+                ["cmd", "/c", "mklink", "/J", str(junction), str(target)],
+                capture_output=True,
+            )
+            if created.returncode != 0:
+                self.skipTest("junction creation unavailable")
+            try:
+                with self.assertRaisesRegex(RegistryError, "SOURCE_LINK_FORBIDDEN"):
+                    safe_path(root, "junction")
+            finally:
+                subprocess.run(["cmd", "/c", "rmdir", str(junction)],
+                               capture_output=True)
 
     def test_source_lock_tampering_rejected_before_reading_sources(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -173,7 +219,7 @@ class RegistryTests(unittest.TestCase):
         for filename, document in (
             ("registry-v1.json", self.bundle), ("provision-plan-v1.json", self.plan),
         ):
-            schema = read_json(ROOT / "registry/schemas" / filename)
+            schema = read_json(ROOT / "registry/schemas" / filename, ROOT)
             self.assertEqual(set(schema["required"]), set(document))
             self.assertEqual(set(schema["properties"]), set(document))
             self.assertFalse(schema["additionalProperties"])

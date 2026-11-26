@@ -3,7 +3,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .core import build, canonical_bytes, provision_plan, read_json, verify_document
+from .core import ROOT, build, canonical_bytes, provision_plan, read_json, safe_path, verify_document
 
 
 def main():
@@ -13,7 +13,8 @@ def main():
     commands.add_parser("build", help="emit candidate registry and agent locks")
     commands.add_parser("plan", help="emit disabled, offline provision intentions")
     validate = commands.add_parser("validate", help="verify a previously emitted JSON")
-    validate.add_argument("document", type=Path)
+    validate.add_argument("document", type=Path,
+                          help="repository-relative path to a JSON artifact")
     args = parser.parse_args()
     try:
         if args.command == "verify":
@@ -23,7 +24,8 @@ def main():
                   % (bundle["summary"]["agents"], bundle["summary"]["packages"],
                      bundle["summary"]["assignments"], len(plan["agent_intents"])))
         elif args.command == "validate":
-            verify_document(read_json(args.document))
+            document_path = safe_path(ROOT, args.document.as_posix())
+            verify_document(read_json(document_path, ROOT))
             print("REGISTRY_DOCUMENT_OK")
         else:
             document = build() if args.command == "build" else provision_plan()

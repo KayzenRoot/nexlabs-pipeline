@@ -53,8 +53,20 @@ def _reject_constant(_value):
     raise RegistryError("NONFINITE_JSON_NUMBER")
 
 
-def read_json(path):
-    return json.loads(path.read_text(encoding="utf-8-sig"),
+def read_json(path, root):
+    """Read JSON only after resolving it beneath root without links or escapes."""
+    root = Path(root).resolve()
+    candidate = Path(path)
+    try:
+        resolved = candidate.resolve(strict=True)
+    except OSError as exc:
+        raise RegistryError("DOCUMENT_NOT_FOUND") from exc
+    try:
+        relative = resolved.relative_to(root)
+    except ValueError as exc:
+        raise RegistryError("UNSAFE_DOCUMENT_PATH") from exc
+    safe = safe_path(root, relative.as_posix())
+    return json.loads(safe.read_text(encoding="utf-8-sig"),
                       object_pairs_hook=_unique_object, parse_constant=_reject_constant)
 
 
@@ -73,7 +85,11 @@ def safe_path(root, relative):
     current = root
     for part in posix.parts:
         current = current / part
-        require(not _is_link(current), "SOURCE_LINK_FORBIDDEN")
+        try:
+            linked = _is_link(current)
+        except OSError as exc:
+            raise RegistryError("SOURCE_NOT_REGULAR") from exc
+        require(not linked, "SOURCE_LINK_FORBIDDEN")
     require(current.is_file() and current.resolve().is_relative_to(root.resolve()),
             "SOURCE_NOT_REGULAR")
     return current
@@ -113,7 +129,7 @@ def validate_dependencies(packages):
 def _verified_sources(root):
     path = safe_path(root, SOURCE_LOCK)
     require(sha256(path.read_bytes()) == SOURCE_LOCK_SHA256, "BASELINE_LOCK_DRIFT")
-    source_files = read_json(path)["files"]
+    source_files = read_json(path, root)["files"]
     require(len(source_files) == 364, "BASELINE_SOURCE_COUNT")
     for relative, expected in source_files.items():
         require(relative.startswith("sources/"), "UNSAFE_SOURCE_LOCK_ENTRY")
@@ -129,11 +145,11 @@ def _verified_sources(root):
 def build(root=ROOT):
     root = Path(root)
     hashes = _verified_sources(root)
-    policy = read_json(safe_path(root, "registry/policy.json"))
+    policy = read_json(safe_path(root, "registry/policy.json"), root)
     verify_policy(policy)
-    catalog = read_json(safe_path(root, CATALOG))
-    original = read_json(safe_path(root, f"{SR}/registry.json"))
-    bindings = read_json(safe_path(root, f"{SR}/agent-bindings.json"))
+    catalog = read_json(safe_path(root, CATALOG), root)
+    original = read_json(safe_path(root, f"{SR}/registry.json"), root)
+    bindings = read_json(safe_path(root, f"{SR}/agent-bindings.json"), root)
     with safe_path(root, f"{SR}/assignment-matrix.csv").open(
             encoding="utf-8-sig", newline="") as stream:
         rows = list(csv.DictReader(stream))
@@ -256,7 +272,7 @@ def provision_plan(root=ROOT, bundle=None):
     expected = build(root)
     if bundle is not None:
         require(canonical_bytes(bundle) == canonical_bytes(expected), "REGISTRY_LOCK_DRIFT")
-    agents = index(read_json(safe_path(root, CATALOG))["agents"], "id")
+    agents = index(read_json(safe_path(root, CATALOG), root)["agents"], "id")
 
     def depth(aid):
         seen = set()

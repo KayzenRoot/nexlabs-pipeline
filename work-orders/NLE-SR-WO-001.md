@@ -27,3 +27,7 @@ TESTS: python -m registry verify; python -m unittest discover -s tests -v; pytho
 
 DELIVERABLES: registry compiler, policy, schema envelopes, CLI, tests, Context Lock, same WO PR/evidence. REVIEW FORMAT: pt-BR, base/head, AC01-07, counts, security, CI, risks/verdict.
 STOP CONDITION: failed check or unresolved HIGH/CRITICAL, stale lock, new spend, unauthorized effect; no next WO until approved and merged.
+
+## Correction Delta CD-01.1 | 2026-11-26
+
+The first independent audit passed the 50 existing tests and all canonical counts, but found a HIGH security defect: the `validate` CLI passed an unrestricted path to `read_json`, allowing path traversal/outside-root reads, and SonarCloud failed with `pythonsecurity:S8707`. It also noted that the Windows symlink test skipped and the Context Lock/PR evidence were stale. The correction confines `read_json`/CLI validation to repository-relative regular files, rejects symlinks/junctions/reparse points and outside-root paths, converts missing components to controlled `RegistryError`s, and adds outside-root, CLI rejection and real Windows junction regressions. Revalidation: **53/53 tests**, validator 7/7, Windows CLI `verify/build/plan/validate` PASS, determinism unchanged. Final CI/Sonar/ECC and a new independent audit remain required before APPROVED. No runtime, Paperclip, model, import, VPS or spend effect.
