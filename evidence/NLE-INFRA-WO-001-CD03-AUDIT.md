@@ -100,4 +100,11 @@ The PowerShell suite covers existing targets, active directories, external paths
 
 **NOT APPROVED — BLOCKED ON CODEX AUTHENTICATION.**
 
-The infrastructure corrections, restore isolation, hidden-file backup coverage, container identity checks, local bind, claim read-back and test suite pass. Final code head `f1b0db6` passed `docs-validation` (run `45883754562`, 34/34 tests plus security scan), SonarCloud reports 0 open issues with an OK gate, and the ECC Security Evidence gate passed. The runtime does not have valid Codex subscription authentication, so AC16 is unmet and no agent execution can be qualified. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record.
+The infrastructure corrections, restore isolation, hidden-file backup coverage, container identity checks, local bind, claim read-back and test suite pass. Final evidence head `b7a20f4` passed `docs-validation` (run `45883919521`, 34/34 tests plus security scan), SonarCloud reports 0 open issues with an OK gate, and the ECC Security Evidence gate passed. The runtime does not have valid Codex subscription authentication, so AC16 is unmet and no agent execution can be qualified. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record.
+
+## 11. Independent read-only audit
+
+- An independent read-only agent audited code head `b7a20f4` and the evidence: verdict **APPROVED** for the CD-03 correction/evidence scope, no HIGH/CRITICAL findings.
+- It independently verified: no destructive teardown or expanded workflow permissions; restore guard ordering and target restrictions; .NET ZIP hidden-file coverage and `.codex/tmp` exclusion; container/image/identity and loopback checks; a real security scanner; honest claim PASS/Codex FAIL evidence; and all 44 SHA-256 plus 44 Git-blob fingerprints with zero mismatches.
+- It confirmed the Codex blocker and that **AC16 is NOT MET**.
+- Its two LOW documentation findings were corrected here: this section records the final `b7a20f4` CI run, and the secret-scan wording in the security evidence no longer implies e-mail/CPF/CNPJ rules that the committed scanner does not contain. A documentation-only commit follows; no code changed after the audited head.

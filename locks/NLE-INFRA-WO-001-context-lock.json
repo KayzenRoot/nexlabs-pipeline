@@ -7,7 +7,7 @@
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
   "head_at_context_capture": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
-  "head_note": "b7f447d is the CD-03 source-check HEAD; 0fca04a is the correction commit; d77b4e4 is the security-gate commit; f1b0db6 is the final code head with CI, Sonar and ECC read-back. This evidence/lock commit is appended on the same PR; final head and CI are verified externally because the lock cannot contain its own commit hash.",
+  "head_note": "b7f447d is the CD-03 source-check HEAD; 0fca04a corrections; d77b4e4 security gate; f1b0db6 scanner fix; b7a20f4 final evidence head, independently audited and CI-verified. This documentation-only follow-up records the LOW audit corrections. Canonical SHA-256/Git-blob identities capture this tree; the follow-up CI run is verified externally because the lock cannot contain its own commit hash.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -72,7 +72,7 @@
     "no_bypass": true
   },
   "ci": {
-    "status": "PASS_AT_F1B0DB6_RUN_45883754562; FINAL_EVIDENCE_COMMIT_RUN_PENDING",
+    "status": "PASS_AT_B7A20F4_RUN_45883919521; INDEPENDENT_AUDIT_APPROVED; FOLLOW_UP_CI_EXTERNAL",
     "previous_head_sha": "28cfe934638d97c656cb7ec050e6a5235221136f",
     "previous_run_id": 45877720820,
     "previous_conclusion": "success",
@@ -88,7 +88,10 @@
     "evidence_conclusion": "success",
     "final_code_head_sha": "f1b0db6f4e1b362715091dc60ffc3106dfbd483f",
     "final_code_run_id": 45883754562,
-    "final_code_conclusion": "success"
+    "final_code_conclusion": "success",
+    "final_evidence_head_sha": "b7a20f4422e1b9f400769ab39bd33f4d4bd43eb6",
+    "final_evidence_run_id": 45883919521,
+    "final_evidence_conclusion": "success"
   },
   "blockers": [
     "Codex subscription authentication is not valid at runtime; AC16 unmet",
@@ -97,7 +100,7 @@
     "Docker Desktop commercial-size eligibility requires owner attestation"
   ],
   "next_action": "Push corrections and evidence to PR #3, verify CI/Sonar, obtain independent read-only audit, then report blocked Codex auth. No merge, agent execution, VPS access, checkpoint promotion or next Work Order.",
-  "audit": "EXECUTOR_FINAL_AUDIT_COMPLETE; INDEPENDENT_FINAL_HEAD_AUDIT_PENDING",
+  "audit": "INDEPENDENT_READ_ONLY_AUDIT_APPROVED_AT_B7A20F4; LOW_DOC_FINDINGS_CORRECTED; CODEX_AUTH_BLOCKED",
   "merge": false,
   "deploy": "NOT_AUTHORIZED",
   "runtime_activation": false,
@@ -270,13 +273,13 @@
     "additional_spend_usd": 0
   },
   "canonical_git_blob_fingerprints": {
-    "docs/Checkpoint.md": "ac03439f19e46c1cbcc29c382c0d716ce1e1df33",
+    "docs/Checkpoint.md": "fd9a521df29ac68d4d41b7bb1b4b7861fdcc29a9",
     "docs/Decisions-Ledger.md": "2f36e4ae40ba9db7b1240cbbe88bf1970fd920bf",
     "docs/Backlog.md": "a2b9d69f74c095dcb376bc55428a667e3c55578d",
     "docs/Architecture.md": "6b22865933fa7a3c81ec913dacf96137237cae85",
     "docs/Deployment.md": "11b63e481c86bb8bcdd3007f6745e3cb9ea95b51",
     "docs/decisions-index.json": "460e93919dc8e9c63b0251c90f198c87a12285af",
-    "work-orders/NLE-INFRA-WO-001.md": "440b8113a5eac54e5a395de7f658d0b6dcea66a7",
+    "work-orders/NLE-INFRA-WO-001.md": "2f80b2db516e7add8baacad6123d4525c52f8a35",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "06981c4cb469b8066eeec173331c2d544f547166",
     "deploy/compose.yaml": "409f4684560ce8306781a984760cf7d78a80b193",
     "deploy/local/compose.yaml": "009ee029a27523730a40770c72c922cfc5b3c77b",
@@ -312,8 +315,8 @@
     "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
     "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
     "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "d202519b9ea9e909da82e7abef6e5f6aef57eed9",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "bc41c4899955f5ab78f17a1b5d6108ebdf5c918c"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "6c7cfd6603e149e63d770fcde78a7188cdb9906e",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "f8862bc36dc54193a2ee60ba7db0ecb12c91e619"
   },
   "verdict": "NOT_APPROVED_BLOCKED_CODEX_AUTH",
   "sonar": {
@@ -338,13 +341,13 @@
     "commercial_size_attestation": "OWNER_ATTESTATION_REQUIRED"
   },
   "canonical_fingerprints_sha256": {
-    "docs/Checkpoint.md": "293a157d08a8d9df714896ac74826a98fbf8b3a69171f6a9f00da0a922d4b0c8",
+    "docs/Checkpoint.md": "32b8dbe4a031b72c4406d1cc5821b2020f46a492409075746bc47fe036e6b79e",
     "docs/Decisions-Ledger.md": "07af059db1e75700fcd21fc235a1817f2163864c1a01628ba13edac1eb89f24a",
     "docs/Backlog.md": "52e32dbae8a72f00f0fa3d0eb41771877c95f54f9b27561818653b8d69def57e",
     "docs/Architecture.md": "9fc38e604e1d837fa8649a0fafdcb677801d5336925111940c2dad29c140fa3c",
     "docs/Deployment.md": "bd921537a08a5d00f857511ec27e85d0a047d0c926eb24c3a09e2dc7b3e32743",
     "docs/decisions-index.json": "d75c81f886ca54b0df79344894b2d853a89218198e6fa36f0f6bbd54790713b9",
-    "work-orders/NLE-INFRA-WO-001.md": "2f0473b4ee42a3d5e56db98a53ebdbc83ce710c7bf4ddfee9a099ea4bb01ed9f",
+    "work-orders/NLE-INFRA-WO-001.md": "e8cf3f9e8c48e320d36fbddadf9904337f28d5c35e3cce0563b420739664b5a7",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "31f1714fe74f1db00c026856c92a3aaa260fc945cdd3542829de4bc9ae7c4e49",
     "deploy/compose.yaml": "a88ba00caa17915b96510c7a4ec33ee1fd33a8fd3db3d8291721b64514d5eb66",
     "deploy/local/compose.yaml": "5656f89a67df28fc79268e3714d20c7fafe7a4f42019a7159ad2cf79f4952a54",
@@ -380,7 +383,19 @@
     "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
     "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94",
     "locks/source-lock.json": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "0abbe524d533c47dbe077bb84205d571d594860b14ad149f59eea0a665abc3be",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "302136a67f683354e89cef7014daec9c83e81944bd0e2f333228b3a15d3f7ef9"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "1b77e41fc101bb42771e7eec1421f9fbd690a0c93473688f7a8b6017af3668a8",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "18f55f7358e52d0271007438d8a8651d33675b5778ef4c86a776226494d2bf71"
+  },
+  "independent_audit": {
+    "verdict": "APPROVED",
+    "head": "b7a20f4422e1b9f400769ab39bd33f4d4bd43eb6",
+    "scope": "CD-03 correction/evidence",
+    "high_critical_findings": 0,
+    "low_findings": [
+      "final CI run b7a20f4 not recorded in lock/audit (corrected)",
+      "secret-scan wording implied e-mail/CPF/CNPJ rules not present in scanner (corrected)"
+    ],
+    "codex_blocker_confirmed": true,
+    "ac16_met": false
   }
 }

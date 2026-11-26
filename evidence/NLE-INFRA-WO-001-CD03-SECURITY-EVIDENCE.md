@@ -26,7 +26,7 @@ Scope: local Paperclip runtime, protected credentials, backup/restore isolation,
 - `BETTER_AUTH_SECRET` and `PAPERCLIP_TOOL_ACTION_SIGNING_SECRET` are stored outside Git at `D:\NexLabs\Paperclip\secrets\paperclip.env`.
 - File: 2 lines, 186 bytes; ACL protected (`AreAccessRulesProtected=True`, one owner ACE); values were never printed, logged or committed.
 - Container secret keys `instances/default/secrets/master.key` and `decision-signing.key` are included in protected backups and have owner-only ACL on the backup.
-- Secret scan of versioned files: 0 private keys, tokens, credentials in URLs, e-mails, CPF/CNPJ or 64-hex secret values.
+- Secret scan of versioned files: 0 private keys, tokens, credentials in URLs or 64-hex secret values. The committed CI scanner covers these categories; it does not include e-mail/CPF/CNPJ rules.
 
 ## 4. Backup and restore security
 
@@ -72,6 +72,8 @@ No issues were excluded or marked false-positive artificially. `bash -n scripts/
 - Additional spend: **US$0**. No CI paid runner, cloud provider or paid service was used.
 
 ## 8. Residual risks
+
+Independent read-only audit at `b7a20f4`: **APPROVED** for the CD-03 correction/evidence scope, no HIGH/CRITICAL findings; it independently confirmed the Codex blocker and AC16 NOT MET.
 
 1. Codex subscription auth is not present in the container (3 cancelled sessions, no auth file, CLI reports Not logged in); owner must complete it before any agent execution.
 2. Docker Desktop commercial licensing eligibility requires owner attestation.
