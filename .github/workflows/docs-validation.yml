@@ -32,5 +32,7 @@ jobs:
         run: python3 -m unittest discover -s tests -v
       - name: Compile offline registry and dry-run plan
         run: python3 -m registry verify
+      - name: Verify offline security control contracts
+        run: python3 -m security verify
       - name: Security regression scan
         run: python3 scripts/security/scan_repository.py
