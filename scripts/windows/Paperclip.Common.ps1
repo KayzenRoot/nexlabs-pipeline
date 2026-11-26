@@ -107,8 +107,23 @@ function Write-PaperclipSecrets {
     return $true
 }
 
+function Enable-PaperclipDockerCli {
+    if (Get-Command docker -ErrorAction SilentlyContinue) { return $true }
+    $candidates = @(
+        (Join-Path $env:ProgramFiles 'Docker\Docker\resources\bin')
+    )
+    foreach ($candidate in $candidates) {
+        $exe = Join-Path $candidate 'docker.exe'
+        if (Test-Path $exe) {
+            $env:Path = "$candidate;$env:Path"
+            return $true
+        }
+    }
+    return $false
+}
+
 function Test-PaperclipDocker {
-    if (-not (Get-Command docker -ErrorAction SilentlyContinue)) { return $false }
+    if (-not (Enable-PaperclipDockerCli)) { return $false }
     try {
         & docker version --format '{{.Server.Version}}' 2>$null | Out-Null
         return ($LASTEXITCODE -eq 0)
@@ -118,7 +133,7 @@ function Test-PaperclipDocker {
 }
 
 function Assert-PaperclipDocker {
-    if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+    if (-not (Enable-PaperclipDockerCli)) {
         throw 'DOCKER_CLI_MISSING: install Docker Desktop with WSL2 backend; this WO will not install it without owner authorization'
     }
     & docker version --format '{{.Server.Version}}' 2>$null | Out-Null
@@ -155,6 +170,7 @@ function Get-PaperclipComposeArguments {
     )
     $commandArgs = @(
         'compose',
+        '-p', 'nexlabs-paperclip',
         '--env-file', $SecretFile,
         '-f', (Join-Path $RepositoryRoot 'deploy\compose.yaml'),
         '-f', (Join-Path $RepositoryRoot 'deploy\local\compose.yaml')
@@ -171,12 +187,23 @@ function Invoke-PaperclipCompose {
         [switch]$Quiet
     )
     $arguments = Get-PaperclipComposeArguments -RepositoryRoot $RepositoryRoot -SecretFile $SecretFile -ComposeCommand $ComposeCommand
-    if ($Quiet) {
-        & docker @arguments 2>&1 | Out-Null
-    } else {
-        & docker @arguments
+    $previousProjectName = $env:COMPOSE_PROJECT_NAME
+    $env:COMPOSE_PROJECT_NAME = 'nexlabs-paperclip'
+    try {
+        if ($Quiet) {
+            & docker @arguments 2>&1 | Out-Null
+        } else {
+            & docker @arguments
+        }
+        $exitCode = $LASTEXITCODE
+    } finally {
+        if ($null -eq $previousProjectName) {
+            Remove-Item Env:COMPOSE_PROJECT_NAME -ErrorAction SilentlyContinue
+        } else {
+            $env:COMPOSE_PROJECT_NAME = $previousProjectName
+        }
     }
-    if ($LASTEXITCODE -ne 0) { throw "COMPOSE_COMMAND_FAILED: $($ComposeCommand -join ' ')" }
+    if ($exitCode -ne 0) { throw "COMPOSE_COMMAND_FAILED: $($ComposeCommand -join ' ')" }
 }
 
 function Get-PaperclipPortState {
@@ -266,4 +293,19 @@ function Expand-PaperclipBackupArchive {
     New-PaperclipDirectory -Path $TargetDir
     Expand-Archive -LiteralPath $ArchivePath -DestinationPath $TargetDir -Force:$Force
     return $TargetDir
+}
+
+function Repair-PaperclipRestoredPermissions {
+    param([string]$DataDir)
+    if (-not (Enable-PaperclipDockerCli)) { return $false }
+    $dbDir = Join-Path $DataDir 'instances\default\db'
+    if (-not (Test-Path $dbDir)) { return $false }
+    $repositoryRoot = Get-PaperclipRepositoryRoot
+    $image = Get-PaperclipImageReference -RepositoryRoot $repositoryRoot
+    & docker image inspect $image 2>$null | Out-Null
+    if ($LASTEXITCODE -ne 0) { return $false }
+    $mount = $DataDir.Replace('\', '/')
+    & docker run --rm --entrypoint sh -v "${mount}:/paperclip" $image -c "chown -R node:node /paperclip/instances/default 2>/dev/null || true; chmod 700 /paperclip/instances/default; chmod -R go-rwx /paperclip/instances/default/db" 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'RESTORE_PERMISSION_REPAIR_FAILED' }
+    return $true
 }

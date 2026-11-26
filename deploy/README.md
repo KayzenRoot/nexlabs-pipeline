@@ -87,9 +87,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows/Restore-Pape
 
 The backup script stops Paperclip gracefully, archives the complete data
 directory, writes a SHA-256 sidecar, then starts Paperclip again. The restore
-script verifies the sidecar and expands into an **isolated** target. It does not
-replace live data automatically; switching live data is a manual, reviewed
-operation after validation.
+script verifies the sidecar, expands into an **isolated** target, and repairs the
+embedded PostgreSQL ownership/permissions (`0700`) using the pinned image when
+Docker is available. It does not replace live data automatically; switching live
+data is a manual, reviewed operation after validating the restored instance.
 
 ## Codex preparation
 

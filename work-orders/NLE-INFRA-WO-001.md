@@ -154,5 +154,8 @@ Install and validate the first functional Paperclip instance **locally on this W
 - If Docker is available: `docker compose config`, image architecture inspection, start, healthcheck, persistence/restart, backup/restore, localhost-only exposure.
 - `python3 scripts/validate_sources.py`; `python3 -m unittest discover -s tests -v`; GitHub CI `docs-validation`.
 
+### Runtime validation result | 2026-11-26
+Docker Desktop 4.100.1 was installed from the official installer (SHA-256 `98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2`), engine 29.9.3. The pinned Paperclip container `nexlabs-paperclip-paperclip-1` is healthy; `/api/health` returns 200; the port is bound only to `127.0.0.1:3100`; the UI returns 200. Persistence across stop/start, full backup with SHA-256, isolated restore with permission repair, and a second restored instance health 200 were validated. The browser was opened for the owner to claim the instance; no account was created. Codex subscription authentication remains pending owner action. No agent, workflow, heartbeat, VPS, deploy or spend was activated.
+
 ### Stop conditions CD-02
 Stop without installing or reconfiguring if Docker Desktop/WSL2 is absent or requires administrator privileges not authorized; the image lacks the required architecture; port 3100 is occupied without a safe alternative; a secret would be exposed; data loss risk; authentication requires human action; a subscription/spend is required; or any HIGH/CRITICAL risk appears.

@@ -38,7 +38,7 @@ try {
     }
 
     Invoke-PaperclipCompose -RepositoryRoot $repositoryRoot -SecretFile $paths.SecretFile -ComposeCommand @('up', '-d')
-    if (-not (Wait-PaperclipHealth -Port $Port -TimeoutSeconds 180)) {
+    if (-not (Wait-PaperclipHealth -Port $Port -TimeoutSeconds 420)) {
         Write-Error "PAPERCLIP_HEALTH_TIMEOUT: inspect docker compose ps and container logs"
         exit 5
     }

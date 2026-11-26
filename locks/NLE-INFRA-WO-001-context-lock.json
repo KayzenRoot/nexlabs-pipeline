@@ -1,13 +1,13 @@
 {
   "work_order": "NLE-INFRA-WO-001",
   "delta": "CD-02",
-  "status": "IMPLEMENTATION_APPROVED_RUNTIME_BLOCKED_DOCKER_ABSENT",
+  "status": "LOCAL_RUNTIME_HEALTHY_PENDING_OWNER_CLAIM_AND_CODEX_AUTH",
   "decision": "NLE-ADR-INFRA-011 (LOCAL FIRST)",
   "repository": "KayzenRoot/nexlabs-pipeline",
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
   "head_at_context_capture": "7e3fd8f71fb283274301cfdab714826c046f2917",
-  "head_note": "Lock records the audited implementation commit 6a7aaa2; the post-audit hardening commit and final head are recorded in the CD-02 Evidence Bundle/PR #3 comment, without self-reference.",
+  "head_note": "Lock records audited implementation 6a7aaa2, correction 8f6af9e and runtime validation on 8f6af9e; the runtime evidence commit and final head are recorded in the CD-02 Evidence Bundle/PR #3 comment.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -60,31 +60,31 @@
     "external_effects": false
   },
   "canonical_fingerprints": {
-    "docs/Checkpoint.md": "7e9b58a07c3fa414a0eb440e002e2650f9c86437c457dc25573be5402c8f4761",
+    "docs/Checkpoint.md": "5c96dd513773971a0999a04394f16f74bad8d4e20d45b22d291a58164ae0052b",
     "docs/Decisions-Ledger.md": "07af059db1e75700fcd21fc235a1817f2163864c1a01628ba13edac1eb89f24a",
-    "docs/Backlog.md": "7bc359df7fb3eece35829e1879b7c352c995f8797fea3391804082b630910c1f",
+    "docs/Backlog.md": "280b7a0adfaa29b5d26133811f811b6d5298d22e9800d374bc201496b95d9b17",
     "docs/Architecture.md": "9fc38e604e1d837fa8649a0fafdcb677801d5336925111940c2dad29c140fa3c",
-    "docs/Deployment.md": "a483ee400b68500d1e51f4bfadbe8664daf9daa9769e670e966c5f1bcd9da6af",
+    "docs/Deployment.md": "5f5ebf9f41c16aa4444dcdc7681c08828f659f1548a29cc028e60dc23731b906",
     "docs/decisions-index.json": "d75c81f886ca54b0df79344894b2d853a89218198e6fa36f0f6bbd54790713b9",
-    "work-orders/NLE-INFRA-WO-001.md": "28f296426b171ea2ff4481efcbc806f0aca7dcba9015fee252528d410209eb7a",
+    "work-orders/NLE-INFRA-WO-001.md": "5f494b16bd0c3463b07a150d5f7741edcad5113e425cfdf8fe9433b0113e5ecb",
     "prompts/NLE-INFRA-WO-001-CODEX.md": "31f1714fe74f1db00c026856c92a3aaa260fc945cdd3542829de4bc9ae7c4e49",
-    "deploy/compose.yaml": "64183169bb8e6e14f9c3af3d13f68dd8125fa88dece3a74ece670cbdd9155f27",
+    "deploy/compose.yaml": "a88ba00caa17915b96510c7a4ec33ee1fd33a8fd3db3d8291721b64514d5eb66",
     "deploy/local/compose.yaml": "5656f89a67df28fc79268e3714d20c7fafe7a4f42019a7159ad2cf79f4952a54",
     "deploy/vps/compose.yaml": "fdc8128252b3da00a82b8c8266e5a4241cd65ef0ce6f8fd4b7676cbaf5b98285",
     "deploy/image-lock.json": "bb23e4c2d16baa100a94ad1e7bc73b2d25e7740625d7daeb55ba7669607f055d",
-    "deploy/README.md": "1ed2cc0c0e7b61be35edb4d83d8fe7af715445938c9be1de5e99eb35d33fd96a",
+    "deploy/README.md": "cafac2b82d156b4e27c39ebd4754c718d59a47d5187ae3396925326add2a197a",
     "deploy/local/README.md": "5d5c4c8a320305dd410dcdf76c041b741a6b15523fd804395d96baaff09ffe79",
     "deploy/vps/README.md": "10b619af07f6023373b293665893b8a921f3573cc1220c54665256fe143f9efe",
     "deploy/local/codex/README.md": "a6141377e7745076872c64f5b2b1c8cbd27283ec200cdf405310d5840dcd18d3",
     "deploy/local/agents/README.md": "2d0a67f1b92a1c6bd90c349eef41dd2d70926ba4a3aae46300798db1482c9419",
     ".gitignore": "c46658c9045932d921107b03b09126deba959dfdd23d38f0c59365a8bd6f84fc",
-    "scripts/windows/Paperclip.Common.ps1": "2fe2d1d5c98936d8ef68d8bb768a19ff9593f13edb22537ec863d805a24de779",
+    "scripts/windows/Paperclip.Common.ps1": "fd54dc410171c60311539884d4c88d18a3282fd6b819fce5d69d93425833b6dc",
     "scripts/windows/Initialize-PaperclipSecrets.ps1": "fd85547d14e57ee55c3f9d575bd2f16167c0927f57620c0e5fcead4a8d1ab452",
-    "scripts/windows/Start-Paperclip.ps1": "fa5329aa2ce92808775f91defe2afbb8b7c0a0dde6ac9de250274176641d5651",
+    "scripts/windows/Start-Paperclip.ps1": "caff245f22cf7d83c9fe6160cece88d10efaf11d7160bc396d324375b198311f",
     "scripts/windows/Stop-Paperclip.ps1": "c33f3b59883d517a6fbaf88b69d1f80b2b7f5cf0c4680de53c119111a2713d97",
     "scripts/windows/Get-PaperclipStatus.ps1": "2732077b850167fe19e87cd0f349e98e2b0eb66578f86b3ce2a4de6d06f10d9e",
     "scripts/windows/Backup-Paperclip.ps1": "37a613df59bedb59f6e48a916efdf271413d73f315b3a8732e3eda0a8280adf3",
-    "scripts/windows/Restore-Paperclip.ps1": "669fd0d0ad407ed914e767199e86283268f3efaf8be4635bac9b404341ebd8b0",
+    "scripts/windows/Restore-Paperclip.ps1": "a36dd3fa9aa8bf46a7384025167f88098f3888e52f65a8865ff2377a1b24d2db",
     "scripts/windows/Test-PaperclipDeployment.ps1": "c2092046777db8593cae7d799883b7b447286db8603643645be90d130a320efd",
     "scripts/windows/README.md": "aee7a7c6458a165bde8c2e877379b1fe865c4e22e6b71d9c3ba70956c865d3a8",
     "tests/deployment/test_deploy_contract.py": "97e82e875be5ba9c48b59b4ea7dc8309a5f804ecec2a8ac64299e294e305b9fb",
@@ -99,12 +99,15 @@
     "compose_yaml_parse": "PASS",
     "docker_compose_config": "BLOCKED_DOCKER_ABSENT",
     "paperclip_start_health": "BLOCKED_DOCKER_ABSENT",
-    "persistence_restart": "BLOCKED_DOCKER_ABSENT",
+    "persistence_restart": "PASS",
     "container_backup_restore": "BLOCKED_DOCKER_ABSENT",
-    "localhost_exposure": "STATIC_PASS_RUNTIME_NOT_RUN",
+    "localhost_exposure": "PASS_127_0_0_1",
     "secret_scan": "PASS",
     "restore_requires_sidecar": "PASS_FAIL_CLOSED",
-    "git_diff_check": "PASS_AFTER_WHITESPACE_CORRECTION"
+    "git_diff_check": "PASS_AFTER_WHITESPACE_CORRECTION",
+    "runtime_health": "PASS_200",
+    "backup": "PASS",
+    "restore_isolated": "PASS_200"
   },
   "governance": {
     "main_protected": true,
@@ -115,20 +118,17 @@
   "ci": {
     "status": "PASS",
     "workflow": "docs-validation",
-    "run_id": 45845361323,
-    "run_url": "https://github.com/KayzenRoot/nexlabs-pipeline/actions/runs/45845361323",
-    "head_sha": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
+    "run_id": 45848372035,
+    "run_url": "https://github.com/KayzenRoot/nexlabs-pipeline/actions/runs/45848372035",
+    "head_sha": "8f6af9ebda0799d8395af64609574788a8586a2f",
     "conclusion": "success",
     "runner": "ubuntu-24.04 (standard GitHub-hosted)",
     "validator_groups": "7 PASS",
     "tests": "26/26 PASS"
   },
-  "blockers": [
-    "Docker Desktop is not installed and the docker CLI/daemon is unavailable.",
-    "Installing Docker Desktop or enabling Windows features requires owner-authorized administrative action; this Work Order did not perform it."
-  ],
-  "next_action": "Owner installs/authorizes Docker Desktop with WSL2 backend; then run Start-Paperclip.ps1, health, persistence/restart, backup/restore, and localhost exposure checks; update Evidence Bundle.",
-  "audit": "APPROVED_IMPLEMENTATION_RUNTIME_BLOCKED",
+  "blockers": [],
+  "next_action": "Owner completes claim and Codex subscription authorization; run independent runtime audit; then checkpoint/merge decision. Do not start NLE-SR-WO-001 yet.",
+  "audit": "IMPLEMENTATION_APPROVED_RUNTIME_VALIDATED_BY_EXECUTOR_RUNTIME_AUDIT_PENDING",
   "merge": false,
   "deploy": "NOT_AUTHORIZED",
   "runtime_activation": false,
@@ -143,11 +143,49 @@
   "generated_on": "2026-11-26",
   "head_after_implementation": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
   "head_audited": "6a7aaa22cf4f7308f98d78abb6b962dc93ff8f05",
-  "audit_note": "Independent read-only agent audit of 6a7aaa2: implementation APPROVED; runtime BLOCKED due Docker Desktop absent. LOW-1 whitespace, LOW-2 lock freshness, LOW-3 restore sidecar fail-closed and LOW-4 ACL/.gitignore hardening were corrected in the post-audit commit; no CRITICAL/HIGH/MEDIUM.",
+  "audit_note": "Independent agent audit of 6a7aaa2 approved implementation; runtime was blocked at audit time. Runtime was validated by the executor on 8f6af9e after owner-authorized Docker installation. Independent runtime audit pending.",
   "corrections": [
     "Removed pre-existing trailing whitespace from the Work Order; full-range diff-check expected clean after commit.",
     "Anchored lock to audited/corrective heads and recorded CI run 45845361323.",
     "Restore now fails closed when the SHA-256 sidecar is missing.",
     "ACL now purges non-owner explicit ACEs via icacls reset; .gitignore covers arbitrary paperclip.env/data/backup paths."
+  ],
+  "head_corrective": "8f6af9ebda0799d8395af64609574788a8586a2f",
+  "head_runtime_validation": "8f6af9ebda0799d8395af64609574788a8586a2f",
+  "runtime": {
+    "docker_desktop": "4.100.1",
+    "installer_sha256": "98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2",
+    "engine": "29.9.3",
+    "container": "nexlabs-paperclip-paperclip-1",
+    "image": "ghcr.io/paperclipai/paperclip:2026.1117.0@sha256:bdf38d10544dc6c831e16dc027f23ad586353ef3be1a1b2c6979e63b956aceb1",
+    "healthy": true,
+    "health_http": 200,
+    "ui_http": 200,
+    "bind": "127.0.0.1:3100",
+    "bootstrap_status": "bootstrap_pending",
+    "browser_opened": true,
+    "persistence": {
+      "stop_start": "PASS",
+      "data_files": 3540,
+      "data_bytes_approx": 89105365
+    },
+    "backup": {
+      "file": "paperclip-data-20261126T180447Z.zip",
+      "size_mib": 12.96,
+      "sha256": "b1dea3e66ee2f523de672bd750be546301aa8673529798e2730bc1e3ebbb8106"
+    },
+    "restore_isolated": {
+      "health_http": 200,
+      "port": 3101,
+      "permissions_repaired": true
+    },
+    "owner_claim": "PENDING",
+    "codex_subscription_auth": "PENDING",
+    "docker_license": "Accepted by official installer on explicit owner instruction; no Docker account or subscription created; commercial licensing to be confirmed by owner."
+  },
+  "pending_actions": [
+    "Owner claims the Paperclip instance in the browser (no account created by executor).",
+    "Owner authorizes Codex subscription authentication in the browser.",
+    "Independent runtime audit and final checkpoint/merge authorization."
   ]
 }

@@ -1,6 +1,6 @@
 # Evidence Bundle | NLE-INFRA-WO-001/CD-02 — LOCAL FIRST
 
-Status: **IMPLEMENTATION_APPROVED_RUNTIME_BLOCKED_DOCKER_ABSENT**
+Status: **LOCAL_RUNTIME_HEALTHY_PENDING_OWNER_CLAIM_AND_CODEX_AUTH**
 Data: 2026-11-26
 Repositório: `KayzenRoot/nexlabs-pipeline`
 Branch: `work/nle-infra-wo-001`
@@ -14,7 +14,7 @@ Decisão: **NLE-ADR-INFRA-011 — LOCAL FIRST**.
 
 A estratégia LOCAL FIRST foi registrada; o Context Lock CD-01 anterior foi marcado STALE e um novo Context Lock CD-02 foi gerado. A estrutura portátil de deployment, a imagem oficial pinada por digest multi-arquitetura, os scripts PowerShell, os testes de contrato e a documentação operacional foram implementados. Os testes estáticos/offline e o Source Pack passaram.
 
-O Paperclip **não foi iniciado** porque **Docker Desktop não está instalado** e o CLI/daemon Docker não existe neste host. A instalação de Docker Desktop ou a habilitação de recursos do Windows exigiria ação administrativa não autorizada. O runtime permanece **BLOCKED**, conforme a stop condition do Work Order. Nenhum agente, workflow, heartbeat, API key, deploy, VPS, gasto ou efeito externo foi ativado.
+Após autorização explícita do proprietário, **Docker Desktop 4.100.1** foi instalado do instalador oficial (SHA-256 verificado), o engine 29.9.3 iniciou e o **Paperclip está rodando healthy** em `127.0.0.1:3100`, com health 200, UI 200, persistência/restart, backup e restauração isolada validados. O navegador foi aberto para o claim da instância; nenhuma conta foi criada. Claim do proprietário e autenticação Codex por assinatura permanecem pendentes. Nenhum agente, workflow, heartbeat, API key, deploy VPS, gasto ou efeito externo foi ativado.
 
 ## 2. Source Check e host
 
@@ -27,9 +27,9 @@ O Paperclip **não foi iniciado** porque **Docker Desktop não está instalado**
 | RAM | 24.591.810.560 bytes |
 | Virtualização | firmware habilitado |
 | WSL2 | Ubuntu-26.04, versão 2, estado Stopped |
-| Docker Desktop | **AUSENTE** (`Docker Desktop.exe` não existe) |
-| Docker CLI/daemon | **AUSENTE** (`docker` retorna 127) |
-| Porta 3100 | **LIVRE** (sem listener) |
+| Docker Desktop | **4.100.1 instalado**; instalador oficial SHA-256 `98b24fd6…39b2` |
+| Docker engine | **29.9.3**; WSL2 backend |
+| Porta 3100 | **127.0.0.1:3100**, container healthy |
 | Disco | C: 29,96 GiB livres; D: 119,87 GiB livres |
 
 ## 3. Contratos oficiais do Paperclip
@@ -83,15 +83,16 @@ PostgreSQL externo futuro: `postgres:17-alpine` no índice `sha256:f9cf3e1f0066f
 | `Test-PaperclipDeployment.ps1` offline | 30/30 PASS; exit 0 |
 | Restore com sidecar ausente | FAIL-CLOSED `BACKUP_SIDECAR_MISSING` |
 | Parse YAML dos 3 Compose | PASS; services `paperclip`, `paperclip`, `db+paperclip` |
-| `docker version` | BLOCKED — comando ausente, exit 127 |
-| `docker compose version` | BLOCKED — comando ausente, exit 127 |
-| `Start-Paperclip.ps1` | FAIL-CLOSED `DOCKER_CLI_MISSING`, exit 2 |
-| `Stop-Paperclip.ps1` | FAIL-CLOSED `DOCKER_CLI_MISSING`, exit 2 |
-| `Get-PaperclipStatus.ps1` | `DOCKER_UNAVAILABLE`, exit 2 |
-| Porta 3100 | LIVRE |
-| Backup/restore offline | PASS, incluindo sentinelas e detecção de tamper |
-| Exposição | Configuração estática `127.0.0.1:3100`; runtime não executado |
-| GitHub Actions | run `45845361323`, success no HEAD `6a7aaa2`, job `docs-validation`, labels `["ubuntu-24.04"]`, 26/26 testes |
+| Docker Desktop | **4.100.1 instalado**; engine **29.9.3** |
+| Container | `nexlabs-paperclip-paperclip-1` **healthy**; `127.0.0.1:3100->3100/tcp` |
+| `/api/health` | **200**; status ok; deploymentMode authenticated; exposure private; bootstrap_pending |
+| UI `http://localhost:3100/` | **200** |
+| Persistência stop/start | PASS; 3.540 arquivos / ~89 MB; health 200 após restart |
+| Backup | `paperclip-data-20261126T180447Z.zip`, 12,96 MiB, SHA-256 `b1dea3e66ee2f523de672bd750be546301aa8673529798e2730bc1e3ebbb8106` |
+| Restore isolado | PASS; permissões `0700` reparadas; instância restaurada **healthy 200** na porta 3101 |
+| Exposição | somente `127.0.0.1:3100` |
+| Owner claim / Codex | navegador aberto; `bootstrap_pending`; claim e autenticação por assinatura pendentes |
+| GitHub Actions | run `45845361323` success em `6a7aaa2` (auditado) e run `45848372035` success em `8f6af9e`; `docs-validation`, labels `["ubuntu-24.04"]`, 26/26 testes |
 | `git diff --check` | Limpo no diff do CD-02 e no range completo após remover whitespace histórico do WO |
 | Source Pack | 364/364 + 6 ZIPs; 105/92/1110/1071/62/35 preservados |
 
@@ -106,18 +107,18 @@ Os AC01–AC09 originais do CD-01 são preservados como histórico read-only. O 
 | AC12 local loopback/persistência/health | **PASS estático** | `127.0.0.1:3100`, volume, `/api/health` |
 | AC13 segredos fora do Git/protegidos | **PASS** | 2 secrets, ACL protegida, valores não registrados |
 | AC14 scripts e segurança offline | **PASS** | 30/30 self-test; restore fail-closed; sem `down -v`, prune ou force-recreate |
-| AC15 runtime start/health/persistência/restart/backup | **BLOCKED_DOCKER_ABSENT** | Docker Desktop/CLI ausente; nenhuma instalação administrativa executada |
-| AC16 Codex preparado | **PASS documental** | `codex_local`, assinatura, sem API key, sem cópia de auth |
+| AC15 runtime start/health/persistência/restart/backup | **PASS** | Paperclip healthy; health 200; persistência/restart; backup e restore isolado validados |
+| AC16 Codex preparado | **PASS parcial** | `codex_local`/assinatura preparado; sem API key/cópia de auth; autenticação pendente do proprietário |
 | AC17 VPS preparada | **PASS documental** | Compose externo PostgreSQL/ARM64; sem SSH/deploy |
 | AC18 catálogo preservado | **PASS** | 105/92/1110/1071/62/35; sem importação/ativação |
-| AC19 testes/CI/auditoria/evidência | **PASS*** | 7 PASS + 26/26 CI + 30/30 offline; auditoria independente APPROVED na implementação e BLOCKED no runtime; ver abaixo |
+| AC19 testes/CI/auditoria/evidência | **PASS*** | 7 PASS + 26/26 CI + 30/30 offline; auditoria independente APPROVED na implementação; runtime validado pelo executor; auditoria de runtime pendente |
 
 ## 7.1 Auditoria independente
 
 Auditoria read-only por agente separado no HEAD `6a7aaa2`:
 
 - **Implementação: APPROVED**, com achados LOW não bloqueantes.
-- **Runtime: BLOCKED** — Docker Desktop/CLI ausente; Paperclip não iniciado; health/persistência não comprovados.
+- **Runtime na auditoria: BLOCKED** — Docker Desktop/CLI estava ausente naquele momento. Após autorização do proprietário, Docker Desktop 4.100.1 foi instalado e o runtime foi validado pelo executor; auditoria independente de runtime ainda pendente.
 - Sem achados CRITICAL/HIGH/MEDIUM.
 - LOW-1 trailing whitespace: corrigido no WO; range completo limpo após o commit corretivo.
 - LOW-2 Context Lock não ancorado ao HEAD final/CI: corrigido com `head_audited`, `head_after_implementation`, CI `45845361323` e run de testes.
@@ -126,30 +127,26 @@ Auditoria read-only por agente separado no HEAD `6a7aaa2`:
 - Jev 1.14.0: 6/6 claims verificadas.
 - A auditoria é de agente, **não é aprovação humana**; merge/promoção seguem não autorizados.
 
-## 8. Bloqueio e ação necessária
+## 8. Runtime validado e pendências
 
-**BLOCKED_DOCKER_DESKTOP_ABSENT.** O host tem Windows 11, WSL2 e virtualização, mas não tem Docker Desktop nem Docker CLI/daemon. Instalar Docker Desktop/habilitar recursos exige ação administrativa e provavelmente reinício, o que este Work Order não executa sem autorização.
-
-Ação mínima do proprietário:
-1. Autorizar/instalar Docker Desktop com backend WSL2 neste Windows 11.
-2. Confirmar `docker version` e `docker compose version`.
-3. Executar `scripts/windows/Initialize-PaperclipSecrets.ps1` (os segredos já existem; não rotacionar).
-4. Executar `scripts/windows/Start-Paperclip.ps1`.
-5. Abrir `http://localhost:3100`, reivindicar a instância no navegador e **não** criar agentes.
-6. Executar status, parada/início para persistência, backup, restauração isolada e verificação de exposição.
-7. Atualizar o Evidence Bundle com run de CI, health e logs; então auditoria independente e eventual APPROVED.
-
-Nenhum acesso à VPS, SSH, firewall/NSG/DNS, deploy ou segredo remoto foi executado.
+- Docker Desktop **4.100.1** instalado do instalador oficial (SHA-256 `98b24fd6f56313899953ca4d2ed05645d69963b598143b75c6585fa4f7f639b2`); engine **29.9.3**.
+- Container `nexlabs-paperclip-paperclip-1` **healthy**; `/api/health` **200**; UI **200**; porta somente `127.0.0.1:3100`.
+- Persistência stop/start: 3.540 arquivos/~89 MB; health 200 após restart.
+- Backup completo: 12,96 MiB; SHA-256 `b1dea3e66ee2f523de672bd750be546301aa8673529798e2730bc1e3ebbb8106`.
+- Restore isolado: permissões `0700` reparadas; instância restaurada **healthy 200** na porta 3101; container temporário removido.
+- Navegador aberto em `http://localhost:3100`; `bootstrap_pending`; nenhuma conta criada. **Claim do proprietário e autenticação Codex por assinatura pendentes.**
+- Docker Desktop foi instalado com `--accept-license` por instrução explícita do proprietário; nenhuma conta, assinatura ou cobrança Docker foi criada. Licenciamento comercial deve ser confirmado pelo proprietário.
+- Nenhum acesso à VPS, SSH, firewall/NSG/DNS, deploy remoto, agente, workflow, heartbeat, API key ou gasto.
 
 ## 9. Checkpoint Delta proposto
 
-**`IMPLEMENTATION_APPROVED_RUNTIME_BLOCKED_DOCKER_ABSENT`**
+**`LOCAL_RUNTIME_HEALTHY_PENDING_OWNER_CLAIM_AND_CODEX_AUTH`**
 
-- Decisão LOCAL FIRST registrada; implementação aprovada pela auditoria independente com achados LOW corrigidos; testes estáticos/offline completos.
-- Runtime Paperclip não instalado por ausência de Docker Desktop; bloqueio externo explícito.
+- Implementação aprovada; runtime local healthy; persistência/backup/restore validados.
+- Claim do proprietário e Codex por assinatura pendentes.
 - Nenhuma promoção de checkpoint, merge ou avanço para NLE-SR-WO-001.
-- Próximo WO após autorização e runtime validado: **NLE-SR-WO-001** (registry schema, locks, quarentena e validador). Não iniciar.
+- Próximo WO após autorização do proprietário: **NLE-SR-WO-001** (registry schema, locks, quarentena e validador). Não iniciar.
 
 ## 10. Veredito
 
-**BLOCKED** no runtime, com **implementação APPROVED** pela auditoria independente (agente read-only; não é aprovação humana). O bloqueio é exclusivamente o pré-requisito Docker Desktop/WSL2. A implementação está preparada, os testes locais/CI passam e os segredos estão protegidos; o Paperclip não foi iniciado e nenhuma evidência de health, persistência ou restart de runtime é declarada.
+**LOCAL_RUNTIME_HEALTHY** — implementação **APPROVED** pela auditoria independente e runtime local validado pelo executor. Paperclip está rodando em `127.0.0.1:3100`, com health 200, persistência, backup e restore isolado comprovados. Claim da instância e autenticação Codex por assinatura permanecem pendentes de ação do proprietário. Não é aprovação humana, não é merge e não conclui a NexLabs AI Enterprise v1.0.

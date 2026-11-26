@@ -43,8 +43,8 @@ O ZIP completo foi localizado, verificado e extraído; 364/364 hashes conferem c
 ## Checkpoint Delta candidato | NLE-INFRA-WO-001/CD-02 (não promovido)
 - Decisão: NLE-ADR-INFRA-011 (LOCAL FIRST). O proprietário autorizou instalar/validar Paperclip localmente primeiro; VPS, SSH e deploy remoto permanecem fora de escopo.
 - Estado: artefatos de deployment implementados (compose base/local/VPS, imagem pinada por índice multi-arquitetura, scripts PowerShell, testes de contrato, documentação, Context Lock novo). O Context Lock CD-01 anterior foi marcado STALE e preservado em `locks/history/`.
-- Runtime: **BLOCKED_DOCKER_DESKTOP_ABSENT**. Docker Desktop e `docker` CLI não estão instalados; WSL2 existe (Ubuntu-26.04, versão 2) e a virtualização está habilitada. A instalação exige ação administrativa não autorizada e não foi executada.
-- Auditoria independente: **implementação APPROVED** (agente read-only; achados LOW corrigidos); runtime BLOCKED no pré-requisito Docker. Não é aprovação humana.
+- Runtime: **LOCAL_RUNTIME_HEALTHY_PENDING_OWNER_CLAIM_AND_CODEX_AUTH**. Docker Desktop 4.100.1 instalado; engine 29.9.3; container `nexlabs-paperclip-paperclip-1` healthy; `/api/health` 200; porta apenas `127.0.0.1:3100`; persistência, restart, backup e restauração isolada validados. O navegador foi aberto para claim da instância; nenhuma conta foi criada. Codex por assinatura permanece pendente de autorização no navegador.
+- Auditoria independente: **implementação APPROVED** (agente read-only; achados LOW corrigidos); runtime validado pelo executor, auditoria independente de runtime pendente. Não é aprovação humana.
 - Sem segredos no Git; os dois segredos locais foram gerados fora do repositório em diretório protegido, com valores não registrados.
-- Nenhum merge, deploy, agente, workflow, heartbeat, efeito externo ou gasto. Promoção/merge somente após autorização do proprietário e validação real de runtime.
+- Nenhum merge, deploy VPS, agente, workflow, heartbeat, efeito externo ou gasto. Promoção/merge somente após claim do proprietário, Codex autorizado e auditoria final.
 

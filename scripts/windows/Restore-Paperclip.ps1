@@ -20,6 +20,12 @@ try {
     Expand-PaperclipBackupArchive -ArchivePath $archive -TargetDir $target -Force:$Force
     $entries = @(Get-ChildItem -LiteralPath $target -Force)
     if ($entries.Count -eq 0) { throw 'RESTORE_EMPTY_TARGET' }
+    $repaired = Repair-PaperclipRestoredPermissions -DataDir $target
+    if ($repaired) {
+        Write-Output 'RESTORE_PERMISSIONS_REPAIRED'
+    } else {
+        Write-Output 'RESTORE_PERMISSIONS_NOT_REPAIRED_DOCKER_OR_IMAGE_UNAVAILABLE'
+    }
     Write-Output "RESTORE_OK target=$target entries=$($entries.Count)"
     Write-Output 'LIVE_DATA_NOT_REPLACED: validate the isolated restore before any manual swap'
     exit 0
