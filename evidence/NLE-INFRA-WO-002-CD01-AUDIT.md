@@ -70,10 +70,11 @@ The independent security review also found a real authorization gap not reported
 
 ### AC08 CI evidence
 
-- Run `45908006041` at corrected HEAD `fb6fa8d` has **both** jobs success:
+- Run `45908334436` at final evidence HEAD `578c273` has **both** jobs success:
   - `docs-validation` on `ubuntu-24.04`: Source Pack validation, 98-test canonical suite, Registry verify, security verify, scanner.
   - `security-windows` on `windows-2025`: security-control suite including the real `mklink /J` junction and offline policy verify.
-- SonarCloud at the same head: 0 open issues, quality gate OK; ECC Security Evidence pass; Socket pass.
+- Prior correction-head run `45908006041` at `fb6fa8d` also passed both jobs.
+- SonarCloud at `578c273`: 0 open issues, quality gate OK; ECC Security Evidence pass; Socket pass.
 
 ## 6. Acceptance criteria
 
@@ -86,11 +87,19 @@ The independent security review also found a real authorization gap not reported
 | AC05 Network descriptor private-only/wildcard/default/port/duplicate | **PASS** — RFC1918/ULA/loopback accepted; public/special/CGNAT/wildcard/default/link-local rejected |
 | AC06 Opaque version-pinned tenant/purpose SecretRef | **PASS** — itemized above; no resolution code |
 | AC07 Workspace traversal/symlink/reparse isolation | **PASS** — traversal/absolute/Windows paths, symlink ancestors/components, real junction; non-mutating |
-| AC08 Tests/validator/registry/scanner/Sonar/Linux+Windows CI | **PASS** — 98/98, 45/45, 7/7, 105/92/1110, 472/0, Sonar 0/OK, Linux+Windows run 45908006041 |
-| AC09 Independent audit of exact final HEAD | **PENDING final re-audit** — initial audit required the above evidence; checkpoint delta withheld |
+| AC08 Tests/validator/registry/scanner/Sonar/Linux+Windows CI | **PASS** — 98/98, 45/45, 7/7, 105/92/1110, 472/0, Sonar 0/OK, Linux+Windows run 45908334436 |
+| AC09 Independent audit of exact final HEAD | **PASS** — independent final audit APPROVED at `578c273`; this docs/lock finalization follows without code changes |
 
 ## 7. Verdict at this stage
 
-**CORRECTION DELTA APPLIED — FINAL INDEPENDENT RE-AUDIT PENDING.**
+**APPROVED.**
 
-The 11 Sonar findings were corrected at their root causes, the approval-scope replay gap was fixed, AC06/AC08 evidence was itemized, the 0.0% coverage cause was identified without misrepresenting test execution, and all 364 sources/registry counts remain intact. No merge, checkpoint promotion, runtime capability, VPS access, credential, model call or spend is authorized. A final independent audit of the new evidence-only HEAD is the remaining gate.
+The 11 Sonar findings were corrected at their root causes, the approval-scope replay gap was fixed, AC06/AC08 evidence was itemized, the 0.0% coverage cause was identified without misrepresenting test execution, and all 364 sources/registry counts remain intact. The independent final audit at `578c273` returned APPROVED with no HIGH/CRITICAL findings and AC01–AC09 PASS. No merge, checkpoint promotion, runtime capability, VPS access, credential, model call or spend is authorized.
+
+## 8. Independent final audit — non-blocking notes
+
+- AC08's “100% targeted tests” is recorded verbatim as **98/98 pass rate, not coverage**. Sonar `new_lines_to_cover=0`, 0.0% new coverage has no report/upload, and the quality gate has no coverage condition. No coverage claim is made and no dependency was added.
+- The Linux `docs-validation` job passed the canonical suite; the suite’s per-platform Linux itemization is not separately published beyond the successful job steps. This is a reporting limitation, not a failed required check.
+- The seven approval-scope mismatch tests map 1:1 to project/task/workflow/skill/host/provider/risk and must be retained.
+- No secret-resolution path may be added without a new AC and a new independent audit.
+- The zero-Sonar state is necessary, not sufficient: the cross-project approval defect was found by audit, not Sonar.
