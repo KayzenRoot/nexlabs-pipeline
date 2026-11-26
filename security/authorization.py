@@ -65,8 +65,7 @@ def authorize(
                 "POLICY_EPOCH_INVALID")
         require(type(request.policy_epoch) is int and request.policy_epoch > 0,
                 "POLICY_EPOCH_INVALID")
-        require(type(actor.policy_epoch) is int and actor.policy_epoch > 0,
-                "PRINCIPAL_POLICY_EPOCH_INVALID")
+        require(type(actor.policy_epoch) is int, "PRINCIPAL_POLICY_EPOCH_INVALID")
         require(request.policy_sha256 == current_policy_sha256
                 and request.policy_epoch == current_policy_epoch,
                 "REQUEST_POLICY_STALE")

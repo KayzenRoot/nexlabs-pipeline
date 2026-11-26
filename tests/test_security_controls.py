@@ -141,6 +141,12 @@ class AuthorizationTests(unittest.TestCase):
         self.assertEqual(authorize(boolean_epoch, [fixture_grant(request)]).reason,
                          "POLICY_EPOCH_INVALID")
 
+    def test_boolean_principal_epoch_is_invalid(self):
+        request = fixture_request()
+        invalid = replace(request, actor=replace(request.actor, policy_epoch=True))
+        self.assertEqual(authorize(invalid, [fixture_grant(request)]).reason,
+                         "PRINCIPAL_POLICY_EPOCH_INVALID")
+
     def test_project_and_host_mismatch_deny(self):
         request = fixture_request()
         self.assertEqual(authorize(replace(request, project_id="project-2"),
@@ -212,6 +218,31 @@ class AuthorizationTests(unittest.TestCase):
                            approval_signature="0" * 64, verifier=verifier,
                            nonce_store=InMemoryNonceStore())
         self.assertEqual(result.reason, "APPROVAL_SIGNATURE_INVALID")
+
+    def test_approval_verifier_and_nonce_store_errors_fail_closed(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        envelope = fixture_approval(request)
+
+        class BrokenVerifier:
+            def verify(self, _message, _signature):
+                raise RuntimeError("unavailable")
+
+        class BrokenNonceStore:
+            def consume(self, _nonce, _expires_at, _now):
+                raise RuntimeError("unavailable")
+
+        verifier_error = authorize(
+            request, [fixture_grant(request)], approval=envelope,
+            approval_signature=sign(envelope), verifier=BrokenVerifier(),
+            nonce_store=InMemoryNonceStore(),
+        )
+        nonce_error = authorize(
+            request, [fixture_grant(request)], approval=envelope,
+            approval_signature=sign(envelope), verifier=HmacSha256TestVerifier(KEY),
+            nonce_store=BrokenNonceStore(),
+        )
+        self.assertEqual(verifier_error.reason, "APPROVAL_VERIFIER_ERROR")
+        self.assertEqual(nonce_error.reason, "APPROVAL_NONCE_STORE_ERROR")
 
     def test_approval_nonce_is_single_use(self):
         request = fixture_request("HIGH_ASSURANCE")
