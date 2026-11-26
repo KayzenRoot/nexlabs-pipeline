@@ -10,3 +10,10 @@ Delta de alvo: `KayzenRoot/nexlabs-pipeline` exclusivamente. Não criar outro re
 - Read-back de governança: `main` com PR obrigatório, histórico linear, squash-only, sem force-push, sem deleção, conversas resolvidas e `enforce_admins`; ruleset ativo `main-bootstrap-protection` cobre non-fast-forward e deletion, sem bypass. Checks obrigatórios ainda não configurados.
 - CI: **NOT_RUN**. Plano/billing/franquia não comprovados com o token disponível; nenhum workflow ou runner foi ativado. Se o billing não for comprovado, o gate permanece bloqueado, sem simular enforcement.
 - Nenhum force-push, bypass, rewrite, autoaprovação ou merge foi executado. Auditoria independente pendente.
+
+## Delta CD-03 | CI free qualification (2026-11-26)
+- CI qualificada exclusivamente no caminho gratuito: repositório **público** + runner padrão **`ubuntu-24.04`** + `actions/checkout` oficial pinado por SHA integral + `permissions: contents: read`. Sem runner maior, self-hosted runner, serviço pago, cache, artefatos, secrets, deploy ou `pull_request_target`.
+- A qualificação de US$0 baseia-se na política pública do GitHub para runners padrão em repositórios públicos e no escopo explícito deste WO; nenhum recurso faturável é utilizado. O read-back de billing por API continua indisponível por escopo de token, mas não há consumo faturável no workflow.
+- O check `docs-validation` só será configurado como obrigatório na `main` após a primeira execução bem-sucedida no HEAD exato e read-back do contexto do check. Não será criado check fictício.
+- `docs/Provenance.md` separa proveniência do pacote original e estado Git remoto; `locks/context-lock.json` registra o HEAD auditado. O HEAD final e os logs ficam no Evidence Bundle.
+- Nenhum merge, promoção de checkpoint, force-push, bypass ou autoaprovação. Auditoria independente obrigatória.

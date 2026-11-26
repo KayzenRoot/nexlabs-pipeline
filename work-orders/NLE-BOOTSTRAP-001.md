@@ -30,3 +30,11 @@ Stop on unknown target, billing, governance, access, conflicting approved decisi
 - O Source Pack completo foi importado: 364/364 originais, seis ZIPs, `locks/source-lock.json`, validadores e testes canônicos. O Context Lock real está em `locks/context-lock.json`.
 - Governança: `main` com PR obrigatório, histórico linear, squash-only, sem force/delete, sem bypass e conversas resolvidas; checks obrigatórios e CI pendentes de prova de billing/plano. Nenhum workflow foi ativado.
 - Não fazer merge, não promover checkpoint e não iniciar NLE-INFRA-WO-001. Auditoria independente obrigatória.
+
+## Delta CD-03 | CI free qualification e correção de auditoria (2026-11-26)
+- **NLE-ADR-BOOT-007 é a decisão ratificada vigente** para visibilidade: repositório público temporário apenas para planejamento/desenvolvimento revisado e não sensível; produção privada. O texto private-only original deste WO é histórico e fica expressamente superseded por BOOT-007 no escopo desta fase; nenhuma decisão anterior é apagada.
+- CI: exclusivamente GitHub Actions padrão, runner `ubuntu-24.04`, repositório público. Sem runner maior, serviço pago, cache, artefatos, secrets, deploy ou `pull_request_target`. Checkout oficial `actions/checkout` pinado por SHA integral verificado.
+- O workflow `docs-validation` executa `python3 scripts/validate_sources.py` e `python3 -m unittest discover -s tests -v`; o check só será exigido na `main` após a primeira execução bem-sucedida e read-back.
+- Proveniência do pacote original (ZIP/SHA-256/source-lock) e estado Git remoto (repo/base/branch/PR/HEAD/CI) são documentados separadamente em `docs/Provenance.md`.
+- O HEAD auditado é registrado em `locks/context-lock.json`; o HEAD final e os logs ficam no Evidence Bundle, sem hash autorreferente.
+- Auditoria independente de segurança, integridade, governança e consistência é obrigatória antes de APPROVED. Sem merge, promoção de checkpoint ou avanço para NLE-INFRA-WO-001.

@@ -22,3 +22,9 @@ C01 access/base resolved by authenticated target KayzenRoot/nexlabs-pipeline and
 
 ## Fechamento C01 | NLE-BOOTSTRAP-001/CD-02 completion (2026-11-26)
 O pacote completo foi recebido e verificado: 364/364 arquivos originais, seis ZIPs, `locks/source-lock.json` com SHA-256 `a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e` e ZIP de entrega com SHA-256 `1c012736772aba8a96bc27f796194d4a77f1f88a7ff66ee37c2512f2d6129844`. Os 325 arquivos já versionados foram comparados byte a byte com o lock e preservados; os 39 ausentes foram adicionados. `python scripts/validate_sources.py` passou nos 7 grupos e `python -m unittest discover -s tests -v` passou 7/7. C01 fica resolvido para acesso, base e completude do Source Pack. C02–C12 permanecem inalterados; C12 continua gate de runtime. Governança da `main` foi configurada e lida de volta (PR obrigatório, histórico linear, squash-only, sem force/delete, sem bypass), mas checks obrigatórios e CI continuam pendentes porque billing/plano não foram comprovados. Nenhum HIGH/CRITICAL operacional é declarado resolvido por documentação.
+
+## CD-03 | CI free qualification (em andamento, 2026-11-26)
+- CI qualificada no caminho gratuito: repositório público + runner padrão `ubuntu-24.04` + `actions/checkout` oficial pinado por SHA integral + `contents: read`; sem runner maior, self-hosted, serviço pago, cache, artefatos, secrets, deploy ou `pull_request_target`.
+- Proveniência do pacote e estado Git remoto separados em `docs/Provenance.md`; HEAD auditado será registrado em `locks/context-lock.json`.
+- NLE-ADR-BOOT-007 é a decisão vigente de visibilidade; o texto private-only histórico permanece preservado, sem sobrescrever decisões.
+- Nenhum novo achado C01–C12; C12 continua HIGH/runtime gate. A primeira execução de CI e a auditoria independente ainda estão pendentes.

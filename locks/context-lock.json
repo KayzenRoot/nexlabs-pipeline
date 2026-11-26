@@ -1,7 +1,7 @@
 {
   "work_order": "NLE-BOOTSTRAP-001",
-  "delta": "CD-02",
-  "status": "SOURCE_PACK_COMPLETE_PENDING_INDEPENDENT_AUDIT",
+  "delta": "CD-03",
+  "status": "CI_FREE_QUALIFICATION_IN_PROGRESS",
   "repository": {
     "full_name": "KayzenRoot/nexlabs-pipeline",
     "id": 1472951510,
@@ -16,40 +16,45 @@
     "url": "https://github.com/KayzenRoot/nexlabs-pipeline/pull/1",
     "draft": true
   },
-  "head_at_execution_start": "9a0d4009fb491a545e917cc1dc1b95d9f2b354f7",
+  "head_at_execution_start": "70418070aa80b2b35093be46e87fb246eacfeb6a",
+  "head_audited": null,
   "head_final": null,
-  "head_final_note": "Recorded in evidence/NLE-BOOTSTRAP-001-CD02-EVIDENCE.md and PR #1 evidence comment after normal push; omitted here to avoid a self-referential hash.",
-  "archive": {
-    "name": "NLE-BOOTSTRAP-001_NexLabs_Pipeline.zip",
-    "bytes": 1557156,
-    "sha256": "1c012736772aba8a96bc27f796194d4a77f1f88a7ff66ee37c2512f2d6129844",
-    "entries": 394
-  },
-  "source_lock": {
-    "path": "locks/source-lock.json",
-    "sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
-    "files": 364,
-    "zip_archives": 6,
-    "verified": true
-  },
-  "source_subset": {
-    "tree_sha": "3856ba9b4995443510166cefa5f2550394465be5",
-    "files_versioned_before_execution": 325,
-    "byte_identical_to_lock": true,
-    "files_added_this_execution": 39
+  "head_note": "head_audited set after the first successful CI run; head_final recorded in the CD-03 Evidence Bundle/PR comment after push, without self-reference.",
+  "provenance": {
+    "archive": {
+      "name": "NLE-BOOTSTRAP-001_NexLabs_Pipeline.zip",
+      "bytes": 1557156,
+      "sha256": "1c012736772aba8a96bc27f796194d4a77f1f88a7ff66ee37c2512f2d6129844",
+      "entries": 394
+    },
+    "source_lock": {
+      "path": "locks/source-lock.json",
+      "sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
+      "files": 364,
+      "zip_archives": 6,
+      "verified": true
+    },
+    "source_subset": {
+      "tree_sha": "3856ba9b4995443510166cefa5f2550394465be5",
+      "files_versioned_before_execution": 325,
+      "byte_identical_to_lock": true,
+      "files_added_cd02": 39
+    },
+    "separation": "docs/Provenance.md separates original package provenance from remote Git/CI state"
   },
   "canonical_fingerprints": {
-    "README.md": "d7dc06a06c89311819bddb953d49784677e9b6c7a685da51b6d70587dce613c0",
-    "docs/Checkpoint.md": "137923901c7da48f575eddfd60b0cb446230121ce31571699891ec6952083ebc",
+    "README.md": "c06a7cef811caff6b9b317ca1f75cd1d0a97e9485a5ff49e94374cf3465cc32f",
+    "docs/Provenance.md": "1aebfaa53d00e9c6a82aa46d5faa3a33152bcfb6def56f089a44e697fe6941fd",
+    "docs/Checkpoint.md": "798f58f88875afa7c255a4b3c90d144fa45df848e7a9098dc5edb9118e112e82",
     "docs/Decisions-Ledger.md": "a29215b092dfda7648135f2c840bae6e4a7a292cafed979a1f56d761470df930",
     "docs/Scope.md": "e3ac2829657b98802fd902e64ad5628fe4529eadaeda66673d956f472a7bb877",
-    "docs/Definition-of-Done.md": "d8c347f6b77457fdbebfb0d055539072612643b2871656a471c5fe7494c55785",
+    "docs/Definition-of-Done.md": "52a02f489f2bc8a8246f24ad3053575a8f4b43154785f2cbab6707bbf4d04d17",
     "docs/Architecture.md": "1b0064162245ade1d29c2ec954b235c1327bc73acea7dd7e37bd43b81aa13e61",
     "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
     "docs/Backlog.md": "d5bd5c91695b65afe08db4336ff072eadfc45e2fde19b7f9b8f309100802be13",
     "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94",
-    "docs/Governance.md": "92136198b0b64f6d2f90125c9bbfdf78853423206affa753c9e03447038bcd0d",
-    "docs/Consistency-Audit.md": "22e29ea1964bd9f4f036b785e29807fa2724c81c626ae18126d1567d4043d6eb",
+    "docs/Governance.md": "cb4b50d94188fde36cdd09000eef00387ec26afca8a7b86c67e398a825465c9b",
+    "docs/Consistency-Audit.md": "52005cd21da2ed1024e8e7ee49ecbe2fe48b9d063175afa34a8f5768bb91f043",
     "docs/Test-Benchmark-Plan.md": "9af7fb2d44ba4997eb5128190b64a52484ac111ea5666e15d856ed26813ae260",
     "docs/API-Contracts.md": "3ee1fbeb562fcf228d56089f25d7cf680a5b40f54c7729f0e726baa9fdcf8046",
     "docs/Data-Model.md": "501301ac5f801eb7395efa2c6c49997d2b6b809d68958c27bc97f255bdf0ce8b",
@@ -59,28 +64,37 @@
     "docs/backlog.json": "4fc72f619e112ee3dfbac96805a601fe1711c84279df077eeb0db8db866fe372",
     "docs/decisions-index.json": "c64856150f7b42aa42286b8bbf56755957c8fe90e45552ec93748fde6d844f77",
     "locks/source-lock.json": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
-    "work-orders/NLE-BOOTSTRAP-001.md": "39630d537135842904ce3931b9e2b9c989ebe261a07879f7292e3f90f89f7c06",
+    "work-orders/NLE-BOOTSTRAP-001.md": "8ca0b588e37c1ff7a6473fe75548e59e3ac23a5ce5815a4409277bccbd772ffb",
     "prompts/NLE-BOOTSTRAP-001-CODEX.md": "71478566935cf4162d006ad44f0a81ddd54bee129b8cda0bb4c6b779e3b25f01",
     "scripts/validate_sources.py": "61fe8bf6e48c7f71d158e7122be1cd7a411ddd2c90b4978ef13739ea16596272",
-    "tests/test_sources.py": "df830b134eabb9032361d251c1c6023ebcfed46735207bd81a40e53a743caf08"
+    "tests/test_sources.py": "df830b134eabb9032361d251c1c6023ebcfed46735207bd81a40e53a743caf08",
+    ".github/workflows/docs-validation.yml": "90c748346f79f10bbbe2857d547f90935228f36da8fc972b0579e816cf153589"
   },
   "governance": {
     "main_ruleset": "main-bootstrap-protection (ID 28163842): non_fast_forward, deletion, active, no bypass",
     "main_protection": "PR required, linear history, dismiss stale reviews, enforce_admins, no force-push, no deletions, conversation resolution, approvals=0",
     "merge_policy": "squash-only; merge commit and rebase disabled; delete branch on merge disabled; auto-merge disabled",
-    "required_checks": "NOT_CONFIGURED (CI billing/free quota not proven)",
+    "required_checks": "PENDING_FIRST_CI_SUCCESS (no fictional check)",
     "read_back": true
   },
   "ci": {
-    "status": "NOT_RUN",
-    "reason": "plan/billing/free-quota not proven with available token scopes; no workflow or runner activated",
-    "workflow_activated": false,
+    "status": "PENDING_FIRST_RUN",
+    "workflow": ".github/workflows/docs-validation.yml",
+    "runner": "ubuntu-24.04 (standard GitHub-hosted)",
+    "checkout": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262 (v4.4.0)",
+    "permissions": "contents: read",
+    "no_secrets": true,
+    "no_cache": true,
+    "no_artifacts": true,
+    "no_deploy": true,
+    "cost_basis": "public repository + standard runner + no paid feature; documented GitHub free policy",
+    "workflow_activated": true,
     "runs": 0
   },
   "audit": "PENDING_INDEPENDENT",
   "merge": "NOT_DONE",
   "deploy": "NOT_AUTHORIZED",
   "additional_spend_usd": 0,
-  "stale_when": "base or approved critical source/doc changes; source-lock changes; head diverges from the recorded execution; visibility or governance settings change",
-  "generated_at_utc": "2026-11-26T12:45:00Z"
+  "stale_when": "base or approved critical source/doc changes; source-lock changes; workflow/check context changes; head audited diverges; visibility or governance settings change",
+  "generated_at_utc": "2026-11-26T13:05:00Z"
 }
