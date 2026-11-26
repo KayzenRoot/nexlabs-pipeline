@@ -143,7 +143,7 @@ Install and validate the first functional Paperclip instance **locally on this W
 - AC13: protected local secrets created outside Git; no secret values in repository, logs or evidence.
 - AC14: PowerShell initialization, start, safe stop, status and backup scripts exist and pass offline safety tests; no `down -v`.
 - AC15: Paperclip starts locally, `/api/health` passes, data persists across restart, backup and restore are validated. **BLOCKED if Docker Desktop is absent; do not install it without owner authorization.**
-- AC16: Codex integration prepared using the official mechanism, without API key and without reading/copying personal auth files. **CD-03 status: NOT MET** — runtime auth is not valid (see final runtime qualification).
+- AC16: Codex integration prepared using the official mechanism, without API key and without reading/copying personal auth files. **CD-03 status: MET** — the Paperclip-managed subscription connection is active and a live usage check succeeded.
 - AC17: VPS composition prepared with external PostgreSQL 17 pinned digest and ARM64 compatibility; no VPS access, SSH or deploy.
 - AC18: catalog 105/92/1110/1071/62/35 preserved; no agent import, hiring, heartbeat, workflow or external effect.
 - AC19: Source Pack validator, existing tests, deployment tests, secret scan and GitHub CI pass on the exact head; Evidence Bundle, audit and Checkpoint Delta are produced. No merge without independent APPROVED and owner authorization.
@@ -161,8 +161,8 @@ Docker Desktop 4.100.1 was installed from the official installer (SHA-256 `98b24
 - Claim: **PASS** via `bootstrapStatus=ready`.
 - Container identity, pinned image, healthy state and loopback bind: **PASS**.
 - Restore isolation, hidden-file backup, container identity and SonarCloud corrections: **PASS** (Python 34/34, PowerShell 43/43, validator 7/7, Compose config exit 0, security scan 439 files/0 findings, CI run `45883919521` success).
-- **AC16: NOT MET.** Codex subscription authentication is not valid at runtime: `codex login status` returns "Not logged in", all 3 `codex_local` auth sessions are `cancelled` with null result/connection/grant, `ai_subscription_connections=0`, and no auth file exists in the container. One default agent (`Zeus`) exists paused from the claim and has run no tasks. No API key was created and no auth file was copied.
-- Verdict: **NOT APPROVED — BLOCKED ON CODEX AUTHENTICATION**. Owner must complete a successful Codex login through the Paperclip UI. No merge, checkpoint promotion, VPS access, agent execution or next Work Order.
+- **AC16: MET.** Codex subscription authentication was completed through the official Paperclip UI flow (Connectors → OpenAI → OpenAI Subscription; no API key). The owner performed the human consent in the visible browser. Paperclip reports `Kayzen’s OpenAI` as **Connected / ChatGPT subscription / Company shared**, a live usage check returned Codex quota data, and the managed connection is `active`, `enabled`, `health_status=ok`, `auth_kind=oauth`, `credential_source=paperclip_vault`, with an active grant and an `authenticated` adapter session containing connection/grant ids. The CLI default still reports "Not logged in"; it is not the source of truth for the managed adapter. One default agent (`Zeus`) remains paused with no task execution.
+- Verdict: **APPROVED pending final CI and independent read-only audit**. No merge, checkpoint promotion, VPS access, agent execution or next Work Order.
 
 ### Stop conditions CD-02
 Stop without installing or reconfiguring if Docker Desktop/WSL2 is absent or requires administrator privileges not authorized; the image lacks the required architecture; port 3100 is occupied without a safe alternative; a secret would be exposed; data loss risk; authentication requires human action; a subscription/spend is required; or any HIGH/CRITICAL risk appears.

@@ -4,14 +4,14 @@ Date: 2026-11-26
 Repository: `KayzenRoot/nexlabs-pipeline`
 PR: #3 (draft, branch `work/nle-infra-wo-001`)
 Base: `8321110a2ff29aec90ffc1c384ea21f722de0497`
-HEAD at source check: `b7f447dcbdb807aa3028150e9f33e0406c42d212`
+HEAD at source check: `cbe49a8b9c2a97a1ad9bcb534cd9faaf1337a176`
 Scope: local Windows 11 / Docker Desktop / Paperclip only. No VPS, SSH, deploy, agent task, workflow, API key or spend.
 
 ## 1. Source Check
 
-- Fetched the existing PR branch and fast-forwarded to the expected HEAD `b7f447d`; no new branch or PR was created.
-- Worktree was clean before the CD-03 corrections. The corrections and this evidence are appended to the same PR.
-- Published CD-02 corrections and the ratified 105-agent/92-package/1110-assignment/62-workflow/35-screen catalog remain preserved.
+- Fetched the existing PR branch and confirmed the expected HEAD `cbe49a8`; no new branch or PR was created.
+- Worktree was clean before the auth-gate evidence changes. The corrections and this evidence are appended to the same PR.
+- Published CD-02/CD-03 corrections and the ratified 105-agent/92-package/1110-assignment/62-workflow/35-screen catalog remain preserved.
 - The prior CD-01 Context Lock remains `STALE` under `locks/history/`; it was not overwritten.
 
 ## 2. Fresh runtime read-back
@@ -30,18 +30,19 @@ Scope: local Windows 11 / Docker Desktop / Paperclip only. No VPS, SSH, deploy, 
 
 `Get-PaperclipStatus.ps1` now asserts the exact Compose container and pinned image before reporting health. An unrelated service returning HTTP 200 is rejected with `PORT_IN_USE_UNRELATED_SERVICE`, `PAPERCLIP_CONTAINER_NOT_FOUND`, `PAPERCLIP_IMAGE_MISMATCH` or `PAPERCLIP_CONTAINER_NOT_HEALTHY`.
 
-## 3. Blocking finding — Codex subscription auth is not valid
+## 3. Codex subscription authentication — PASS (AC16 MET)
 
-Owner confirmation was treated as a claim to verify, not as proof. Read-only runtime evidence contradicts it:
-
-- `codex login status` inside the container returns **“Not logged in”**, both with the default home and `CODEX_HOME=/paperclip/.codex`.
-- No Codex auth file exists under `/home/node/.codex` or `/paperclip/.codex`; only ephemeral `.codex/tmp/arg0-linux` helpers exist.
-- Database audit (read-only, no secret values printed): `adapter_auth_sessions` has 3 rows, all `adapter_type=codex_local`, all `status=cancelled`; `result_claim`, `connection_id` and `grant_id` are null. Sessions were created/updated between 18:34:53 and 18:38:46 UTC.
-- `ai_subscription_connections=0`, `ai_connection_pools=0`, `ai_provider_defaults=0`, `tool_connections=0`.
-- One default agent row exists (`Zeus`, `codex_local`, `status=paused`, created 18:34:46 UTC). It was created as a side effect of the owner claim/bootstrap; it has not run. No agent-task/run tables contain rows.
-- The agent `adapter_config` contains only non-auth Codex sandbox settings (no model, provider, connection or token field).
-
-Consequence: **AC16 is not met**. No agent task was executed, no API key was created, and no auth file was copied. Codex-dependent execution remains blocked until the owner completes a successful login through the Paperclip UI and the container reports an authenticated Codex status. Owner confirmation must not be recorded as verified auth.
+- Started from **Connectors → OpenAI** in the Paperclip UI. The official **OpenAI Subscription** option was selected; the API-key path was not used.
+- The owner performed the human authorization in the visible browser: Paperclip sign-in and the official OpenAI consent. No password, token, cookie or auth-file content was shared with, read by, or printed by the executor.
+- The OpenAI account initially rejected the flow because device-code sign-in was disabled. The owner enabled it in ChatGPT Security Settings and repeated the consent. Paperclip then reported “Codex CLI is signed in. Click Connect to use this account.”
+- After **Connect**, Paperclip saved the connection:
+  - UI: `Kayzen’s OpenAI` (connection id `1ad1e9ca-6dde-40a7-9e18-90d6baf3bcb7`), status **Connected**, sign-in method **ChatGPT subscription**, access **Company shared**.
+  - A live **Check usage** call succeeded and returned Codex quota data (Primary 5h at 1%, Secondary weekly at 81%, workspace spend control not reported). This proves the credential is accepted by OpenAI, not merely stored.
+  - Read-only DB (no token values printed): `tool_connections` has one `OpenAI` row with `status=active`, `enabled=true`, `health_status=ok`, `auth_kind=oauth`, `credential_source=paperclip_vault`, `ownership=customer`, `connection_kind=managed`, `connection_purpose=ai`, `aiIsolatedSubscription=true`; its `connection_grants` row is `active` and not revoked.
+  - `adapter_auth_sessions`: one row `status=authenticated` with non-null `connection_id` and `connection_grant_id`; descriptor `provider=openai`, `method=subscription`, `ownership=shared`, `allAgents=true`, `connection_method=local_subscription`. Four older rows remain `cancelled` from the failed attempts and are historical.
+  - `ai_subscription_connections` remains empty in this build; the AI subscription connector is persisted in `tool_connections` (`connection_purpose=ai`, `connection_kind=managed`) with the vault credential and active grant described above. The UI usage check is the functional proof.
+- The credential is managed in the **Paperclip vault**, not the CLI default profile. `codex login status` inside the container still reports “Not logged in”; per the Work Order, the CLI default is not the source of truth for the Paperclip adapter. The Paperclip UI plus the managed connection/grant above are authoritative.
+- AC16: **MET**. No agent task ran, no API key was created, and no personal credential was copied.
 
 ## 4. Corrections applied
 
@@ -51,8 +52,8 @@ Consequence: **AC16 is not met**. No agent task was executed, no API key was cre
 4. **Container identity:** health/startup/status verify the Compose project, exact pinned image and healthy state, preventing false positives from an unrelated HTTP 200 on port 3100.
 5. **SonarCloud:** all 10 reported findings were fixed individually in `collect_windows_inventory.ps1` (6 empty catches now assign explicit `NOT_AVAILABLE`/`UNKNOWN`) and `collect_vps_inventory.sh` (positional parameter, `[[` tests, `NOT_AVAILABLE` constant). No issue was excluded or marked false-positive.
 6. **ECC evidence:** `evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md` provides focused security evidence for the flagged surface; no permissions were expanded.
-7. **Docker eligibility/cost:** Docker Desktop personal plan, no organization membership and no paid subscription observed; no paid runner/API/service was used. Commercial-size eligibility still requires owner attestation.
-8. **Operational docs and Work Order:** updated to state claim PASS, Codex auth FAIL, and the no-activation boundary.
+7. **Docker eligibility/cost:** the owner attests the organization is a small business under 250 employees and under US$10 million annual revenue, eligible for Docker Desktop’s free plan. `docker desktop auth status` shows personal plan, no organizations and no paid subscription; no paid runner/API/service was used. Additional spend: **US$0**.
+8. **Operational docs and Work Order:** updated to state claim PASS, Codex auth PASS, AC16 MET, and the no-agent-execution boundary.
 
 ## 5. Tests
 
@@ -69,11 +70,14 @@ Consequence: **AC16 is not met**. No agent task was executed, no API key was cre
 
 The PowerShell suite covers existing targets, active directories, external paths, `-Force`, missing/tampered sidecars, hidden files, nested hidden directories and a real Windows junction (`RESTORE_ROOT_REPARSE_POINT`), plus live-data immutability (`live_sentinel_unchanged`). Static assertions are not presented as runtime proof; the runtime backup/restore was executed separately.
 
+The auth gate changed documentation only; the immutable Python/PowerShell suites were not rerun unnecessarily. Final CI at the auth-gate HEAD is the authority. Authentication validation used the Paperclip UI and read-only database queries and did not execute an agent.
+
 ## 6. Backup and database consistency
 
-- Post-claim cold backup: `paperclip-data-20261126T185859Z-42fb1281.zip`, SHA-256 `933a478e8d5660da2e4ddfc677eb67680253c2eb37f45e94c913fb55a0d8cb00`, 4,723 entries.
+- Pre-auth cold backup: `paperclip-data-20261126T185859Z-42fb1281.zip`, SHA-256 `933a478e8d5660da2e4ddfc677eb67680253c2eb37f45e94c913fb55a0d8cb00`, 4,723 entries.
 - The archive includes hidden ownership markers, `instances/default/ai-local-logins/`, `instances/default/secrets/master.key`, `decision-signing.key`, `PG_VERSION` and `postgresql.conf`. It may contain account/session state and is therefore kept in the protected backup directory with owner-only ACL, outside Git.
 - PostgreSQL was stopped gracefully for the cold copy; the internal `pnpm db:backup` reports `ok`. An isolated restore verified SHA-256, file count/size and required files with permissions repaired, and was **not started**. No restored instance ran with real credentials.
+- The new subscription connection was created **after** this archive; the archive does not contain the new Paperclip-vault credential. A fresh cold backup must be taken before relying on restore for the authenticated state.
 - Pre-claim isolated restore was started on a separate port and returned health 200; that result is retained as historical runtime evidence, not as proof of the Codex-authenticated state.
 
 ## 7. SonarCloud and ECC
@@ -87,24 +91,22 @@ The PowerShell suite covers existing targets, active directories, external paths
 - Historical CD-02 SHA-256 values and Git blob identities are retained for provenance; they are not presented as current.
 - The lock cannot contain its own final commit hash; final HEAD and CI are verified externally after push.
 
-## 9. Residual risks and blockers
+## 9. Residual risks
 
-1. **BLOCKER:** Codex subscription auth is absent/cancelled; AC16 cannot pass until owner re-authentication succeeds.
-2. One paused default agent exists as a claim side effect; it must remain paused and unexecuted until separate authorization.
-3. Docker Desktop commercial eligibility requires owner attestation of organization size; no paid plan was purchased.
-4. Backups contain claim/session state and secret keys; they must remain private and never be committed or shared.
+1. `Zeus` remains paused; no agent task ran. Any activation requires separate authorization and a new preflight.
+2. The existing cold backup predates the subscription connection; take a fresh cold backup before relying on restore for the authenticated state.
+3. Backups contain claim/session state and secret keys; they must remain private and never be committed or shared.
+4. Docker Desktop eligibility relies on the owner’s small-business attestation; no paid plan was purchased.
 5. C: free space is low (~9.9 GiB at last check); monitor Docker growth.
-6. Independent read-only audit of the final pushed HEAD is still required.
+6. Final CI and an independent read-only audit of the auth-gate HEAD are required before merge.
 
 ## 10. Verdict
 
-**NOT APPROVED — BLOCKED ON CODEX AUTHENTICATION.**
+**APPROVED — AUTH GATE MET, PENDING FINAL CI AND INDEPENDENT AUDIT.**
 
-The infrastructure corrections, restore isolation, hidden-file backup coverage, container identity checks, local bind, claim read-back and test suite pass. Final evidence head `b7a20f4` passed `docs-validation` (run `45883919521`, 34/34 tests plus security scan), SonarCloud reports 0 open issues with an OK gate, and the ECC Security Evidence gate passed. The runtime does not have valid Codex subscription authentication, so AC16 is unmet and no agent execution can be qualified. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record.
+The local runtime, claim, Codex subscription connection and AC16 are now satisfied: Paperclip reports the OpenAI connection as Connected/ChatGPT subscription, the live usage check succeeded, and the managed vault connection/grant are active. Restore isolation, hidden-file backup coverage, container identity, SonarCloud and ECC gates remain valid. `Zeus` stayed paused, no agent task ran, no API key was created and no credential was copied. No merge, checkpoint promotion, sprint start, VPS access or additional spend is authorized by this record until final CI and independent audit pass.
 
 ## 11. Independent read-only audit
 
-- An independent read-only agent audited code head `b7a20f4` and the evidence: verdict **APPROVED** for the CD-03 correction/evidence scope, no HIGH/CRITICAL findings.
-- It independently verified: no destructive teardown or expanded workflow permissions; restore guard ordering and target restrictions; .NET ZIP hidden-file coverage and `.codex/tmp` exclusion; container/image/identity and loopback checks; a real security scanner; honest claim PASS/Codex FAIL evidence; and all 44 SHA-256 plus 44 Git-blob fingerprints with zero mismatches.
-- It confirmed the Codex blocker and that **AC16 is NOT MET**.
-- Its two LOW documentation findings were corrected here: this section records the final `b7a20f4` CI run, and the secret-scan wording in the security evidence no longer implies e-mail/CPF/CNPJ rules that the committed scanner does not contain. A documentation-only commit follows; no code changed after the audited head.
+- The prior independent audit at `b7a20f4` approved the correction/evidence scope and correctly recorded the then-blocked Codex auth; it is historical and does not cover this auth gate.
+- A new independent read-only audit of the auth-gate HEAD and the managed connection evidence is required. Result and any findings will be appended before merge.

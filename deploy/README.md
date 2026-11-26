@@ -100,16 +100,20 @@ authorizes it. Do not set `OPENAI_API_KEY`, do not copy personal Codex auth
 files, and do not run agent tasks during installation. See
 `deploy/local/codex/README.md`.
 
-After the owner completes the login, verify the runtime instead of assuming the
-UI confirmation is sufficient:
+After the owner completes the login, verify the managed connection in the Paperclip
+UI under **Connectors → OpenAI**: it must show **Connected**, sign-in method
+**ChatGPT subscription**, and a successful **Check usage** call. The CLI default
+profile is not the source of truth for the `codex_local` adapter: Paperclip stores
+the subscription credential in its own vault, so `codex login status` may still
+report `Not logged in` while the managed connection is valid. Use the UI, the live
+usage check and the managed connection/grant state as authoritative.
 
-```powershell
-docker exec nexlabs-paperclip-paperclip-1 codex login status
-```
-
-On 2026-11-26 the container reported `Not logged in`, all three `codex_local`
-auth sessions were `cancelled`, and no auth file existed. In that state AC16 is
-not met and no agent may run.
+On 2026-11-26 the official device flow required enabling device-code sign-in in
+the OpenAI account's ChatGPT Security Settings. After consent, Paperclip saved the
+connection as `Connected / ChatGPT subscription / Company shared`, the usage check
+returned Codex quota data, and the managed connection was `active` with
+`credential_source=paperclip_vault` and an active grant. `Zeus` remained paused and
+no agent task was executed.
 
 ## NexLabs catalog
 

@@ -13,13 +13,16 @@ Scope: local Paperclip runtime, protected credentials, backup/restore isolation,
 ## 2. Claim and Codex authentication
 
 - Claim: **PASS** — health reports `bootstrapStatus=ready` (pre-claim was `bootstrap_pending`).
-- Codex subscription auth: **FAIL**.
-  - `codex login status` inside the container returns **“Not logged in”** both for default home and `CODEX_HOME=/paperclip/.codex`.
-  - Read-only DB audit: `adapter_auth_sessions` has 3 `codex_local` sessions, all `status=cancelled` (created/updated 18:34:53–18:38:46 UTC); `result_claim`, `connection_id` and `grant_id` are null; `ai_subscription_connections` has 0 rows; `ai_connection_pools` 0; `ai_provider_defaults` 0; `tool_connections` 0.
-  - One default agent row exists (`Zeus`, `codex_local`, `status=paused`, created 18:34:46 UTC) as a claim/bootstrap side effect. It has not run; no agent-task/run table contains rows. Its `adapter_config` contains only non-auth sandbox settings.
-  - No Codex auth files were found under `/home/node/.codex` or `/paperclip/.codex` (only ephemeral `tmp/arg0-linux` helper directories).
-  - No tokens, cookies or auth-file contents were read or printed.
-- Consequence: no agent tasks were executed; AC16 is unmet and Codex-dependent execution remains blocked until the owner completes a successful login in the container/Paperclip adapter. Owner confirmation alone is not treated as proof.
+- Codex subscription auth: **PASS / AC16 MET**.
+  - Official flow: Connectors → OpenAI → **OpenAI Subscription**; no API key. The owner completed the Paperclip sign-in and OpenAI consent in the visible browser. No password, token, cookie or auth-file content was read or printed by the executor.
+  - OpenAI initially rejected the device flow because device-code sign-in was disabled; the owner enabled it in ChatGPT Security Settings and repeated consent.
+  - Paperclip UI: connection `Kayzen’s OpenAI` (id `1ad1e9ca-6dde-40a7-9e18-90d6baf3bcb7`), **Connected**, sign-in method **ChatGPT subscription**, access **Company shared**. A live **Check usage** call succeeded with Codex quota data (Primary 1%, Secondary weekly 81%).
+  - Read-only DB, no secret values: `tool_connections` has one `OpenAI` row with `status=active`, `enabled=true`, `health_status=ok`, `auth_kind=oauth`, `credential_source=paperclip_vault`, `ownership=customer`, `connection_kind=managed`, `connection_purpose=ai`, `aiIsolatedSubscription=true`; its `connection_grants` row is `active` and not revoked.
+  - `adapter_auth_sessions`: one `status=authenticated` row with non-null `connection_id` and `connection_grant_id`; descriptor `provider=openai`, `method=subscription`, `ownership=shared`, `allAgents=true`, `connection_method=local_subscription`. Four older `cancelled` rows are historical failed attempts.
+  - `ai_subscription_connections` is empty in this build; the AI subscription connector is stored in `tool_connections` (`connection_purpose=ai`, `connection_kind=managed`) with `credential_source=paperclip_vault` and an active grant. The live usage check is the functional proof.
+  - The credential is in the **Paperclip vault**, not the CLI default profile. `codex login status` still reports “Not logged in”; this is not the Paperclip adapter’s source of truth. The managed connection/grant and successful usage check are authoritative.
+  - One default agent row exists (`Zeus`, `codex_local`, `status=paused`, created 18:34:46 UTC) as a claim/bootstrap side effect. It has not run; no agent-task/run table contains rows.
+  - No tokens, cookies or auth-file contents were read or printed. No API key was created.
 
 ## 3. Secrets
 
@@ -30,8 +33,9 @@ Scope: local Paperclip runtime, protected credentials, backup/restore isolation,
 
 ## 4. Backup and restore security
 
-- Post-claim backup: `paperclip-data-20261126T185859Z-42fb1281.zip`, SHA-256 `933a478e8d5660da2e4ddfc677eb67680253c2eb37f45e94c913fb55a0d8cb00`.
+- Pre-auth cold backup: `paperclip-data-20261126T185859Z-42fb1281.zip`, SHA-256 `933a478e8d5660da2e4ddfc677eb67680253c2eb37f45e94c913fb55a0d8cb00`.
 - 4.723 entries; includes hidden `.paperclip-ownership-verified`, `instances/default/ai-local-logins/`, `instances/default/secrets/master.key`, `instances/default/secrets/decision-signing.key`, `instances/default/db/PG_VERSION` and `postgresql.conf`.
+- The new subscription connection was created after this archive; the archive does not contain the new Paperclip-vault credential. A fresh cold backup is required before relying on restore for the authenticated state.
 - `.codex/tmp` ephemeral root-owned sandbox helpers are excluded; auth/config/DB/secrets remain included.
 - Backup directory and archive ACL: owner-only, inheritance protected.
 - Cold backup: container is gracefully stopped before archiving and restarted after; DB files are copied in a stopped state.
@@ -68,15 +72,13 @@ No issues were excluded or marked false-positive artificially. `bash -n scripts/
 
 - Docker Desktop **4.100.1** installed from the official installer (SHA-256 `98b24fd6…39b2`); no larger runner, paid API or billing change was created by this execution.
 - `docker desktop auth status` reports Plan `personal`, no organizations, `Must Log In=false` and `Business Enforced=false`; account identifiers were not recorded.
-- Docker Desktop free eligibility depends on Docker’s subscription terms (personal, education, non-commercial open source, or small business under the published employee/revenue thresholds). The owner must attest the organization’s commercial size; no paid plan was purchased.
+- Owner attestation: the organization is a **small business with fewer than 250 employees and under US$10 million annual revenue**, eligible for Docker Desktop’s free plan. No paid plan was purchased.
 - Additional spend: **US$0**. No CI paid runner, cloud provider or paid service was used.
 
 ## 8. Residual risks
 
-Independent read-only audit at `b7a20f4`: **APPROVED** for the CD-03 correction/evidence scope, no HIGH/CRITICAL findings; it independently confirmed the Codex blocker and AC16 NOT MET.
-
-1. Codex subscription auth is not present in the container (3 cancelled sessions, no auth file, CLI reports Not logged in); owner must complete it before any agent execution.
-2. Docker Desktop commercial licensing eligibility requires owner attestation.
-3. Backups now contain claim/DB state and secret keys; they must remain in the protected directory and never be committed or shared.
-4. Runtime audit remains pending independent review.
+1. `Zeus` remains paused and no agent task ran; activation requires separate authorization.
+2. The pre-auth cold backup does not contain the new subscription credential; take a fresh cold backup before relying on restore for the authenticated state.
+3. Backups contain claim/DB state and secret keys; they must remain in the protected directory and never be committed or shared.
+4. Final CI and independent read-only audit of the auth-gate HEAD remain required before merge.
 5. C: free space is ~9.9 GiB; Docker data ~17 GiB. Monitor capacity.
