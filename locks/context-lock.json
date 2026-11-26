@@ -68,7 +68,7 @@
     "prompts/NLE-BOOTSTRAP-001-CODEX.md": "71478566935cf4162d006ad44f0a81ddd54bee129b8cda0bb4c6b779e3b25f01",
     "scripts/validate_sources.py": "61fe8bf6e48c7f71d158e7122be1cd7a411ddd2c90b4978ef13739ea16596272",
     "tests/test_sources.py": "df830b134eabb9032361d251c1c6023ebcfed46735207bd81a40e53a743caf08",
-    ".github/workflows/docs-validation.yml": "90c748346f79f10bbbe2857d547f90935228f36da8fc972b0579e816cf153589"
+    ".github/workflows/docs-validation.yml": "7002255da60ce33ffad2c0652a540b1111549d784bb7084d183e30dae0e65548"
   },
   "governance": {
     "main_ruleset": "main-bootstrap-protection (ID 28163842): non_fast_forward, deletion, active, no bypass",
@@ -81,7 +81,7 @@
     "status": "PENDING_FIRST_RUN",
     "workflow": ".github/workflows/docs-validation.yml",
     "runner": "ubuntu-24.04 (standard GitHub-hosted)",
-    "checkout": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262 (v4.4.0)",
+    "checkout": "actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 (v5.1.0)",
     "permissions": "contents: read",
     "no_secrets": true,
     "no_cache": true,
