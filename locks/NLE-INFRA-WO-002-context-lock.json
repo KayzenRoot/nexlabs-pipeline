@@ -72,7 +72,7 @@
     "security/schemas/policy-v1.json": "35404317362b5748b15d387eb635e18826b91c15",
     "security/schemas/secret-ref-v1.json": "a5c8f585fb5ca4418bd8eb0467c5a6277decb9fb",
     "security/secrets.py": "442e00cdf5ac82b9103f4108af5994926f36ea9f",
-    "tests/test_security_controls.py": "44939d936be5203963a8d60c2a668d94d91f664b",
+    "tests/test_security_controls.py": "5c1f57daa0d3ace26178c8aaa9adcae26cd26096",
     "work-orders/NLE-INFRA-WO-002.md": "e23867e2ad3153e15542f3abf731ed8b69002995",
     "evidence/NLE-INFRA-WO-002-CD01-AUDIT.md": "3a39ea32c0a1df2de24799884ba1c47767fbaf7d"
   },
@@ -149,7 +149,7 @@
     "security/schemas/policy-v1.json": "abf0b663b53704380a5f49dac1e6d32721bf0f600f5cb6587502bec8d51fded5",
     "security/schemas/secret-ref-v1.json": "e8ac71c3e299168b20e61963bf5adb0deed985fe13c94e0ef8475281f9ba72f6",
     "security/secrets.py": "d0a460c543e15b333a42df9d0ec620b1b06dc38fcbed987f404b4fd66d86bda4",
-    "tests/test_security_controls.py": "c44704dff1155f5d5671a5ed694f9f3b5eb86fe1e3b7250505b3e16e5c7c29b9",
+    "tests/test_security_controls.py": "a0911adda46033aab61c545e1488b8e3ed43a1456e11a2459e9de30de7783804",
     "work-orders/NLE-INFRA-WO-002.md": "831d951f3ea9d28084e9b035165cc6a128e977dada9771a2302cca54a900f955",
     "evidence/NLE-INFRA-WO-002-CD01-AUDIT.md": "a7ea2d6d3a3ba83dbbcd49f4322d07ea3ac7f9a6235c191ff9931246e87a1185"
   },

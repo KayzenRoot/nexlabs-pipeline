@@ -316,10 +316,11 @@ class NetworkPolicyTests(unittest.TestCase):
                     validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
         for address in ("0.0.0.0", "::", "8.8.8.8", "fe80::1"):
             with self.subTest(address=address):
+                invalid_service = NetworkPolicy(
+                    services=(ServiceBinding("svc", address, 443, "PRIVATE"),)
+                )
                 with self.assertRaises(SecurityError):
-                    validate_network_policy(NetworkPolicy(
-                        services=(ServiceBinding("svc", address, 443, "PRIVATE"),)
-                    ))
+                    validate_network_policy(invalid_service)
 
     def test_special_purpose_reserved_and_cgnat_ranges_are_not_private_allowlists(self):
         for cidr in ("192.0.0.0/24", "100.64.0.0/10", "198.18.0.0/15"):
@@ -364,10 +365,11 @@ class NetworkPolicyTests(unittest.TestCase):
     def test_invalid_ports_and_exposure_mismatch_deny(self):
         for port in (0, -1, 65536, True):
             with self.subTest(port=port):
+                invalid_service = NetworkPolicy(
+                    services=(ServiceBinding("svc", "10.8.0.1", port, "PRIVATE"),)
+                )
                 with self.assertRaises(SecurityError):
-                    validate_network_policy(NetworkPolicy(
-                        services=(ServiceBinding("svc", "10.8.0.1", port, "PRIVATE"),)
-                    ))
+                    validate_network_policy(invalid_service)
         mismatch = NetworkPolicy(
             services=(ServiceBinding("svc", "127.0.0.1", 3100, "PRIVATE"),)
         )
@@ -408,10 +410,12 @@ class SecretReferenceTests(unittest.TestCase):
         base = dict(tenant_id="tenant-1", project_id="project-1",
                     allowed_providers=frozenset({"windows-os-store"}),
                     allowed_purposes=frozenset({"paperclip-auth"}))
+        wrong_project = {**base, "project_id": "project-2"}
         with self.assertRaises(SecurityError):
-            validate_secret_ref(self.ref, **{**base, "project_id": "project-2"})
+            validate_secret_ref(self.ref, **wrong_project)
+        wrong_purpose = {**base, "allowed_purposes": frozenset({"other-purpose"})}
         with self.assertRaises(SecurityError):
-            validate_secret_ref(self.ref, **{**base, "allowed_purposes": frozenset({"other-purpose"})})
+            validate_secret_ref(self.ref, **wrong_purpose)
 
 
 class WorkspaceIsolationTests(unittest.TestCase):
