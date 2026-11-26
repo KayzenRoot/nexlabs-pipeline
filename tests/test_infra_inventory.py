@@ -63,6 +63,13 @@ class InfraInventorySafetyTests(unittest.TestCase):
         self.assertIn("READ_ONLY", VPS_SCRIPT.read_text(encoding="utf-8"))
         self.assertIn("READ_ONLY", WINDOWS_SCRIPT.read_text(encoding="utf-8"))
 
+    def test_vps_collector_does_not_emit_hostname_or_mac_address(self):
+        source = VPS_SCRIPT.read_text(encoding="utf-8")
+        self.assertIn("uname -srm", source)
+        self.assertNotIn("uname -a", source)
+        self.assertIn("network_interface_names", source)
+        self.assertNotIn("ip -brief link", source)
+
     def test_no_mutating_commands(self):
         for path in (VPS_SCRIPT, WINDOWS_SCRIPT):
             source = path.read_text(encoding="utf-8")
