@@ -1,0 +1,29 @@
+{
+  "schema": "nexlabs.registry-policy.v1",
+  "mode": "OFFLINE_ONLY",
+  "default_effect": "DENY",
+  "allow_network": false,
+  "allow_runtime_writes": false,
+  "allow_model_calls": false,
+  "allow_source_downloads": false,
+  "allow_skill_activation": false,
+  "allow_agent_activation": false,
+  "allow_heartbeat": false,
+  "max_additional_spend_usd": 0,
+  "tool_grants": [],
+  "credential_grants": [],
+  "required_source_evidence": [
+    "immutable_commit",
+    "sha256",
+    "artifact_license",
+    "inventory",
+    "reviewed_diff",
+    "independent_review"
+  ],
+  "runtime_gates": [
+    "POST_AUTH_BACKUP",
+    "LEAST_PRIVILEGE_GRANTS",
+    "C12",
+    "EXPLICIT_OWNER_APPROVAL"
+  ]
+}

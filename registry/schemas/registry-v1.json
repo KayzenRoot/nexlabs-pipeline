@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexlabs:offline-registry:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "state",
+    "source_lock_sha256",
+    "policy",
+    "summary",
+    "manifests",
+    "agent_locks",
+    "assignments",
+    "competencies",
+    "shared_core_baseline",
+    "quarantine"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexlabs.offline-registry.v1"
+    },
+    "state": {
+      "const": "SPECIFICATIONS_ONLY"
+    },
+    "source_lock_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "policy": {
+      "type": "object"
+    },
+    "summary": {
+      "type": "object"
+    },
+    "manifests": {
+      "type": "object",
+      "minProperties": 92,
+      "maxProperties": 92
+    },
+    "agent_locks": {
+      "type": "object",
+      "minProperties": 105,
+      "maxProperties": 105
+    },
+    "assignments": {
+      "type": "array",
+      "minItems": 1110,
+      "maxItems": 1110
+    },
+    "competencies": {
+      "type": "array",
+      "minItems": 1071,
+      "maxItems": 1071
+    },
+    "shared_core_baseline": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8
+    },
+    "quarantine": {
+      "type": "array",
+      "minItems": 18,
+      "maxItems": 18
+    }
+  }
+}
