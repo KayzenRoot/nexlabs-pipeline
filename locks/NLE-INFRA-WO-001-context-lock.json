@@ -7,7 +7,7 @@
   "base_sha": "8321110a2ff29aec90ffc1c384ea21f722de0497",
   "branch": "work/nle-infra-wo-001",
   "head_at_context_capture": "b7f447dcbdb807aa3028150e9f33e0406c42d212",
-  "head_note": "b7f447d is the CD-03 source-check HEAD; 0fca04a is the correction commit; d77b4e4 is the security-gate commit; 41a3135 records CI/ECC/Sonar evidence. A final scanner line-class correction and this lock follow on the same PR. Canonical SHA-256/Git-blob identities capture this tree; final head and CI are verified externally because the lock cannot contain its own commit hash.",
+  "head_note": "b7f447d is the CD-03 source-check HEAD; 0fca04a is the correction commit; d77b4e4 is the security-gate commit; f1b0db6 is the final code head with CI, Sonar and ECC read-back. This evidence/lock commit is appended on the same PR; final head and CI are verified externally because the lock cannot contain its own commit hash.",
   "previous_context_lock": {
     "path": "locks/history/NLE-INFRA-WO-001-context-lock-CD01.json",
     "status": "STALE",
@@ -72,7 +72,7 @@
     "no_bypass": true
   },
   "ci": {
-    "status": "PASS_AT_41A3135_RUN_45883640126; FINAL_SCANNER_FIX_RUN_PENDING",
+    "status": "PASS_AT_F1B0DB6_RUN_45883754562; FINAL_EVIDENCE_COMMIT_RUN_PENDING",
     "previous_head_sha": "28cfe934638d97c656cb7ec050e6a5235221136f",
     "previous_run_id": 45877720820,
     "previous_conclusion": "success",
@@ -85,7 +85,10 @@
     "security_gate_conclusion": "success",
     "evidence_head_sha": "41a31350a0cb09f6be6ad074104499ce54f7e60c",
     "evidence_run_id": 45883640126,
-    "evidence_conclusion": "success"
+    "evidence_conclusion": "success",
+    "final_code_head_sha": "f1b0db6f4e1b362715091dc60ffc3106dfbd483f",
+    "final_code_run_id": 45883754562,
+    "final_code_conclusion": "success"
   },
   "blockers": [
     "Codex subscription authentication is not valid at runtime; AC16 unmet",
@@ -309,21 +312,21 @@
     "docs/Requirements.md": "ea8512ff62cbd0b849d3b19a15462f9f6f764901",
     "docs/Security.md": "c09eaab28274f32e1cf7b5ca30446b1aefd79466",
     "locks/source-lock.json": "86bff14a49f366b524874f9ff1915372fa743756",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "e03e2bb0d079f17b35de5dc99f0221e9f9d058e8",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "5ffde2155fd1b682d3305d1129f12e042210a59f"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "d202519b9ea9e909da82e7abef6e5f6aef57eed9",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "bc41c4899955f5ab78f17a1b5d6108ebdf5c918c"
   },
   "verdict": "NOT_APPROVED_BLOCKED_CODEX_AUTH",
   "sonar": {
     "open_issues_at_start": 10,
     "fixes": "APPLIED_INDIVIDUALLY",
-    "final_api_readback": "10_ORIGINAL_RESOLVED_AT_0FCA04A; S6353_FIXED_IN_FOLLOW_UP; FINAL_REANALYSIS_PENDING",
-    "new_scanner_issue": "AaIZUJIeG8sBJogj31Sh python:S6353 fixed with \\w classes"
+    "final_api_readback": "PASS_TOTAL_0_QUALITY_GATE_OK_AT_F1B0DB6",
+    "new_scanner_issue": "AaIZUJIeG8sBJogj31Sh python:S6353 fixed and cleared at f1b0db6"
   },
   "ecc": {
     "alert": "SECURITY_EVIDENCE_REQUESTED",
     "evidence_file": "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md",
     "permissions_expanded": false,
-    "status": "PASS_AT_D77B4E4_42_CHANGED_FILES; CHECK_PUBLICATION_UNAVAILABLE",
+    "status": "PASS_AT_F1B0DB6_42_CHANGED_FILES; CHECK_PUBLICATION_UNAVAILABLE",
     "security_gate": "scripts/security/scan_repository.py",
     "result": "No security-sensitive scanner-evidence gap detected"
   },
@@ -377,7 +380,7 @@
     "docs/Requirements.md": "8e4c5484e9b172fae22ea460af484fcb7fd1fab8f3b7e96779087361629fdcfb",
     "docs/Security.md": "4143b8fc92d4dbe916cec2a1376a7be09f396c50fe582740674578c6c889bd94",
     "locks/source-lock.json": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
-    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "5e597890282001ccdd330f326b1c67717377fde8bf6fbe6e0ef0454437049930",
-    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "4f64900684447356bef9b470a20e0a4c5a5f910af6ae4576674634b569c1722b"
+    "evidence/NLE-INFRA-WO-001-CD03-AUDIT.md": "0abbe524d533c47dbe077bb84205d571d594860b14ad149f59eea0a665abc3be",
+    "evidence/NLE-INFRA-WO-001-CD03-SECURITY-EVIDENCE.md": "302136a67f683354e89cef7014daec9c83e81944bd0e2f333228b3a15d3f7ef9"
   }
 }
