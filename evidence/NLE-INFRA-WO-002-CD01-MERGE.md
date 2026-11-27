@@ -62,7 +62,7 @@ CI run `45986351904`; SonarCloud 0 open issues/gate OK; ECC Security Evidence pa
 
 ## 7. CP-RECONCILE-001 — Context Lock e limites
 
-Base `6eacae4c8b6f4d3a5c43c84074b2061e6dca49db`; árvore `6eacae4c8b6f4d3a5c43c84074b2061e6dca49db`. Fingerprints Git blob da base (não do próprio commit):
+Base `6eacae4c8b6f4d3a5c43c84074b2061e6dca49db`; árvore `04b1364feffa2217a7897e81c462bad0f4c37d21`. Fingerprints Git blob da base (não do próprio commit):
 
 - `docs/Checkpoint.md`: `5727e742495d5a642dc3b7e534dc840df1b257a5`
 - `docs/Decisions-Ledger.md`: `df7c47def352a4fd3151e156d43007325209817d`
