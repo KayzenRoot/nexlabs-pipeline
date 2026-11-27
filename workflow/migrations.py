@@ -222,7 +222,7 @@ def _event_risk(conn: sqlite3.Connection, event_id: str, tenant_id: str) -> str:
         risk = json.loads(row[0]).get("risk")
     except (TypeError, ValueError, AttributeError):
         return "HIGH_ASSURANCE"
-    return risk if risk in RISK_LEVELS else "HIGH_ASSURANCE"
+    return risk if isinstance(risk, str) and risk in RISK_LEVELS else "HIGH_ASSURANCE"
 
 
 def _migrate_v4(conn: sqlite3.Connection) -> None:
@@ -230,6 +230,12 @@ def _migrate_v4(conn: sqlite3.Connection) -> None:
         conn.execute("ALTER TABLE runs ADD COLUMN risk TEXT NOT NULL DEFAULT 'STANDARD'")
     rows = conn.execute("SELECT run_id,tenant_id,event_id,risk FROM runs").fetchall()
     for run_id, tenant_id, event_id, current in rows:
+        if not isinstance(current, str) or current not in RISK_LEVELS:
+            conn.execute(
+                "UPDATE runs SET risk='HIGH_ASSURANCE' WHERE run_id=? AND tenant_id=?",
+                (run_id, tenant_id),
+            )
+            continue
         event_risk = _event_risk(conn, event_id, tenant_id)
         if RISK_LEVELS[event_risk] > RISK_LEVELS[current]:
             conn.execute(

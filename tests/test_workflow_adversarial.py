@@ -537,6 +537,18 @@ class LedgerIntegrityTests(unittest.TestCase):
             with TestLedger(resumable) as ledger:
                 self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
                 self.assertEqual(ledger.run("legacy-run-1")["risk"], "HIGH_ASSURANCE")
+            nonhashable = Path(tmp) / "nonhashable.sqlite3"
+            make_v2_ledger(nonhashable, event_risk=["HIGH_ASSURANCE"])
+            with TestLedger(nonhashable) as ledger:
+                self.assertEqual(ledger.run("legacy-run-1")["risk"], "HIGH_ASSURANCE")
+            bogus = Path(tmp) / "bogus.sqlite3"
+            make_v2_ledger(bogus, risk_column_without_version=True)
+            conn = sqlite3.connect(bogus)
+            conn.execute("UPDATE runs SET risk='BOGUS'")
+            conn.commit()
+            conn.close()
+            with TestLedger(bogus) as ledger:
+                self.assertEqual(ledger.run("legacy-run-1")["risk"], "HIGH_ASSURANCE")
 
     def test_migration_handles_legacy_duplicates_and_partial_v3(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -10,7 +10,7 @@ Status: **CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT**
 
 ## 1. Escopo e proveniência
 
-A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F01–F06 HIGH/MEDIUM. Uma segunda auditoria independente em `0122cfc` emitiu **CORRECTION REQUIRED** com C12 allowlist, zero grants global, BLOCKED, migração v3, retry e risco de run. Uma terceira auditoria em `902c02f` emitiu **CORRECTION REQUIRED** com campos C12 aninhados e migração v4/risco legado. Esta CD-02 corrige o código no mesmo Work Order, branch e PR #10. Não cria Work Order, não faz merge, não promove checkpoint, não inicia NLE-WF-WO-002/INFRA-WO-003, não acessa VPS/rede/segredos/Paperclip runtime e não gera gasto.
+A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F01–F06 HIGH/MEDIUM. Uma segunda auditoria independente em `0122cfc` emitiu **CORRECTION REQUIRED** com C12 allowlist, zero grants global, BLOCKED, migração v3, retry e risco de run. Uma terceira auditoria em `902c02f` emitiu **CORRECTION REQUIRED** com campos C12 aninhados e migração v4/risco legado. Uma quarta auditoria em `a67b459` manteve apenas um MEDIUM: `risk` JSON lista/objeto quebrava `_event_risk` em vez de virar HIGH_ASSURANCE. Esta CD-02 corrige o código no mesmo Work Order, branch e PR #10. Não cria Work Order, não faz merge, não promove checkpoint, não inicia NLE-WF-WO-002/INFRA-WO-003, não acessa VPS/rede/segredos/Paperclip runtime e não gera gasto.
 
 ## 2. Correções F01–F06
 
@@ -37,7 +37,7 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 - Nonce exige `expires_at > now`; nonce expirado, inválido ou reutilizado nega.
 - Retenção conservadora de 24h após expiração; não há limpeza prematura por relógio/retrocesso.
 - Aprovação e resultado são persistidos em `approvals` com escopo completo (actor/project/task/workflow/risk/policy_epoch/target/approver_role/evidence_refs/max_spend/issued_at); `run_id` é nullable para ações de evento/recovery, e `runs.approval_id` é atualizado no create.
-- Migração v3 é transacional e resiliente a approvals legados com `approval_id` duplicado, `approvals_v3` parcial e retomada após rename; schema v4 adiciona `runs.risk`, faz backfill fail-closed a partir do evento (HIGH_ASSURANCE se ausente/inválido) e é resumível/idempotente.
+- Migração v3 é transacional e resiliente a approvals legados com `approval_id` duplicado, `approvals_v3` parcial e retomada após rename; schema v4 adiciona `runs.risk`, faz backfill fail-closed a partir do evento (HIGH_ASSURANCE para ausente, não-string, lista/objeto ou risco inválido) e é resumível/idempotente, inclusive para `runs.risk` corrompido.
 - Consumo, decisão e mutação ficam na mesma transação; falha de storage/rollback reverte o conjunto, inclusive nonce já consumido.
 - HMAC permanece test-only; nenhuma chave/identidade produtiva foi criada.
 
@@ -94,14 +94,13 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 | Security scanner | 493 arquivos, 0 achados |
 | `git diff --check` | limpo |
 
-Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão obsoleta; command boundary; referências cross-tenant/run; append com run inexistente/de outro tenant; idempotência divergente; nonce expirado/replay/concorrência entre conexões independentes; rollback de nonce após mutação falha; recovery/lease/cap; stale/deadline expirado sem retry; attempts nunca acima do cap; reversão de revogação negada; `approval_id` persistido no run; aprovação de append/recovery; binding de parâmetros de outbox, append run e policy epoch; downgrade de risco negado; run HIGH_ASSURANCE rejeita transição STANDARD; EFFECT_IN_PROGRESS claim/verify; BLOCKED com saída e sem outbox; outbox em run terminal negado; migração v2 com approval_id duplicado, approvals_v3 parcial e retomada de v3; backfill de risco legado HIGH_ASSURANCE e v4 resumível; WAL e integridade FK; UNKNOWN_EFFECT sem evidência; DAG circular; workflow desconhecido; C12 dispatcher, variações de privilégio e campos aninhados; zero grants fora C12; retry 429/cap consistente; schemas obrigatórios.
+Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão obsoleta; command boundary; referências cross-tenant/run; append com run inexistente/de outro tenant; idempotência divergente; nonce expirado/replay/concorrência entre conexões independentes; rollback de nonce após mutação falha; recovery/lease/cap; stale/deadline expirado sem retry; attempts nunca acima do cap; reversão de revogação negada; `approval_id` persistido no run; aprovação de append/recovery; binding de parâmetros de outbox, append run e policy epoch; downgrade de risco negado; run HIGH_ASSURANCE rejeita transição STANDARD; EFFECT_IN_PROGRESS claim/verify; BLOCKED com saída e sem outbox; outbox em run terminal negado; migração v2 com approval_id duplicado, approvals_v3 parcial e retomada de v3; backfill de risco legado HIGH_ASSURANCE, risk lista/objeto e risk corrompido, e v4 resumível; WAL e integridade FK; UNKNOWN_EFFECT sem evidência; DAG circular; workflow desconhecido; C12 dispatcher, variações de privilégio e campos aninhados; zero grants fora C12; retry 429/cap consistente; schemas obrigatórios.
 
 ## 4. CI e gates
 
-- CI/CD-02 no code head `36f1c970dc3dff5e652c46e902277f2dd0888bd1`: run **46047796447** — `docs-validation` (ubuntu-24.04, suíte canônica 156 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
-- SonarCloud no HEAD `36f1c97`: **0 issues abertas**, Quality Gate **passed**, check **success**. As 13 issues de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) permanecem corrigidas sem supressão/NOSONAR.
-- Socket Security: Pull Request Alerts e Project Report **PASS**; ECC Tools / Security Evidence **PASS** no commit `36f1c97`.
-- O commit docs-only seguinte registra este read-back e contém o lock final; a auditoria independente do HEAD final permanece pendente.
+- CI/CD-02 histórico no code head `36f1c97`: run **46047796447** — `docs-validation` (156 testes) e `security-windows` **SUCCESS**; Sonar **0 issues**; Socket/ECC **PASS**.
+- A rodada corretiva atual (risk lista/objeto/corrompido fail-closed) tem **156 testes locais** e CI/Sonar/Socket/ECC **pendentes** neste HEAD; nenhum resultado novo é declarado aprovado antes do read-back.
+- As 13 issues Sonar de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) permanecem corrigidas sem supressão/NOSONAR.
 - O CI executa explicitamente `workflow compile`, `workflow dry-run` e os testes adversariais no Windows.
 - Nenhum APPROVED é declarado antes da nova auditoria independente HIGH_ASSURANCE no HEAD final.
 - Cobertura Sonar 0.0% continua sendo ausência de relatório/instrumentação, não cobertura; não há alegação de cobertura.
@@ -123,7 +122,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **GATES PASS em 36f1c97; auditoria independente do HEAD final pendente** |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PENDENTE** — fix MEDIUM de risk JSON em validação; CI do novo HEAD e auditoria final pendentes |
 
 ## 6. Limitações e riscos
 
