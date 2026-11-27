@@ -5,7 +5,7 @@ Repositório: `KayzenRoot/nexlabs-pipeline`
 Base: `04724af867659e278210489c8ba91fc6344e3fb1`
 Base tree: `d0f135f2ba896a5fe22f21610bae78f025c0650e`
 Branch: `work/nle-wf-wo-001`
-Status: **CANDIDATE_PENDING_CI_AND_INDEPENDENT_AUDIT**
+Status: **CANDIDATE_PENDING_INDEPENDENT_AUDIT**
 
 ## 1. Resultado da recuperação
 
@@ -51,7 +51,7 @@ Nenhuma chamada de modelo, rede, Paperclip API/DB, VPS/SSH, segredo, agente, wor
 | AC11 C12 dispatch-only | **PASS** — exatamente 5 workflows; dispatcher não executa/revisa/accountable; sem grants; DISABLED |
 | AC12 Retry/limites | **PASS** — 401/403 BLOCK; 429 RETRY_AFTER; 5xx cap 2; desconhecido FAILED |
 | AC13 CLI/verificação | **PASS** — `python -m workflow verify` e C12 determinísticos |
-| AC14 CI Linux/Windows, Sonar, Socket, ECC, auditoria | **PENDING** — executado localmente em Windows; gates remotos e auditoria independente ainda necessários |
+| AC14 CI Linux/Windows, Sonar, Socket, ECC, auditoria | **PASS gates; auditoria pendente** — CI 46015081817 passou em ubuntu-24.04 e windows-2025; Sonar 0/gate OK; Socket/ECC PASS; auditoria independente ainda pendente |
 
 ## 4. Testes executados (Windows 11)
 
@@ -90,7 +90,10 @@ Cobertura Sonar continua sem relatório/instrumentação; 120/120 é execução 
 
 ## 7. CI/Sonar/Socket/ECC
 
-- CI Linux/Windows, SonarCloud, Socket e ECC são executados após o push; IDs serão registrados no Evidence Bundle externo/PR.
+- CI do código: run `46015081817` — `docs-validation` (ubuntu-24.04) e `security-windows` (windows-2025) **SUCCESS**.
+- SonarCloud: **0 issues abertas**, quality gate **OK**, check **pass**.
+- Socket Security e ECC Security Evidence: **PASS**.
+- O commit de evidência/lock segue após o HEAD de código `38a7b892d6bd63c0cbffc9ebae54dee41bd93abd`; o HEAD final verificável é registrado no Evidence Bundle externo/PR.
 - Nenhum APPROVED é declarado antes da auditoria independente do HEAD exato.
 
 ## 8. Checkpoint Delta proposto (não promovido)
@@ -101,4 +104,4 @@ Cobertura Sonar continua sem relatório/instrumentação; 120/120 é execução 
 
 ## 9. Veredito proposto
 
-**CANDIDATE_PENDING_CI_AND_INDEPENDENT_AUDIT.** A recuperação está implementada e testada localmente, mas ainda não está publicada/auditada no GitHub.
+**CANDIDATE_PENDING_INDEPENDENT_AUDIT.** A recuperação está implementada, publicada e com CI/Sonar/Socket/ECC verdes; falta a auditoria independente do HEAD exato.
