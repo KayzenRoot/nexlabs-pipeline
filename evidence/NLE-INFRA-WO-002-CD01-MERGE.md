@@ -35,7 +35,7 @@ CI run `45986351904`; SonarCloud 0 open issues/gate OK; ECC Security Evidence pa
 - Auditoria independente histórica de código/segurança: HEAD `578c273f937423758d2d37abb96c70e342357978`, verdict APPROVED por revisão de dossiê, sem reexecução de ferramentas pelo auditor.
 - Revisão de dossiê no HEAD documental `af8ead3`: APPROVED, sem reexecução de ferramentas.
 - Revisão técnica read-only realizada nesta conversa no HEAD exato `f7fb57e502347850d847e6c763dffe5e58eeee70`: veredito APPROVED; não havia artefato formal de review no GitHub no momento da integração. O merge foi executado sob autorização expressa do proprietário, registrada na conversa de integração.
-- **A promoção do checkpoint na PR #8 recebeu auditoria read-only APPROVED nesta conversa; permanece sem merge e aguarda aprovação expressa do proprietário.**
+- **A promoção do checkpoint na PR #8 recebeu auditoria read-only APPROVED e foi integrada sob autorização expressa do proprietário.** PR #8 squash merge e main read-back `6eacae4c8b6f4d3a5c43c84074b2061e6dca49db`; HEAD aprovado `75bdb840c287266a62e334b70137ca49148b86f7`; árvore idêntica `04b1364feffa2217a7897e81c462bad0f4c37d21`; pai `6d6f87c60144386c1242673322d147338a4dab61`; CI `45994037814`, cinco checks SUCCESS e ECC Security Evidence PASS por comentário; autorização expressa do proprietário e read-back confirmados. Evidência pós-merge: https://github.com/KayzenRoot/nexlabs-pipeline/pull/8.
 
 ## 4. Resultado técnico preservado
 
@@ -52,10 +52,30 @@ CI run `45986351904`; SonarCloud 0 open issues/gate OK; ECC Security Evidence pa
 - Nenhuma alteração de runtime, Paperclip, rede, WireGuard, VPS/SSH, firewall, segredo, credencial, agente, workflow, modelo ou deploy.
 - Custo adicional: US$0.
 - Cobertura de novo código continua 0.0% por ausência de relatório/instrumentação; não é cobertura medida.
-- Nenhum merge deste checkpoint; nenhuma promoção antecipada.
+- A promoção do checkpoint foi integrada somente após auditoria APPROVED e autorização expressa; nenhuma promoção antecipada.
 
-## 6. Checkpoint Delta proposto
+## 6. Checkpoint promovido
 
-- Promover o estado integrado NLE-INFRA-WO-002/CD-01 após auditoria independente desta PR documental.
-- Próximo Work Order NECESSARY proposto: **NLE-WF-WO-001** (evento/autorização/ledger, HIGH_ASSURANCE), **não iniciado**.
+- Estado integrado NLE-INFRA-WO-002/CD-01 promovido pela PR #8 após auditoria read-only APPROVED, autorização expressa, squash merge e read-back.
+- Próximo Work Order NECESSARY: **NLE-WF-WO-001** (evento/autorização/ledger, HIGH_ASSURANCE), **não iniciado**.
 - Sem ativação de agentes/workflows, sem Paperclip runtime, sem VPS/SSH, sem rede real, sem segredos, sem deploy e sem gasto.
+
+## 7. CP-RECONCILE-001 — Context Lock e limites
+
+Base `6eacae4c8b6f4d3a5c43c84074b2061e6dca49db`; árvore `04b1364feffa2217a7897e81c462bad0f4c37d21`. Fingerprints Git blob da base (não do próprio commit):
+
+- `docs/Checkpoint.md`: `5727e742495d5a642dc3b7e534dc840df1b257a5`
+- `docs/Decisions-Ledger.md`: `df7c47def352a4fd3151e156d43007325209817d`
+- `docs/Scope.md`: `9dc00ca1509728f2d6812daeceaaee2d1db2a2a5`
+- `docs/Definition-of-Done.md`: `c3ee3206e1d456045202339616512a0386d00f33`
+- `docs/Architecture.md`: `6b22865933fa7a3c81ec913dacf96137237cae85`
+- `docs/Requirements.md`: `ea8512ff62cbd0b849d3b19a15462f9f6f764901`
+- `docs/Security.md`: `c09eaab28274f32e1cf7b5ca30446b1aefd79466`
+- `docs/Backlog.md`: `eb2f8dde14c79bb68cb61845fa3209835f1f765f`
+- `docs/backlog.json`: `40dd43f85e1ac391dfa9bcb6b8a9516a005f2450`
+- `locks/source-lock.json`: `86bff14a49f366b524874f9ff1915372fa743756`
+- `.github/workflows/docs-validation.yml`: `9af099ea1d60810b2d8b84af9654e985128e7f4a`
+- `work-orders/NLE-INFRA-WO-002.md`: `c5549b5ac76e2d2fd4a342dc60415aa1dc29436c`
+- `evidence/NLE-INFRA-WO-002-CD01-MERGE.md`: `19bcf01883d96c799734528f528474a97429d7f9`
+
+Reconciliar apenas os quatro documentos afetados. O resultado desta reconciliação será atestado no HEAD exato e, após merge, na descrição/comentário da própria PR; não há requisito de nova PR para registrar o merge desta reconciliação. Nenhuma alteração de código, fontes, ADR, runtime ou infraestrutura. NLE-WF-WO-001 não iniciado. Billing não consultado.
