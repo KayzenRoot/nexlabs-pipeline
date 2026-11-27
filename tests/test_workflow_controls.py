@@ -106,7 +106,7 @@ class EventContractTests(unittest.TestCase):
         event = make_event()
         validate_event(event)
         self.assertEqual(event.digest(), make_event().digest())
-        self.assertTrue(event.canonical()["event_id"] == "event-1")
+        self.assertEqual(event.canonical()["event_id"], "event-1")
 
     def test_invalid_event_fields_and_unsafe_payload_reference_deny(self):
         for field, value in (
@@ -118,8 +118,9 @@ class EventContractTests(unittest.TestCase):
                 event = make_event(**{field: value})
                 with self.assertRaises(SecurityError):
                     validate_event(event)
+        reversed_event = make_event(received_at=NOW - timedelta(seconds=2))
         with self.assertRaises(SecurityError):
-            validate_event(make_event(received_at=NOW - timedelta(seconds=2)))
+            validate_event(reversed_event)
 
 
 class LedgerPersistenceTests(unittest.TestCase):

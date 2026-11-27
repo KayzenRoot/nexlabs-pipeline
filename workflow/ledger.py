@@ -76,6 +76,11 @@ CREATE TRIGGER IF NOT EXISTS events_no_delete
 BEFORE DELETE ON events BEGIN SELECT RAISE(ABORT, 'IMMUTABLE_EVENT'); END;
 """
 
+TRANSITION_INSERT = (
+    "INSERT INTO transitions(run_id,from_state,to_state,event_id,revision,occurred_at) "
+    "VALUES(?,?,?,?,?,?)"
+)
+
 
 class Ledger:
     """A small durable ledger; all writes are explicit transactions."""
@@ -158,8 +163,7 @@ class Ledger:
             except sqlite3.IntegrityError as exc:
                 raise WorkflowError("DUPLICATE_RUN") from exc
             self.conn.execute(
-                "INSERT INTO transitions(run_id,from_state,to_state,event_id,revision,occurred_at) "
-                "VALUES(?,?,?,?,?,?)",
+                TRANSITION_INSERT,
                 (run_id, None, "RECEIVED", event.event_id, 0, self._timestamp(now)),
             )
 
@@ -193,8 +197,7 @@ class Ledger:
                 (target, revision, attempts, self._timestamp(now), run_id),
             )
             self.conn.execute(
-                "INSERT INTO transitions(run_id,from_state,to_state,event_id,revision,occurred_at) "
-                "VALUES(?,?,?,?,?,?)",
+                TRANSITION_INSERT,
                 (run_id, current["state"], target, event_id, revision, self._timestamp(now)),
             )
             return revision
@@ -277,8 +280,7 @@ class Ledger:
                     (revision, self._timestamp(now), row["run_id"]),
                 )
                 self.conn.execute(
-                    "INSERT INTO transitions(run_id,from_state,to_state,event_id,revision,occurred_at) "
-                    "VALUES(?,?,?,?,?,?)",
+                    TRANSITION_INSERT,
                     (row["run_id"], "RUNNING", "RETRY_WAIT", None, revision, self._timestamp(now)),
                 )
                 recovered_retry += 1
@@ -292,8 +294,7 @@ class Ledger:
                     (revision, self._timestamp(now), row["run_id"]),
                 )
                 self.conn.execute(
-                    "INSERT INTO transitions(run_id,from_state,to_state,event_id,revision,occurred_at) "
-                    "VALUES(?,?,?,?,?,?)",
+                    TRANSITION_INSERT,
                     (row["run_id"], "EFFECT_IN_PROGRESS", "UNKNOWN_EFFECT", None,
                      revision, self._timestamp(now)),
                 )
