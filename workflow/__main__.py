@@ -4,7 +4,9 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timedelta, timezone
 import hashlib
+import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 
@@ -21,11 +23,50 @@ PAYLOAD = "a" * 64
 NOW = datetime(2026, 11, 27, 12, 0, tzinfo=timezone.utc)
 
 
-def verify() -> dict:
-    source_lock = ROOT / "locks/source-lock.json"
-    require(hashlib.sha256(source_lock.read_bytes()).hexdigest() == SOURCE_LOCK_SHA256,
+def _git_blob(path: str) -> bytes:
+    completed = subprocess.run(
+        ["git", "-C", str(ROOT), "show", f"HEAD:{path}"],
+        capture_output=True, check=False,
+    )
+    require(completed.returncode == 0, "SOURCE_GIT_OBJECT_UNAVAILABLE")
+    return completed.stdout
+
+
+def verify_source_lock() -> None:
+    """Validate canonical bytes from Git, independent of checkout line endings."""
+    lock_bytes = _git_blob("locks/source-lock.json")
+    require(hashlib.sha256(lock_bytes).hexdigest() == SOURCE_LOCK_SHA256,
             "BASELINE_LOCK_DRIFT")
-    validate_source_pack(ROOT, verbose=False)
+    files = json.loads(lock_bytes.decode("utf-8"))["files"]
+    require(len(files) == 364, "BASELINE_SOURCE_COUNT")
+    paths = sorted(files)
+    completed = subprocess.run(
+        ["git", "-C", str(ROOT), "cat-file", "--batch"],
+        input=("".join("HEAD:" + path + "\n" for path in paths)).encode("utf-8"),
+        capture_output=True, check=False,
+    )
+    require(completed.returncode == 0, "SOURCE_GIT_OBJECT_UNAVAILABLE")
+    output = completed.stdout
+    offset = 0
+    for relative in paths:
+        header_end = output.find(b"\n", offset)
+        require(header_end >= 0, "SOURCE_GIT_OBJECT_UNAVAILABLE")
+        header = output[offset:header_end].split()
+        require(len(header) == 3 and header[1] == b"blob", "SOURCE_GIT_OBJECT_UNAVAILABLE")
+        size = int(header[2])
+        data_start = header_end + 1
+        data = output[data_start:data_start + size]
+        require(len(data) == size, "SOURCE_GIT_OBJECT_UNAVAILABLE")
+        require(hashlib.sha256(data).hexdigest() == files[relative],
+                "SOURCE_FINGERPRINT_MISMATCH")
+        offset = data_start + size + 1
+    # The established archive/cross-plan validator is byte-exact and runs on Linux.
+    if sys.platform != "win32":
+        validate_source_pack(ROOT, verbose=False)
+
+
+def verify() -> dict:
+    verify_source_lock()
     workflows = load_workflows()
     contracts = validate_c12()
     require(len(workflows) == 62 and len(contracts) == 5, "C12_CATALOG_DRIFT")
@@ -68,7 +109,8 @@ def main(argv: list[str] | None = None) -> int:
             print("WORKFLOW_OK workflows=%(workflows)d c12=%(c12)d events=%(events)d "
                   "runs=%(runs)d nonces=%(nonces)d" % result)
     except (OSError, ValueError, TypeError, KeyError, AssertionError) as exc:
-        print("WORKFLOW_REJECTED " + type(exc).__name__, file=sys.stderr)
+        print("WORKFLOW_REJECTED " + type(exc).__name__ + ":" + str(exc),
+              file=sys.stderr)
         return 1
     return 0
 

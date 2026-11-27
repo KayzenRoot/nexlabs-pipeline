@@ -70,7 +70,7 @@
   },
   "implementation_git_blob_fingerprints": {
     "workflow/__init__.py": "4c05c11aa5926541254c86939c74437716efd44e",
-    "workflow/__main__.py": "82e5bdabdc4d89b364f0120ad81d8fdca298c303",
+    "workflow/__main__.py": "58e017d99ca3357e6ae8680bb51ffff692b912cb",
     "workflow/authorization.py": "b719be6fc42336666d2372c4d4d64117e6208c3c",
     "workflow/contracts.py": "e248e26e3b075fcf0e652749328b1c578087e626",
     "workflow/ledger.py": "834576df803696d72db752977cf88a74e1dea135",
@@ -78,11 +78,11 @@
     "tests/test_workflow_controls.py": "c5cbafa6a803d1cf27e6b5ed71a3434567125b85",
     "work-orders/NLE-WF-WO-001.md": "fce8adccda7555483d7689ee3c79fb0777ce4161",
     ".github/workflows/docs-validation.yml": "938d5ec23b7b409b4e4151ad847366f9045b4136",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "da5de824bc6cd31fcd7b8414108d5b53aeb2d278"
+    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "f5de01619f7188bf505716713b0feadeb7fb324a"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
-    "workflow/__main__.py": "f59147f4c4c6ed950b9e8e75e94b5f3210da6b87d6e00716a5e761ddd659fb81",
+    "workflow/__main__.py": "b53546368b0dda757d8219e78648a937da2c7706c9a25a67f51e2b41def17e73",
     "workflow/authorization.py": "da5ec007f742f77fcab6d118551350ad9fb8256a4f300e65d03dbedf6f67daac",
     "workflow/contracts.py": "8c1cf9aa825394551a0e7978c77f098eefe33d859f71b725f19d4d46c6913042",
     "workflow/ledger.py": "93792a7fa26c09c9be22d6673f8f1c1ded0a12866ca147fcebf30d269799bbbd",
@@ -90,7 +90,7 @@
     "tests/test_workflow_controls.py": "f67c0086a1f87ea7214375ceb1568e56bfcb0b338ab0e7549f552bb309a73946",
     "work-orders/NLE-WF-WO-001.md": "ca581d6320c81b3627c53e39837cb60ab07dfd4926b5724c4d18d643b6b2de06",
     ".github/workflows/docs-validation.yml": "634257c315c307cf5f281db8ea63abb91c267b6c996ed497ba39306f172aa7ba",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "9b7f587d7a446d11929e0c015b65b2d34e01c0d38cc6ba6e0f98fdaf801a130b"
+    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "73858a2dc054b47127b60a73bb8de5ccd11d905497e7941a48455c0b93e23eab"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
