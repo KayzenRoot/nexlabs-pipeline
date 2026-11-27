@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import sqlite3
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 MIGRATION_1 = """
 CREATE TABLE IF NOT EXISTS schema_migrations (
@@ -125,12 +125,15 @@ CREATE INDEX IF NOT EXISTS idx_nonce_retention ON nonces(retention_until);
 """
 
 MIGRATION_3 = """
+DROP TABLE IF EXISTS approvals_v3;
 CREATE TABLE approvals_v3 (
-  approval_id TEXT NOT NULL PRIMARY KEY,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  approval_id TEXT NOT NULL,
   run_id TEXT,
   tenant_id TEXT NOT NULL,
   actor_id TEXT NOT NULL,
   approver_id TEXT NOT NULL,
+  approver_role TEXT NOT NULL,
   action TEXT NOT NULL,
   target_id TEXT NOT NULL,
   project_id TEXT NOT NULL,
@@ -141,24 +144,35 @@ CREATE TABLE approvals_v3 (
   policy_sha256 TEXT NOT NULL,
   policy_epoch INTEGER NOT NULL,
   nonce TEXT NOT NULL,
+  evidence_refs_json TEXT NOT NULL,
+  max_spend_usd TEXT NOT NULL,
+  issued_at TEXT NOT NULL,
   expires_at TEXT NOT NULL,
   result TEXT NOT NULL,
   created_at TEXT NOT NULL,
+  UNIQUE (approval_id, run_id, tenant_id),
   FOREIGN KEY (run_id, tenant_id) REFERENCES runs(run_id, tenant_id)
 );
 INSERT INTO approvals_v3(
-  approval_id,run_id,tenant_id,actor_id,approver_id,action,target_id,
+  approval_id,run_id,tenant_id,actor_id,approver_id,approver_role,action,target_id,
   project_id,task_id,workflow_id,risk,payload_sha256,policy_sha256,
-  policy_epoch,nonce,expires_at,result,created_at)
-SELECT approval_id,run_id,tenant_id,'LEGACY-ACTOR',approver_id,action,run_id,
+  policy_epoch,nonce,evidence_refs_json,max_spend_usd,issued_at,expires_at,result,created_at)
+SELECT approval_id,run_id,tenant_id,'LEGACY-ACTOR',approver_id,'OWNER',action,run_id,
   'LEGACY-PROJECT','LEGACY-TASK','LEGACY-WORKFLOW','STANDARD',payload_sha256,
-  policy_sha256,1,nonce,expires_at,result,created_at FROM approvals;
+  policy_sha256,1,nonce,'["LEGACY-EVIDENCE"]','0',created_at,expires_at,result,created_at
+FROM approvals;
 DROP TABLE approvals;
 ALTER TABLE approvals_v3 RENAME TO approvals;
 CREATE INDEX IF NOT EXISTS idx_approvals_run ON approvals(run_id, tenant_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_approvals_null_run
+  ON approvals(approval_id) WHERE run_id IS NULL;
 """
 
-MIGRATIONS = {1: MIGRATION_1, 2: MIGRATION_2, 3: MIGRATION_3}
+MIGRATION_4 = """
+ALTER TABLE runs ADD COLUMN risk TEXT NOT NULL DEFAULT 'STANDARD';
+"""
+
+MIGRATIONS = {1: MIGRATION_1, 2: MIGRATION_2, 3: MIGRATION_3, 4: MIGRATION_4}
 
 
 def apply_migrations(conn: sqlite3.Connection) -> int:

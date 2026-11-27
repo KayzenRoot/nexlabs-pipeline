@@ -23,7 +23,7 @@ from workflow.authorization import authorize_workflow
 from workflow.contracts import (
     C12_WORKFLOW_IDS, STATES, TRANSITIONS, WorkflowEvent,
     assert_transition, load_workflows, retry_decision, validate_c12,
-    validate_c12_workflow, validate_event,
+    validate_c12_workflow, validate_event, validate_workflow_catalog,
 )
 from workflow.ledger import Ledger
 
@@ -414,7 +414,15 @@ class C12AndPolicyTests(unittest.TestCase):
             ("effect_allowed", lambda w: w.__setitem__("effect_policy", "ALLOW")),
             ("spend_nonzero", lambda w: w.__setitem__("new_spend_limit_usd", 1)),
             ("memory_grant", lambda w: w.__setitem__("memory_grants", ["memory-1"])),
-            ("skill_import", lambda w: w.__setitem__("skill_imports", ["skill-1"])),
+            ("memory_grant_case", lambda w: w.__setitem__("Memory_Grants", ["memory-1"])),
+            ("memory_grant_singular", lambda w: w.__setitem__("memory_grant", ["memory-1"])),
+            ("skill_grant", lambda w: w.__setitem__("skill_grant", ["skill-1"])),
+            ("client_permission", lambda w: w.__setitem__("client_permission", True)),
+            ("entitlements", lambda w: w.__setitem__("entitlements", ["ent-1"])),
+            ("secrets", lambda w: w.__setitem__("secrets", ["secret-1"])),
+            ("unknown_field", lambda w: w.__setitem__("foo", "bar")),
+            ("step_memory_grant_case",
+             lambda w: w["steps"][0].__setitem__("Memory_Grants", ["memory-1"])),
             ("privileges", lambda w: w.__setitem__("privileges", {"elevated": True})),
             ("step_client_access", lambda w: w["steps"][0].__setitem__("client_access", True)),
         )
@@ -425,11 +433,20 @@ class C12AndPolicyTests(unittest.TestCase):
                 with self.assertRaises(SecurityError):
                     validate_c12_workflow(workflow)
 
+    def test_catalog_rejects_grant_fields_outside_c12(self):
+        workflows = [copy.deepcopy(item) for item in load_workflows().values()]
+        target = next(item for item in workflows if item["id"] not in C12_WORKFLOW_IDS)
+        target["grants"] = ["external-grant"]
+        with self.assertRaises(SecurityError):
+            validate_workflow_catalog(workflows)
+
     def test_retry_policy_respects_auth_rate_limit_and_attempt_cap(self):
         self.assertEqual(retry_decision(401, 0), "BLOCK")
         self.assertEqual(retry_decision(403, 0), "BLOCK")
         self.assertEqual(retry_decision(429, 0, retry_after=10), "RETRY_AFTER")
         self.assertEqual(retry_decision(500, 0), "RETRY_WAIT")
+        self.assertEqual(retry_decision(500, 1), "FAILED")
+        self.assertEqual(retry_decision(429, 1), "FAILED")
         self.assertEqual(retry_decision(500, 2), "FAILED")
         self.assertEqual(retry_decision(404, 0), "FAILED")
 

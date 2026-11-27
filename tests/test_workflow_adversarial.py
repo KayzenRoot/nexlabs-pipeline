@@ -21,10 +21,10 @@ from workflow.commands import CommandScope, WorkflowCommands, _payload_digest
 from workflow.compiler import compile_catalog, dry_run, validate_dag
 from workflow.contracts import (
     MAX_ATTEMPTS, RunContract, WorkflowEvent, load_workflows, retry_decision,
-    validate_c12_workflow,
+    validate_c12_workflow, validate_workflow_catalog,
 )
 from workflow.ledger import Ledger
-from workflow.migrations import SCHEMA_VERSION
+from workflow.migrations import MIGRATION_1, MIGRATION_2, SCHEMA_VERSION
 
 NOW = datetime(2026, 11, 27, 12, 0, tzinfo=timezone.utc)
 PAYLOAD = "a" * 64
@@ -78,6 +78,54 @@ class TestLedger(Ledger):
 
     def recover(self, now=NOW):
         return self._recover("tenant-1", now)
+
+
+def make_v2_ledger(path, *, partial_v3=False):
+    """Build a synthetic schema-2 ledger with duplicate legacy approval ids."""
+    conn = sqlite3.connect(path)
+    try:
+        conn.executescript(MIGRATION_1)
+        conn.executescript(MIGRATION_2)
+        conn.executemany(
+            "INSERT INTO schema_migrations(version, applied_at) VALUES(?,?)",
+            [(1, NOW.isoformat()), (2, NOW.isoformat())],
+        )
+        for index in (1, 2):
+            event_id = f"legacy-event-{index}"
+            run_id = f"legacy-run-{index}"
+            conn.execute(
+                "INSERT INTO events(event_id,tenant_id,run_id,event_sha256,"
+                "idempotency_key,event_type,correlation_id,payload_ref,payload_sha256,"
+                "received_at,body_json) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                (event_id, "tenant-1", run_id,
+                 hashlib.sha256(event_id.encode()).hexdigest(), f"idem-{index}",
+                 "work_order.ready", f"corr-{index}", f"payload-{index}", PAYLOAD,
+                 NOW.isoformat(), "{}"),
+            )
+            conn.execute(
+                "INSERT INTO runs(run_id,tenant_id,project_id,task_id,workflow_id,"
+                "workflow_version,event_id,correlation_id,state,revision,attempts,"
+                "source_lock_sha256,deadline_at,created_at,updated_at) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (run_id, "tenant-1", "project-1", "task-1", "NLE-WF-GOV-03",
+                 "0.1.0", event_id, f"corr-{index}", "RECEIVED", 0, 0,
+                 SOURCE_LOCK, (NOW + timedelta(hours=1)).isoformat(),
+                 NOW.isoformat(), NOW.isoformat()),
+            )
+            conn.execute(
+                "INSERT INTO approvals(approval_id,run_id,tenant_id,approver_id,action,"
+                "payload_sha256,policy_sha256,nonce,expires_at,result,created_at) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+                ("legacy-duplicate", run_id, "tenant-1", "legacy-approver",
+                 "workflow.run.create", PAYLOAD, POLICY, f"legacy-nonce-{index}",
+                 (NOW + timedelta(hours=1)).isoformat(), "AUTHORIZED_INTERNAL_ONLY",
+                 NOW.isoformat()),
+            )
+        if partial_v3:
+            conn.execute("CREATE TABLE approvals_v3 (partial TEXT)")
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def grant(action, target="run-1", tenant="tenant-1", risk="STANDARD"):
@@ -221,16 +269,25 @@ class HighAssuranceCommandTests(unittest.TestCase):
                 self.assertEqual(ledger.run("run-1")["approval_id"], "approval-1")
                 row = ledger._conn.execute(
                     "SELECT run_id,target_id,actor_id,project_id,task_id,workflow_id,"
-                    "risk,policy_epoch,action FROM approvals WHERE approval_id=?",
+                    "risk,policy_epoch,action,approver_role,evidence_refs_json,"
+                    "max_spend_usd,issued_at FROM approvals WHERE approval_id=?",
                     ("approval-1",),
                 ).fetchone()
                 self.assertEqual(
-                    dict(row),
+                    {key: row[key] for key in (
+                        "run_id", "target_id", "actor_id", "project_id", "task_id",
+                        "workflow_id", "risk", "policy_epoch", "action",
+                        "approver_role", "max_spend_usd",
+                    )},
                     {"run_id": "run-1", "target_id": "run-1", "actor_id": "agent-1",
                      "project_id": "project-1", "task_id": "task-1",
                      "workflow_id": "NLE-WF-GOV-03", "risk": "HIGH_ASSURANCE",
-                     "policy_epoch": 1, "action": "workflow.run.create"},
+                     "policy_epoch": 1, "action": "workflow.run.create",
+                     "approver_role": "OWNER", "max_spend_usd": "0"},
                 )
+                self.assertEqual(json.loads(row["evidence_refs_json"]),
+                                 ["evidence-001"])
+                self.assertEqual(row["issued_at"], (NOW - timedelta(minutes=1)).isoformat())
             with TestLedger(path) as ledger:
                 replay = WorkflowCommands(
                     ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
@@ -353,6 +410,27 @@ class HighAssuranceCommandTests(unittest.TestCase):
                     command.enqueue_outbox("run-1", "event-3", "payload-3", NOW)
                 self.assertEqual(ledger.counts()["outbox"], 0)
 
+    def test_high_assurance_run_rejects_standard_transition(self):
+        event = make_event(risk="HIGH_ASSURANCE")
+        approval, signature = make_approval(
+            create_payload(event), nonce="riskfloornonce0123456789abcdef",
+            approval_id="approval-risk-floor",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                high = WorkflowCommands(
+                    ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
+                    risk="HIGH_ASSURANCE",
+                    grants=(grant("workflow.run.create", risk="HIGH_ASSURANCE"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                high.create_run("run-1", "0.1.0", event, NOW, NOW + timedelta(hours=1))
+                standard = commands(ledger, [grant("workflow.run.transition")])
+                with self.assertRaises(SecurityError):
+                    standard.transition("run-1", "VALIDATED", event.event_id, NOW,
+                                        expected_revision=0, payload_sha256=PAYLOAD)
+
     def test_approval_policy_epoch_is_bound(self):
         event = make_event()
         approval, signature = make_approval(
@@ -397,6 +475,32 @@ class LedgerIntegrityTests(unittest.TestCase):
                 with self.assertRaises(SecurityError):
                     ledger._append_event(cross, "run-1")
                 self.assertEqual(ledger.counts()["events"], 1)
+
+    def test_blocked_state_has_exit_and_no_outbox(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = ledger.create_run()
+                ledger.advance("run-1", "VALIDATED", "BLOCKED")
+                with self.assertRaises(SecurityError):
+                    ledger._enqueue_outbox("run-1", "tenant-1", event.event_id,
+                                           event.payload_ref, NOW)
+                ledger.transition("run-1", "CANCELLED")
+                self.assertEqual(ledger.run("run-1")["state"], "CANCELLED")
+
+    def test_migration_handles_legacy_duplicates_and_partial_v3(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            duplicate = Path(tmp) / "duplicate.sqlite3"
+            make_v2_ledger(duplicate)
+            with TestLedger(duplicate) as ledger:
+                self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
+                self.assertEqual(ledger.counts()["approvals"], 2)
+                self.assertEqual(ledger.integrity(), "ok")
+            partial = Path(tmp) / "partial.sqlite3"
+            make_v2_ledger(partial, partial_v3=True)
+            with TestLedger(partial) as ledger:
+                self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
+                self.assertEqual(ledger.counts()["approvals"], 2)
+                self.assertEqual(ledger.integrity(), "ok")
 
     def test_outbox_rejects_terminal_run(self):
         with tempfile.TemporaryDirectory() as tmp:

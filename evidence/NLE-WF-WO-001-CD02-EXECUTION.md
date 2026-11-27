@@ -10,7 +10,7 @@ Status: **CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT**
 
 ## 1. Escopo e proveniência
 
-A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F01–F06 HIGH/MEDIUM. Esta CD-02 corrige o código no mesmo Work Order, branch e PR #10. Não cria Work Order, não faz merge, não promove checkpoint, não inicia NLE-WF-WO-002/INFRA-WO-003, não acessa VPS/rede/segredos/Paperclip runtime e não gera gasto.
+A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F01–F06 HIGH/MEDIUM. Uma segunda auditoria independente em `0122cfc` emitiu **CORRECTION REQUIRED** com C12 allowlist, zero grants global, BLOCKED, migração v3, retry e risco de run. Esta CD-02 corrige o código no mesmo Work Order, branch e PR #10. Não cria Work Order, não faz merge, não promove checkpoint, não inicia NLE-WF-WO-002/INFRA-WO-003, não acessa VPS/rede/segredos/Paperclip runtime e não gera gasto.
 
 ## 2. Correções F01–F06
 
@@ -36,7 +36,8 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 
 - Nonce exige `expires_at > now`; nonce expirado, inválido ou reutilizado nega.
 - Retenção conservadora de 24h após expiração; não há limpeza prematura por relógio/retrocesso.
-- Aprovação e resultado são persistidos em `approvals` com escopo completo (actor/project/task/workflow/risk/policy_epoch/target); `run_id` é nullable para ações de evento/recovery, e `runs.approval_id` é atualizado no create.
+- Aprovação e resultado são persistidos em `approvals` com escopo completo (actor/project/task/workflow/risk/policy_epoch/target/approver_role/evidence_refs/max_spend/issued_at); `run_id` é nullable para ações de evento/recovery, e `runs.approval_id` é atualizado no create.
+- Migração v3 é resiliente a approvals legados com `approval_id` duplicado e a `approvals_v3` parcial; schema v4 adiciona `runs.risk`.
 - Consumo, decisão e mutação ficam na mesma transação; falha de storage/rollback reverte o conjunto, inclusive nonce já consumido.
 - HMAC permanece test-only; nenhuma chave/identidade produtiva foi criada.
 
@@ -44,7 +45,8 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 
 - Recovery libera lease expirada, incrementa attempts/revision atomicamente e leva a RETRY_WAIT ou FAILED no cap.
 - Run stale, revogada ou com deadline expirado vai direto a FAILED no recovery; nunca retorna a RETRY_WAIT. Reverse de stale/revogação é negado.
-- Recovery nunca grava attempts acima do cap 2, mesmo para linha legacy em attempts=2.
+- Recovery nunca grava attempts acima do cap 2, mesmo para linha legacy em attempts=2; `retry_decision` usa o mesmo corte de 2 tentativas totais do ledger.
+- `BLOCKED` é estado explícito com saídas definidas (QUEUED/CANCELLED/FAILED) e não permite outbox.
 - Lease ativa não é tocada; EFFECT_IN_PROGRESS só vira UNKNOWN_EFFECT quando a lease expirou/está ausente. Claim é permitido em RUNNING e EFFECT_IN_PROGRESS, exige deadline futuro e attempts abaixo do cap, permitindo verificação normal do efeito.
 - UNKNOWN_EFFECT → VERIFIED/FAILED/BLOCKED exige `reconciliation_ref`.
 - Mutações em RUNNING/EFFECT_IN_PROGRESS exigem lease owner/epoch válidos; fencing antigo e owner divergente negam.
@@ -59,7 +61,7 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 | 2. Run Contract completo | `RunContract` + `runs` persistido |
 | 3. Schemas versionados | `workflow/schemas/*.json` |
 | 4. Ledger persistente | SQLite WAL/FULL, eventos/transições/aprovações |
-| 5. Migrações versionadas | `workflow/migrations.py`, `schema_migrations`, versão 2 |
+| 5. Migrações versionadas | `workflow/migrations.py`, `schema_migrations`, versão 4 |
 | 6. Nonce durável | tabela `nonces`, retenção, atomicidade |
 | 7. Máquina de estados com autorização | `WorkflowCommands` + `TRANSITIONS` |
 | 8. Compilador dos 62 workflows | `workflow/compiler.py`, 62/62 |
@@ -73,31 +75,32 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 ### F06 — Context Lock e C12
 
 - `workflow verify` valida base tree, ancestralidade do base, `origin/main` obrigatório, drift de fontes e de implementação, fingerprints canônicos no base e no HEAD (exceto arquivos também cobertos pela implementação), 24 canônicos + 17 de implementação, source lock 364 e C12.
-- C12 exige exatamente GOV-03/QNT-01/02/03/05, dispatcher `NLE-ATHENA-PMO`, e rejeita dispatcher executor/accountable/reviewer, campos de privilégio/memória/skill/client, grants, efeitos e ativação — sem mascarar campos injetados.
+- C12 usa allowlist de campos no workflow e nos steps; qualquer campo desconhecido, variação de case ou sinônimo (`Memory_Grants`, `memory_grant`, `skill_grant`, `client_permission`, `entitlements`, `secrets`) é rejeitado, sem mascaramento.
+- O invariante de zero grants é verificado recursivamente em todos os 62 workflows e steps; `summary.grants` do compilador é derivado dessa varredura, não literal.
+- O run persiste `risk`; comandos STANDARD não transicionam/gerenciam run criado como HIGH_ASSURANCE.
 - 62 workflows preservados: 36 INTERNAL_ONLY, 12 POLICY_GATED_EXTERNAL, 14 HUMAN_APPROVAL_REQUIRED; todos DISABLED; zero grants externos.
 
 ## 3. Testes executados
 
 | Verificação | Resultado |
 |---|---|
-| Suíte completa local Windows 11 | **150/150 OK** (120 anteriores + 30 adversariais), após commit limpo |
+| Suíte completa local Windows 11 | **154/154 OK** (120 anteriores preservados + 34 novos: 33 adversariais + 1 regressão de catálogo) |
 | `python -m workflow verify` | `WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0` |
 | `python -m workflow compile` | 62 workflows compilados; summary 36/12/14; 0 grants |
 | `python -m workflow dry-run` | DAG determinístico, `execution_allowed=false`, 0 efeitos |
 | Source validator | 7/7 grupos PASS; 364 fontes |
 | Registry | 105/92/1110; 105 intents; 0 writes |
 | Security verify | PASS |
-| Security scanner | 485 arquivos, 0 achados |
+| Security scanner | 493 arquivos, 0 achados |
 | `git diff --check` | limpo |
 
-Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão obsoleta; command boundary; referências cross-tenant/run; append com run inexistente/de outro tenant; idempotência divergente; nonce expirado/replay/concorrência entre conexões independentes; rollback de nonce após mutação falha; recovery/lease/cap; stale/deadline expirado sem retry; attempts nunca acima do cap; reversão de revogação negada; `approval_id` persistido no run; aprovação de append/recovery; binding de parâmetros de outbox e policy epoch; downgrade de risco negado; EFFECT_IN_PROGRESS claim/verify; outbox em run terminal negado; WAL e integridade FK; UNKNOWN_EFFECT sem evidência; migração; DAG circular; workflow desconhecido; C12 dispatcher e campos de privilégio; retry 429 no cap; schemas obrigatórios.
+Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão obsoleta; command boundary; referências cross-tenant/run; append com run inexistente/de outro tenant; idempotência divergente; nonce expirado/replay/concorrência entre conexões independentes; rollback de nonce após mutação falha; recovery/lease/cap; stale/deadline expirado sem retry; attempts nunca acima do cap; reversão de revogação negada; `approval_id` persistido no run; aprovação de append/recovery; binding de parâmetros de outbox, append run e policy epoch; downgrade de risco negado; run HIGH_ASSURANCE rejeita transição STANDARD; EFFECT_IN_PROGRESS claim/verify; BLOCKED com saída e sem outbox; outbox em run terminal negado; migração v2 com approval_id duplicado e approvals_v3 parcial; WAL e integridade FK; UNKNOWN_EFFECT sem evidência; DAG circular; workflow desconhecido; C12 dispatcher e variações de privilégio; zero grants fora C12; retry 429/cap consistente; schemas obrigatórios.
 
 ## 4. CI e gates
 
-- CI/CD-02 no code head `f54cc3e5741bdafded929d5edfdcc6253ace82d6`: run **46034967128** — `docs-validation` (ubuntu-24.04, suíte canônica 150 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
-- SonarCloud no HEAD `f54cc3e`: **0 issues abertas**, Quality Gate **passed**, check **success**. As 13 issues de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) foram corrigidas sem supressão/NOSONAR.
-- Socket Security: Pull Request Alerts e Project Report **PASS**; ECC Tools / Security Evidence **PASS** no commit `f54cc3e`.
-- O commit docs-only seguinte registra este read-back; sua CI é o último gate antes da auditoria independente.
+- CI/CD-02 histórico no code head `f54cc3e5741bdafded929d5edfdcc6253ace82d6`: run **46034967128** — `docs-validation` (150 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` **SUCCESS**; Sonar **0 issues**; Socket/ECC **PASS**.
+- A rodada corretiva atual (C12 allowlist, zero grants global, BLOCKED, migração v3/v4, retry e risco de run) tem **154 testes locais** e CI/Sonar/Socket/ECC **pendentes** neste HEAD; nenhum resultado novo é declarado aprovado antes do read-back.
+- As 13 issues Sonar de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) permanecem corrigidas sem supressão/NOSONAR.
 - O CI executa explicitamente `workflow compile`, `workflow dry-run` e os testes adversariais no Windows.
 - Nenhum APPROVED é declarado antes da nova auditoria independente HIGH_ASSURANCE no HEAD final.
 - Cobertura Sonar 0.0% continua sendo ausência de relatório/instrumentação, não cobertura; não há alegação de cobertura.
@@ -119,7 +122,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **GATES PASS em f54cc3e; auditoria independente do HEAD final pendente** |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PENDENTE** — correções HIGH/MEDIUM da segunda auditoria em validação; CI do novo HEAD e auditoria final pendentes |
 
 ## 6. Limitações e riscos
 
@@ -127,7 +130,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 - Identidade humana real, custódia de chaves de aprovação e provider de assinatura continuam gates de produção fora do CD-02.
 - `retry_decision` é contrato puro de política (401/403/429/5xx/cap); não há rota HTTP/effect neste slice offline para integrá-lo.
 - `counts()`/`integrity()` permanecem leituras globais de diagnóstico, não caminhos de mutação.
-- Windows CI executará security, workflow e adversarial suites; a suíte integral de 150 roda no Linux e localmente no Windows.
+- Windows CI executará security, workflow e adversarial suites; a suíte integral de 154 roda no Linux e localmente no Windows.
 - Cobertura não medida; `required_approving_review_count=0` permanece risco de governança.
 - Nenhum efeito externo, VPS, Paperclip runtime, segredo, agente, workflow ativo, deploy, merge ou despesa.
 

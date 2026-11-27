@@ -8,12 +8,14 @@ from pathlib import Path
 from typing import Iterator
 
 from security.contracts import (
-    AccessRequest, ApprovalEnvelope, require, require_hash, require_id, require_utc,
+    AccessRequest, ApprovalEnvelope, as_decimal, require, require_hash, require_id,
+    require_utc,
 )
 
 from .contracts import (
-    EXECUTOR_STATES, MAX_ATTEMPTS, TERMINAL, RunContract, WorkflowEvent,
-    assert_transition, canonical_bytes, validate_event, WorkflowError,
+    EXECUTOR_STATES, MAX_ATTEMPTS, OUTBOX_BLOCKED_STATES, RISK_LEVELS, RunContract,
+    WorkflowEvent, assert_transition, canonical_bytes, require_risk_floor,
+    validate_event, WorkflowError,
 )
 from .migrations import apply_migrations
 
@@ -95,7 +97,8 @@ class Ledger:
 
     def _create_run(self, run_id: str, tenant_id: str, project_id: str, task_id: str,
                     workflow_id: str, workflow_version: str, event: WorkflowEvent,
-                    now: datetime, deadline_at: datetime, source_lock_sha256: str) -> None:
+                    now: datetime, deadline_at: datetime, source_lock_sha256: str,
+                    risk: str = "STANDARD") -> None:
         for value in (run_id, project_id, task_id, workflow_id, workflow_version):
             require_id(value, "RUN_IDENTIFIER_INVALID")
         require_utc(now)
@@ -108,7 +111,7 @@ class Ledger:
             workflow_id=workflow_id, workflow_version=workflow_version,
             event_id=event.event_id, correlation_id=event.correlation_id, state="RECEIVED",
             revision=0, attempts=0, source_lock_sha256=source_lock_sha256,
-            deadline_at=deadline_at,
+            deadline_at=deadline_at, risk=risk,
         ).validate()
         with self._transaction():
             self._insert_event(event, run_id)
@@ -116,11 +119,11 @@ class Ledger:
                 self._conn.execute(
                     "INSERT INTO runs(run_id,tenant_id,project_id,task_id,workflow_id,"
                     "workflow_version,event_id,correlation_id,state,revision,attempts,"
-                    "source_lock_sha256,deadline_at,created_at,updated_at) "
-                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    "source_lock_sha256,deadline_at,risk,created_at,updated_at) "
+                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (run_id, tenant_id, project_id, task_id, workflow_id, workflow_version,
                      event.event_id, event.correlation_id, "RECEIVED", 0, 0,
-                     source_lock_sha256, self._timestamp(deadline_at),
+                     source_lock_sha256, self._timestamp(deadline_at), risk,
                      self._timestamp(now), self._timestamp(now)),
                 )
             except sqlite3.IntegrityError as exc:
@@ -247,14 +250,18 @@ class Ledger:
             try:
                 self._conn.execute(
                     "INSERT INTO approvals(approval_id,run_id,tenant_id,actor_id,approver_id,"
-                    "action,target_id,project_id,task_id,workflow_id,risk,payload_sha256,"
-                    "policy_sha256,policy_epoch,nonce,expires_at,result,created_at) "
-                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    "approver_role,action,target_id,project_id,task_id,workflow_id,risk,"
+                    "payload_sha256,policy_sha256,policy_epoch,nonce,evidence_refs_json,"
+                    "max_spend_usd,issued_at,expires_at,result,created_at) "
+                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (approval.approval_id, run_id, request.tenant_id,
-                     request.actor.principal_id, approval.approver_id, request.action,
-                     request.target_id, request.project_id, request.task_id,
-                     request.workflow_id, request.risk, request.payload_sha256,
-                     request.policy_sha256, request.policy_epoch, approval.nonce,
+                     request.actor.principal_id, approval.approver_id,
+                     approval.approver_role, request.action, request.target_id,
+                     request.project_id, request.task_id, request.workflow_id,
+                     request.risk, request.payload_sha256, request.policy_sha256,
+                     request.policy_epoch, approval.nonce,
+                     canonical_bytes(list(approval.evidence_refs)).decode(),
+                     str(as_decimal(approval.max_spend_usd)), approval.issued_at.isoformat(),
                      self._timestamp(approval.expires_at), result, self._timestamp(now)),
                 )
                 if run_id is not None and request.action == "workflow.run.create":
@@ -279,7 +286,7 @@ class Ledger:
             require(event["tenant_id"] == tenant_id, "OUTBOX_TENANT_MISMATCH")
             require(event["run_id"] == run_id, "OUTBOX_RUN_MISMATCH")
             require(event["payload_ref"] == payload_ref, "OUTBOX_PAYLOAD_REF_MISMATCH")
-            require(run["state"] not in TERMINAL, "OUTBOX_RUN_TERMINAL")
+            require(run["state"] not in OUTBOX_BLOCKED_STATES, "OUTBOX_RUN_TERMINAL")
             try:
                 self._conn.execute(
                     "INSERT INTO outbox(run_id,tenant_id,event_id,payload_ref,status,created_at) "
@@ -304,9 +311,11 @@ class Ledger:
                 (run_id, tenant_id, reason, sanitized_ref, self._timestamp(now)),
             )
 
-    def _recover(self, tenant_id: str, now: datetime) -> dict[str, int]:
+    def _recover(self, tenant_id: str, now: datetime,
+                 risk: str = "HIGH_ASSURANCE") -> dict[str, int]:
         require_id(tenant_id, "TENANT_ID_INVALID")
         require_utc(now)
+        require(risk in RISK_LEVELS, "RECOVERY_RISK_INVALID")
         retry = unknown = failed = 0
         with self._transaction():
             rows = self._conn.execute(
@@ -315,10 +324,12 @@ class Ledger:
                 (tenant_id, self._timestamp(now)),
             ).fetchall()
             for row in rows:
+                require_risk_floor(risk, row["risk"])
                 attempts = min(row["attempts"] + 1, MAX_ATTEMPTS)
                 terminal = (row["stale"] or row["revoked"]
-                            or datetime.fromisoformat(row["deadline_at"]) <= now)
-                target = "FAILED" if terminal or attempts >= MAX_ATTEMPTS else "RETRY_WAIT"
+                            or datetime.fromisoformat(row["deadline_at"]) <= now
+                            or attempts >= MAX_ATTEMPTS)
+                target = "FAILED" if terminal else "RETRY_WAIT"
                 revision = row["revision"] + 1
                 self._conn.execute(
                     "UPDATE runs SET state=?,revision=?,attempts=?,lease_owner=NULL,"
@@ -341,6 +352,7 @@ class Ledger:
                 (tenant_id, self._timestamp(now)),
             ).fetchall()
             for row in rows:
+                require_risk_floor(risk, row["risk"])
                 revision = row["revision"] + 1
                 self._conn.execute(
                     "UPDATE runs SET state='UNKNOWN_EFFECT',revision=?,lease_owner=NULL,"

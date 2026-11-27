@@ -3,7 +3,7 @@
   "$id": "urn:nexlabs:workflow-run:v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["run_id", "tenant_id", "project_id", "task_id", "workflow_id", "workflow_version", "event_id", "correlation_id", "state", "revision", "attempts", "source_lock_sha256", "deadline_at", "stale", "revoked", "approval_id", "lease_owner", "lease_epoch"],
+  "required": ["run_id", "tenant_id", "project_id", "task_id", "workflow_id", "workflow_version", "event_id", "correlation_id", "state", "revision", "attempts", "source_lock_sha256", "deadline_at", "risk", "stale", "revoked", "approval_id", "lease_owner", "lease_epoch"],
   "properties": {
     "run_id": {"type": "string"},
     "tenant_id": {"type": "string"},
@@ -18,6 +18,7 @@
     "attempts": {"type": "integer", "minimum": 0},
     "source_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "deadline_at": {"type": "string", "format": "date-time"},
+    "risk": {"enum": ["LOW", "STANDARD", "ELEVATED", "HIGH_ASSURANCE"]},
     "stale": {"type": "boolean"},
     "revoked": {"type": "boolean"},
     "approval_id": {"type": ["string", "null"]},

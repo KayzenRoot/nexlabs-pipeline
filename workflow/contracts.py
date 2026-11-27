@@ -30,6 +30,7 @@ STATES = frozenset({
     "RETRY_WAIT", "UNKNOWN_EFFECT", "FAILED", "QUARANTINED",
 })
 TERMINAL = frozenset({"COMPLETED", "CANCELLED", "QUARANTINED"})
+OUTBOX_BLOCKED_STATES = TERMINAL | {"BLOCKED"}
 EXECUTOR_STATES = frozenset({"RUNNING", "EFFECT_IN_PROGRESS"})
 TRANSITIONS = {
     "RECEIVED": frozenset({"VALIDATED", "QUARANTINED", "FAILED"}),
@@ -39,6 +40,7 @@ TRANSITIONS = {
     "REVIEW": frozenset({"APPROVED", "CORRECTION_REQUIRED", "BLOCKED"}),
     "APPROVED": frozenset({"VERIFIED", "EFFECT_READY"}),
     "CORRECTION_REQUIRED": frozenset({"QUEUED", "CANCELLED", "BLOCKED"}),
+    "BLOCKED": frozenset({"QUEUED", "CANCELLED", "FAILED"}),
     "WAITING_APPROVAL": frozenset({"APPROVED", "CORRECTION_REQUIRED", "BLOCKED", "CANCELLED"}),
     "EFFECT_READY": frozenset({"EFFECT_IN_PROGRESS", "CANCELLED"}),
     "EFFECT_IN_PROGRESS": frozenset({"VERIFIED", "UNKNOWN_EFFECT", "FAILED"}),
@@ -59,6 +61,21 @@ C12_FORBIDDEN_FIELDS = frozenset({
     "client_access", "external_grants", "grants", "memory", "memory_grants",
     "permissions", "privileges", "skill_imports", "skills", "tools",
 })
+C12_ALLOWED_WORKFLOW_FIELDS = frozenset({
+    "accountable", "activation", "common_tests", "dispatch_agent", "effect_policy",
+    "eligible_packages_union", "failure", "gate", "id", "inputs", "kpi_proposed",
+    "name", "new_spend_limit_usd", "next_candidates", "output", "qualification",
+    "reviewer", "reviewer_packages", "risk", "scenario_specific_not_run", "steps",
+    "trigger_proposed",
+})
+C12_ALLOWED_STEP_FIELDS = frozenset({
+    "agent_id", "autonomy_ceiling", "eligible_packages", "external_effects", "scope",
+    "step", "task",
+})
+GRANT_KEY_MARKERS = (
+    "grant", "memory", "skill", "client", "privilege", "entitlement", "secret",
+    "permission", "tool",
+)
 MAX_ATTEMPTS = 2
 RISK_LEVELS = {"LOW": 0, "STANDARD": 1, "ELEVATED": 2, "HIGH_ASSURANCE": 3}
 
@@ -68,6 +85,17 @@ def require_risk_floor(command_risk: str, event_risk: str) -> None:
     require(command_risk in RISK_LEVELS and event_risk in RISK_LEVELS
             and RISK_LEVELS[command_risk] >= RISK_LEVELS[event_risk],
             "EVENT_RISK_ESCALATION")
+
+
+def forbidden_field_count(value: Any) -> int:
+    """Count grant/memory/skill/privilege-like keys anywhere in a document."""
+    if isinstance(value, dict):
+        return sum(
+            1 for key in value if any(marker in str(key).lower() for marker in GRANT_KEY_MARKERS)
+        ) + sum(forbidden_field_count(item) for item in value.values())
+    if isinstance(value, list):
+        return sum(forbidden_field_count(item) for item in value)
+    return 0
 
 
 class WorkflowError(SecurityError):
@@ -148,7 +176,8 @@ def validate_event(event: WorkflowEvent) -> None:
 
 
 def assert_transition(current: str, target: str) -> None:
-    require(current in STATES and target in STATES, "STATE_UNKNOWN")
+    require(current in STATES and target in STATES
+            and current in TRANSITIONS, "STATE_UNKNOWN")
     require(target in TRANSITIONS[current], "STATE_TRANSITION_FORBIDDEN")
 
 
@@ -157,10 +186,10 @@ def retry_decision(status_code: int, attempts: int, retry_after: int | None = No
             "RETRY_INPUT_INVALID")
     require(retry_after is None or (type(retry_after) is int and retry_after >= 0),
             "RETRY_INPUT_INVALID")
-    if attempts >= MAX_ATTEMPTS:
-        return "FAILED"
     if status_code in (401, 403):
         return "BLOCK"
+    if attempts + 1 >= MAX_ATTEMPTS:
+        return "FAILED"
     if status_code == 429:
         return "RETRY_AFTER" if retry_after is not None else "RETRY_WAIT"
     if status_code in (408, 500, 502, 503, 504):
@@ -183,6 +212,7 @@ class RunContract:
     attempts: int
     source_lock_sha256: str
     deadline_at: datetime
+    risk: str = "STANDARD"
     stale: bool = False
     revoked: bool = False
     approval_id: str | None = None
@@ -201,6 +231,7 @@ class RunContract:
                 "RUN_ATTEMPTS_INVALID")
         require_hash(self.source_lock_sha256)
         require_utc(self.deadline_at)
+        require(self.risk in RISK_LEVELS, "RUN_RISK_INVALID")
         require(type(self.stale) is bool and type(self.revoked) is bool, "RUN_FLAGS_INVALID")
 
 
@@ -215,6 +246,7 @@ def validate_workflow_catalog(workflows: list[dict[str, Any]]) -> None:
                               "HUMAN_APPROVAL_REQUIRED": 14}), "WORKFLOW_GATE_DRIFT")
     require(all(item.get("new_spend_limit_usd") == 0 for item in workflows),
             "WORKFLOW_SPEND_FORBIDDEN")
+    require(forbidden_field_count(workflows) == 0, "WORKFLOW_PRIVILEGE_FIELD")
 
 
 def load_workflows(root: Path = ROOT) -> dict[str, dict[str, Any]]:
@@ -227,6 +259,7 @@ def load_workflows(root: Path = ROOT) -> dict[str, dict[str, Any]]:
 
 
 def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
+    require(set(workflow) <= C12_ALLOWED_WORKFLOW_FIELDS, "C12_UNKNOWN_FIELD")
     require(workflow.get("activation") == "DISABLED", "C12_ACTIVATION_FORBIDDEN")
     require(workflow.get("gate") == "INTERNAL_ONLY", "C12_GATE_FORBIDDEN")
     require(workflow.get("effect_policy") == "DENY_DEFAULT", "C12_EFFECT_FORBIDDEN")
@@ -245,9 +278,11 @@ def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
     require(dispatcher != workflow.get("accountable"), "C12_DISPATCHER_ACCOUNTABLE")
     for step in steps:
         require(isinstance(step, dict), "C12_STEP_INVALID")
+        require(set(step) <= C12_ALLOWED_STEP_FIELDS, "C12_STEP_UNKNOWN_FIELD")
         require(step.get("external_effects") == "DENY", "C12_STEP_EFFECT_FORBIDDEN")
         require(not any(step.get(field) for field in C12_FORBIDDEN_FIELDS),
                 "C12_STEP_PRIVILEGE_FORBIDDEN")
+        require_id(step.get("agent_id"), "C12_STEP_AGENT_INVALID")
         require(step.get("agent_id") != dispatcher, "C12_DISPATCHER_EXECUTES")
     return {
         "workflow_id": workflow["id"], "dispatcher": dispatcher,

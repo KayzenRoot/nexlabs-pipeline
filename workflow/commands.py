@@ -68,12 +68,7 @@ class WorkflowCommands:
         authorizer: Authorizer = authorize_workflow,
     ):
         self._ledger = ledger
-        self.scope = scope
-        self.actor = scope.actor
-        self.tenant_id = scope.tenant_id
-        self.project_id = scope.project_id
-        self.task_id = scope.task_id
-        self.workflow_id = scope.workflow_id
+        self._scope = scope
         self.policy_sha256 = policy_sha256
         self.policy_epoch = policy_epoch
         self.risk = risk
@@ -82,6 +77,34 @@ class WorkflowCommands:
         self.approval_signature = approval_signature
         self.verifier = verifier
         self.authorizer = authorizer
+
+    @property
+    def scope(self) -> CommandScope:
+        return self._scope
+
+    @property
+    def actor(self) -> Principal:
+        return self._scope.actor
+
+    @property
+    def tenant_id(self) -> str:
+        return self._scope.tenant_id
+
+    @property
+    def project_id(self) -> str:
+        return self._scope.project_id
+
+    @property
+    def task_id(self) -> str:
+        return self._scope.task_id
+
+    @property
+    def workflow_id(self) -> str:
+        return self._scope.workflow_id
+
+    def _require_run_risk(self, run_id: str) -> None:
+        run = self._ledger.run(run_id, self.tenant_id)
+        require_risk_floor(self.risk, run["risk"])
 
     def _request(self, action: str, target_id: str, payload_sha256: str,
                  now: datetime) -> AccessRequest:
@@ -132,7 +155,7 @@ class WorkflowCommands:
             request,
             lambda: self._ledger._create_run(
                 run_id, self.tenant_id, self.project_id, self.task_id, self.workflow_id,
-                workflow_version, event, now, deadline_at, SOURCE_LOCK_SHA256,
+                workflow_version, event, now, deadline_at, SOURCE_LOCK_SHA256, self.risk,
             ),
             run_id,
         )
@@ -141,6 +164,8 @@ class WorkflowCommands:
                      now: datetime) -> AccessDecision:
         require(event.tenant_id == self.tenant_id, "EVENT_TENANT_MISMATCH")
         require_risk_floor(self.risk, event.risk)
+        if run_id is not None:
+            self._require_run_risk(run_id)
         payload = _payload_digest(
             "workflow.event.append", event_sha256=event.digest(), run_id=run_id,
             policy_epoch=self.policy_epoch,
@@ -154,6 +179,7 @@ class WorkflowCommands:
                    expected_revision: int, payload_sha256: str,
                    lease_owner: str | None = None, lease_epoch: int | None = None,
                    reconciliation_ref: str | None = None) -> AccessDecision:
+        self._require_run_risk(run_id)
         payload = _payload_digest(
             "workflow.run.transition", target=target, event_id=event_id,
             expected_revision=expected_revision, payload_sha256=payload_sha256,
@@ -172,6 +198,7 @@ class WorkflowCommands:
 
     def claim_lease(self, run_id: str, owner: str, now: datetime,
                     ttl_seconds: int = 30) -> AccessDecision:
+        self._require_run_risk(run_id)
         payload = _payload_digest(
             "workflow.run.lease", owner=owner, ttl_seconds=ttl_seconds,
             policy_epoch=self.policy_epoch,
@@ -191,10 +218,13 @@ class WorkflowCommands:
             policy_epoch=self.policy_epoch,
         )
         request = self._request("workflow.recovery.run", self.tenant_id, payload, now)
-        return self._execute(request, lambda: self._ledger._recover(self.tenant_id, now))
+        return self._execute(
+            request, lambda: self._ledger._recover(self.tenant_id, now, self.risk)
+        )
 
     def enqueue_outbox(self, run_id: str, event_id: str, payload_ref: str,
                        now: datetime) -> AccessDecision:
+        self._require_run_risk(run_id)
         payload = _payload_digest(
             "workflow.outbox.enqueue", event_id=event_id, payload_ref=payload_ref,
             policy_epoch=self.policy_epoch,
@@ -210,6 +240,7 @@ class WorkflowCommands:
 
     def dead_letter(self, run_id: str, reason: str, sanitized_ref: str,
                     now: datetime) -> AccessDecision:
+        self._require_run_risk(run_id)
         payload = _payload_digest(
             "workflow.dlq.record", reason=reason, sanitized_ref=sanitized_ref,
             policy_epoch=self.policy_epoch,
@@ -225,6 +256,7 @@ class WorkflowCommands:
 
     def set_flags(self, run_id: str, now: datetime, stale: bool | None = None,
                   revoked: bool | None = None) -> AccessDecision:
+        self._require_run_risk(run_id)
         payload = _payload_digest(
             "workflow.run.flags", stale=stale, revoked=revoked,
             policy_epoch=self.policy_epoch,
@@ -239,6 +271,7 @@ class WorkflowCommands:
     def reconcile(self, run_id: str, outcome: str, evidence_ref: str,
                   now: datetime, expected_revision: int, payload_sha256: str,
                   lease_owner: str | None = None, lease_epoch: int | None = None) -> AccessDecision:
+        self._require_run_risk(run_id)
         payload = _payload_digest(
             "workflow.run.reconcile", outcome=outcome, evidence_ref=evidence_ref,
             expected_revision=expected_revision, payload_sha256=payload_sha256,

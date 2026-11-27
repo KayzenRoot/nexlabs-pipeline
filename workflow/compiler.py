@@ -11,8 +11,8 @@ from typing import Any
 from security.contracts import require, require_id, require_utc
 
 from .contracts import (
-    C12_WORKFLOW_IDS, ROOT, WorkflowError, canonical_bytes, load_workflows,
-    validate_c12, validate_workflow_catalog,
+    C12_WORKFLOW_IDS, ROOT, WorkflowError, canonical_bytes, forbidden_field_count,
+    load_workflows, validate_c12, validate_workflow_catalog,
 )
 
 SOURCE_LOCK_SHA256 = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e"
@@ -85,7 +85,7 @@ def compile_catalog(root: Path = ROOT) -> dict[str, Any]:
         "policy_gated_external": gates["POLICY_GATED_EXTERNAL"],
         "human_approval_required": gates["HUMAN_APPROVAL_REQUIRED"],
         "disabled": sum(item["activation"] == "DISABLED" for item in compiled),
-        "c12": len(contracts), "grants": 0,
+        "c12": len(contracts), "grants": forbidden_field_count(workflows),
     }
     return {
         "schema": "nexlabs.workflow-compiled.v1", "source_lock_sha256": SOURCE_LOCK_SHA256,
