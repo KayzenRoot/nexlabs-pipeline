@@ -98,9 +98,10 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 
 ## 4. CI e gates
 
-- CI/CD-02 histórico no code head `36f1c97`: run **46047796447** — `docs-validation` (156 testes) e `security-windows` **SUCCESS**; Sonar **0 issues**; Socket/ECC **PASS**.
-- A rodada corretiva atual (risk lista/objeto/corrompido fail-closed) tem **156 testes locais** e CI/Sonar/Socket/ECC **pendentes** neste HEAD; nenhum resultado novo é declarado aprovado antes do read-back.
-- As 13 issues Sonar de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) permanecem corrigidas sem supressão/NOSONAR.
+- CI/CD-02 no code head `3618339b32205557e23c8330e1ead53191398d45`: run **46050653703** — `docs-validation` (ubuntu-24.04, suíte canônica 156 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
+- SonarCloud no HEAD `3618339`: **0 issues abertas**, Quality Gate **passed**, check **success**. As 13 issues de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) permanecem corrigidas sem supressão/NOSONAR.
+- Socket Security: Pull Request Alerts e Project Report **PASS**; ECC Tools / Security Evidence **PASS** no commit `3618339`.
+- O commit docs-only seguinte registra este read-back e contém o lock final; a auditoria independente do HEAD final permanece pendente.
 - O CI executa explicitamente `workflow compile`, `workflow dry-run` e os testes adversariais no Windows.
 - Nenhum APPROVED é declarado antes da nova auditoria independente HIGH_ASSURANCE no HEAD final.
 - Cobertura Sonar 0.0% continua sendo ausência de relatório/instrumentação, não cobertura; não há alegação de cobertura.
@@ -122,7 +123,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PENDENTE** — fix MEDIUM de risk JSON em validação; CI do novo HEAD e auditoria final pendentes |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **GATES PASS em 3618339; auditoria independente do HEAD final pendente** |
 
 ## 6. Limitações e riscos
 

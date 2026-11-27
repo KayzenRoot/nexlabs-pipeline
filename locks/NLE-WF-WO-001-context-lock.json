@@ -4,8 +4,8 @@
   "status": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "a67b459bd2c92fae47370bfdb254790106742829",
-  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. a67b459 is the last docs-only head before the risk-JSON migration hardening. The evidence commit containing this lock is the final HEAD; exact SHA and approved audit are external.",
+  "head_at_context_capture": "3618339b32205557e23c8330e1ead53191398d45",
+  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. 3618339 is the risk-JSON migration hardening code head with green CI/Sonar/Socket/ECC. The evidence commit containing this lock is the final HEAD; exact SHA and approved audit are external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "canonical_git_blob_fingerprints": {
@@ -77,7 +77,7 @@
     "tests/test_workflow_adversarial.py": "7dda63a4bc8f78e200d85383a8e9f850c16f86f2",
     "work-orders/NLE-WF-WO-001.md": "78784093cec0be1d33c22e723f64c87735cfe489",
     ".github/workflows/docs-validation.yml": "b3b33f8a65eb1e2a1a2de7188111a77e0dc19b87",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "b666c5eeec7a4f3f072783f89d1304b0536d2971"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "09f6efe250432f93b5503c6dddb9ad210a57146f"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
@@ -96,7 +96,7 @@
     "tests/test_workflow_adversarial.py": "b4dde76571ea3aca581c787425a5b914b5293c024dc9a687267be0791efa6ee1",
     "work-orders/NLE-WF-WO-001.md": "011cc6e16339f99f95ff29062a2ca02f2473c799c94900465c952a10306abe7a",
     ".github/workflows/docs-validation.yml": "49bd3785ff6267471016787121796e112576e249d81c4423684f61c1663d02f0",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "ba1074978791e4f02019ae3992cc4c957f40a9083df042f6d470a77c3c7e1f5d"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "37d804981e98ffcca94095d78f5d6e0febd6f11b894e8e2800a01b31431ab16d"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
@@ -134,13 +134,13 @@
     "grants": 0
   },
   "ci": {
-    "code_head": "PENDING_RISK_JSON_MIGRATION_HARDENING",
-    "run_id": null,
-    "docs_validation": "PENDING_NEW_HEAD",
-    "security_windows": "PENDING_NEW_HEAD",
-    "sonar": "PENDING_NEW_HEAD",
-    "socket": "PENDING_NEW_HEAD",
-    "ecc": "PENDING_NEW_HEAD",
+    "code_head": "3618339b32205557e23c8330e1ead53191398d45",
+    "run_id": 46050653703,
+    "docs_validation": "success_ubuntu-24.04_156_tests_compile_dry_run_scanner",
+    "security_windows": "success_windows-2025_security_workflow_adversarial_verify_compile_dry_run",
+    "sonar": "0_open_issues_quality_gate_passed",
+    "socket": "PASS",
+    "ecc": "SECURITY_EVIDENCE_PASS",
     "prior_run_id": 46047796447,
     "prior_code_head": "36f1c970dc3dff5e652c46e902277f2dd0888bd1",
     "prior_tests": 156,
@@ -149,7 +149,7 @@
     "final_evidence_head": "COMMIT_CONTAINING_THIS_LOCK",
     "final_head_note": "Exact SHA and approved audit are recorded in the external final report; this lock is committed in the final HEAD."
   },
-  "independent_audit": "CORRECTION_REQUIRED_AT_a67b459; FIFTH_HARDENING_IN_PROGRESS; FINAL_HEAD_AUDIT_PENDING",
+  "independent_audit": "CORRECTION_REQUIRED_AT_a67b459; FIFTH_HARDENING_APPLIED_AT_3618339; FINAL_HEAD_AUDIT_PENDING",
   "verdict": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "scope_lock": {
     "mode": "OFFLINE_CONTRACT_ONLY",
@@ -163,10 +163,10 @@
     "model_calls": false
   },
   "blockers": [
-    "Risk-JSON migration hardening head CI/Sonar/Socket/ECC read-back pending",
+    "Docs-only evidence commit CI read-back pending",
     "Independent HIGH_ASSURANCE audit of final CD-02 HEAD pending after fifth correction round"
   ],
-  "next_action": "Push the risk-JSON migration hardening head, verify CI/Sonar/Socket/ECC, record a docs-only read-back, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
+  "next_action": "Push the docs-only evidence commit, verify CI on it, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
   "evidence": "evidence/NLE-WF-WO-001-CD02-EXECUTION.md",
   "stale_when": [
     "base/main changes",
