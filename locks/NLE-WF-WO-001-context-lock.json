@@ -4,8 +4,8 @@
   "status": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "1947f88abe226db6ff44273006322496ffa6c55e",
-  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. 1947f88 is the second-hardening code head with green CI/Sonar/Socket/ECC; a docs-only evidence commit follows. Final HEAD and independent audit are external.",
+  "head_at_context_capture": "73053f031e67d94e7c235484ed0c974bd5be6be3",
+  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. 1947f88 is the second-hardening code head with green CI/Sonar/Socket/ECC; 73053f0 recorded that read-back. A final append/deadline binding commit and its docs-only evidence commit follow. Final HEAD and independent audit are external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "canonical_git_blob_fingerprints": {
@@ -64,7 +64,7 @@
     "workflow/__init__.py": "4c05c11aa5926541254c86939c74437716efd44e",
     "workflow/__main__.py": "05599b1b7590f72d019f4e6b20ea993d3a52467f",
     "workflow/authorization.py": "11f6e223de7f64d5ae44cf5192a056d1f12dd681",
-    "workflow/commands.py": "d314d8f5a2e530b406e53c7796e17904139452c0",
+    "workflow/commands.py": "762143af4f2fdb7fcecce3b4399c71e8a472bc31",
     "workflow/compiler.py": "a11c944c736cde55485ade412c356cf08f7c33c9",
     "workflow/contracts.py": "293752e75138cd31330115e770d90a392a587787",
     "workflow/ledger.py": "0d8bbb15b3407b35fedd6b4e056feae6e1ea25c8",
@@ -74,16 +74,16 @@
     "workflow/schemas/run-v1.json": "4af8b4e904d54c34042c2f97ce5fccc9b619eb8c",
     "workflow/schemas/command-v1.json": "bf7709bcd6150a546c903509bc7bb3e85773db55",
     "tests/test_workflow_controls.py": "0083b5c475b687f14e2da74f4d7b1adcecc22b32",
-    "tests/test_workflow_adversarial.py": "c14cc4d71d6dd4046437a44b65193cb6e68d4055",
-    "work-orders/NLE-WF-WO-001.md": "70ec9f8e3759effff925fdaf5eecc55df0844ba4",
+    "tests/test_workflow_adversarial.py": "3aff245ba5bdbf0af4a517859f6e266fd44fc558",
+    "work-orders/NLE-WF-WO-001.md": "e53b4269b5e366e410bca579b365d2a6ccf77130",
     ".github/workflows/docs-validation.yml": "b3b33f8a65eb1e2a1a2de7188111a77e0dc19b87",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "9ab76f98fd923fb03e3749afafc94c02c807815e"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "8b74452a15f7f97ff46b64bb601e0aea53261a93"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
     "workflow/__main__.py": "409896db07bcfbdbcd879af63dce7ad993be7f7f97fd5a8df44cf026ebf67fcd",
     "workflow/authorization.py": "97083c7ef3c454d69790721ea3557effcadb36aaafaf0d5a8681a2a941523bed",
-    "workflow/commands.py": "b6912294660e1b84b12a3eb20b1a0532ee79c90c9745cc72376c50e7adc3e37f",
+    "workflow/commands.py": "d267ab282429dd1a429af6e247d698daffd5661d49007afe9e7abcc459332a04",
     "workflow/compiler.py": "13a80054b7e706f07470bf2308c6a55bca231212d1268cb54022c3b5d2c6b1b9",
     "workflow/contracts.py": "dab9b4e79629fb54d0079a8b49c2fb2ddb894667e1d45d6952ed4176fc45e300",
     "workflow/ledger.py": "bcc76097eaf765bb172f479cfaa69c37511b7d902b25374dd1c8ffe2d062c1f9",
@@ -93,10 +93,10 @@
     "workflow/schemas/run-v1.json": "06751e5d41b6f8833b907bc985260dcb5a41c157822ad8e1e4eb249529737bd0",
     "workflow/schemas/command-v1.json": "93506be469ebe9017362839f8cbc7adb050560f89bb07cad9586415bb2a1db06",
     "tests/test_workflow_controls.py": "4b46f96faf790e24433c58b635c22de4c08a54f738afe56953b2e8a742546d61",
-    "tests/test_workflow_adversarial.py": "ca3fefa5c7f9aee97ed6ee6532f5933cf97e44d986b48fad1b530096fa5b841b",
-    "work-orders/NLE-WF-WO-001.md": "ad7f4a5274a1efff7dd5161dc87d532abe36eceaa9a3b0ba6bd1a5e4a481ac90",
+    "tests/test_workflow_adversarial.py": "fcc60040dac1163acf116fc51fbb68e2f6ef80f9ea521dc38b74a2a85a00f5a8",
+    "work-orders/NLE-WF-WO-001.md": "0325b9ee11168f6d86fa1cca2d22090fef66e45090a99bd3783540e04ef17bc6",
     ".github/workflows/docs-validation.yml": "49bd3785ff6267471016787121796e112576e249d81c4423684f61c1663d02f0",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "9baadadb634837d4b4219da8e086175c2853467fdc8a3d4f35a401c7225a78fb"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "c24f98ef7c99306d1e06491849850ead1c77829182e97d20955bfc58bf810535"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
@@ -104,7 +104,7 @@
   },
   "fingerprint_status": "BASE_AND_CD02_SETS_RECALCULATED_AT_CANDIDATE_INDEX; FINAL_HEAD_EXTERNAL",
   "tests": {
-    "full_windows": "149/149 OK (120 prior + 29 adversarial)",
+    "full_windows": "150/150 OK (120 prior + 30 adversarial)",
     "workflow_verify": "WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0",
     "compile": "62 workflows; gates 36/12/14; 0 grants",
     "dry_run": "deterministic DAG; execution_allowed=false",
@@ -134,16 +134,18 @@
     "grants": 0
   },
   "ci": {
-    "code_head": "1947f88abe226db6ff44273006322496ffa6c55e",
-    "run_id": 46033034325,
-    "docs_validation": "success_ubuntu-24.04_149_tests_compile_dry_run_scanner",
-    "security_windows": "success_windows-2025_security_workflow_adversarial_verify_compile_dry_run",
-    "sonar": "0_open_issues_quality_gate_passed",
-    "socket": "PASS",
-    "ecc": "SECURITY_EVIDENCE_PASS",
-    "prior_run_id": 46027613376,
-    "prior_code_head": "b474ee79c067d53282e9cbe49f8f88c4222af984",
+    "code_head": "PENDING_APPEND_DEADLINE_BINDING_HEAD",
+    "run_id": null,
+    "docs_validation": "PENDING_NEW_HEAD",
+    "security_windows": "PENDING_NEW_HEAD",
+    "sonar": "PENDING_NEW_HEAD",
+    "socket": "PENDING_NEW_HEAD",
+    "ecc": "PENDING_NEW_HEAD",
+    "prior_run_id": 46033034325,
+    "prior_code_head": "1947f88abe226db6ff44273006322496ffa6c55e",
+    "prior_tests": 149,
     "f503d36_run_id": 46027865163,
+    "b474ee7_run_id": 46027613376,
     "final_evidence_head": "PENDING_DOCS_ONLY_COMMIT"
   },
   "independent_audit": "CORRECTION_REQUIRED_AT_f503d36; SECOND_HARDENING_APPLIED; FINAL_HEAD_AUDIT_PENDING",
@@ -160,10 +162,10 @@
     "model_calls": false
   },
   "blockers": [
-    "Docs-only evidence commit CI read-back pending",
-    "Independent HIGH_ASSURANCE audit of final CD-02 HEAD pending after second hardening"
+    "Append/deadline binding head CI/Sonar/Socket/ECC read-back pending",
+    "Independent HIGH_ASSURANCE audit of final CD-02 HEAD pending after final hardening"
   ],
-  "next_action": "Push the docs-only evidence/lock commit, verify CI on it, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
+  "next_action": "Push the append/deadline binding head, verify CI/Sonar/Socket/ECC, record a docs-only read-back, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
   "evidence": "evidence/NLE-WF-WO-001-CD02-EXECUTION.md",
   "stale_when": [
     "base/main changes",

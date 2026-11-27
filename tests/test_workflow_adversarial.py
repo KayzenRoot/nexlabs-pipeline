@@ -105,16 +105,18 @@ def commands(ledger, grants):
     )
 
 
-def create_payload(event, policy_epoch=1):
+def create_payload(event, *, deadline=None, policy_epoch=1):
+    deadline = deadline or NOW + timedelta(hours=1)
     return _payload_digest(
         "workflow.run.create", event_sha256=event.digest(),
+        workflow_version="0.1.0", deadline_at=deadline.isoformat(),
         policy_epoch=policy_epoch,
     )
 
 
-def append_payload(event, policy_epoch=1):
+def append_payload(event, run_id, *, policy_epoch=1):
     return _payload_digest(
-        "workflow.event.append", event_sha256=event.digest(),
+        "workflow.event.append", event_sha256=event.digest(), run_id=run_id,
         policy_epoch=policy_epoch,
     )
 
@@ -269,7 +271,7 @@ class HighAssuranceCommandTests(unittest.TestCase):
         run_event = make_event()
         appended = make_event(event_id="event-2", idempotency_key="idem-2")
         approval, signature = make_approval(
-            append_payload(appended), nonce="appendnonce0123456789abcdef",
+            append_payload(appended, "run-1"), nonce="appendnonce0123456789abcdef",
             approval_id="approval-append", action="workflow.event.append",
             target_id=appended.event_id,
         )
@@ -297,6 +299,31 @@ class HighAssuranceCommandTests(unittest.TestCase):
                     {"run_id": "run-1", "target_id": "event-2",
                      "action": "workflow.event.append"},
                 )
+
+    def test_approval_payload_binds_append_run_id(self):
+        run_event = make_event()
+        appended = make_event(event_id="event-2", idempotency_key="idem-2")
+        approval, signature = make_approval(
+            append_payload(appended, "run-1"),
+            nonce="appendrun0123456789abcdef", approval_id="approval-append-run",
+            action="workflow.event.append", target_id=appended.event_id,
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                commands(ledger, [grant("workflow.run.create")]).create_run(
+                    "run-1", "0.1.0", run_event, NOW, NOW + timedelta(hours=1)
+                )
+                command = WorkflowCommands(
+                    ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
+                    risk="HIGH_ASSURANCE",
+                    grants=(grant("workflow.event.append", target=appended.event_id,
+                                  risk="HIGH_ASSURANCE"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                with self.assertRaises(SecurityError):
+                    command.append_event(appended, "run-2", NOW)
+                self.assertEqual(ledger.counts()["events"], 1)
 
     def test_approval_payload_binds_outbox_parameters(self):
         run_event = make_event()

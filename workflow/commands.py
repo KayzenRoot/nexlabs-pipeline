@@ -28,13 +28,13 @@ def _payload_digest(operation: str, **values: Any) -> str:
 class _BoundNonceStore:
     def __init__(self, ledger: Ledger, run_id: str | None, tenant_id: str,
                  approval_id: str | None):
-        self.ledger = ledger
+        self._ledger = ledger
         self.run_id = run_id
         self.tenant_id = tenant_id
         self.approval_id = approval_id
 
     def consume(self, nonce: str, expires_at: datetime, now: datetime) -> bool:
-        return self.ledger._consume(
+        return self._ledger._consume(
             nonce, expires_at, now, self.run_id, self.tenant_id, self.approval_id,
         )
 
@@ -67,7 +67,7 @@ class WorkflowCommands:
         verifier: SignatureVerifier | None = None,
         authorizer: Authorizer = authorize_workflow,
     ):
-        self.ledger = ledger
+        self._ledger = ledger
         self.scope = scope
         self.actor = scope.actor
         self.tenant_id = scope.tenant_id
@@ -97,23 +97,23 @@ class WorkflowCommands:
 
     def _execute(self, request: AccessRequest, apply: Callable[[], None],
                  run_id: str | None = None) -> AccessDecision:
-        with self.ledger._transaction():
+        with self._ledger._transaction():
             decision = self.authorizer(
-                self.ledger, request, self.grants,
+                self._ledger, request, self.grants,
                 current_policy_sha256=self.policy_sha256,
                 current_policy_epoch=self.policy_epoch,
                 approval=self.approval,
                 approval_signature=self.approval_signature,
                 verifier=self.verifier,
                 nonce_store=_BoundNonceStore(
-                    self.ledger, run_id, request.tenant_id,
+                    self._ledger, run_id, request.tenant_id,
                     self.approval.approval_id if self.approval else None,
                 ),
             )
             require(decision.allowed and decision.grant_id is not None, "COMMAND_DENIED")
             apply()
             if self.approval is not None:
-                self.ledger._record_approval(
+                self._ledger._record_approval(
                     request, self.approval, run_id, decision.reason, request.now,
                 )
             return decision
@@ -124,12 +124,13 @@ class WorkflowCommands:
         require_risk_floor(self.risk, event.risk)
         payload = _payload_digest(
             "workflow.run.create", event_sha256=event.digest(),
+            workflow_version=workflow_version, deadline_at=deadline_at.isoformat(),
             policy_epoch=self.policy_epoch,
         )
         request = self._request("workflow.run.create", run_id, payload, now)
         return self._execute(
             request,
-            lambda: self.ledger._create_run(
+            lambda: self._ledger._create_run(
                 run_id, self.tenant_id, self.project_id, self.task_id, self.workflow_id,
                 workflow_version, event, now, deadline_at, SOURCE_LOCK_SHA256,
             ),
@@ -141,12 +142,12 @@ class WorkflowCommands:
         require(event.tenant_id == self.tenant_id, "EVENT_TENANT_MISMATCH")
         require_risk_floor(self.risk, event.risk)
         payload = _payload_digest(
-            "workflow.event.append", event_sha256=event.digest(),
+            "workflow.event.append", event_sha256=event.digest(), run_id=run_id,
             policy_epoch=self.policy_epoch,
         )
         request = self._request("workflow.event.append", event.event_id, payload, now)
         return self._execute(
-            request, lambda: self.ledger._append_event(event, run_id), run_id
+            request, lambda: self._ledger._append_event(event, run_id), run_id
         )
 
     def transition(self, run_id: str, target: str, event_id: str | None, now: datetime,
@@ -162,7 +163,7 @@ class WorkflowCommands:
         request = self._request("workflow.run.transition", run_id, payload, now)
         return self._execute(
             request,
-            lambda: self.ledger._transition(
+            lambda: self._ledger._transition(
                 run_id, self.tenant_id, target, event_id, now, expected_revision,
                 lease_owner, lease_epoch, reconciliation_ref,
             ),
@@ -178,7 +179,7 @@ class WorkflowCommands:
         request = self._request("workflow.run.lease", run_id, payload, now)
         return self._execute(
             request,
-            lambda: self.ledger._claim_lease(
+            lambda: self._ledger._claim_lease(
                 run_id, self.tenant_id, owner, now, ttl_seconds
             ),
             run_id,
@@ -190,7 +191,7 @@ class WorkflowCommands:
             policy_epoch=self.policy_epoch,
         )
         request = self._request("workflow.recovery.run", self.tenant_id, payload, now)
-        return self._execute(request, lambda: self.ledger._recover(self.tenant_id, now))
+        return self._execute(request, lambda: self._ledger._recover(self.tenant_id, now))
 
     def enqueue_outbox(self, run_id: str, event_id: str, payload_ref: str,
                        now: datetime) -> AccessDecision:
@@ -201,7 +202,7 @@ class WorkflowCommands:
         request = self._request("workflow.outbox.enqueue", run_id, payload, now)
         return self._execute(
             request,
-            lambda: self.ledger._enqueue_outbox(
+            lambda: self._ledger._enqueue_outbox(
                 run_id, self.tenant_id, event_id, payload_ref, now
             ),
             run_id,
@@ -216,7 +217,7 @@ class WorkflowCommands:
         request = self._request("workflow.dlq.record", run_id, payload, now)
         return self._execute(
             request,
-            lambda: self.ledger._dead_letter(
+            lambda: self._ledger._dead_letter(
                 run_id, self.tenant_id, reason, sanitized_ref, now
             ),
             run_id,
@@ -231,7 +232,7 @@ class WorkflowCommands:
         request = self._request("workflow.run.flags", run_id, payload, now)
         return self._execute(
             request,
-            lambda: self.ledger._set_flags(run_id, self.tenant_id, now, stale, revoked),
+            lambda: self._ledger._set_flags(run_id, self.tenant_id, now, stale, revoked),
             run_id,
         )
 
@@ -247,7 +248,7 @@ class WorkflowCommands:
         request = self._request("workflow.run.reconcile", run_id, payload, now)
         return self._execute(
             request,
-            lambda: self.ledger._transition(
+            lambda: self._ledger._transition(
                 run_id, self.tenant_id, outcome, None, now, expected_revision,
                 lease_owner, lease_epoch, evidence_ref,
             ),

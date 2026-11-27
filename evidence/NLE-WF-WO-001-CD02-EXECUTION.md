@@ -16,9 +16,9 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 
 ### F01 — fronteira única de comandos autorizados
 
-- `workflow/commands.py`: `WorkflowCommands` é a única API pública de mutação; Ledger expõe somente leitura e primitivas privadas `_*` (`_conn`, `_transaction`, `_consume`).
+- `workflow/commands.py`: `WorkflowCommands` é a única API pública de mutação; o ledger interno é `_ledger`, e Ledger expõe somente leitura e primitivas privadas `_*` (`_conn`, `_transaction`, `_consume`).
 - Cada comando usa `security.authorization`/`security.approval`; a transação abrange autorização, nonce, mutação, transição e registro de aprovação.
-- O payload assinado é derivado dos parâmetros de cada comando (target, evento, revisão, lease, TTL, reason/ref, flags, outcome/evidence) e inclui `policy_epoch`; aprovação não pode ser reaproveitada com parâmetros diferentes.
+- O payload assinado é derivado dos parâmetros de cada comando (target, evento, `run_id` de append, versão/deadline de create, revisão, lease, TTL, reason/ref, flags, outcome/evidence) e inclui `policy_epoch`; aprovação não pode ser reaproveitada com parâmetros diferentes.
 - Decisão vinculada a principal, tenant, project, task, workflow, target/run, ação, payload, risco e policy; ações desconhecidas, grant ausente/escopo divergente e revisão obsoleta negam.
 - Risco do evento não pode ser rebaixado: comando STANDARD não processa evento HIGH_ASSURANCE.
 - `APPROVED → VERIFIED → COMPLETED`; `APPROVED → COMPLETED` não existe. Efeitos externos permanecem negados; o ledger é apenas armazenamento offline.
@@ -80,7 +80,7 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 
 | Verificação | Resultado |
 |---|---|
-| Suíte completa local Windows 11 | **149/149 OK** (120 anteriores + 29 adversariais), após commit limpo |
+| Suíte completa local Windows 11 | **150/150 OK** (120 anteriores + 30 adversariais), após commit limpo |
 | `python -m workflow verify` | `WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0` |
 | `python -m workflow compile` | 62 workflows compilados; summary 36/12/14; 0 grants |
 | `python -m workflow dry-run` | DAG determinístico, `execution_allowed=false`, 0 efeitos |
@@ -94,7 +94,8 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 
 ## 4. CI e gates
 
-- CI/CD-02 em `1947f88abe226db6ff44273006322496ffa6c55e`: run **46033034325** — `docs-validation` (ubuntu-24.04, suíte canônica 149 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
+- CI/CD-02 no code head `1947f88abe226db6ff44273006322496ffa6c55e`: run **46033034325** — `docs-validation` (ubuntu-24.04, suíte canônica 149 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
+- O HEAD seguinte acrescenta binding de `run_id` em append e de `workflow_version`/deadline em create, com 150 testes locais; seu CI/Sonar/Socket/ECC está **pendente** e não é declarado como aprovado.
 - SonarCloud no HEAD `1947f88`: **0 issues abertas**, Quality Gate **passed**, check **success**. As 13 issues de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) foram corrigidas sem supressão/NOSONAR.
 - Socket Security: Pull Request Alerts e Project Report **PASS**; ECC Tools / Security Evidence **PASS** no commit `1947f88`.
 - O CI executa explicitamente `workflow compile`, `workflow dry-run` e os testes adversariais no Windows.
@@ -118,7 +119,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PASS gates em 1947f88; auditoria independente do HEAD final pendente** |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **GATES PASS em 1947f88; CI do novo HEAD e auditoria independente pendentes** |
 
 ## 6. Limitações e riscos
 
@@ -126,7 +127,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 - Identidade humana real, custódia de chaves de aprovação e provider de assinatura continuam gates de produção fora do CD-02.
 - `retry_decision` é contrato puro de política (401/403/429/5xx/cap); não há rota HTTP/effect neste slice offline para integrá-lo.
 - `counts()`/`integrity()` permanecem leituras globais de diagnóstico, não caminhos de mutação.
-- Windows CI executará security, workflow e adversarial suites; a suíte integral de 149 roda no Linux e localmente no Windows.
+- Windows CI executará security, workflow e adversarial suites; a suíte integral de 150 roda no Linux e localmente no Windows.
 - Cobertura não medida; `required_approving_review_count=0` permanece risco de governança.
 - Nenhum efeito externo, VPS, Paperclip runtime, segredo, agente, workflow ativo, deploy, merge ou despesa.
 

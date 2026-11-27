@@ -74,6 +74,6 @@ A auditoria oficial no HEAD `82180fa4c9a29fc735ecb492c1e497bc75d0d53a` emitiu CO
 
 ## Acceptance Criteria CD-02
 
-AC01 Context Lock/base/364/fingerprints; AC02 Event Contract; AC03 Run/ledger/migrações/imutabilidade; AC04 estados e APPROVED→VERIFIED→COMPLETED; AC05 command boundary/deny-by-default; AC06 approval/nonce/replay/rollback offline; AC07 atomicidade; AC08 concorrência/lease/fencing; AC09 recovery/retry/reconciliação; AC10 outbox/DLQ; AC11 C12 canônico; AC12 retry/limites; AC13 CLI verify/compile/dry-run; AC14 CI/auditoria. Status local: AC01–AC13 PASS em 149/149 testes; AC14 PENDING final HEAD.
+AC01 Context Lock/base/364/fingerprints; AC02 Event Contract; AC03 Run/ledger/migrações/imutabilidade; AC04 estados e APPROVED→VERIFIED→COMPLETED; AC05 command boundary/deny-by-default; AC06 approval/nonce/replay/rollback offline; AC07 atomicidade; AC08 concorrência/lease/fencing; AC09 recovery/retry/reconciliação; AC10 outbox/DLQ; AC11 C12 canônico; AC12 retry/limites; AC13 CLI verify/compile/dry-run; AC14 CI/auditoria. Status local: AC01–AC13 PASS em 150/150 testes; AC14 PENDING final HEAD.
 
 **Não declarar o Work Order pai completo enquanto a auditoria independente CD-02 e os gates remotos não estiverem APPROVED.** Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows, modelo ou despesa.
