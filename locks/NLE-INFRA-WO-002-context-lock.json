@@ -1,10 +1,24 @@
 {
   "work_order": "NLE-INFRA-WO-002/CD-01",
-  "status": "APPROVED",
+  "delta": "CD-01.2",
+  "status": "CORRECTION_DELTA_APPLIED_PENDING_INDEPENDENT_AUDIT",
   "base_sha": "eebbd7325ab45fca8e176bd713245189ed148bdd",
-  "base_tree_sha": "eebbd7325ab45fca8e176bd713245189ed148bdd",
+  "base_tree_sha": "8d8cbf1a5c4ce752c4df8787f1c79d4d15f04e33",
+  "head_at_context_capture": "af8ead31d78dd30b1daf8fce22366b0d06cb59d0",
+  "head_note": "af8ead3 is the prior documentary HEAD. This CD-01.2 evidence/lock commit follows on the same PR. The lock cannot contain its own commit hash; the final HEAD is verified externally in the PR. No audit approval is claimed for this final documentary HEAD.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
+  "fingerprint_sets": {
+    "canonical_base": {
+      "source": "eebbd7325ab45fca8e176bd713245189ed148bdd^{tree}",
+      "files": 27
+    },
+    "implementation_head": {
+      "source": "working tree at CD-01.2; committed after this lock",
+      "files": 22
+    },
+    "separation": "canonical files are read from the base tree; implementation files are read from the final working tree; workflow is present in both intentionally"
+  },
   "canonical_git_blob_fingerprints": {
     "docs/Checkpoint.md": "28c7ec154976028e5e114f3863a836eb6852f012",
     "docs/Decisions-Ledger.md": "df7c47def352a4fd3151e156d43007325209817d",
@@ -28,101 +42,11 @@
     "scripts/windows/Initialize-PaperclipSecrets.ps1": "7f11a0387fc5abbdd876cd5716143f8273b4200b",
     "scripts/windows/Backup-Paperclip.ps1": "bb439bb61303ae6cf2e67ca636d81ff262b86ce2",
     "tests/deployment/test_deploy_contract.py": "8d855450ba458a1792588c6bbcac7c30cd697752",
-    ".github/workflows/docs-validation.yml": "9af099ea1d60810b2d8b84af9654e985128e7f4a",
+    ".github/workflows/docs-validation.yml": "137a06448282fb224420cf5037e0016def5e2cc8",
     "deploy/compose.yaml": "409f4684560ce8306781a984760cf7d78a80b193",
     "deploy/local/compose.yaml": "009ee029a27523730a40770c72c922cfc5b3c77b",
-    "deploy/vps/compose.yaml": "1a593cf9dc4510d6ef50f82a651929c1eb8301c3"
-  },
-  "stale_when": [
-    "main/base SHA changes",
-    "any canonical Git blob fingerprint changes",
-    "source-lock bytes or source pack changes",
-    "policy/ADR/authorization changes",
-    "CI or audit state changes"
-  ],
-  "scope_lock": {
-    "classification": "NECESSARY",
-    "risk": "HIGH_ASSURANCE",
-    "mode": "OFFLINE_CONTRACT_ONLY",
-    "additional_spend_usd": 0,
-    "vps_access": false,
-    "network_access": false,
-    "paperclip_runtime_writes": false,
-    "secret_values": false,
-    "agent_activation": false,
-    "skill_import": false,
-    "model_calls": false
-  },
-  "implementation_head_before_evidence": "cbb82ad3d9ac6c6ab3f3dc79dc116a48b6a22149",
-  "implementation_git_blob_fingerprints": {
-    ".github/workflows/docs-validation.yml": "9af099ea1d60810b2d8b84af9654e985128e7f4a",
-    "security/README.md": "9840cf581077afda5ea3675a02fa9b1060151a1d",
-    "security/__init__.py": "98719ff1ee1f707d33b2d6bf9c6affd6c745e4b7",
-    "security/__main__.py": "8ff0bb1c02ee03ac4a5509c9291f583aefd398bf",
-    "security/approval.py": "3b4fff14147752f02b2e34194392c35479663e4a",
-    "security/authorization.py": "3bd8d4b676e726f04aa382f8a4a3f61df6033eaa",
-    "security/contracts.py": "44f37587567c818cda3f6379f467c0eb71a85a4f",
-    "security/core.py": "5081410007dbe962d8efff685e742d0fb1401881",
-    "security/isolation.py": "785a40d55bc697a5d6dd7f9136a786dac6db8ccc",
-    "security/network.py": "4c5345ffccc7ea38b8c372f5f2260a860c2f2293",
-    "security/policy.json": "63ea1ee4c8f7011de79827f548d1396113fd2f87",
-    "security/schemas/approval-envelope-v1.json": "12b9a7ba080a6be3287ec41fd354c7714a114207",
-    "security/schemas/grant-v1.json": "8961fb0b29244c4b0a63ce1150d55d85b9c735a9",
-    "security/schemas/network-policy-v1.json": "3074b7f1dafd8b2b4dd8b224621bbc8c0f0d2cbe",
-    "security/schemas/policy-v1.json": "35404317362b5748b15d387eb635e18826b91c15",
-    "security/schemas/secret-ref-v1.json": "a5c8f585fb5ca4418bd8eb0467c5a6277decb9fb",
-    "security/secrets.py": "442e00cdf5ac82b9103f4108af5994926f36ea9f",
-    "tests/test_security_controls.py": "5c1f57daa0d3ace26178c8aaa9adcae26cd26096",
-    "work-orders/NLE-INFRA-WO-002.md": "e23867e2ad3153e15542f3abf731ed8b69002995",
-    "evidence/NLE-INFRA-WO-002-CD01-AUDIT.md": "688ce1c860f4c151df2d37cab0284417f2cd39f9"
-  },
-  "ci": {
-    "initial_pr_check_run_id": 45900241955,
-    "initial_docs_validation": "success",
-    "initial_security_windows": "success",
-    "correction_head": "fb6fa8d3338f90313ff7b6a1d857517179113b44",
-    "correction_run_id": 45908006041,
-    "final_evidence_head": "578c273f937423758d2d37abb96c70e342357978",
-    "final_evidence_run_id": 45908334436,
-    "final_docs_validation": "success_ubuntu-24.04",
-    "final_security_windows": "success_windows-2025",
-    "final_sonar": "0_open_issues_quality_gate_OK",
-    "final_ecc": "PASS",
-    "final_socket": "PASS",
-    "docs_finalization_head": "PENDING_COMMIT"
-  },
-  "sonar": {
-    "initial_new_issues": 11,
-    "initial_quality_gate": "SUCCESS",
-    "initial_security_hotspots": 0,
-    "initial_new_code_coverage": "0.0%",
-    "issues_by_rule": {
-      "python:S1313": 3,
-      "python:S3776": 1,
-      "python:S5778": 7
-    },
-    "issues_by_severity": {
-      "MINOR": 3,
-      "CRITICAL": 1,
-      "MAJOR": 7
-    },
-    "triage": "ALL_11_DETAILED_AND_CORRECTED",
-    "correction_reanalysis": "0_OPEN_ISSUES_QUALITY_GATE_OK_AT_578C273",
-    "coverage_cause": "NO_COVERAGE_REPORT_GENERATED_OR_UPLOADED; CI_TEST_EXECUTION_IS_NOT_COVERAGE"
-  },
-  "independent_audit": {
-    "verdict": "APPROVED",
-    "head": "578c273f937423758d2d37abb96c70e342357978",
-    "scope": "NLE-INFRA-WO-002/CD-01 final correction/evidence",
-    "high_critical_findings": 0,
-    "ac01_ac09": "PASS",
-    "non_blocking": [
-      "AC08 100% targeted tests interpreted as 98/98 pass rate, not coverage",
-      "Linux docs-validation passed; suite per-platform itemization is a reporting limitation",
-      "seven approval-scope mismatch tests must be retained",
-      "no secret-resolution path without new AC/audit",
-      "single-HEAD approval dependency"
-    ]
+    "deploy/vps/compose.yaml": "1a593cf9dc4510d6ef50f82a651929c1eb8301c3",
+    "docs/decisions-index.json": "460e93919dc8e9c63b0251c90f198c87a12285af"
   },
   "canonical_fingerprints_sha256": {
     "docs/Checkpoint.md": "497ab482b2b882a0e1a85cb408a81e34da243bc179cc5e6a6d20aa9ec363605c",
@@ -147,10 +71,35 @@
     "scripts/windows/Initialize-PaperclipSecrets.ps1": "fd85547d14e57ee55c3f9d575bd2f16167c0927f57620c0e5fcead4a8d1ab452",
     "scripts/windows/Backup-Paperclip.ps1": "37a613df59bedb59f6e48a916efdf271413d73f315b3a8732e3eda0a8280adf3",
     "tests/deployment/test_deploy_contract.py": "30e79e6e108568e8ae78b07d0396a1fceb73f7bde0a03e82ed36e2d8ef9e1673",
-    ".github/workflows/docs-validation.yml": "e0f6a3f7cf26f3370be8c4e989adba76f0528bcd771cd466ccf5d9536f216510",
+    ".github/workflows/docs-validation.yml": "8f405d4bf6776096cb102688b1cb35f51343e4f78108958494c60a5da1a08a4d",
     "deploy/compose.yaml": "a88ba00caa17915b96510c7a4ec33ee1fd33a8fd3db3d8291721b64514d5eb66",
     "deploy/local/compose.yaml": "5656f89a67df28fc79268e3714d20c7fafe7a4f42019a7159ad2cf79f4952a54",
-    "deploy/vps/compose.yaml": "fdc8128252b3da00a82b8c8266e5a4241cd65ef0ce6f8fd4b7676cbaf5b98285"
+    "deploy/vps/compose.yaml": "fdc8128252b3da00a82b8c8266e5a4241cd65ef0ce6f8fd4b7676cbaf5b98285",
+    "docs/decisions-index.json": "d75c81f886ca54b0df79344894b2d853a89218198e6fa36f0f6bbd54790713b9"
+  },
+  "implementation_git_blob_fingerprints": {
+    ".github/workflows/docs-validation.yml": "9af099ea1d60810b2d8b84af9654e985128e7f4a",
+    "security/README.md": "9840cf581077afda5ea3675a02fa9b1060151a1d",
+    "security/__init__.py": "98719ff1ee1f707d33b2d6bf9c6affd6c745e4b7",
+    "security/__main__.py": "8ff0bb1c02ee03ac4a5509c9291f583aefd398bf",
+    "security/approval.py": "3b4fff14147752f02b2e34194392c35479663e4a",
+    "security/authorization.py": "3bd8d4b676e726f04aa382f8a4a3f61df6033eaa",
+    "security/contracts.py": "44f37587567c818cda3f6379f467c0eb71a85a4f",
+    "security/core.py": "5081410007dbe962d8efff685e742d0fb1401881",
+    "security/isolation.py": "785a40d55bc697a5d6dd7f9136a786dac6db8ccc",
+    "security/network.py": "4c5345ffccc7ea38b8c372f5f2260a860c2f2293",
+    "security/policy.json": "63ea1ee4c8f7011de79827f548d1396113fd2f87",
+    "security/schemas/approval-envelope-v1.json": "12b9a7ba080a6be3287ec41fd354c7714a114207",
+    "security/schemas/grant-v1.json": "8961fb0b29244c4b0a63ce1150d55d85b9c735a9",
+    "security/schemas/network-policy-v1.json": "3074b7f1dafd8b2b4dd8b224621bbc8c0f0d2cbe",
+    "security/schemas/policy-v1.json": "35404317362b5748b15d387eb635e18826b91c15",
+    "security/schemas/secret-ref-v1.json": "a5c8f585fb5ca4418bd8eb0467c5a6277decb9fb",
+    "security/secrets.py": "442e00cdf5ac82b9103f4108af5994926f36ea9f",
+    "tests/test_security_controls.py": "5c1f57daa0d3ace26178c8aaa9adcae26cd26096",
+    "work-orders/NLE-INFRA-WO-002.md": "e23867e2ad3153e15542f3abf731ed8b69002995",
+    "evidence/NLE-INFRA-WO-002-CD01-AUDIT.md": "688ce1c860f4c151df2d37cab0284417f2cd39f9",
+    "docs/decisions-index.json": "3112cdd0766e5fca7c7a12d7327a84eee4358fae",
+    "evidence/NLE-INFRA-WO-002-CD01.2-EXECUTION.md": "ed9adf9ded0059e07f6b23df07848392b148cc3a"
   },
   "implementation_fingerprints_sha256": {
     ".github/workflows/docs-validation.yml": "e0f6a3f7cf26f3370be8c4e989adba76f0528bcd771cd466ccf5d9536f216510",
@@ -172,32 +121,136 @@
     "security/secrets.py": "d0a460c543e15b333a42df9d0ec620b1b06dc38fcbed987f404b4fd66d86bda4",
     "tests/test_security_controls.py": "a0911adda46033aab61c545e1488b8e3ed43a1456e11a2459e9de30de7783804",
     "work-orders/NLE-INFRA-WO-002.md": "831d951f3ea9d28084e9b035165cc6a128e977dada9771a2302cca54a900f955",
-    "evidence/NLE-INFRA-WO-002-CD01-AUDIT.md": "e279f22c1cf64676398761141f05ab5209abd256cadfec3d8a8f71b7f4b46e95"
+    "evidence/NLE-INFRA-WO-002-CD01-AUDIT.md": "e279f22c1cf64676398761141f05ab5209abd256cadfec3d8a8f71b7f4b46e95",
+    "docs/decisions-index.json": "8d6d91d279053149961bd4e1a6af6935d61e5430dcd614f3497360eb9c4b64ff",
+    "evidence/NLE-INFRA-WO-002-CD01.2-EXECUTION.md": "a205b4da7e552136d733f27194bb6703762ec3172e32a526b8ac53f6174acbb2"
   },
-  "head_at_context_capture": "27247893d3493de3b9c8e1ee6741ee3df4124797",
-  "head_note": "2724789 is the triage-start HEAD. The Sonar/approval-scope correction and this evidence/lock commit follow on the same PR; final head, CI, Sonar and independent audit are verified externally because the lock cannot contain its own commit hash.",
-  "tests": {
-    "full_python_windows": "98/98 OK",
-    "security_controls_windows": "45/45 OK including real junction",
-    "source_validator": "7/7 groups PASS; 364 files unchanged",
-    "registry": "105 agents/92 packages/1110 assignments; 105 intents; 0 runtime writes",
-    "security_scan": "472 tracked files; 0 findings",
-    "determinism": "policy/decisions deterministic; injected clock/nonce only"
-  },
-  "security_findings": [
-    "HIGH: HIGH_ASSURANCE approval was not bound to project/task/workflow/skill/host/provider/risk; corrected and regression-tested.",
-    "MEDIUM: Windows junction coverage was platform-dependent; real junction test runs on Windows.",
-    "INFO: Sonar 11 findings were code smells, not Sonar vulnerabilities; corrected at root causes."
+  "fingerprint_status": "BASE_AND_IMPLEMENTATION_SETS_RECALCULATED; ZERO_DIVERGENCE_VERIFIED_LOCALLY; FINAL_HEAD_EXTERNAL",
+  "stale_when": [
+    "main/base SHA changes",
+    "base tree changes",
+    "any canonical or implementation fingerprint changes",
+    "source-lock/source pack changes",
+    "decisions-index changes",
+    "CI/Sonar/ECC or audit state changes"
   ],
-  "verdict": "APPROVED",
-  "evidence": "evidence/NLE-INFRA-WO-002-CD01-AUDIT.md",
-  "next_action": "Update PR #7 with the APPROVED Evidence Bundle; owner decides merge/checkpoint. No merge, runtime, VPS, agent, model or spend action by this execution.",
-  "fingerprint_status": "SHA256_AND_GIT_BLOB_RECALCULATED; FINAL_DOCS_COMMIT_EXTERNAL_VERIFICATION_REQUIRED",
+  "scope_lock": {
+    "classification": "NECESSARY",
+    "risk": "HIGH_ASSURANCE",
+    "mode": "OFFLINE_CONTRACT_ONLY",
+    "additional_spend_usd": 0,
+    "vps_access": false,
+    "network_access": false,
+    "paperclip_runtime_writes": false,
+    "secret_values": false,
+    "agent_activation": false,
+    "skill_import": false,
+    "model_calls": false
+  },
+  "implementation_head_before_evidence": "cbb82ad3d9ac6c6ab3f3dc79dc116a48b6a22149",
+  "history": {
+    "prior_code_head": "578c273f937423758d2d37abb96c70e342357978",
+    "prior_documentary_head": "af8ead31d78dd30b1daf8fce22366b0d06cb59d0",
+    "final_docs_head": "PENDING_COMMIT_EXTERNAL"
+  },
+  "ci": {
+    "prior_final_run_id": 45908617377,
+    "prior_head": "af8ead31d78dd30b1daf8fce22366b0d06cb59d0",
+    "prior_docs_validation": "success_ubuntu-24.04",
+    "prior_security_windows": "success_windows-2025",
+    "prior_sonar": "0_open_issues_quality_gate_OK",
+    "prior_ecc": "PASS",
+    "prior_socket": "PASS",
+    "cd01_2_run": "PENDING_EXTERNAL_AFTER_PUSH"
+  },
+  "sonar": {
+    "initial_new_issues": 11,
+    "initial_quality_gate": "SUCCESS",
+    "initial_security_hotspots": 0,
+    "initial_new_code_coverage": "0.0%",
+    "issues_by_rule": {
+      "python:S1313": 3,
+      "python:S3776": 1,
+      "python:S5778": 7
+    },
+    "issues_by_severity": {
+      "MINOR": 3,
+      "CRITICAL": 1,
+      "MAJOR": 7
+    },
+    "triage": "ALL_11_DETAILED_AND_CORRECTED",
+    "correction_reanalysis": "0_OPEN_ISSUES_QUALITY_GATE_OK_AT_578C273",
+    "coverage_cause": "NO_COVERAGE_REPORT_GENERATED_OR_UPLOADED; CI_TEST_EXECUTION_IS_NOT_COVERAGE"
+  },
   "coverage": {
     "new_code_coverage": "0.0%",
     "new_lines_to_cover": 0,
     "cause": "NO_COVERAGE_INSTRUMENTATION_OR_REPORT_UPLOADED",
     "quality_gate_has_coverage_condition": false,
     "disposition": "COVERAGE_NOT_AN_ACCEPTANCE_CRITERION; 100% TARGETED TESTS MEANS 98/98 PASS RATE, NOT COVERAGE; NO REPORT UPLOADED; NO DEPENDENCY ADDED"
-  }
+  },
+  "tests": {
+    "full_python_windows": "98/98 OK",
+    "security_controls_windows": "45/45 OK including real junction",
+    "source_validator": "7/7 groups PASS; 364 files unchanged",
+    "registry": "105 agents/92 packages/1110 assignments; 105 intents; 0 runtime writes",
+    "security_scan": "473 tracked files; 0 findings",
+    "json_validation": "docs/decisions-index.json valid",
+    "fingerprints": "27 canonical + 22 implementation; zero mismatch locally"
+  },
+  "security_findings": [
+    "HIGH: HIGH_ASSURANCE approval was not bound to project/task/workflow/skill/host/provider/risk; corrected and regression-tested.",
+    "MEDIUM: Windows junction coverage was platform-dependent; real junction test runs on Windows.",
+    "INFO: Sonar 11 findings were code smells, not Sonar vulnerabilities; corrected at root causes."
+  ],
+  "decisions": {
+    "inspected": [
+      "INFRA-ADR-001",
+      "INFRA-ADR-002",
+      "INFRA-ADR-003",
+      "INFRA-ADR-004",
+      "INFRA-ADR-005",
+      "INFRA-ADR-006",
+      "INFRA-ADR-007",
+      "INFRA-ADR-008",
+      "INFRA-ADR-009",
+      "INFRA-ADR-010"
+    ],
+    "source_pack_status": "PROPOSED",
+    "index_corrected": true,
+    "direction_ratification_preserved": "NLE-INFRA-PLAN-001",
+    "ledger_changed": false
+  },
+  "branch_protection": {
+    "required_check": "docs-validation",
+    "app_id": 15368,
+    "strict": true,
+    "enforce_admins": true,
+    "force_pushes": false,
+    "deletions": false,
+    "linear_history": true,
+    "conversation_resolution": true,
+    "required_approving_review_count": 0,
+    "ruleset_id": 28163842,
+    "ruleset_name": "main-bootstrap-protection",
+    "ruleset_enforcement": "active",
+    "changed": false
+  },
+  "audit_provenance": {
+    "historical_code_audit": {
+      "head": "578c273f937423758d2d37abb96c70e342357978",
+      "verdict": "APPROVED",
+      "method": "independent dossier review; no tool re-execution by auditor"
+    },
+    "prior_documentary_review": {
+      "head": "af8ead31d78dd30b1daf8fce22366b0d06cb59d0",
+      "verdict": "APPROVED",
+      "method": "dossier-only review; no tool re-execution"
+    },
+    "cd01_2_final": "PENDING_EXTERNAL_INDEPENDENT_AUDIT"
+  },
+  "f04_schemas": "SCHEMA_VALIDATOR_RIGOR_GAP_OUT_OF_SCOPE_NON_BLOCKING",
+  "verdict": "CORRECTION_DELTA_APPLIED_PENDING_INDEPENDENT_AUDIT",
+  "evidence": "evidence/NLE-INFRA-WO-002-CD01.2-EXECUTION.md",
+  "next_action": "Push CD-01.2, verify the new CI/Sonar/Socket/ECC externally, then request an independent audit of the final HEAD. No merge, checkpoint promotion, VPS, runtime, network, credentials, agents, workflows, model calls or spend."
 }
