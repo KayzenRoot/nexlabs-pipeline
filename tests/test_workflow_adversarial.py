@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+import hmac
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import sqlite3
@@ -10,7 +12,8 @@ import threading
 import unittest
 from pathlib import Path
 
-from security.contracts import Grant, Principal, SecurityError
+from security.approval import HmacSha256TestVerifier, canonical_approval_bytes
+from security.contracts import ApprovalEnvelope, Grant, Principal, SecurityError
 from security.core import EXPECTED_POLICY, policy_fingerprint
 from workflow.commands import WorkflowCommands
 from workflow.compiler import compile_catalog, dry_run, validate_dag
@@ -24,6 +27,7 @@ NOW = datetime(2026, 11, 27, 12, 0, tzinfo=timezone.utc)
 PAYLOAD = "a" * 64
 POLICY = policy_fingerprint(EXPECTED_POLICY)
 SOURCE_LOCK = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e"
+APPROVAL_KEY = b"synthetic-workflow-approval-key-never-production"
 
 
 def make_event(**changes):
@@ -137,6 +141,59 @@ class CommandBoundaryTests(unittest.TestCase):
                         "run-1", "VALIDATED", event.event_id, NOW,
                         expected_revision=99, payload_sha256=PAYLOAD
                     )
+
+
+class HighAssuranceCommandTests(unittest.TestCase):
+    def test_command_persists_approval_and_nonce(self):
+        request = None
+        approval = ApprovalEnvelope(
+            approval_id="approval-1", actor_id="agent-1", approver_id="human-owner",
+            approver_kind="human", approver_role="OWNER", action="workflow.run.create",
+            target_id="run-1", tenant_id="tenant-1", project_id="project-1",
+            task_id="task-1", workflow_id="NLE-WF-GOV-03", skill_id="workflow-skill",
+            host_id="host-1", provider_id="provider-local", risk="HIGH_ASSURANCE",
+            payload_sha256=make_event().digest(), policy_sha256=POLICY,
+            evidence_refs=("evidence-001",), max_spend_usd=Decimal("0"),
+            nonce="0123456789abcdefghijklmnopqrstuv",
+            issued_at=NOW - timedelta(minutes=1), expires_at=NOW + timedelta(minutes=5),
+        )
+        signature = hmac.new(
+            APPROVAL_KEY, canonical_approval_bytes(approval), hashlib.sha256
+        ).hexdigest()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.sqlite3"
+            with TestLedger(path) as ledger:
+                command = WorkflowCommands(
+                    ledger, actor=Principal("agent-1", "agent", "tenant-1", "project-1",
+                                            "host-1", "ACTIVE", 1),
+                    tenant_id="tenant-1", project_id="project-1", task_id="task-1",
+                    workflow_id="NLE-WF-GOV-03", policy_sha256=POLICY, policy_epoch=1,
+                    risk="HIGH_ASSURANCE",
+                    grants=(grant("workflow.run.create", risk="HIGH_ASSURANCE"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                command.create_run("run-1", "0.1.0", make_event(), NOW,
+                                   NOW + timedelta(hours=1))
+                counts = ledger.counts()
+                self.assertEqual(counts["approvals"], 1)
+                self.assertEqual(counts["nonces"], 1)
+            with TestLedger(path) as ledger:
+                replay = WorkflowCommands(
+                    ledger, actor=Principal("agent-1", "agent", "tenant-1", "project-1",
+                                            "host-1", "ACTIVE", 1),
+                    tenant_id="tenant-1", project_id="project-1", task_id="task-1",
+                    workflow_id="NLE-WF-GOV-03", policy_sha256=POLICY, policy_epoch=1,
+                    risk="HIGH_ASSURANCE",
+                    grants=(grant("workflow.run.create", target="run-2", risk="HIGH_ASSURANCE"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                with self.assertRaises(SecurityError):
+                    replay.create_run("run-2", "0.1.0",
+                                      make_event(event_id="event-2", idempotency_key="idem-2"),
+                                      NOW, NOW + timedelta(hours=1))
+        self.assertIsNone(request)
 
 
 class LedgerIntegrityTests(unittest.TestCase):

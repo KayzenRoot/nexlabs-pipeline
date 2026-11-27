@@ -20,6 +20,7 @@ def authorize_workflow(
     approval: ApprovalEnvelope | None = None,
     approval_signature: str | None = None,
     verifier: SignatureVerifier | None = None,
+    nonce_store=None,
 ) -> AccessDecision:
     """Authorize one workflow action with the durable ledger as nonce store."""
     require(request.action.startswith("workflow."), "WORKFLOW_ACTION_REQUIRED")
@@ -30,5 +31,5 @@ def authorize_workflow(
         approval=approval,
         approval_signature=approval_signature,
         verifier=verifier,
-        nonce_store=ledger,
+        nonce_store=nonce_store or ledger,
     )

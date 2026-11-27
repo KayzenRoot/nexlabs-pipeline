@@ -18,6 +18,20 @@ SOURCE_LOCK_SHA256 = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd6
 Authorizer = Callable[..., AccessDecision]
 
 
+class _BoundNonceStore:
+    def __init__(self, ledger: Ledger, run_id: str, tenant_id: str,
+                 approval_id: str | None):
+        self.ledger = ledger
+        self.run_id = run_id
+        self.tenant_id = tenant_id
+        self.approval_id = approval_id
+
+    def consume(self, nonce: str, expires_at: datetime, now: datetime) -> bool:
+        return self.ledger._consume(
+            nonce, expires_at, now, self.run_id, self.tenant_id, self.approval_id,
+        )
+
+
 class WorkflowCommands:
     """The only public mutation boundary. Ledger primitives stay private."""
 
@@ -75,6 +89,10 @@ class WorkflowCommands:
                 approval=self.approval,
                 approval_signature=self.approval_signature,
                 verifier=self.verifier,
+                nonce_store=_BoundNonceStore(
+                    self.ledger, request.target_id, request.tenant_id,
+                    self.approval.approval_id if self.approval else None,
+                ),
             )
             require(decision.allowed and decision.grant_id is not None, "COMMAND_DENIED")
             apply()

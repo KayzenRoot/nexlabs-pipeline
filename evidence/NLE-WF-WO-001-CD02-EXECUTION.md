@@ -74,7 +74,7 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 
 | Verificação | Resultado |
 |---|---|
-| Suíte completa local Windows 11 | **136/136 OK** (120 anteriores + 16 adversariais) |
+| Suíte completa local Windows 11 | **137/137 OK** (120 anteriores + 17 adversariais) |
 | `python -m workflow verify` | `WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0` |
 | `python -m workflow compile` | 62 workflows compilados; summary 36/12/14; 0 grants |
 | `python -m workflow dry-run` | DAG determinístico, `execution_allowed=false`, 0 efeitos |

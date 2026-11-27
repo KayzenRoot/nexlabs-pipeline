@@ -63,8 +63,8 @@
   "implementation_git_blob_fingerprints": {
     "workflow/__init__.py": "4c05c11aa5926541254c86939c74437716efd44e",
     "workflow/__main__.py": "ccdb06206938d9f73ebc8f3dc6299aa75eeccc72",
-    "workflow/authorization.py": "b719be6fc42336666d2372c4d4d64117e6208c3c",
-    "workflow/commands.py": "c9c408542760a890e614421fcd000a590ca1dc7c",
+    "workflow/authorization.py": "4ddc9065b976dc067e7779db7b71bd5e85a788bc",
+    "workflow/commands.py": "4226c3cf8683511ac8804fe403252544d86c2493",
     "workflow/compiler.py": "a6888f118df11309b2304ba1c545df6d1934510b",
     "workflow/contracts.py": "843d9ab7f1996a7f9f76bcd16b8d9a04ee15a667",
     "workflow/ledger.py": "612c7f088d4b98b52e5e8165ecd9d2229f5baf95",
@@ -74,16 +74,16 @@
     "workflow/schemas/run-v1.json": "4af8b4e904d54c34042c2f97ce5fccc9b619eb8c",
     "workflow/schemas/command-v1.json": "bf7709bcd6150a546c903509bc7bb3e85773db55",
     "tests/test_workflow_controls.py": "a35620f778a8c3ecf0c6a5b74d81b5ceadf0d5bd",
-    "tests/test_workflow_adversarial.py": "6ca65941c786504ba70eb7c036e8d1b38c54c290",
+    "tests/test_workflow_adversarial.py": "ebe3a842a9a9e8a45abdb2e97b037c666370cbcb",
     "work-orders/NLE-WF-WO-001.md": "aee26cf87e26db70bcc2e7d42bec2fb4ae4e1558",
     ".github/workflows/docs-validation.yml": "84e742b514a88b2252dc9867cf8cab966258b52e",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "8b5f43f8e0ff9cb2855d8eb22e829dfbd84c52f6"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "bf9f0e747a97168400cf9d9851674239ab950dad"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
     "workflow/__main__.py": "6d305633337302adeb31c6d9b27938eb88fafec9681679fe197dc9df572883a2",
-    "workflow/authorization.py": "da5ec007f742f77fcab6d118551350ad9fb8256a4f300e65d03dbedf6f67daac",
-    "workflow/commands.py": "51ef6e6d849250e08fca952665cf87cf9cbd2c990c95ca071b3a064818a37636",
+    "workflow/authorization.py": "606d997df65338a0e87dc15d417bbd32b2351dcbe9860ba0d3c69dbaa841e32b",
+    "workflow/commands.py": "2a67e718a5b3cc1623e5e55d3ba9ba05c521945569ab5cb9d9577a16c5fb9455",
     "workflow/compiler.py": "5e645dc3a10d05bafeef7dc1e2cc866d3149657ab2ef841e16effe65bfe68bf9",
     "workflow/contracts.py": "9e488781dde7fbccdda4958d48f33c4082959b0daff992c35eb714fe43a128bc",
     "workflow/ledger.py": "a5d13fa2b1aa185d3165359cb5bcbc4b48e8d544ed84332b9fbfba98382532f8",
@@ -93,10 +93,10 @@
     "workflow/schemas/run-v1.json": "06751e5d41b6f8833b907bc985260dcb5a41c157822ad8e1e4eb249529737bd0",
     "workflow/schemas/command-v1.json": "93506be469ebe9017362839f8cbc7adb050560f89bb07cad9586415bb2a1db06",
     "tests/test_workflow_controls.py": "78c9b0c814fc73d062c93ab8ad5b9f7564eedb27536cdb5d03074656a1fa20ac",
-    "tests/test_workflow_adversarial.py": "ef92b1284ea5a2cc4d67102ee87d000e5c630ba0ea44741347bdd3f77b33eb00",
+    "tests/test_workflow_adversarial.py": "10f9f646b49aa3782d035d79c26986da4c8d9767802cc7795d01ae2f9194e25f",
     "work-orders/NLE-WF-WO-001.md": "17bbcc7cfe3535913b5de9e9bfe7cf558bf8ae6cb1ed429f707a6fd402cfb240",
     ".github/workflows/docs-validation.yml": "830f8c7dd35fcb68b56ba7e99ed7ffa53529dbac8a4eb1c3add908d373fee45d",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "c697a73b679881c45df3fd4e45bcb876488af1d4e384d8f9125c5fbc0f0fef77"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "07e89538c0202f32fd94d1afbe61cc57e9798530748c58169f7b992cc1ed79c3"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
@@ -104,14 +104,14 @@
   },
   "fingerprint_status": "BASE_AND_CD02_SETS_RECALCULATED; ZERO_DIVERGENCE_VERIFIED_LOCALLY; FINAL_HEAD_EXTERNAL",
   "tests": {
-    "full_windows": "136/136 OK (120 prior + 16 adversarial)",
+    "full_windows": "137/137 OK (120 prior + 17 adversarial)",
     "workflow_verify": "WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0",
     "compile": "62 workflows; gates 36/12/14; 0 grants",
     "dry_run": "deterministic DAG; execution_allowed=false",
     "source_validator": "7/7; 364 sources",
     "registry": "105/92/1110; 105 intents; 0 writes",
     "security_verify": "PASS",
-    "security_scan": "485 files; 0 findings"
+    "security_scan": "493 files; 0 findings"
   },
   "f01_f06": {
     "F01": "COMMAND_BOUNDARY_AUTHORIZATION_TRANSACTION_IMPLEMENTED",
