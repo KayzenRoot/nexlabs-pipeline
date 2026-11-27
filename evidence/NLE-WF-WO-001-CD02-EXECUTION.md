@@ -94,10 +94,10 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 
 ## 4. CI e gates
 
-- CI/CD-02 no code head `1947f88abe226db6ff44273006322496ffa6c55e`: run **46033034325** — `docs-validation` (ubuntu-24.04, suíte canônica 149 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
-- O HEAD seguinte acrescenta binding de `run_id` em append e de `workflow_version`/deadline em create, com 150 testes locais; seu CI/Sonar/Socket/ECC está **pendente** e não é declarado como aprovado.
-- SonarCloud no HEAD `1947f88`: **0 issues abertas**, Quality Gate **passed**, check **success**. As 13 issues de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) foram corrigidas sem supressão/NOSONAR.
-- Socket Security: Pull Request Alerts e Project Report **PASS**; ECC Tools / Security Evidence **PASS** no commit `1947f88`.
+- CI/CD-02 no code head `f54cc3e5741bdafded929d5edfdcc6253ace82d6`: run **46034967128** — `docs-validation` (ubuntu-24.04, suíte canônica 150 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
+- SonarCloud no HEAD `f54cc3e`: **0 issues abertas**, Quality Gate **passed**, check **success**. As 13 issues de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) foram corrigidas sem supressão/NOSONAR.
+- Socket Security: Pull Request Alerts e Project Report **PASS**; ECC Tools / Security Evidence **PASS** no commit `f54cc3e`.
+- O commit docs-only seguinte registra este read-back; sua CI é o último gate antes da auditoria independente.
 - O CI executa explicitamente `workflow compile`, `workflow dry-run` e os testes adversariais no Windows.
 - Nenhum APPROVED é declarado antes da nova auditoria independente HIGH_ASSURANCE no HEAD final.
 - Cobertura Sonar 0.0% continua sendo ausência de relatório/instrumentação, não cobertura; não há alegação de cobertura.
@@ -119,7 +119,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **GATES PASS em 1947f88; CI do novo HEAD e auditoria independente pendentes** |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **GATES PASS em f54cc3e; auditoria independente do HEAD final pendente** |
 
 ## 6. Limitações e riscos
 
