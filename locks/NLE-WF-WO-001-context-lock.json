@@ -4,8 +4,8 @@
   "status": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "0122cfce1c9fb801acd0aef23e9e40d1c7c976f2",
-  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. 0122cfc is the last docs-only head before the C12/BLOCKED/migration/risk correction round. Final HEAD and independent audit are external.",
+  "head_at_context_capture": "47799738010584eb277ed0d6db6e3084892146b2",
+  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. 4779973 is the C12/BLOCKED/migration/risk correction code head with green CI/Sonar/Socket/ECC. The evidence commit containing this lock is the final HEAD; exact SHA and approved audit are external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "canonical_git_blob_fingerprints": {
@@ -77,7 +77,7 @@
     "tests/test_workflow_adversarial.py": "6a0e7641d4fce0c083a46028795c4ab55c34e2ce",
     "work-orders/NLE-WF-WO-001.md": "ca6a0f7ab1cc23022994094d38fd42568efefd2c",
     ".github/workflows/docs-validation.yml": "b3b33f8a65eb1e2a1a2de7188111a77e0dc19b87",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "d243821548e5feb282d5d6e77e91c78e59bf872c"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "8a1d319708966c62f1991e25e54b3c9b4abe0aac"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
@@ -96,7 +96,7 @@
     "tests/test_workflow_adversarial.py": "4500ee64d412849901e7558b77d9b22e4c4c6055037a112718b0f3ef150ae4e7",
     "work-orders/NLE-WF-WO-001.md": "46a2a573d2bd7a56b8f8a27c053bc309bab570a507f604c1272e4d39be310721",
     ".github/workflows/docs-validation.yml": "49bd3785ff6267471016787121796e112576e249d81c4423684f61c1663d02f0",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "fe110d0cef861de94191445c471b7a29d6f50588543271ee39f11f8e2da7cdcd"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "f244d40cd7cfe15a2c43d6a3dea6768d016beee4b3f74deb594271fc79a7bced"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
@@ -134,13 +134,13 @@
     "grants": 0
   },
   "ci": {
-    "code_head": "PENDING_C12_BLOCKED_MIGRATION_RISK_CORRECTION",
-    "run_id": null,
-    "docs_validation": "PENDING_NEW_HEAD",
-    "security_windows": "PENDING_NEW_HEAD",
-    "sonar": "PENDING_NEW_HEAD",
-    "socket": "PENDING_NEW_HEAD",
-    "ecc": "PENDING_NEW_HEAD",
+    "code_head": "47799738010584eb277ed0d6db6e3084892146b2",
+    "run_id": 46042928502,
+    "docs_validation": "success_ubuntu-24.04_154_tests_compile_dry_run_scanner",
+    "security_windows": "success_windows-2025_security_workflow_adversarial_verify_compile_dry_run",
+    "sonar": "0_open_issues_quality_gate_passed",
+    "socket": "PASS",
+    "ecc": "SECURITY_EVIDENCE_PASS",
     "prior_run_id": 46034967128,
     "prior_code_head": "f54cc3e5741bdafded929d5edfdcc6253ace82d6",
     "prior_tests": 150,
@@ -149,7 +149,7 @@
     "final_evidence_head": "COMMIT_CONTAINING_THIS_LOCK",
     "final_head_note": "Exact SHA and approved audit are recorded in the external final report; this lock is committed in the final HEAD."
   },
-  "independent_audit": "CORRECTION_REQUIRED_AT_f503d36; SECOND_HARDENING_APPLIED; FINAL_HEAD_AUDIT_PENDING",
+  "independent_audit": "CORRECTION_REQUIRED_AT_0122cfc; THIRD_HARDENING_APPLIED_AT_4779973; FINAL_HEAD_AUDIT_PENDING",
   "verdict": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "scope_lock": {
     "mode": "OFFLINE_CONTRACT_ONLY",
@@ -163,10 +163,10 @@
     "model_calls": false
   },
   "blockers": [
-    "C12/BLOCKED/migration/risk correction head CI/Sonar/Socket/ECC read-back pending",
-    "Independent HIGH_ASSURANCE audit of final CD-02 HEAD pending after this correction round"
+    "Docs-only evidence commit CI read-back pending",
+    "Independent HIGH_ASSURANCE audit of final CD-02 HEAD pending after third correction round"
   ],
-  "next_action": "Push the C12/BLOCKED/migration/risk correction head, verify CI/Sonar/Socket/ECC, record a docs-only read-back, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
+  "next_action": "Push the docs-only evidence commit, verify CI on it, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
   "evidence": "evidence/NLE-WF-WO-001-CD02-EXECUTION.md",
   "stale_when": [
     "base/main changes",

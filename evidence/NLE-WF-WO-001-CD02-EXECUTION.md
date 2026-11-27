@@ -98,9 +98,10 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 
 ## 4. CI e gates
 
-- CI/CD-02 histórico no code head `f54cc3e5741bdafded929d5edfdcc6253ace82d6`: run **46034967128** — `docs-validation` (150 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` **SUCCESS**; Sonar **0 issues**; Socket/ECC **PASS**.
-- A rodada corretiva atual (C12 allowlist, zero grants global, BLOCKED, migração v3/v4, retry e risco de run) tem **154 testes locais** e CI/Sonar/Socket/ECC **pendentes** neste HEAD; nenhum resultado novo é declarado aprovado antes do read-back.
-- As 13 issues Sonar de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) permanecem corrigidas sem supressão/NOSONAR.
+- CI/CD-02 no code head `47799738010584eb277ed0d6db6e3084892146b2`: run **46042928502** — `docs-validation` (ubuntu-24.04, suíte canônica 154 testes, Source Pack, registry, security, workflow verify, compile/dry-run e scanner) e `security-windows` (windows-2025, security/workflow/adversarial, verify/compile/dry-run) **SUCCESS**.
+- SonarCloud no HEAD `4779973`: **0 issues abertas**, Quality Gate **passed**, check **success**. As 13 issues de `f503d36` (S5655 CRITICAL, S107, S7519, S7498, S5914 e 8× S5778) permanecem corrigidas sem supressão/NOSONAR.
+- Socket Security: Pull Request Alerts e Project Report **PASS**; ECC Tools / Security Evidence **PASS** no commit `4779973`.
+- O commit docs-only seguinte registra este read-back e contém o lock final; a auditoria independente do HEAD final permanece pendente.
 - O CI executa explicitamente `workflow compile`, `workflow dry-run` e os testes adversariais no Windows.
 - Nenhum APPROVED é declarado antes da nova auditoria independente HIGH_ASSURANCE no HEAD final.
 - Cobertura Sonar 0.0% continua sendo ausência de relatório/instrumentação, não cobertura; não há alegação de cobertura.
@@ -122,7 +123,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PENDENTE** — correções HIGH/MEDIUM da segunda auditoria em validação; CI do novo HEAD e auditoria final pendentes |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **GATES PASS em 4779973; auditoria independente do HEAD final pendente** |
 
 ## 6. Limitações e riscos
 
