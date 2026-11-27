@@ -34,7 +34,7 @@ CI run `45986351904`; SonarCloud 0 open issues/gate OK; ECC Security Evidence pa
 
 - Auditoria independente histórica de código/segurança: HEAD `578c273f937423758d2d37abb96c70e342357978`, verdict APPROVED por revisão de dossiê, sem reexecução de ferramentas pelo auditor.
 - Revisão de dossiê no HEAD documental `af8ead3`: APPROVED, sem reexecução de ferramentas.
-- Revisão técnica read-only realizada nesta conversa no HEAD exato `f7fb57e502347850d847e6c763dffe5e58eeee70`: veredito APPROVED; não havia artefato formal de review no GitHub no momento da integração. O merge foi executado sob autorização expressa do proprietário. O merge foi executado sob autorização expressa do proprietário, registrada na conversa de integração.
+- Revisão técnica read-only realizada nesta conversa no HEAD exato `f7fb57e502347850d847e6c763dffe5e58eeee70`: veredito APPROVED; não havia artefato formal de review no GitHub no momento da integração. O merge foi executado sob autorização expressa do proprietário, registrada na conversa de integração.
 - **A promoção do checkpoint nesta PR separada permanece pendente de auditoria independente.** Nenhum APPROVED é reivindicado para esta PR documental.
 
 ## 4. Resultado técnico preservado
