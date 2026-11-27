@@ -16,31 +16,37 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 
 ### F01 — fronteira única de comandos autorizados
 
-- `workflow/commands.py`: `WorkflowCommands` é a única API pública de mutação; Ledger expõe somente leitura e primitivas privadas `_*`.
+- `workflow/commands.py`: `WorkflowCommands` é a única API pública de mutação; Ledger expõe somente leitura e primitivas privadas `_*` (`_conn`, `_transaction`, `_consume`).
 - Cada comando usa `security.authorization`/`security.approval`; a transação abrange autorização, nonce, mutação, transição e registro de aprovação.
-- Decisão vinculada a principal, tenant, project, task, workflow, target/run, ação, payload, risco, policy e epoch; ações desconhecidas, grant ausente/escopo divergente e revisão obsoleta negam.
+- O payload assinado é derivado dos parâmetros de cada comando (target, evento, revisão, lease, TTL, reason/ref, flags, outcome/evidence) e inclui `policy_epoch`; aprovação não pode ser reaproveitada com parâmetros diferentes.
+- Decisão vinculada a principal, tenant, project, task, workflow, target/run, ação, payload, risco e policy; ações desconhecidas, grant ausente/escopo divergente e revisão obsoleta negam.
+- Risco do evento não pode ser rebaixado: comando STANDARD não processa evento HIGH_ASSURANCE.
 - `APPROVED → VERIFIED → COMPLETED`; `APPROVED → COMPLETED` não existe. Efeitos externos permanecem negados; o ledger é apenas armazenamento offline.
 
 ### F02 — integridade, referências e isolamento
 
 - `runs` carrega tenant/project/task/workflow/version/event/correlation/source-lock/deadline/stale/revoked/approval.
 - Consultas e mutações exigem tenant; FKs compostas ligam runs/events/transitions/outbox/DLQ/approvals.
-- Transition exige event existente do mesmo run/tenant; outbox exige evento/run/tenant/payload_ref consistentes; DLQ exige run existente; revisão é obrigatória.
+- Transition exige event existente do mesmo run/tenant; `append_event` com `run_id` exige run existente do mesmo tenant; outbox exige evento/run/tenant/payload_ref consistentes e rejeita run terminal; DLQ exige run existente e referência opaca; revisão é obrigatória.
 - Colisão de event_id/idempotency com conteúdo divergente é rejeitada; event store é append-only por trigger; SQL é parametrizado.
+- WAL é obrigatório: falha ao habilitar WAL aborta a abertura do ledger, sem fallback silencioso; `integrity()` verifica `integrity_check` e `foreign_key_check`.
 - SQLite é explicitamente armazenamento local/offline, **não** fronteira de isolamento produtiva.
 
 ### F03 — nonce e aprovação duráveis
 
 - Nonce exige `expires_at > now`; nonce expirado, inválido ou reutilizado nega.
 - Retenção conservadora de 24h após expiração; não há limpeza prematura por relógio/retrocesso.
-- Aprovação e resultado são persistidos em `approvals`; nonce, run, tenant e approval_id ficam vinculados.
-- Consumo, decisão e mutação ficam na mesma transação; falha de storage/rollback reverte o conjunto.
+- Aprovação e resultado são persistidos em `approvals` com escopo completo (actor/project/task/workflow/risk/policy_epoch/target); `run_id` é nullable para ações de evento/recovery, e `runs.approval_id` é atualizado no create.
+- Consumo, decisão e mutação ficam na mesma transação; falha de storage/rollback reverte o conjunto, inclusive nonce já consumido.
 - HMAC permanece test-only; nenhuma chave/identidade produtiva foi criada.
 
 ### F04 — recovery, fencing e retry
 
 - Recovery libera lease expirada, incrementa attempts/revision atomicamente e leva a RETRY_WAIT ou FAILED no cap.
-- Lease ativa não é tocada; EFFECT_IN_PROGRESS só vira UNKNOWN_EFFECT quando a lease expirou/está ausente.
+- Run stale, revogada ou com deadline expirado vai direto a FAILED no recovery; nunca retorna a RETRY_WAIT. Reverse de stale/revogação é negado.
+- Recovery nunca grava attempts acima do cap 2, mesmo para linha legacy em attempts=2.
+- Lease ativa não é tocada; EFFECT_IN_PROGRESS só vira UNKNOWN_EFFECT quando a lease expirou/está ausente. Claim é permitido em RUNNING e EFFECT_IN_PROGRESS, exige deadline futuro e attempts abaixo do cap, permitindo verificação normal do efeito.
+- UNKNOWN_EFFECT → VERIFIED/FAILED/BLOCKED exige `reconciliation_ref`.
 - Mutações em RUNNING/EFFECT_IN_PROGRESS exigem lease owner/epoch válidos; fencing antigo e owner divergente negam.
 - UNKNOWN_EFFECT → VERIFIED/FAILED exige `reconciliation_ref`; retry 429/5xx respeita o cap 2 em todas as rotas.
 - Deadline e TTL são validados; correções permanecem no mesmo run; efeito externo nunca é reexecutado cegamente.
@@ -66,15 +72,15 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 
 ### F06 — Context Lock e C12
 
-- `workflow verify` valida base tree, ancestralidade do base, main atual (quando o ref existe), drift de fontes, 24 fingerprints canônicos + 10 de implementação, source lock 364 e C12.
-- C12 exige exatamente GOV-03/QNT-01/02/03/05, dispatcher `NLE-ATHENA-PMO`, e rejeita dispatcher executor/accountable/reviewer, elevação, grants, memória, skills, efeitos e ativação.
+- `workflow verify` valida base tree, ancestralidade do base, `origin/main` obrigatório, drift de fontes e de implementação, fingerprints canônicos no base e no HEAD (exceto arquivos também cobertos pela implementação), 24 canônicos + 17 de implementação, source lock 364 e C12.
+- C12 exige exatamente GOV-03/QNT-01/02/03/05, dispatcher `NLE-ATHENA-PMO`, e rejeita dispatcher executor/accountable/reviewer, campos de privilégio/memória/skill/client, grants, efeitos e ativação — sem mascarar campos injetados.
 - 62 workflows preservados: 36 INTERNAL_ONLY, 12 POLICY_GATED_EXTERNAL, 14 HUMAN_APPROVAL_REQUIRED; todos DISABLED; zero grants externos.
 
 ## 3. Testes executados
 
 | Verificação | Resultado |
 |---|---|
-| Suíte completa local Windows 11 | **137/137 OK** (120 anteriores + 17 adversariais) |
+| Suíte completa local Windows 11 | **149/149 OK** (120 anteriores + 29 adversariais), após commit limpo |
 | `python -m workflow verify` | `WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0` |
 | `python -m workflow compile` | 62 workflows compilados; summary 36/12/14; 0 grants |
 | `python -m workflow dry-run` | DAG determinístico, `execution_allowed=false`, 0 efeitos |
@@ -84,14 +90,15 @@ A auditoria oficial do ChatGPT em `82180fa` emitiu **CORRECTION REQUIRED** com F
 | Security scanner | 485 arquivos, 0 achados |
 | `git diff --check` | limpo |
 
-Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão obsoleta; command boundary; referências cross-tenant/run; idempotência divergente; nonce expirado/replay/concorrência entre conexões independentes; recovery/lease/cap; UNKNOWN_EFFECT sem evidência; migração; DAG circular; workflow desconhecido; C12 dispatcher substitution; retry 429 no cap; schemas.
+Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão obsoleta; command boundary; referências cross-tenant/run; append com run inexistente/de outro tenant; idempotência divergente; nonce expirado/replay/concorrência entre conexões independentes; rollback de nonce após mutação falha; recovery/lease/cap; stale/deadline expirado sem retry; attempts nunca acima do cap; reversão de revogação negada; `approval_id` persistido no run; aprovação de append/recovery; binding de parâmetros de outbox e policy epoch; downgrade de risco negado; EFFECT_IN_PROGRESS claim/verify; outbox em run terminal negado; WAL e integridade FK; UNKNOWN_EFFECT sem evidência; migração; DAG circular; workflow desconhecido; C12 dispatcher e campos de privilégio; retry 429 no cap; schemas obrigatórios.
 
 ## 4. CI e gates
 
-- CI/CD-02: run **46027613376** no HEAD `b474ee79c067d53282e9cbe49f8f88c4222af984` — `docs-validation` (ubuntu-24.04, 137 testes) e `security-windows` (windows-2025, security+workflow) **SUCCESS**.
-- SonarCloud: **0 issues abertas**, quality gate **OK**, check pass.
-- Socket Security: Pull Request Alerts/Project Report **PASS**; ECC Security Evidence **PASS**.
-- O commit final de evidência/lock é docs-only após este HEAD de código; o HEAD final verificável é registrado no PR #10.
+- CI/CD-02 anterior: run **46027613376** em `b474ee79c067d53282e9cbe49f8f88c4222af984` — `docs-validation` (ubuntu-24.04, 137 testes) e `security-windows` (windows-2025) **SUCCESS**.
+- CI/CD-02 em `f503d36`: run **46027865163** — `docs-validation` e `security-windows` **SUCCESS**; quality gates de checkpoint passaram, mas a leitura da API Sonar revelou **13 issues abertas**.
+- SonarCloud em `f503d36`: **13 issues** — `python:S5655` CRITICAL (compiler), `python:S107` (commands), `python:S7519`, `python:S7498`, `python:S5914` e 8× `python:S5778` em testes. Todas foram corrigidas neste HEAD sem supressão/NOSONAR; o read-back do novo HEAD está pendente.
+- Socket Security e ECC: **PASS** no HEAD anterior; read-back do novo HEAD pendente.
+- O novo CI também executa explicitamente `workflow compile`, `workflow dry-run` e os testes adversariais no Windows.
 - Nenhum APPROVED é declarado antes da nova auditoria independente HIGH_ASSURANCE.
 - Cobertura Sonar 0.0% continua sendo ausência de relatório/instrumentação, não cobertura; não há alegação de cobertura.
 
@@ -112,13 +119,15 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PASS gates; auditoria independente pendente** |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PENDENTE** — read-back do novo HEAD e auditoria independente pendentes |
 
 ## 6. Limitações e riscos
 
 - SQLite é storage local; não é isolamento/ledger produtivo.
 - Identidade humana real, custódia de chaves de aprovação e provider de assinatura continuam gates de produção fora do CD-02.
-- Windows CI executará security + workflow suites; a suíte integral de 136 roda no Linux e localmente no Windows.
+- `retry_decision` é contrato puro de política (401/403/429/5xx/cap); não há rota HTTP/effect neste slice offline para integrá-lo.
+- `counts()`/`integrity()` permanecem leituras globais de diagnóstico, não caminhos de mutação.
+- Windows CI executará security, workflow e adversarial suites; a suíte integral de 149 roda no Linux e localmente no Windows.
 - Cobertura não medida; `required_approving_review_count=0` permanece risco de governança.
 - Nenhum efeito externo, VPS, Paperclip runtime, segredo, agente, workflow ativo, deploy, merge ou despesa.
 

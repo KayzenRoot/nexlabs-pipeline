@@ -1,7 +1,7 @@
 """Deterministic offline compiler and per-run DAG for the 62 workflow catalog."""
 from __future__ import annotations
 
-from collections import defaultdict, deque
+from collections import Counter, defaultdict, deque
 from datetime import datetime
 import hashlib
 import json
@@ -30,7 +30,7 @@ def validate_dag(nodes: list[dict[str, Any]], edges: list[tuple[str, str]]) -> N
     ids = [node["id"] for node in nodes]
     require(len(ids) == len(set(ids)) and ids, "DAG_NODES_INVALID")
     graph = defaultdict(list)
-    indegree = {node_id: 0 for node_id in ids}
+    indegree = dict.fromkeys(ids, 0)
     for source, target in edges:
         require(source in indegree and target in indegree, "DAG_EDGE_UNKNOWN")
         graph[source].append(target)
@@ -55,7 +55,7 @@ def compile_catalog(root: Path = ROOT) -> dict[str, Any]:
     compiled = []
     for workflow in workflows:
         steps = workflow.get("steps") or []
-        require(steps, "WORKFLOW_STEPS_EMPTY")
+        require(bool(steps), "WORKFLOW_STEPS_EMPTY")
         agents = []
         for step in steps:
             require(isinstance(step, dict), "WORKFLOW_STEP_INVALID")
@@ -78,10 +78,14 @@ def compile_catalog(root: Path = ROOT) -> dict[str, Any]:
             "new_spend_limit_usd": workflow["new_spend_limit_usd"],
             "effect_policy": workflow["effect_policy"],
         })
+    gates = Counter(item["gate"] for item in compiled)
     summary = {
         "workflows": len(compiled),
-        "internal_only": 36, "policy_gated_external": 12, "human_approval_required": 14,
-        "disabled": len(compiled), "c12": len(contracts), "grants": 0,
+        "internal_only": gates["INTERNAL_ONLY"],
+        "policy_gated_external": gates["POLICY_GATED_EXTERNAL"],
+        "human_approval_required": gates["HUMAN_APPROVAL_REQUIRED"],
+        "disabled": sum(item["activation"] == "DISABLED" for item in compiled),
+        "c12": len(contracts), "grants": 0,
     }
     return {
         "schema": "nexlabs.workflow-compiled.v1", "source_lock_sha256": SOURCE_LOCK_SHA256,
@@ -102,7 +106,7 @@ def compile_run(workflow_id: str, run_id: str, tenant_id: str, now: datetime,
     require(workflow_id in workflows, "WORKFLOW_UNKNOWN")
     workflow = workflows[workflow_id]
     steps = sorted(workflow.get("steps") or [], key=lambda item: item["step"])
-    require(steps, "WORKFLOW_STEPS_EMPTY")
+    require(bool(steps), "WORKFLOW_STEPS_EMPTY")
     nodes = []
     for step in steps:
         if workflow_id in C12_WORKFLOW_IDS:

@@ -202,7 +202,7 @@ class LedgerPersistenceTests(unittest.TestCase):
                 ):
                     with self.subTest(statement=statement):
                         with self.assertRaises(sqlite3.DatabaseError):
-                            ledger.conn.execute(statement)
+                            ledger._conn.execute(statement)
 
 
 class StateMachineTests(unittest.TestCase):
@@ -233,10 +233,10 @@ class NonceAndApprovalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "ledger.sqlite3"
             with TestLedger(path) as ledger:
-                self.assertTrue(ledger.consume("nonce-1", NOW + timedelta(minutes=1), NOW))
-                self.assertFalse(ledger.consume("nonce-1", NOW + timedelta(minutes=1), NOW))
+                self.assertTrue(ledger._consume("nonce-1", NOW + timedelta(minutes=1), NOW))
+                self.assertFalse(ledger._consume("nonce-1", NOW + timedelta(minutes=1), NOW))
             with TestLedger(path) as ledger:
-                self.assertFalse(ledger.consume("nonce-1", NOW + timedelta(minutes=1), NOW))
+                self.assertFalse(ledger._consume("nonce-1", NOW + timedelta(minutes=1), NOW))
 
     def test_high_assurance_approval_replay_is_denied(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -413,6 +413,10 @@ class C12AndPolicyTests(unittest.TestCase):
             ("activation_enabled", lambda w: w.__setitem__("activation", "ENABLED")),
             ("effect_allowed", lambda w: w.__setitem__("effect_policy", "ALLOW")),
             ("spend_nonzero", lambda w: w.__setitem__("new_spend_limit_usd", 1)),
+            ("memory_grant", lambda w: w.__setitem__("memory_grants", ["memory-1"])),
+            ("skill_import", lambda w: w.__setitem__("skill_imports", ["skill-1"])),
+            ("privileges", lambda w: w.__setitem__("privileges", {"elevated": True})),
+            ("step_client_access", lambda w: w["steps"][0].__setitem__("client_access", True)),
         )
         for name, mutate in mutations:
             with self.subTest(name=name):

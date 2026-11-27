@@ -55,7 +55,19 @@ C12_WORKFLOW_IDS = frozenset({
     "NLE-WF-GOV-03", "NLE-WF-QNT-01", "NLE-WF-QNT-02",
     "NLE-WF-QNT-03", "NLE-WF-QNT-05",
 })
+C12_FORBIDDEN_FIELDS = frozenset({
+    "client_access", "external_grants", "grants", "memory", "memory_grants",
+    "permissions", "privileges", "skill_imports", "skills", "tools",
+})
 MAX_ATTEMPTS = 2
+RISK_LEVELS = {"LOW": 0, "STANDARD": 1, "ELEVATED": 2, "HIGH_ASSURANCE": 3}
+
+
+def require_risk_floor(command_risk: str, event_risk: str) -> None:
+    """A command may escalate risk, but it may never process a higher-risk event."""
+    require(command_risk in RISK_LEVELS and event_risk in RISK_LEVELS
+            and RISK_LEVELS[command_risk] >= RISK_LEVELS[event_risk],
+            "EVENT_RISK_ESCALATION")
 
 
 class WorkflowError(SecurityError):
@@ -220,6 +232,8 @@ def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
     require(workflow.get("effect_policy") == "DENY_DEFAULT", "C12_EFFECT_FORBIDDEN")
     require(workflow.get("new_spend_limit_usd") == 0, "C12_SPEND_FORBIDDEN")
     require(workflow.get("qualification") == "NOT_RUN", "C12_QUALIFICATION_FORBIDDEN")
+    require(not any(workflow.get(field) for field in C12_FORBIDDEN_FIELDS),
+            "C12_PRIVILEGE_FORBIDDEN")
     dispatcher = workflow.get("dispatch_agent")
     require(dispatcher == "NLE-ATHENA-PMO", "C12_DISPATCHER_IDENTITY_INVALID")
     require_id(dispatcher, "C12_DISPATCHER_INVALID")
@@ -232,6 +246,8 @@ def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
     for step in steps:
         require(isinstance(step, dict), "C12_STEP_INVALID")
         require(step.get("external_effects") == "DENY", "C12_STEP_EFFECT_FORBIDDEN")
+        require(not any(step.get(field) for field in C12_FORBIDDEN_FIELDS),
+                "C12_STEP_PRIVILEGE_FORBIDDEN")
         require(step.get("agent_id") != dispatcher, "C12_DISPATCHER_EXECUTES")
     return {
         "workflow_id": workflow["id"], "dispatcher": dispatcher,

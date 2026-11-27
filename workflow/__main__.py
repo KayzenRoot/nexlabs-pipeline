@@ -13,7 +13,7 @@ import tempfile
 from scripts.validate_sources import validate as validate_source_pack
 from security.contracts import Grant, Principal, require
 from security.core import EXPECTED_POLICY, policy_fingerprint
-from workflow.commands import WorkflowCommands
+from workflow.commands import CommandScope, WorkflowCommands
 
 from .compiler import compile_catalog, dry_run
 from .contracts import (
@@ -89,13 +89,16 @@ def verify_context_lock() -> None:
             "CONTEXT_LOCK_BASE_NOT_ANCESTOR")
     require(_git_ok("diff", "--quiet", "HEAD", "--", "sources"),
             "CONTEXT_LOCK_WORKTREE_SOURCE_DRIFT")
+    implementation = document["implementation_fingerprints_sha256"]
+    require(_git_ok("diff", "--quiet", "HEAD", "--", *implementation),
+            "CONTEXT_LOCK_WORKTREE_IMPLEMENTATION_DRIFT")
     main_ref = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--verify", "origin/main"],
                               capture_output=True, check=False)
-    if main_ref.returncode == 0:
-        require(main_ref.stdout.decode("utf-8").strip() == base,
-                "CONTEXT_LOCK_MAIN_STALE")
+    require(main_ref.returncode == 0, "CONTEXT_LOCK_MAIN_UNAVAILABLE")
+    require(main_ref.stdout.decode("utf-8").strip() == base,
+            "CONTEXT_LOCK_MAIN_STALE")
     require(len(document["canonical_fingerprints_sha256"]) == 24
-            and len(document["implementation_fingerprints_sha256"]) == 17,
+            and len(implementation) == 17,
             "CONTEXT_LOCK_REQUIRED_SET_INCOMPLETE")
     base_tree = subprocess.run(
         ["git", "-C", str(ROOT), "rev-parse", f"{base}^{{tree}}"],
@@ -111,7 +114,10 @@ def verify_context_lock() -> None:
                 "CONTEXT_LOCK_CANONICAL_MISMATCH")
         require(_git_hash_blob(data) == document["canonical_git_blob_fingerprints"][relative],
                 "CONTEXT_LOCK_CANONICAL_BLOB_MISMATCH")
-    for relative, expected in document["implementation_fingerprints_sha256"].items():
+        if relative not in implementation:
+            require(hashlib.sha256(_git_blob(relative)).hexdigest() == expected,
+                    "CONTEXT_LOCK_CANONICAL_HEAD_DRIFT")
+    for relative, expected in implementation.items():
         data = _git_blob(relative)
         require(hashlib.sha256(data).hexdigest() == expected,
                 "CONTEXT_LOCK_IMPLEMENTATION_MISMATCH")
@@ -122,22 +128,25 @@ def verify_context_lock() -> None:
 def _verification_commands(ledger: Ledger) -> WorkflowCommands:
     actor = Principal("verify-agent", "agent", "tenant-1", "project-1", "host-1", "ACTIVE", 1)
     policy = policy_fingerprint(EXPECTED_POLICY)
-    common = dict(
-        principal_id="verify-agent", target_id="run-verify-1", tenant_id="tenant-1",
-        project_id="project-1", task_id="task-1", workflow_id="NLE-WF-GOV-03",
-        skill_id="workflow-skill", host_id="host-1", provider_id="provider-local",
-        risk="STANDARD", policy_sha256=policy, policy_epoch=1,
-        issued_at=NOW - timedelta(minutes=1), expires_at=NOW + timedelta(hours=1),
-        revoked=False, max_spend_usd=0, external_effects="DENY",
-    )
+    common = {
+        "principal_id": "verify-agent", "target_id": "run-verify-1",
+        "tenant_id": "tenant-1", "project_id": "project-1", "task_id": "task-1",
+        "workflow_id": "NLE-WF-GOV-03", "skill_id": "workflow-skill",
+        "host_id": "host-1", "provider_id": "provider-local", "risk": "STANDARD",
+        "policy_sha256": policy, "policy_epoch": 1,
+        "issued_at": NOW - timedelta(minutes=1), "expires_at": NOW + timedelta(hours=1),
+        "revoked": False, "max_spend_usd": 0, "external_effects": "DENY",
+    }
     grants = (
         Grant(grant_id="verify-create", action="workflow.run.create", **common),
         Grant(grant_id="verify-transition", action="workflow.run.transition", **common),
     )
+    scope = CommandScope(
+        actor=actor, tenant_id="tenant-1", project_id="project-1",
+        task_id="task-1", workflow_id="NLE-WF-GOV-03",
+    )
     return WorkflowCommands(
-        ledger, actor=actor, tenant_id="tenant-1", project_id="project-1",
-        task_id="task-1", workflow_id="NLE-WF-GOV-03", policy_sha256=policy,
-        policy_epoch=1, grants=grants,
+        ledger, scope, policy_sha256=policy, policy_epoch=1, grants=grants,
     )
 
 

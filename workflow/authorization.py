@@ -1,6 +1,8 @@
 """Workflow-specific authorization wrapper using the approved security contracts."""
 from __future__ import annotations
 
+from datetime import datetime
+
 from security.approval import SignatureVerifier
 from security.authorization import authorize
 from security.contracts import (
@@ -8,6 +10,16 @@ from security.contracts import (
 )
 
 from .ledger import Ledger
+
+
+class _LedgerNonceStore:
+    """Private adapter; nonce consumption stays behind the ledger primitive."""
+
+    def __init__(self, ledger: Ledger):
+        self.ledger = ledger
+
+    def consume(self, nonce: str, expires_at: datetime, now: datetime) -> bool:
+        return self.ledger._consume(nonce, expires_at, now)
 
 
 def authorize_workflow(
@@ -31,5 +43,5 @@ def authorize_workflow(
         approval=approval,
         approval_signature=approval_signature,
         verifier=verifier,
-        nonce_store=nonce_store or ledger,
+        nonce_store=nonce_store or _LedgerNonceStore(ledger),
     )
