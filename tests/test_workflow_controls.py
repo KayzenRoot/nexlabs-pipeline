@@ -423,6 +423,18 @@ class C12AndPolicyTests(unittest.TestCase):
             ("unknown_field", lambda w: w.__setitem__("foo", "bar")),
             ("step_memory_grant_case",
              lambda w: w["steps"][0].__setitem__("Memory_Grants", ["memory-1"])),
+            ("nested_common_tests",
+             lambda w: w["common_tests"].append({"grants": ["grant-1"]})),
+            ("nested_inputs",
+             lambda w: w.__setitem__("inputs", {"client_access": True})),
+            ("nested_scenario",
+             lambda w: w.__setitem__("scenario_specific_not_run",
+                                     {"memory_grants": ["memory-1"]})),
+            ("nested_step_task",
+             lambda w: w["steps"][0].__setitem__("task", {"grants": ["grant-1"]})),
+            ("nested_step_packages",
+             lambda w: w["steps"][0]["eligible_packages"].append(
+                 {"skill_grant": "skill-1"})),
             ("privileges", lambda w: w.__setitem__("privileges", {"elevated": True})),
             ("step_client_access", lambda w: w["steps"][0].__setitem__("client_access", True)),
         )

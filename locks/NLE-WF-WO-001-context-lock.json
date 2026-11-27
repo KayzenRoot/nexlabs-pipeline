@@ -4,8 +4,8 @@
   "status": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "47799738010584eb277ed0d6db6e3084892146b2",
-  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. 4779973 is the C12/BLOCKED/migration/risk correction code head with green CI/Sonar/Socket/ECC. The evidence commit containing this lock is the final HEAD; exact SHA and approved audit are external.",
+  "head_at_context_capture": "902c02fa2aac5f861839dd86f19f5d6873a0bc41",
+  "head_note": "82180fa is the previously audited CD-01 head; f503d36 is the last pre-Sonar-correction CD-02 head. 902c02f is the last docs-only head before the nested-C12 and migration-v4 correction. The evidence commit containing this lock is the final HEAD; exact SHA and approved audit are external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "canonical_git_blob_fingerprints": {
@@ -66,18 +66,18 @@
     "workflow/authorization.py": "11f6e223de7f64d5ae44cf5192a056d1f12dd681",
     "workflow/commands.py": "65d5f17e79de07e1fb02616f5a265a9669342c4c",
     "workflow/compiler.py": "68cdd859f986f1c7568a47beda3c0d4684790b15",
-    "workflow/contracts.py": "f2c78edd3f5cd0eecd72328fe253d022ae3eaf2f",
+    "workflow/contracts.py": "9e3e240ff3ad7cef2a8216eba82fcdcd775e9149",
     "workflow/ledger.py": "43a595b642f4be5354f31b8c04779fd62e63a35b",
-    "workflow/migrations.py": "dc7795f3c4ee20fbb56b56e76878b0d74f7ef5c2",
+    "workflow/migrations.py": "57fdc185a8ff2cc76d24debcd0d13de68321707f",
     "workflow/README.md": "1fb21d02a89b5c818e88e77b5da893c8d1b25d12",
     "workflow/schemas/event-v1.json": "a298d638d6b5fb3f4200b71e85e6f42f269c9bf6",
     "workflow/schemas/run-v1.json": "1d93fd9d6aaafc626fbd5f38af0872726859ea60",
     "workflow/schemas/command-v1.json": "bf7709bcd6150a546c903509bc7bb3e85773db55",
-    "tests/test_workflow_controls.py": "ed6bda7baf4f4024a22b274ad6313b2aff86ecdf",
-    "tests/test_workflow_adversarial.py": "6a0e7641d4fce0c083a46028795c4ab55c34e2ce",
-    "work-orders/NLE-WF-WO-001.md": "ca6a0f7ab1cc23022994094d38fd42568efefd2c",
+    "tests/test_workflow_controls.py": "ba10d747534c082cfa9d902cbedda589ed8507b4",
+    "tests/test_workflow_adversarial.py": "94fbc87614e611aae9efb66ac9536365c90693b2",
+    "work-orders/NLE-WF-WO-001.md": "1a9e8a8853c405fe03ac95e5dabe72e89e4eb6af",
     ".github/workflows/docs-validation.yml": "b3b33f8a65eb1e2a1a2de7188111a77e0dc19b87",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "8a1d319708966c62f1991e25e54b3c9b4abe0aac"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "a40d8ab8c81cb39fe1c401a8e551ef71e60e8bf8"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
@@ -85,18 +85,18 @@
     "workflow/authorization.py": "97083c7ef3c454d69790721ea3557effcadb36aaafaf0d5a8681a2a941523bed",
     "workflow/commands.py": "306c29e033720159a0ccac4efc6772fdfc1c659e35efea0a754334c5b0be9bb3",
     "workflow/compiler.py": "842fadc5bd10a116e8b50bf4a2b67a9e2de4d4a8d49895130b3fcc250b267372",
-    "workflow/contracts.py": "f7676ab271696c9b22701169de6d3a114c9bbd2c9b67536d7580afd7a995b9c0",
+    "workflow/contracts.py": "28ca59af05d92af4a4eaab1e8d8f068dbb35e7bff359ca54209e24a52c865580",
     "workflow/ledger.py": "93acf7b784cbcc7d2bfe53fe6eb4f95d59a2169f555b56b120131017e54953bf",
-    "workflow/migrations.py": "9747e9aa315b901f999363ca0f5d36e5b6191df0ac43d9342f264423a6bbc151",
+    "workflow/migrations.py": "763afbfafabda3e1ed1bfff66416b20828d7c02c50448ab00fc0d12fd95c2b22",
     "workflow/README.md": "9b2bb8c37f72c72fb00e9d7b20117c1f4ea8da5d8f03cd24e204fcf26de117e5",
     "workflow/schemas/event-v1.json": "fc6035557d00b0e7934e3ecbbd644e945e0e77d0a0bb0a275c45f02fc11df2fd",
     "workflow/schemas/run-v1.json": "8e74066f43fa076b65c7defbaaedeed07462025418e36c32f873e6ac4885c05d",
     "workflow/schemas/command-v1.json": "93506be469ebe9017362839f8cbc7adb050560f89bb07cad9586415bb2a1db06",
-    "tests/test_workflow_controls.py": "cd795e5864b597b9f714ccb573142446b342d79ffabbe31d280af32d43a6614f",
-    "tests/test_workflow_adversarial.py": "4500ee64d412849901e7558b77d9b22e4c4c6055037a112718b0f3ef150ae4e7",
-    "work-orders/NLE-WF-WO-001.md": "46a2a573d2bd7a56b8f8a27c053bc309bab570a507f604c1272e4d39be310721",
+    "tests/test_workflow_controls.py": "4e68d31e1c676dda7b1a17b498ee969f6067e48981d8d7b621609dedaa31b505",
+    "tests/test_workflow_adversarial.py": "e9b894d4044f6994a4e39be486e10e9b1fd3059ecb0561c9025bad501fd707e6",
+    "work-orders/NLE-WF-WO-001.md": "d48181490a4713c86910f1b2f768d23b2403dfcfe59ce777d13220fba22df8af",
     ".github/workflows/docs-validation.yml": "49bd3785ff6267471016787121796e112576e249d81c4423684f61c1663d02f0",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "f244d40cd7cfe15a2c43d6a3dea6768d016beee4b3f74deb594271fc79a7bced"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "7320adbac8d0601d6a91086d0d903cb271d3549d595af0a70343185174bf6a51"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
@@ -104,7 +104,7 @@
   },
   "fingerprint_status": "BASE_AND_CD02_SETS_RECALCULATED_AT_CANDIDATE_INDEX; FINAL_HEAD_EXTERNAL",
   "tests": {
-    "full_windows": "154/154 OK (120 prior + 34 new: 33 adversarial + 1 catalog regression)",
+    "full_windows": "156/156 OK (120 prior + 36 new: 35 adversarial + 1 catalog regression)",
     "workflow_verify": "WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0",
     "compile": "62 workflows; gates 36/12/14; 0 grants",
     "dry_run": "deterministic DAG; execution_allowed=false",
@@ -116,10 +116,10 @@
   "f01_f06": {
     "F01": "COMMAND_BOUNDARY_AUTHORIZATION_PARAM_BOUND_PAYLOAD_RUN_RISK_PRIVATE_LEDGER_IMPLEMENTED",
     "F02": "TENANT_REFS_EVENT_RUN_OUTBOX_BLOCKED_TERMINAL_IDEMPOTENCY_WAL_FK_IMPLEMENTED",
-    "F03": "NONCE_EXPIRY_RETENTION_ATOMICITY_FULL_SCOPE_APPROVAL_APPEND_RECOVERY_LEGACY_MIGRATION_IMPLEMENTED",
+    "F03": "NONCE_EXPIRY_RETENTION_ATOMICITY_FULL_SCOPE_APPROVAL_APPEND_RECOVERY_TRANSACTIONAL_MIGRATION_IMPLEMENTED",
     "F04": "RECOVERY_LEASE_FENCING_RETRY_CAP_STALE_DEADLINE_BLOCKED_EFFECT_EXIT_RECONCILIATION_IMPLEMENTED",
-    "F05": "RUN_RISK_CONTRACT_SCHEMAS_MIGRATIONS_V4_COMPILER_GRANTS_DERIVED_CLI_REVOCATION_IRREVERSIBLE_RESTORED",
-    "F06": "CONTEXT_LOCK_HEAD_AND_BASE_C12_ALLOWLIST_GLOBAL_ZERO_GRANTS_CANONICALIZED"
+    "F05": "RUN_RISK_CONTRACT_SCHEMAS_MIGRATIONS_V4_RESUMABLE_RISK_BACKFILL_COMPILER_GRANTS_DERIVED_RESTORED",
+    "F06": "CONTEXT_LOCK_HEAD_AND_BASE_C12_ALLOWLIST_NESTED_GLOBAL_ZERO_GRANTS_CANONICALIZED"
   },
   "c12": {
     "ids": [
@@ -134,22 +134,22 @@
     "grants": 0
   },
   "ci": {
-    "code_head": "47799738010584eb277ed0d6db6e3084892146b2",
-    "run_id": 46042928502,
-    "docs_validation": "success_ubuntu-24.04_154_tests_compile_dry_run_scanner",
-    "security_windows": "success_windows-2025_security_workflow_adversarial_verify_compile_dry_run",
-    "sonar": "0_open_issues_quality_gate_passed",
-    "socket": "PASS",
-    "ecc": "SECURITY_EVIDENCE_PASS",
-    "prior_run_id": 46034967128,
-    "prior_code_head": "f54cc3e5741bdafded929d5edfdcc6253ace82d6",
-    "prior_tests": 150,
+    "code_head": "PENDING_NESTED_C12_MIGRATION_V4_CORRECTION",
+    "run_id": null,
+    "docs_validation": "PENDING_NEW_HEAD",
+    "security_windows": "PENDING_NEW_HEAD",
+    "sonar": "PENDING_NEW_HEAD",
+    "socket": "PENDING_NEW_HEAD",
+    "ecc": "PENDING_NEW_HEAD",
+    "prior_run_id": 46042928502,
+    "prior_code_head": "47799738010584eb277ed0d6db6e3084892146b2",
+    "prior_tests": 154,
     "f503d36_run_id": 46027865163,
     "b474ee7_run_id": 46027613376,
     "final_evidence_head": "COMMIT_CONTAINING_THIS_LOCK",
     "final_head_note": "Exact SHA and approved audit are recorded in the external final report; this lock is committed in the final HEAD."
   },
-  "independent_audit": "CORRECTION_REQUIRED_AT_0122cfc; THIRD_HARDENING_APPLIED_AT_4779973; FINAL_HEAD_AUDIT_PENDING",
+  "independent_audit": "CORRECTION_REQUIRED_AT_902c02f; FOURTH_HARDENING_IN_PROGRESS; FINAL_HEAD_AUDIT_PENDING",
   "verdict": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "scope_lock": {
     "mode": "OFFLINE_CONTRACT_ONLY",
@@ -163,10 +163,10 @@
     "model_calls": false
   },
   "blockers": [
-    "Docs-only evidence commit CI read-back pending",
-    "Independent HIGH_ASSURANCE audit of final CD-02 HEAD pending after third correction round"
+    "Nested-C12/migration-v4 correction head CI/Sonar/Socket/ECC read-back pending",
+    "Independent HIGH_ASSURANCE audit of final CD-02 HEAD pending after fourth correction round"
   ],
-  "next_action": "Push the docs-only evidence commit, verify CI on it, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
+  "next_action": "Push the nested-C12/migration-v4 correction head, verify CI/Sonar/Socket/ECC, record a docs-only read-back, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
   "evidence": "evidence/NLE-WF-WO-001-CD02-EXECUTION.md",
   "stale_when": [
     "base/main changes",

@@ -80,7 +80,8 @@ class TestLedger(Ledger):
         return self._recover("tenant-1", now)
 
 
-def make_v2_ledger(path, *, partial_v3=False):
+def make_v2_ledger(path, *, partial_v3=False, event_risk="STANDARD",
+                   risk_column_without_version=False):
     """Build a synthetic schema-2 ledger with duplicate legacy approval ids."""
     conn = sqlite3.connect(path)
     try:
@@ -100,7 +101,7 @@ def make_v2_ledger(path, *, partial_v3=False):
                 (event_id, "tenant-1", run_id,
                  hashlib.sha256(event_id.encode()).hexdigest(), f"idem-{index}",
                  "work_order.ready", f"corr-{index}", f"payload-{index}", PAYLOAD,
-                 NOW.isoformat(), "{}"),
+                 NOW.isoformat(), json.dumps({"risk": event_risk})),
             )
             conn.execute(
                 "INSERT INTO runs(run_id,tenant_id,project_id,task_id,workflow_id,"
@@ -123,6 +124,12 @@ def make_v2_ledger(path, *, partial_v3=False):
             )
         if partial_v3:
             conn.execute("CREATE TABLE approvals_v3 (partial TEXT)")
+        if risk_column_without_version:
+            conn.execute("ALTER TABLE runs ADD COLUMN risk TEXT NOT NULL DEFAULT 'STANDARD'")
+            conn.execute(
+                "INSERT INTO schema_migrations(version, applied_at) VALUES(3,?)",
+                (NOW.isoformat(),),
+            )
         conn.commit()
     finally:
         conn.close()
@@ -486,6 +493,50 @@ class LedgerIntegrityTests(unittest.TestCase):
                                            event.payload_ref, NOW)
                 ledger.transition("run-1", "CANCELLED")
                 self.assertEqual(ledger.run("run-1")["state"], "CANCELLED")
+
+    def test_migration_resume_preserves_full_approval_scope(self):
+        event = make_event()
+        approval, signature = make_approval(
+            create_payload(event), nonce="resumenonce0123456789abcdef",
+            approval_id="approval-resume",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.sqlite3"
+            with TestLedger(path) as ledger:
+                command = WorkflowCommands(
+                    ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
+                    risk="HIGH_ASSURANCE",
+                    grants=(grant("workflow.run.create", risk="HIGH_ASSURANCE"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                command.create_run("run-1", "0.1.0", event, NOW, NOW + timedelta(hours=1))
+                ledger._conn.execute("DELETE FROM schema_migrations WHERE version>=3")
+            with TestLedger(path) as ledger:
+                self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
+                row = ledger._conn.execute(
+                    "SELECT actor_id,approver_role,evidence_refs_json,policy_epoch "
+                    "FROM approvals WHERE approval_id=?",
+                    ("approval-resume",),
+                ).fetchone()
+                self.assertEqual(row["actor_id"], "agent-1")
+                self.assertEqual(row["approver_role"], "OWNER")
+                self.assertEqual(json.loads(row["evidence_refs_json"]), ["evidence-001"])
+                self.assertEqual(row["policy_epoch"], 1)
+
+    def test_migration_backfills_legacy_high_risk_and_resumes_v4(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            high = Path(tmp) / "high.sqlite3"
+            make_v2_ledger(high, event_risk="HIGH_ASSURANCE")
+            with TestLedger(high) as ledger:
+                self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
+                self.assertEqual(ledger.run("legacy-run-1")["risk"], "HIGH_ASSURANCE")
+            resumable = Path(tmp) / "resumable.sqlite3"
+            make_v2_ledger(resumable, event_risk="HIGH_ASSURANCE",
+                           risk_column_without_version=True)
+            with TestLedger(resumable) as ledger:
+                self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
+                self.assertEqual(ledger.run("legacy-run-1")["risk"], "HIGH_ASSURANCE")
 
     def test_migration_handles_legacy_duplicates_and_partial_v3(self):
         with tempfile.TemporaryDirectory() as tmp:

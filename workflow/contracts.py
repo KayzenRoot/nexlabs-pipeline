@@ -260,6 +260,7 @@ def load_workflows(root: Path = ROOT) -> dict[str, dict[str, Any]]:
 
 def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
     require(set(workflow) <= C12_ALLOWED_WORKFLOW_FIELDS, "C12_UNKNOWN_FIELD")
+    require(forbidden_field_count(workflow) == 0, "C12_PRIVILEGE_FORBIDDEN")
     require(workflow.get("activation") == "DISABLED", "C12_ACTIVATION_FORBIDDEN")
     require(workflow.get("gate") == "INTERNAL_ONLY", "C12_GATE_FORBIDDEN")
     require(workflow.get("effect_policy") == "DENY_DEFAULT", "C12_EFFECT_FORBIDDEN")
