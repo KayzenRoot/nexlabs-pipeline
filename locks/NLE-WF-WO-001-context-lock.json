@@ -77,7 +77,7 @@
     "tests/test_workflow_adversarial.py": "ebe3a842a9a9e8a45abdb2e97b037c666370cbcb",
     "work-orders/NLE-WF-WO-001.md": "aee26cf87e26db70bcc2e7d42bec2fb4ae4e1558",
     ".github/workflows/docs-validation.yml": "84e742b514a88b2252dc9867cf8cab966258b52e",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "bf9f0e747a97168400cf9d9851674239ab950dad"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "65335f5b6f1dc4b6b75d36b9537879aba7b3cf74"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
@@ -96,7 +96,7 @@
     "tests/test_workflow_adversarial.py": "10f9f646b49aa3782d035d79c26986da4c8d9767802cc7795d01ae2f9194e25f",
     "work-orders/NLE-WF-WO-001.md": "17bbcc7cfe3535913b5de9e9bfe7cf558bf8ae6cb1ed429f707a6fd402cfb240",
     ".github/workflows/docs-validation.yml": "830f8c7dd35fcb68b56ba7e99ed7ffa53529dbac8a4eb1c3add908d373fee45d",
-    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "07e89538c0202f32fd94d1afbe61cc57e9798530748c58169f7b992cc1ed79c3"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "b6d34deafde7b2d325a828ebc8f5a8a35b075dfb3600166f9df71934ea47f116"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
@@ -134,14 +134,14 @@
     "grants": 0
   },
   "ci": {
-    "prior_run_id": 46018632012,
-    "prior_head": "82180fa4c9a29fc735ecb492c1e497bc75d0d53a",
-    "prior_docs_validation": "success_ubuntu-24.04",
-    "prior_security_windows": "success_windows-2025",
-    "prior_sonar": "0_open_issues_quality_gate_OK",
-    "prior_socket": "PASS",
-    "prior_ecc": "PASS",
-    "cd02_run": "PENDING_AFTER_PUSH"
+    "code_head": "b474ee79c067d53282e9cbe49f8f88c4222af984",
+    "run_id": 46027613376,
+    "docs_validation": "success_ubuntu-24.04_137_tests",
+    "security_windows": "success_windows-2025",
+    "sonar": "0_open_issues_quality_gate_OK",
+    "socket": "PASS",
+    "ecc": "PASS",
+    "final_evidence_head": "PENDING_COMMIT"
   },
   "independent_audit": "PENDING_CD02_EXTERNAL_INDEPENDENT_AUDIT",
   "verdict": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",

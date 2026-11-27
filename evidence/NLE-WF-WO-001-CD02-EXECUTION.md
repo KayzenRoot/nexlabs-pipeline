@@ -88,7 +88,10 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 
 ## 4. CI e gates
 
-- CI/CD-02, SonarCloud, Socket e ECC serão verificados no HEAD final após o push; IDs e links são publicados no PR #10.
+- CI/CD-02: run **46027613376** no HEAD `b474ee79c067d53282e9cbe49f8f88c4222af984` — `docs-validation` (ubuntu-24.04, 137 testes) e `security-windows` (windows-2025, security+workflow) **SUCCESS**.
+- SonarCloud: **0 issues abertas**, quality gate **OK**, check pass.
+- Socket Security: Pull Request Alerts/Project Report **PASS**; ECC Security Evidence **PASS**.
+- O commit final de evidência/lock é docs-only após este HEAD de código; o HEAD final verificável é registrado no PR #10.
 - Nenhum APPROVED é declarado antes da nova auditoria independente HIGH_ASSURANCE.
 - Cobertura Sonar 0.0% continua sendo ausência de relatório/instrumentação, não cobertura; não há alegação de cobertura.
 
@@ -109,7 +112,7 @@ Testes adversariais cobrem: mutação sem grant; grant de outro tenant; revisão
 | AC11 C12 cinco workflows, dispatcher canônico, sem grants | **PASS** |
 | AC12 Retry/limites/deadline | **PASS** |
 | AC13 CLI verify/compile/dry-run | **PASS** |
-| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PENDING final HEAD** |
+| AC14 CI Linux/Windows, Sonar/Socket/ECC, auditoria | **PASS gates; auditoria independente pendente** |
 
 ## 6. Limitações e riscos
 
