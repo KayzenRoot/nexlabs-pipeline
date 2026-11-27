@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexlabs:grant:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "grant_id",
+    "principal_id",
+    "action",
+    "target_id",
+    "tenant_id",
+    "project_id",
+    "task_id",
+    "workflow_id",
+    "skill_id",
+    "host_id",
+    "provider_id",
+    "risk",
+    "policy_sha256",
+    "policy_epoch",
+    "issued_at",
+    "expires_at",
+    "revoked",
+    "max_spend_usd",
+    "external_effects"
+  ],
+  "properties": {
+    "grant_id": {
+      "type": "string"
+    },
+    "principal_id": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "tenant_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "workflow_id": {
+      "type": "string"
+    },
+    "skill_id": {
+      "type": "string"
+    },
+    "host_id": {
+      "type": "string"
+    },
+    "provider_id": {
+      "type": "string"
+    },
+    "risk": {
+      "enum": [
+        "LOW",
+        "STANDARD",
+        "ELEVATED",
+        "HIGH_ASSURANCE"
+      ]
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "policy_epoch": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked": {
+      "type": "boolean"
+    },
+    "max_spend_usd": {
+      "const": "0"
+    },
+    "external_effects": {
+      "const": "DENY"
+    }
+  }
+}

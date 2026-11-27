@@ -1,0 +1,546 @@
+"""High-assurance offline security contract regression tests."""
+from __future__ import annotations
+
+from dataclasses import replace
+from datetime import datetime, timedelta, timezone
+from decimal import Decimal
+import hashlib
+import hmac
+import json
+import os
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+
+from security.approval import (
+    HmacSha256TestVerifier, InMemoryNonceStore, canonical_approval_bytes,
+)
+from security.authorization import authorize as evaluate_authorization
+from security.contracts import (
+    AccessRequest, ApprovalEnvelope, Grant, Principal, SecurityError,
+)
+from security.core import EXPECTED_POLICY, policy_fingerprint, verify_policy
+from security.isolation import assert_tenant_match, resolve_workspace_path
+from security.network import (
+    NetworkPeer, NetworkPolicy, ServiceBinding, validate_network_policy,
+)
+from security.secrets import SecretRef, validate_secret_ref
+
+NOW = datetime(2026, 11, 26, 12, 0, tzinfo=timezone.utc)
+POLICY = policy_fingerprint(EXPECTED_POLICY)
+PAYLOAD = "b" * 64
+KEY = b"synthetic-test-key-only-never-production"
+
+
+def fixture_request(risk="STANDARD"):
+    actor = Principal("agent-1", "agent", "tenant-1", "project-1", "host-1", "ACTIVE", 1)
+    return AccessRequest(
+        actor=actor, action="document.read", target_id="doc-1",
+        tenant_id="tenant-1", project_id="project-1", task_id="task-1",
+        workflow_id="workflow-1", skill_id="skill-1", host_id="host-1",
+        provider_id="provider-local", risk=risk, policy_sha256=POLICY,
+        policy_epoch=1, payload_sha256=PAYLOAD, effect="INTERNAL_ONLY",
+        requested_spend_usd=Decimal("0"), now=NOW,
+    )
+
+
+def fixture_grant(request=None, **changes):
+    request = request or fixture_request()
+    values = dict(
+        grant_id="grant-1", principal_id=request.actor.principal_id,
+        action=request.action, target_id=request.target_id, tenant_id=request.tenant_id,
+        project_id=request.project_id, task_id=request.task_id,
+        workflow_id=request.workflow_id, skill_id=request.skill_id,
+        host_id=request.host_id, provider_id=request.provider_id, risk=request.risk,
+        policy_sha256=request.policy_sha256, policy_epoch=request.policy_epoch,
+        issued_at=NOW - timedelta(minutes=1), expires_at=NOW + timedelta(minutes=5),
+        revoked=False, max_spend_usd=Decimal("0"), external_effects="DENY",
+    )
+    values.update(changes)
+    return Grant(**values)
+
+
+def fixture_approval(request=None, **changes):
+    request = request or fixture_request("HIGH_ASSURANCE")
+    values = dict(
+        approval_id="approval-1", actor_id=request.actor.principal_id,
+        approver_id="human-owner", approver_kind="human", approver_role="OWNER",
+        action=request.action,
+        target_id=request.target_id, tenant_id=request.tenant_id,
+        project_id=request.project_id, task_id=request.task_id,
+        workflow_id=request.workflow_id, skill_id=request.skill_id,
+        host_id=request.host_id, provider_id=request.provider_id, risk=request.risk,
+        payload_sha256=request.payload_sha256, policy_sha256=request.policy_sha256,
+        evidence_refs=("evidence-001",), max_spend_usd=Decimal("0"),
+        nonce="0123456789abcdefghijklmnopqrstuv", issued_at=NOW - timedelta(minutes=1),
+        expires_at=NOW + timedelta(minutes=5),
+    )
+    values.update(changes)
+    return ApprovalEnvelope(**values)
+
+
+def sign(envelope):
+    return hmac.new(KEY, canonical_approval_bytes(envelope), hashlib.sha256).hexdigest()
+
+
+def authorize(request, grants, **kwargs):
+    return evaluate_authorization(
+        request, grants, current_policy_sha256=POLICY, current_policy_epoch=1, **kwargs
+    )
+
+
+class AuthorizationTests(unittest.TestCase):
+    def test_exact_internal_grant_allows(self):
+        request = fixture_request()
+        result = authorize(request, [fixture_grant(request)])
+        self.assertTrue(result.allowed)
+        self.assertEqual(result.reason, "AUTHORIZED_INTERNAL_ONLY")
+        self.assertEqual(result.grant_id, "grant-1")
+
+    def test_each_scope_dimension_is_exact(self):
+        request = fixture_request()
+        fields = (
+            "principal_id", "action", "target_id", "tenant_id", "project_id",
+            "task_id", "workflow_id", "skill_id", "host_id", "provider_id",
+            "risk", "policy_sha256", "policy_epoch",
+        )
+        for field in fields:
+            with self.subTest(field=field):
+                grant = fixture_grant(request)
+                changed = {"policy_epoch": 8} if field == "policy_epoch" else {
+                    field: "other-" + field
+                }
+                result = authorize(request, [replace(grant, **changed)])
+                self.assertFalse(result.allowed)
+
+    def test_revoked_expired_and_future_grants_deny(self):
+        request = fixture_request()
+        for grant in (
+            fixture_grant(request, revoked=True),
+            fixture_grant(request, expires_at=NOW),
+            fixture_grant(request, issued_at=NOW + timedelta(seconds=1)),
+        ):
+            self.assertFalse(authorize(request, [grant]).allowed)
+
+    def test_invalid_grant_is_skipped_before_a_valid_grant(self):
+        request = fixture_request()
+        revoked = fixture_grant(request, revoked=True)
+        self.assertTrue(authorize(request, [revoked, fixture_grant(request)]).allowed)
+
+    def test_stale_principal_and_cross_tenant_deny(self):
+        request = fixture_request()
+        stale = replace(request, actor=replace(request.actor, policy_epoch=0))
+        cross = replace(request, tenant_id="tenant-2")
+        self.assertEqual(authorize(stale, [fixture_grant(request)]).reason, "PRINCIPAL_POLICY_STALE")
+        self.assertEqual(authorize(cross, [fixture_grant(request)]).reason, "TENANT_ISOLATION_DENY")
+
+    def test_request_policy_hash_and_epoch_are_bound_to_trusted_current_policy(self):
+        request = fixture_request()
+        wrong_hash = evaluate_authorization(
+            request, [fixture_grant(request)], current_policy_sha256="c" * 64,
+            current_policy_epoch=1,
+        )
+        wrong_epoch = evaluate_authorization(
+            request, [fixture_grant(request)], current_policy_sha256=POLICY,
+            current_policy_epoch=2,
+        )
+        self.assertEqual(wrong_hash.reason, "REQUEST_POLICY_STALE")
+        self.assertEqual(wrong_epoch.reason, "REQUEST_POLICY_STALE")
+        boolean_epoch = replace(request, policy_epoch=True)
+        self.assertEqual(authorize(boolean_epoch, [fixture_grant(request)]).reason,
+                         "POLICY_EPOCH_INVALID")
+
+    def test_boolean_principal_epoch_is_invalid(self):
+        request = fixture_request()
+        invalid = replace(request, actor=replace(request.actor, policy_epoch=True))
+        self.assertEqual(authorize(invalid, [fixture_grant(request)]).reason,
+                         "PRINCIPAL_POLICY_EPOCH_INVALID")
+
+    def test_project_and_host_mismatch_deny(self):
+        request = fixture_request()
+        self.assertEqual(authorize(replace(request, project_id="project-2"),
+                                   [fixture_grant(request)]).reason, "PROJECT_ISOLATION_DENY")
+        self.assertEqual(authorize(replace(request, host_id="host-2"),
+                                   [fixture_grant(request)]).reason, "HOST_BINDING_DENY")
+
+    def test_external_effect_and_nonzero_spend_deny(self):
+        request = fixture_request()
+        self.assertEqual(authorize(replace(request, effect="EXTERNAL"),
+                                   [fixture_grant(request)]).reason, "EXTERNAL_EFFECTS_DENY")
+        self.assertEqual(authorize(replace(request, requested_spend_usd=Decimal("0.01")),
+                                   [fixture_grant(request)]).reason, "SPEND_FORBIDDEN")
+
+    def test_float_money_values_are_rejected(self):
+        request = fixture_request()
+        result = authorize(replace(request, requested_spend_usd=0.0), [fixture_grant(request)])
+        self.assertEqual(result.reason, "INVALID_MONEY")
+
+    def test_unknown_principal_risk_and_privilege_mutation_deny(self):
+        request = fixture_request()
+        self.assertFalse(authorize(replace(request, actor=replace(request.actor, state="UNKNOWN")),
+                                   [fixture_grant(request)]).allowed)
+        self.assertFalse(authorize(replace(request, risk="UNKNOWN"),
+                                   [fixture_grant(request)]).allowed)
+        self.assertEqual(authorize(replace(request, action="grant.create"),
+                                   [fixture_grant(request)]).reason, "PRIVILEGE_MUTATION_DENY")
+
+    def test_no_grant_or_hierarchy_inheritance(self):
+        request = fixture_request()
+        self.assertFalse(authorize(request, []).allowed)
+        child = replace(request, actor=replace(request.actor, principal_id="child-agent"))
+        self.assertFalse(authorize(child, [fixture_grant(request)]).allowed)
+
+    def test_high_assurance_requires_bound_independent_approval(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        envelope = fixture_approval(request)
+        result = authorize(request, [fixture_grant(request)], approval=envelope,
+                          approval_signature=sign(envelope),
+                          verifier=HmacSha256TestVerifier(KEY), nonce_store=InMemoryNonceStore())
+        self.assertTrue(result.allowed)
+
+    def test_high_assurance_approval_is_bound_to_full_request_scope(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        base = fixture_approval(request)
+        changes = {
+            "project_id": "other-project",
+            "task_id": "other-task",
+            "workflow_id": "other-workflow",
+            "skill_id": "other-skill",
+            "host_id": "other-host",
+            "provider_id": "other-provider",
+            "risk": "ELEVATED",
+        }
+        for field, value in changes.items():
+            with self.subTest(field=field):
+                envelope = replace(base, **{field: value})
+                result = authorize(
+                    request, [fixture_grant(request)], approval=envelope,
+                    approval_signature=sign(envelope),
+                    verifier=HmacSha256TestVerifier(KEY),
+                    nonce_store=InMemoryNonceStore(),
+                )
+                self.assertFalse(result.allowed)
+                self.assertIn("APPROVAL_", result.reason)
+
+    def test_high_assurance_without_approval_denies(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        self.assertEqual(authorize(request, [fixture_grant(request)]).reason,
+                         "INDEPENDENT_HUMAN_APPROVAL_REQUIRED")
+
+    def test_self_approval_and_nonhuman_approver_deny(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        for changes in ({"approver_id": request.actor.principal_id},
+                        {"approver_kind": "agent"},
+                        {"approver_role": "AGENT_ADMIN"}):
+            envelope = fixture_approval(request, **changes)
+            result = authorize(request, [fixture_grant(request)], approval=envelope,
+                               approval_signature=sign(envelope),
+                               verifier=HmacSha256TestVerifier(KEY), nonce_store=InMemoryNonceStore())
+            self.assertFalse(result.allowed)
+
+    def test_approval_signature_payload_policy_expiry_and_nonce(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        verifier = HmacSha256TestVerifier(KEY)
+        cases = (
+            (fixture_approval(request, payload_sha256="c" * 64), "APPROVAL_PAYLOAD_MISMATCH"),
+            (fixture_approval(request, policy_sha256="c" * 64), "APPROVAL_POLICY_MISMATCH"),
+            (fixture_approval(request, expires_at=NOW), "APPROVAL_EXPIRED_OR_NOT_YET_VALID"),
+            (fixture_approval(request, max_spend_usd=Decimal("0.01")), "APPROVAL_SPEND_FORBIDDEN"),
+        )
+        for envelope, expected in cases:
+            result = authorize(request, [fixture_grant(request)], approval=envelope,
+                               approval_signature=sign(envelope), verifier=verifier,
+                               nonce_store=InMemoryNonceStore())
+            self.assertEqual(result.reason, expected)
+        envelope = fixture_approval(request)
+        result = authorize(request, [fixture_grant(request)], approval=envelope,
+                           approval_signature="0" * 64, verifier=verifier,
+                           nonce_store=InMemoryNonceStore())
+        self.assertEqual(result.reason, "APPROVAL_SIGNATURE_INVALID")
+
+    def test_approval_verifier_and_nonce_store_errors_fail_closed(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        envelope = fixture_approval(request)
+
+        class BrokenVerifier:
+            def verify(self, _message, _signature):
+                raise RuntimeError("unavailable")
+
+        class BrokenNonceStore:
+            def consume(self, _nonce, _expires_at, _now):
+                raise RuntimeError("unavailable")
+
+        verifier_error = authorize(
+            request, [fixture_grant(request)], approval=envelope,
+            approval_signature=sign(envelope), verifier=BrokenVerifier(),
+            nonce_store=InMemoryNonceStore(),
+        )
+        nonce_error = authorize(
+            request, [fixture_grant(request)], approval=envelope,
+            approval_signature=sign(envelope), verifier=HmacSha256TestVerifier(KEY),
+            nonce_store=BrokenNonceStore(),
+        )
+        self.assertEqual(verifier_error.reason, "APPROVAL_VERIFIER_ERROR")
+        self.assertEqual(nonce_error.reason, "APPROVAL_NONCE_STORE_ERROR")
+
+    def test_approval_nonce_is_single_use(self):
+        request = fixture_request("HIGH_ASSURANCE")
+        envelope = fixture_approval(request)
+        store = InMemoryNonceStore()
+        kwargs = dict(approval=envelope, approval_signature=sign(envelope),
+                      verifier=HmacSha256TestVerifier(KEY), nonce_store=store)
+        self.assertTrue(authorize(request, [fixture_grant(request)], **kwargs).allowed)
+        self.assertEqual(authorize(request, [fixture_grant(request)], **kwargs).reason,
+                         "APPROVAL_REPLAY")
+
+    def test_approval_verifier_rejects_short_key(self):
+        with self.assertRaisesRegex(SecurityError, "APPROVAL_KEY_INVALID"):
+            HmacSha256TestVerifier(b"short")
+
+
+class NetworkPolicyTests(unittest.TestCase):
+    def test_private_network_and_loopback_services_are_valid(self):
+        policy = NetworkPolicy(
+            allowed_cidrs=("10.8.0.0/24", "fd00:1234::/64"),
+            peers=(NetworkPeer("peer-a", "10.8.0.2", ("10.8.0.2/32",), "keyref-peer-a"),),
+            services=(ServiceBinding("paperclip", "10.8.0.1", 3100, "PRIVATE"),
+                      ServiceBinding("local-ui", "127.0.0.1", 3100, "LOOPBACK")),
+        )
+        validate_network_policy(policy)
+
+    def test_public_default_wildcard_and_invalid_networks_deny(self):
+        for cidr in ("8.8.8.0/24", "0.0.0.0/0", "::/0", "10.8.0.1/24", "not-a-cidr"):
+            with self.subTest(cidr=cidr):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
+        for address in ("0.0.0.0", "::", "8.8.8.8", "fe80::1"):
+            with self.subTest(address=address):
+                invalid_service = NetworkPolicy(
+                    services=(ServiceBinding("svc", address, 443, "PRIVATE"),)
+                )
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(invalid_service)
+
+    def test_special_purpose_reserved_and_cgnat_ranges_are_not_private_allowlists(self):
+        for cidr in ("192.0.0.0/24", "100.64.0.0/10", "198.18.0.0/15"):
+            with self.subTest(cidr=cidr):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(allowed_cidrs=(cidr,)))
+
+    def test_rfc1918_and_ula_ranges_remain_accepted_after_literal_refactor(self):
+        policy = NetworkPolicy(
+            allowed_cidrs=("10.1.0.0/16", "172.16.0.0/12", "192.168.0.0/16",
+                           "127.0.0.0/8", "fd00:1234::/64"),
+            services=(ServiceBinding("loopback", "127.0.0.1", 3100, "LOOPBACK"),),
+        )
+        validate_network_policy(policy)
+
+    def test_peer_must_be_inside_allowlist(self):
+        policy = NetworkPolicy(
+            allowed_cidrs=("10.8.0.0/24",),
+            peers=(NetworkPeer("peer-a", "10.9.0.2", ("10.8.0.2/32",), "keyref-a"),),
+        )
+        with self.assertRaisesRegex(SecurityError, "NETWORK_PEER_OUTSIDE_ALLOWLIST"):
+            validate_network_policy(policy)
+
+    def test_peer_routes_cannot_escape_allowlist(self):
+        policy = NetworkPolicy(
+            allowed_cidrs=("10.8.0.0/24",),
+            peers=(NetworkPeer("peer-a", "10.8.0.2", ("0.0.0.0/0",), "keyref-a"),),
+        )
+        with self.assertRaises(SecurityError):
+            validate_network_policy(policy)
+
+    def test_duplicate_peer_and_key_reference_deny(self):
+        peer = NetworkPeer("peer-a", "10.8.0.2", ("10.8.0.2/32",), "keyref-a")
+        for peers in ((peer, peer),
+                      (peer, NetworkPeer("peer-b", "10.8.0.3", ("10.8.0.3/32",), "keyref-a"))):
+            with self.subTest(peers=peers):
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(NetworkPolicy(
+                        allowed_cidrs=("10.8.0.0/24",), peers=peers
+                    ))
+
+    def test_invalid_ports_and_exposure_mismatch_deny(self):
+        for port in (0, -1, 65536, True):
+            with self.subTest(port=port):
+                invalid_service = NetworkPolicy(
+                    services=(ServiceBinding("svc", "10.8.0.1", port, "PRIVATE"),)
+                )
+                with self.assertRaises(SecurityError):
+                    validate_network_policy(invalid_service)
+        mismatch = NetworkPolicy(
+            services=(ServiceBinding("svc", "127.0.0.1", 3100, "PRIVATE"),)
+        )
+        with self.assertRaises(SecurityError):
+            validate_network_policy(mismatch)
+
+
+class SecretReferenceTests(unittest.TestCase):
+    def setUp(self):
+        self.ref = SecretRef("ref-paperclip-auth", "windows-os-store", "tenant-1",
+                             "project-1", "paperclip-auth", "v1")
+
+    def test_opaque_pinned_scoped_reference_validates(self):
+        validate_secret_ref(self.ref, tenant_id="tenant-1", project_id="project-1",
+                            allowed_providers=frozenset({"windows-os-store"}),
+                            allowed_purposes=frozenset({"paperclip-auth"}))
+
+    def test_unknown_provider_purpose_and_cross_tenant_deny(self):
+        args = dict(tenant_id="tenant-1", project_id="project-1",
+                    allowed_providers=frozenset({"approved-store"}),
+                    allowed_purposes=frozenset({"paperclip-auth"}))
+        with self.assertRaisesRegex(SecurityError, "SECRET_PROVIDER_NOT_APPROVED"):
+            validate_secret_ref(self.ref, **args)
+        cross_tenant = {**args, "allowed_providers": frozenset({"windows-os-store"}),
+                        "tenant_id": "tenant-2"}
+        with self.assertRaisesRegex(SecurityError, "SECRET_TENANT_MISMATCH"):
+            validate_secret_ref(self.ref, **cross_tenant)
+
+    def test_latest_secret_version_denied(self):
+        ref = replace(self.ref, version="latest")
+        args = dict(tenant_id="tenant-1", project_id="project-1",
+                    allowed_providers=frozenset({"windows-os-store"}),
+                    allowed_purposes=frozenset({"paperclip-auth"}))
+        with self.assertRaisesRegex(SecurityError, "SECRET_VERSION_NOT_PINNED"):
+            validate_secret_ref(ref, **args)
+
+    def test_secret_purpose_and_project_are_exact(self):
+        base = dict(tenant_id="tenant-1", project_id="project-1",
+                    allowed_providers=frozenset({"windows-os-store"}),
+                    allowed_purposes=frozenset({"paperclip-auth"}))
+        wrong_project = {**base, "project_id": "project-2"}
+        with self.assertRaises(SecurityError):
+            validate_secret_ref(self.ref, **wrong_project)
+        wrong_purpose = {**base, "allowed_purposes": frozenset({"other-purpose"})}
+        with self.assertRaises(SecurityError):
+            validate_secret_ref(self.ref, **wrong_purpose)
+
+
+class WorkspaceIsolationTests(unittest.TestCase):
+    def test_tenant_mismatch_denies_without_owner_bypass(self):
+        with self.assertRaisesRegex(SecurityError, "TENANT_ISOLATION_DENY"):
+            assert_tenant_match("tenant-a", "tenant-b")
+
+    def test_valid_workspace_path_is_contained_and_not_created(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "tenant-1" / "project-1" / "task-1").mkdir(parents=True)
+            result = resolve_workspace_path(root, "tenant-1", "project-1", "task-1", "draft/output.txt")
+            self.assertTrue(result.is_relative_to(root.resolve()))
+            self.assertFalse(result.exists())
+
+    def test_traversal_absolute_and_windows_paths_deny(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "tenant-1" / "project-1" / "task-1").mkdir(parents=True)
+            for value in ("../other/file", "/etc/passwd", "C:/secret.txt", "a\\..\\secret"):
+                with self.subTest(value=value):
+                    with self.assertRaises(SecurityError):
+                        resolve_workspace_path(root, "tenant-1", "project-1", "task-1", value)
+
+    def test_symlink_ancestor_of_workspace_root_denied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            real_parent = base / "real-parent"
+            root = real_parent / "workspace"
+            root.mkdir(parents=True)
+            alias = base / "alias"
+            try:
+                alias.symlink_to(real_parent, target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest("symlink creation unavailable")
+            with self.assertRaisesRegex(SecurityError, "WORKSPACE_ROOT_REPARSE_POINT"):
+                resolve_workspace_path(alias / "workspace", "tenant-1", "project-1",
+                                        "task-1", "draft.txt")
+
+    def test_symlink_component_denied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            base = root / "tenant-1" / "project-1" / "task-1"
+            base.mkdir(parents=True)
+            outside = root / "outside"
+            outside.mkdir()
+            try:
+                (base / "linked").symlink_to(outside, target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest("symlink creation unavailable")
+            with self.assertRaisesRegex(SecurityError, "WORKSPACE_LINK_FORBIDDEN"):
+                resolve_workspace_path(root, "tenant-1", "project-1", "task-1", "linked/secret.txt")
+
+    @unittest.skipUnless(os.name == "nt", "Windows junction regression")
+    def test_windows_junction_component_denied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            base = root / "tenant-1" / "project-1" / "task-1"
+            base.mkdir(parents=True)
+            outside = root / "outside"
+            outside.mkdir()
+            junction = base / "junction"
+            result = subprocess.run(["cmd", "/c", "mklink", "/J", str(junction), str(outside)],
+                                    capture_output=True)
+            if result.returncode != 0:
+                self.skipTest("junction creation unavailable")
+            try:
+                with self.assertRaisesRegex(SecurityError, "WORKSPACE_LINK_FORBIDDEN"):
+                    resolve_workspace_path(root, "tenant-1", "project-1", "task-1", "junction/secret.txt")
+            finally:
+                subprocess.run(["cmd", "/c", "rmdir", str(junction)], capture_output=True)
+
+
+class PolicyTests(unittest.TestCase):
+    def test_canonical_policy_is_valid(self):
+        verify_policy(EXPECTED_POLICY)
+
+    def test_policy_mutation_fails_closed(self):
+        changed = dict(EXPECTED_POLICY)
+        changed["default_effect"] = "ALLOW"
+        with self.assertRaisesRegex(SecurityError, "POLICY_DRIFT_OR_GRANT"):
+            verify_policy(changed)
+
+    def test_policy_fingerprint_is_stable_and_changes_with_policy(self):
+        self.assertEqual(policy_fingerprint(EXPECTED_POLICY), POLICY)
+        changed = dict(EXPECTED_POLICY)
+        changed["policy_epoch"] = 2
+        self.assertNotEqual(policy_fingerprint(changed), POLICY)
+
+
+class SchemaContractTests(unittest.TestCase):
+    ROOT = Path(__file__).resolve().parents[1]
+
+    def schema(self, filename):
+        return json.loads((self.ROOT / "security" / "schemas" / filename).read_text(encoding="utf-8"))
+
+    def assert_schema_matches(self, filename, contract):
+        document = self.schema(filename)
+        fields = set(contract.__dataclass_fields__)
+        self.assertEqual(set(document["required"]), fields)
+        self.assertEqual(set(document["properties"]), fields)
+        self.assertFalse(document["additionalProperties"])
+
+    def test_approval_schema_matches_contract_and_policy_binding(self):
+        self.assert_schema_matches("approval-envelope-v1.json", ApprovalEnvelope)
+        self.assertEqual(set(EXPECTED_POLICY["approvals"]["binds"]),
+                         set(ApprovalEnvelope.__dataclass_fields__))
+
+    def test_grant_schema_matches_contract(self):
+        self.assert_schema_matches("grant-v1.json", Grant)
+
+    def test_secret_ref_schema_matches_contract(self):
+        self.assert_schema_matches("secret-ref-v1.json", SecretRef)
+
+    def test_network_schema_and_nested_objects_match_contract(self):
+        document = self.schema("network-policy-v1.json")
+        self.assertFalse(document["additionalProperties"])
+        self.assertEqual(set(document["required"]), set(NetworkPolicy.__dataclass_fields__))
+        peer = document["properties"]["peers"]["items"]
+        service = document["properties"]["services"]["items"]
+        self.assertFalse(peer["additionalProperties"])
+        self.assertFalse(service["additionalProperties"])
+        self.assertEqual(set(peer["required"]), set(NetworkPeer.__dataclass_fields__))
+        self.assertEqual(set(service["required"]), set(ServiceBinding.__dataclass_fields__))
+
+
+if __name__ == "__main__":
+    unittest.main()

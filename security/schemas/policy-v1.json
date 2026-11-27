@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexlabs:security-policy:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "mode",
+    "policy_epoch",
+    "default_effect",
+    "max_additional_spend_usd",
+    "external_effects",
+    "identity",
+    "authorization",
+    "approvals",
+    "network",
+    "secrets",
+    "isolation"
+  ],
+  "properties": {
+    "schema": {
+      "const": "nexlabs.security-policy.v1"
+    },
+    "mode": {
+      "const": "OFFLINE_CONTRACT_ONLY"
+    },
+    "policy_epoch": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "default_effect": {
+      "const": "DENY"
+    },
+    "max_additional_spend_usd": {
+      "const": "0"
+    },
+    "external_effects": {
+      "const": "DENY"
+    },
+    "identity": {
+      "type": "object"
+    },
+    "authorization": {
+      "type": "object"
+    },
+    "approvals": {
+      "type": "object"
+    },
+    "network": {
+      "type": "object"
+    },
+    "secrets": {
+      "type": "object"
+    },
+    "isolation": {
+      "type": "object"
+    }
+  }
+}

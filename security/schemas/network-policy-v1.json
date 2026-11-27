@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexlabs:network-policy:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "allowed_cidrs",
+    "peers",
+    "services"
+  ],
+  "properties": {
+    "allowed_cidrs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "peers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "peer_id",
+          "address",
+          "allowed_ips",
+          "public_key_ref"
+        ],
+        "properties": {
+          "peer_id": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "allowed_ips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "public_key_ref": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "service_id",
+          "bind_address",
+          "port",
+          "exposure"
+        ],
+        "properties": {
+          "service_id": {
+            "type": "string"
+          },
+          "bind_address": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          },
+          "exposure": {
+            "enum": [
+              "PRIVATE",
+              "LOOPBACK"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
