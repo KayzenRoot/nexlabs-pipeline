@@ -32,7 +32,7 @@ Paperclip API/DB writes, dispatcher execution, workflow/agent/routine activation
 - **AC03:** Event ledger is durable and append-only: unique event/idempotency keys, immutable events (UPDATE/DELETE fail), WAL and integrity check.
 - **AC04:** State machine permits only declared transitions, rejects invalid/terminal transitions and records each transition with revision.
 - **AC05:** Workflow authorization is deny-by-default, exact-scope and zero-spend/external-effect using the approved security contracts.
-- **AC06:** HIGH_ASSURANCE approval is bound to the full request scope; durable nonce is single-use across process restart; replay and self-approval deny.
+- **AC06:** HIGH_ASSURANCE approval is bound to the full request scope; durable nonce is single-use across process restart; replay and self-approval deny. Offline verification uses the security package's test-only HMAC adapter; real human identity and production key custody remain an explicit later production gate and are not claimed by this CD.
 - **AC07:** Run creation is atomic with its event and transition; duplicate event/idempotency produces no second run or partial row.
 - **AC08:** Concurrent writers yield exactly one winner for the same idempotency/run; distinct events all commit; lease ownership and fencing reject stale writers.
 - **AC09:** Recovery converts expired RUNNING leases to RETRY_WAIT and EFFECT_IN_PROGRESS to UNKNOWN_EFFECT without blind retry; no automatic effect delivery.

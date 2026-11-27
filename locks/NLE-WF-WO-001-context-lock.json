@@ -70,27 +70,27 @@
   },
   "implementation_git_blob_fingerprints": {
     "workflow/__init__.py": "4c05c11aa5926541254c86939c74437716efd44e",
-    "workflow/__main__.py": "58e017d99ca3357e6ae8680bb51ffff692b912cb",
+    "workflow/__main__.py": "895cb3114163d7a39cbb2924a223b309a0c6f7ab",
     "workflow/authorization.py": "b719be6fc42336666d2372c4d4d64117e6208c3c",
     "workflow/contracts.py": "e248e26e3b075fcf0e652749328b1c578087e626",
     "workflow/ledger.py": "cd5c2a5306805cd666cf63064d62a18db3116d62",
     "workflow/README.md": "f3fab91c3fb3689832b2617b34c16669910a0bab",
     "tests/test_workflow_controls.py": "94e3e4de1e7a6e58abd16bb1f3f4b8fc09cef1b9",
-    "work-orders/NLE-WF-WO-001.md": "fce8adccda7555483d7689ee3c79fb0777ce4161",
-    ".github/workflows/docs-validation.yml": "938d5ec23b7b409b4e4151ad847366f9045b4136",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "1b1c6937ec473ce30ca4eaa4abd99fce47039f10"
+    "work-orders/NLE-WF-WO-001.md": "708a5c679adf686e368e77293088cff46d1b5c31",
+    ".github/workflows/docs-validation.yml": "f68a9c6aa862ebf2318b4bc7bc330fbc66f142e9",
+    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "3806f945cd59189f9e6b60760acc9aae24e19cd4"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
-    "workflow/__main__.py": "b53546368b0dda757d8219e78648a937da2c7706c9a25a67f51e2b41def17e73",
+    "workflow/__main__.py": "f4136e179e32bc2c9a1fa5c32f9eeedd6e791f46ead7c5b7affeb6c09505a8e7",
     "workflow/authorization.py": "da5ec007f742f77fcab6d118551350ad9fb8256a4f300e65d03dbedf6f67daac",
     "workflow/contracts.py": "8c1cf9aa825394551a0e7978c77f098eefe33d859f71b725f19d4d46c6913042",
     "workflow/ledger.py": "62353775e23ba1d506062b8ccd1f2daea2796aa6d342ff8f390991e7e1d8fd6c",
     "workflow/README.md": "0ef9f066322317bee5867974a728d4a5ad6257cbbfd4de34bf32f185be15836f",
     "tests/test_workflow_controls.py": "cffe5aa1700763fbab022a10a7d6228ec970ba17dc407a098f55794c9b405a5a",
-    "work-orders/NLE-WF-WO-001.md": "ca581d6320c81b3627c53e39837cb60ab07dfd4926b5724c4d18d643b6b2de06",
-    ".github/workflows/docs-validation.yml": "634257c315c307cf5f281db8ea63abb91c267b6c996ed497ba39306f172aa7ba",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "ef539135e9bb603fe898c7d9c2f1aafd3ba68299a5bd0ce51f0a7353044c1df9"
+    "work-orders/NLE-WF-WO-001.md": "c3d905a88063fa639047791b92ffe45ee40b8f60792faf775b5e8f83aa5adf92",
+    ".github/workflows/docs-validation.yml": "1c9aa90842bb3c7fb01f33f74e2d0cd7b8ae279159b52ca54add033d32c9cc7d",
+    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "7354eb3d32baeeb10ba2c861a7184ab5d52e62fa4d03df918a23a1f9ea42e137"
   },
   "fingerprint_sets": {
     "canonical_base": 24,

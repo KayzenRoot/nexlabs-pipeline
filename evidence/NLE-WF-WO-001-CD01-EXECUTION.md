@@ -43,7 +43,7 @@ Nenhuma chamada de modelo, rede, Paperclip API/DB, VPS/SSH, segredo, agente, wor
 | AC03 Ledger durável append-only | **PASS** — WAL, `synchronous=FULL`, triggers de imutabilidade, unique event/idempotency, integrity check |
 | AC04 Máquina de estados | **PASS** — transições declaradas, terminais sem saída, revisão registrada |
 | AC05 Autorização deny-by-default | **PASS** — exact-scope, tenant/project/host, zero spend e efeito interno via security contracts |
-| AC06 Approval/nonce/replay | **PASS** — vínculo de escopo completo, nonce durável single-use após reopen, replay/self-approval negados |
+| AC06 Approval/nonce/replay | **PASS offline** — vínculo de escopo completo, nonce durável single-use após reopen, replay/self-approval negados; adapter HMAC é test-only e identidade/custódia de produção é gate posterior não reivindicado |
 | AC07 Atomicidade run/evento | **PASS** — duplicate event/idempotency não cria segundo run nem linha parcial |
 | AC08 Concorrência/leases | **PASS** — 8 escritores concorrentes: 1 vencedor, 7 duplicados; lease alheio e fencing antigo negados |
 | AC09 Recovery | **PASS** — RUNNING expirado → RETRY_WAIT; EFFECT_IN_PROGRESS → UNKNOWN_EFFECT; sem retry cego |
@@ -54,6 +54,23 @@ Nenhuma chamada de modelo, rede, Paperclip API/DB, VPS/SSH, segredo, agente, wor
 | AC14 CI Linux/Windows, Sonar, Socket, ECC, auditoria | **PASS gates; auditoria pendente** — CI 46015081817 passou em ubuntu-24.04 e windows-2025; Sonar 0/gate OK; Socket/ECC PASS; auditoria independente ainda pendente |
 
 ## 4. Testes executados (Windows 11)
+
+| AC | Testes nomeados |
+|---|---|
+| AC01 | `test_verify_cli`; `workflow verify` valida base tree, 24 fingerprints canônicos e 10 de implementação via Git |
+| AC02 | `test_event_contract_and_digest_are_deterministic`, `test_invalid_event_fields_and_unsafe_payload_reference_deny` |
+| AC03 | `test_persistence_and_counts_survive_reopen`, `test_duplicate_event_is_atomic_and_has_no_second_run`, `test_events_are_append_only` |
+| AC04 | `test_invalid_transition_is_denied`, `test_internal_path_and_terminal_state`, `test_terminal_states_have_no_transitions` |
+| AC05 | `test_exact_scope_allows_and_unknown_scope_denies`, `test_no_grant_or_nonzero_spend_denies` |
+| AC06 | `test_nonce_is_single_use_across_reopen`, `test_high_assurance_approval_replay_is_denied`, `test_self_approval_is_denied` |
+| AC07 | `test_duplicate_event_is_atomic_and_has_no_second_run` |
+| AC08 | `test_same_idempotency_has_one_winner_under_threads`, `test_lease_conflict_and_stale_fence_deny` |
+| AC09 | `test_recovery_marks_retry_and_unknown_effect_without_blind_retry` |
+| AC10 | `test_outbox_is_unique_and_dlq_keeps_sanitized_reference` |
+| AC11 | `test_c12_exact_five_dispatch_only_contracts`, `test_c12_negative_mutations_are_rejected`, `test_catalog_is_large_and_all_workflows_disabled` |
+| AC12 | `test_retry_policy_respects_auth_rate_limit_and_attempt_cap` |
+| AC13 | `test_verify_cli`; `python -m workflow verify` |
+| AC14 | CI abaixo; execução local 120/120 Windows |
 
 | Comando | Resultado |
 |---|---|
@@ -91,8 +108,11 @@ Cobertura Sonar continua sem relatório/instrumentação; 120/120 é execução 
 ## 7. CI/Sonar/Socket/ECC
 
 - CI do código: run `46015081817` — `docs-validation` (ubuntu-24.04) e `security-windows` (windows-2025) **SUCCESS**.
-- SonarCloud: **0 issues abertas**, quality gate **OK**, check **pass**.
-- Socket Security e ECC Security Evidence: **PASS**.
+  - https://github.com/KayzenRoot/nexlabs-pipeline/actions/runs/46015081817
+  - O workflow Windows foi atualizado para executar a suíte completa de 120 testes; a execução final do HEAD documental é verificada no GitHub.
+- SonarCloud: **0 issues abertas**, quality gate **OK**, check **pass** — https://sonarcloud.io/dashboard?id=KayzenRoot_nexlabs-pipeline&pullRequest=10
+- ECC Security Evidence: **PASS** — https://github.com/KayzenRoot/nexlabs-pipeline/pull/10#issuecomment-7220725491
+- Socket Security Pull Request Alerts/Project Report: **PASS** nos checks da PR.
 - O commit de evidência/lock segue após o HEAD de código `38a7b892d6bd63c0cbffc9ebae54dee41bd93abd`; o HEAD final verificável é registrado no Evidence Bundle externo/PR.
 - Nenhum APPROVED é declarado antes da auditoria independente do HEAD exato.
 

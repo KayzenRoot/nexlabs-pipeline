@@ -23,9 +23,9 @@ PAYLOAD = "a" * 64
 NOW = datetime(2026, 11, 27, 12, 0, tzinfo=timezone.utc)
 
 
-def _git_blob(path: str) -> bytes:
+def _git_blob(path: str, ref: str = "HEAD") -> bytes:
     completed = subprocess.run(
-        ["git", "-C", str(ROOT), "show", f"HEAD:{path}"],
+        ["git", "-C", str(ROOT), "show", f"{ref}:{path}"],
         capture_output=True, check=False,
     )
     require(completed.returncode == 0, "SOURCE_GIT_OBJECT_UNAVAILABLE")
@@ -65,8 +65,36 @@ def verify_source_lock() -> None:
         validate_source_pack(ROOT, verbose=False)
 
 
+def verify_context_lock() -> None:
+    document = json.loads(_git_blob("locks/NLE-WF-WO-001-context-lock.json").decode("utf-8"))
+    base = document["base_sha"]
+    base_tree = subprocess.run(
+        ["git", "-C", str(ROOT), "rev-parse", f"{base}^{{tree}}"],
+        capture_output=True, check=False,
+    )
+    require(base_tree.returncode == 0, "CONTEXT_LOCK_BASE_UNAVAILABLE")
+    require(base_tree.stdout.decode("utf-8").strip() == document["base_tree_sha"],
+            "CONTEXT_LOCK_BASE_TREE_MISMATCH")
+    require(document["source_pack_files"] == 364, "CONTEXT_LOCK_SOURCE_COUNT")
+    for relative, expected in document["canonical_fingerprints_sha256"].items():
+        data = _git_blob(relative, base)
+        require(hashlib.sha256(data).hexdigest() == expected,
+                "CONTEXT_LOCK_CANONICAL_MISMATCH")
+        require(hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+                == document["canonical_git_blob_fingerprints"][relative],
+                "CONTEXT_LOCK_CANONICAL_BLOB_MISMATCH")
+    for relative, expected in document["implementation_fingerprints_sha256"].items():
+        data = _git_blob(relative)
+        require(hashlib.sha256(data).hexdigest() == expected,
+                "CONTEXT_LOCK_IMPLEMENTATION_MISMATCH")
+        require(hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+                == document["implementation_git_blob_fingerprints"][relative],
+                "CONTEXT_LOCK_IMPLEMENTATION_BLOB_MISMATCH")
+
+
 def verify() -> dict:
     verify_source_lock()
+    verify_context_lock()
     workflows = load_workflows()
     contracts = validate_c12()
     require(len(workflows) == 62 and len(contracts) == 5, "C12_CATALOG_DRIFT")
@@ -98,7 +126,7 @@ def verify() -> dict:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("verify", help="validate source pack, C12 and durable ledger smoke test")
+    commands.add_parser("verify", help="validate source lock, Context Lock, C12 and ledger smoke test")
     commands.add_parser("c12", help="emit the five dispatch-only C12 contracts")
     args = parser.parse_args(argv)
     try:
