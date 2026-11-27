@@ -34,6 +34,8 @@ jobs:
         run: python3 -m registry verify
       - name: Verify offline security control contracts
         run: python3 -m security verify
+      - name: Verify offline workflow contracts
+        run: python3 -m workflow verify
       - name: Security regression scan
         run: python3 scripts/security/scan_repository.py
 
@@ -53,5 +55,9 @@ jobs:
         run: py -3.12 --version
       - name: Run security controls on Windows
         run: py -3.12 -m unittest discover -s tests -p test_security_controls.py -v
+      - name: Run workflow controls on Windows
+        run: py -3.12 -m unittest discover -s tests -p test_workflow_controls.py -v
       - name: Verify offline policy on Windows
         run: py -3.12 -m security verify
+      - name: Verify offline workflow on Windows
+        run: py -3.12 -m workflow verify
