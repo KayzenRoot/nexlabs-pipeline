@@ -1,11 +1,11 @@
 {
   "work_order": "NLE-WF-WO-001",
   "delta": "CD-01",
-  "status": "CANDIDATE_PENDING_CI_AND_INDEPENDENT_AUDIT",
+  "status": "CANDIDATE_PENDING_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "04724af867659e278210489c8ba91fc6344e3fb1",
-  "head_note": "The recovered WF implementation was created from base 04724af; this evidence/lock commit follows on the new branch. Final HEAD and CI are external because the lock cannot contain its own commit SHA.",
+  "head_at_context_capture": "38a7b892d6bd63c0cbffc9ebae54dee41bd93abd",
+  "head_note": "38a7b89 is the validated code head. This evidence/lock commit follows; final HEAD and independent audit are external because the lock cannot contain its own commit SHA.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "recovery": {
@@ -123,13 +123,17 @@
     "activation": "DISABLED"
   },
   "ci": {
-    "status": "PENDING_AFTER_PUSH",
-    "sonar": "PENDING",
-    "socket": "PENDING",
-    "ecc": "PENDING"
+    "code_head": "38a7b892d6bd63c0cbffc9ebae54dee41bd93abd",
+    "run_id": 46015081817,
+    "docs_validation": "success_ubuntu-24.04",
+    "security_windows": "success_windows-2025",
+    "sonar": "0_open_issues_quality_gate_OK",
+    "socket": "PASS",
+    "ecc": "PASS",
+    "final_evidence_head": "PENDING_COMMIT"
   },
   "independent_audit": "PENDING_EXTERNAL_INDEPENDENT_AUDIT",
-  "verdict": "CANDIDATE_PENDING_CI_AND_INDEPENDENT_AUDIT",
+  "verdict": "CANDIDATE_PENDING_INDEPENDENT_AUDIT",
   "scope_lock": {
     "mode": "OFFLINE_CONTRACT_ONLY",
     "additional_spend_usd": 0,
