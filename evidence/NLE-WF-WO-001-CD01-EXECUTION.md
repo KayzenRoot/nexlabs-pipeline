@@ -5,7 +5,7 @@ Repositório: `KayzenRoot/nexlabs-pipeline`
 Base: `04724af867659e278210489c8ba91fc6344e3fb1`
 Base tree: `d0f135f2ba896a5fe22f21610bae78f025c0650e`
 Branch: `work/nle-wf-wo-001`
-Status: **CANDIDATE_PENDING_INDEPENDENT_AUDIT**
+Status: **APPROVED** (auditoria independente no HEAD de código/evidência `539ac28…`; esta atualização documental final é lock/evidência)
 
 ## 1. Resultado da recuperação
 
@@ -51,7 +51,7 @@ Nenhuma chamada de modelo, rede, Paperclip API/DB, VPS/SSH, segredo, agente, wor
 | AC11 C12 dispatch-only | **PASS** — exatamente 5 workflows; dispatcher não executa/revisa/accountable; sem grants; DISABLED |
 | AC12 Retry/limites | **PASS** — 401/403 BLOCK; 429 RETRY_AFTER; 5xx cap 2; desconhecido FAILED |
 | AC13 CLI/verificação | **PASS** — `python -m workflow verify` e C12 determinísticos |
-| AC14 CI Linux/Windows, Sonar, Socket, ECC, auditoria | **PASS gates; auditoria pendente** — Linux full 120/120; Windows security 45/45 + workflow 22/22 + verify; Sonar 0/gate OK; Socket/ECC PASS; auditoria independente ainda pendente |
+| AC14 CI Linux/Windows, Sonar, Socket, ECC, auditoria | **PASS** — Linux full 120/120; Windows security 45/45 + workflow 22/22 + verify; Sonar 0/gate OK; Socket/ECC PASS; auditoria independente APPROVED |
 
 ## 4. Testes executados (Windows 11)
 
@@ -109,18 +109,26 @@ Cobertura Sonar continua sem relatório/instrumentação; 120/120 é execução 
 
 - **Linux:** suíte canônica completa **120/120** no job `docs-validation` (ubuntu-24.04), incluindo validação de fontes, Registry, security e workflow verify.
 - **Windows:** 45/45 security controls + 22/22 workflow controls + `workflow verify` no job `security-windows` (windows-2025). A suíte integral de 120 também foi executada localmente no Windows 11; o CI Windows permanece focado porque testes legados de fonte/bash assumem LF/Git Bash, não por defeito do WF.
-- O ID e a URL da execução final do HEAD documental são registrados no PR #10/Evidence Bundle externo.
+- CI final do código/evidência: run **46017730724** em `539ac28c8cb72fce1e73830d3c218a1f650f4082` — ambos os jobs SUCCESS.
+  - https://github.com/KayzenRoot/nexlabs-pipeline/actions/runs/46017730724
 - SonarCloud: **0 issues abertas**, quality gate **OK**, check **pass** — https://sonarcloud.io/dashboard?id=KayzenRoot_nexlabs-pipeline&pullRequest=10
-- ECC Security Evidence: **PASS** — https://github.com/KayzenRoot/nexlabs-pipeline/pull/10#issuecomment-7220725491
+- ECC Security Evidence: **PASS** — https://github.com/KayzenRoot/nexlabs-pipeline/pull/10#issuecomment-7221037659
 - Socket Security Pull Request Alerts/Project Report: **PASS** nos checks da PR.
-- Nenhum APPROVED é declarado antes da auditoria independente do HEAD exato.
+- A atualização final de lock/evidência é docs-only após o HEAD auditado; o HEAD final verificável é registrado no PR #10.
 
-## 8. Checkpoint Delta proposto (não promovido)
+## 8. Auditoria independente HIGH_ASSURANCE
+
+- Auditor independente em contexto separado no HEAD `539ac28c8cb72fce1e73830d3c218a1f650f4082`: **APPROVED**, sem HIGH/CRITICAL, AC01–AC14 PASS.
+- A auditoria foi baseada no dossiê de evidências e na CI exata; não houve reexecução de ferramentas pelo auditor, o que está registrado como limitação de método.
+- Achados não bloqueantes: evidência de Sonar/Socket/ECC é attestation-level e a suíte Windows integral é local (CI Windows focado em security/workflow, 67 testes + verify). O lock/evidência final é docs-only.
+
+
+## 9. Checkpoint Delta proposto (não promovido)
 
 - Publicar a implementação em PR draft com CI verde, Sonar/Socket/ECC auditados e auditoria independente HIGH_ASSURANCE APPROVED.
 - Não fazer merge, não promover checkpoint, não iniciar outro Work Order e não ativar nada.
 - Próximo WO NECESSARY proposto após aprovação: permanece NLE-INFRA-WO-003 ou o próximo gate definido pelo proprietário; **NLE-WF-WO-002 não iniciado**.
 
-## 9. Veredito proposto
+## 10. Veredito proposto
 
-**CANDIDATE_PENDING_INDEPENDENT_AUDIT.** A recuperação está implementada, publicada e com CI/Sonar/Socket/ECC verdes; falta a auditoria independente do HEAD exato.
+**APPROVED.** A recuperação está publicada na PR #10 draft, com CI Linux/Windows, SonarCloud, Socket e ECC verdes e auditoria independente HIGH_ASSURANCE APPROVED no HEAD de código/evidência `539ac28c8cb72fce1e73830d3c218a1f650f4082`. A atualização final de lock/evidência é docs-only; não houve merge, checkpoint, runtime, VPS, segredo, agente, workflow, modelo ou gasto.

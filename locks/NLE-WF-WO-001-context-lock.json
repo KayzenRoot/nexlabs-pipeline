@@ -1,11 +1,11 @@
 {
   "work_order": "NLE-WF-WO-001",
   "delta": "CD-01",
-  "status": "CANDIDATE_PENDING_INDEPENDENT_AUDIT",
+  "status": "APPROVED",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "38a7b892d6bd63c0cbffc9ebae54dee41bd93abd",
-  "head_note": "38a7b89 is the validated code head. This evidence/lock commit follows; final HEAD and independent audit are external because the lock cannot contain its own commit SHA.",
+  "head_at_context_capture": "539ac28c8cb72fce1e73830d3c218a1f650f4082",
+  "head_note": "539ac28 is the independently audited code/evidence head. This final lock/evidence update is docs-only; final HEAD is external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "recovery": {
@@ -78,7 +78,7 @@
     "tests/test_workflow_controls.py": "94e3e4de1e7a6e58abd16bb1f3f4b8fc09cef1b9",
     "work-orders/NLE-WF-WO-001.md": "a8a92e55d557d182cf3aed0ca30bc51d70901334",
     ".github/workflows/docs-validation.yml": "84e742b514a88b2252dc9867cf8cab966258b52e",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "c378e28ea53625345da95626477301081d6d07ed"
+    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "a33369c1e5b6175e135a10e89d6de34a2f565a8d"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
@@ -90,7 +90,7 @@
     "tests/test_workflow_controls.py": "cffe5aa1700763fbab022a10a7d6228ec970ba17dc407a098f55794c9b405a5a",
     "work-orders/NLE-WF-WO-001.md": "98adcca7f32399674dfd90bbd1e12f0ca702b45a3a7d50f283acdfa143e63c9f",
     ".github/workflows/docs-validation.yml": "830f8c7dd35fcb68b56ba7e99ed7ffa53529dbac8a4eb1c3add908d373fee45d",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "0774ad84058fe39f5f27f75158ca3dcecd71b3adb228ab7f4f8b11af7466a1cd"
+    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "ccf5a93dbca60a0a8ecedaeff908e42c0bb0db3a703cacbd130c048b2721b142"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
@@ -123,8 +123,8 @@
     "activation": "DISABLED"
   },
   "ci": {
-    "code_head": "38a7b892d6bd63c0cbffc9ebae54dee41bd93abd",
-    "run_id": 46015081817,
+    "code_head": "539ac28c8cb72fce1e73830d3c218a1f650f4082",
+    "run_id": 46017730724,
     "docs_validation": "success_ubuntu-24.04",
     "security_windows": "success_windows-2025",
     "sonar": "0_open_issues_quality_gate_OK",
@@ -132,8 +132,20 @@
     "ecc": "PASS",
     "final_evidence_head": "PENDING_COMMIT"
   },
-  "independent_audit": "PENDING_EXTERNAL_INDEPENDENT_AUDIT",
-  "verdict": "CANDIDATE_PENDING_INDEPENDENT_AUDIT",
+  "independent_audit": {
+    "verdict": "APPROVED",
+    "head": "539ac28c8cb72fce1e73830d3c218a1f650f4082",
+    "scope": "NLE-WF-WO-001/CD-01 recovered offline workflow controls",
+    "high_critical_findings": 0,
+    "ac01_ac14": "PASS",
+    "method": "independent dossier/CI review; no tool re-execution by auditor",
+    "non_blocking": [
+      "evidence is attestation-level",
+      "Windows CI is focused 45 security + 22 workflow + verify; full 120 ran locally",
+      "Sonar/Socket/ECC links recorded in PR"
+    ]
+  },
+  "verdict": "APPROVED",
   "scope_lock": {
     "mode": "OFFLINE_CONTRACT_ONLY",
     "additional_spend_usd": 0,
