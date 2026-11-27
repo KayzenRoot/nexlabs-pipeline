@@ -51,7 +51,7 @@ Nenhuma chamada de modelo, rede, Paperclip API/DB, VPS/SSH, segredo, agente, wor
 | AC11 C12 dispatch-only | **PASS** — exatamente 5 workflows; dispatcher não executa/revisa/accountable; sem grants; DISABLED |
 | AC12 Retry/limites | **PASS** — 401/403 BLOCK; 429 RETRY_AFTER; 5xx cap 2; desconhecido FAILED |
 | AC13 CLI/verificação | **PASS** — `python -m workflow verify` e C12 determinísticos |
-| AC14 CI Linux/Windows, Sonar, Socket, ECC, auditoria | **PASS gates; auditoria pendente** — CI 46015081817 passou em ubuntu-24.04 e windows-2025; Sonar 0/gate OK; Socket/ECC PASS; auditoria independente ainda pendente |
+| AC14 CI Linux/Windows, Sonar, Socket, ECC, auditoria | **PASS gates; auditoria pendente** — Linux full 120/120; Windows security 45/45 + workflow 22/22 + verify; Sonar 0/gate OK; Socket/ECC PASS; auditoria independente ainda pendente |
 
 ## 4. Testes executados (Windows 11)
 
@@ -107,13 +107,12 @@ Cobertura Sonar continua sem relatório/instrumentação; 120/120 é execução 
 
 ## 7. CI/Sonar/Socket/ECC
 
-- CI do código: run `46015081817` — `docs-validation` (ubuntu-24.04) e `security-windows` (windows-2025) **SUCCESS**.
-  - https://github.com/KayzenRoot/nexlabs-pipeline/actions/runs/46015081817
-  - O workflow Windows foi atualizado para executar a suíte completa de 120 testes; a execução final do HEAD documental é verificada no GitHub.
+- **Linux:** suíte canônica completa **120/120** no job `docs-validation` (ubuntu-24.04), incluindo validação de fontes, Registry, security e workflow verify.
+- **Windows:** 45/45 security controls + 22/22 workflow controls + `workflow verify` no job `security-windows` (windows-2025). A suíte integral de 120 também foi executada localmente no Windows 11; o CI Windows permanece focado porque testes legados de fonte/bash assumem LF/Git Bash, não por defeito do WF.
+- O ID e a URL da execução final do HEAD documental são registrados no PR #10/Evidence Bundle externo.
 - SonarCloud: **0 issues abertas**, quality gate **OK**, check **pass** — https://sonarcloud.io/dashboard?id=KayzenRoot_nexlabs-pipeline&pullRequest=10
 - ECC Security Evidence: **PASS** — https://github.com/KayzenRoot/nexlabs-pipeline/pull/10#issuecomment-7220725491
 - Socket Security Pull Request Alerts/Project Report: **PASS** nos checks da PR.
-- O commit de evidência/lock segue após o HEAD de código `38a7b892d6bd63c0cbffc9ebae54dee41bd93abd`; o HEAD final verificável é registrado no Evidence Bundle externo/PR.
 - Nenhum APPROVED é declarado antes da auditoria independente do HEAD exato.
 
 ## 8. Checkpoint Delta proposto (não promovido)

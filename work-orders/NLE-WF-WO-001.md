@@ -40,7 +40,7 @@ Paperclip API/DB writes, dispatcher execution, workflow/agent/routine activation
 - **AC11:** C12 output contains exactly the five dispatch-only workflows; dispatcher is never executor, accountable or reviewer; no skill, memory or client grants; all remain DISABLED.
 - **AC12:** Retry policy blocks 401/403, respects 429 Retry-After, caps attempts at 2 and never retries unknown effects; spend remains 0.
 - **AC13:** `python -m workflow verify` validates source lock, catalog/C12 and a durable ledger smoke test deterministically.
-- **AC14:** Full tests pass on Linux and Windows; SonarCloud, Socket and ECC pass; independent HIGH_ASSURANCE audit is APPROVED on the exact HEAD; no runtime activation or spend.
+- **AC14:** Full canonical suite/validators on Linux; security and workflow suites plus `workflow verify` on Windows; SonarCloud, Socket and ECC pass; independent HIGH_ASSURANCE audit APPROVED on the exact HEAD; no runtime activation or spend.
 
 ## TESTS
 

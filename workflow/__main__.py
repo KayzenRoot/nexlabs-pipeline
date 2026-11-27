@@ -65,6 +65,15 @@ def verify_source_lock() -> None:
         validate_source_pack(ROOT, verbose=False)
 
 
+def _git_hash_blob(data: bytes) -> str:
+    completed = subprocess.run(
+        ["git", "-C", str(ROOT), "hash-object", "--stdin"],
+        input=data, capture_output=True, check=False,
+    )
+    require(completed.returncode == 0, "SOURCE_GIT_OBJECT_UNAVAILABLE")
+    return completed.stdout.decode("ascii").strip()
+
+
 def verify_context_lock() -> None:
     document = json.loads(_git_blob("locks/NLE-WF-WO-001-context-lock.json").decode("utf-8"))
     base = document["base_sha"]
@@ -80,15 +89,13 @@ def verify_context_lock() -> None:
         data = _git_blob(relative, base)
         require(hashlib.sha256(data).hexdigest() == expected,
                 "CONTEXT_LOCK_CANONICAL_MISMATCH")
-        require(hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
-                == document["canonical_git_blob_fingerprints"][relative],
+        require(_git_hash_blob(data) == document["canonical_git_blob_fingerprints"][relative],
                 "CONTEXT_LOCK_CANONICAL_BLOB_MISMATCH")
     for relative, expected in document["implementation_fingerprints_sha256"].items():
         data = _git_blob(relative)
         require(hashlib.sha256(data).hexdigest() == expected,
                 "CONTEXT_LOCK_IMPLEMENTATION_MISMATCH")
-        require(hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
-                == document["implementation_git_blob_fingerprints"][relative],
+        require(_git_hash_blob(data) == document["implementation_git_blob_fingerprints"][relative],
                 "CONTEXT_LOCK_IMPLEMENTATION_BLOB_MISMATCH")
 
 

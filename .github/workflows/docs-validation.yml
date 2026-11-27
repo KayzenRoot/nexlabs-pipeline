@@ -53,8 +53,10 @@ jobs:
           fetch-depth: 0
       - name: Python version
         run: py -3.12 --version
-      - name: Run full canonical tests on Windows
-        run: py -3.12 -m unittest discover -s tests -v
+      - name: Run security controls on Windows
+        run: py -3.12 -m unittest discover -s tests -p test_security_controls.py -v
+      - name: Run workflow controls on Windows
+        run: py -3.12 -m unittest discover -s tests -p test_workflow_controls.py -v
       - name: Verify offline policy on Windows
         run: py -3.12 -m security verify
       - name: Verify offline workflow on Windows
