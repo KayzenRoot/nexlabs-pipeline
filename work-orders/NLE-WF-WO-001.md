@@ -60,3 +60,20 @@ Any HIGH/CRITICAL finding, failed check, source drift, stale Context Lock, secre
 ## DELIVERABLES
 
 Workflow package, schemas/contracts, tests, CLI, Work Order, Context Lock, Evidence Bundle and draft PR. No merge, checkpoint promotion, VPS, secrets, agents, models or spend.
+
+## HIGH_ASSURANCE Correction Delta CD-02 | 2026-11-27
+
+A auditoria oficial no HEAD `82180fa4c9a29fc735ecb492c1e497bc75d0d53a` emitiu CORRECTION REQUIRED com F01–F06. Correções no mesmo Work Order/PR:
+
+- **F01:** `WorkflowCommands` é a única fronteira pública de mutação; autorização security.authorization/approval, nonce, mutação e transição na mesma transação; Ledger expõe apenas leitura e primitivas privadas; `APPROVED → VERIFIED → COMPLETED`.
+- **F02:** tenant/project/task/workflow no run; FKs compostas; referências de event/run/outbox/DLQ/approval validadas; revisão obrigatória; colisão de idempotência/payload rejeitada; SQL parametrizado; SQLite explicitamente local.
+- **F03:** nonce exige expiração futura, retenção de 24h, replay/rollback/atomicidade; aprovação persistida; HMAC test-only.
+- **F04:** recovery libera lease expirada, incrementa attempts/revision e aplica cap; lease ativa preservada; fencing obrigatório em RUNNING/EFFECT_IN_PROGRESS; UNKNOWN_EFFECT exige `reconciliation_ref`; deadline/TTL; 429/5xx cap 2.
+- **F05:** RunContract, schemas versionados, migrações, 62-workflow compiler, DAG/validate_dag, CLI verify/compile/dry-run, source lock/deadline/stale/revogação e approval persistida restaurados.
+- **F06:** Context Lock verifica base tree, ancestralidade, main, drift/worktree, conjuntos 24+10 e 364 fontes; C12 fixa `NLE-ATHENA-PMO` e rejeita dispatcher executor/accountable/reviewer, grants, memória, skills, efeitos e ativação.
+
+## Acceptance Criteria CD-02
+
+AC01 Context Lock/base/364/fingerprints; AC02 Event Contract; AC03 Run/ledger/migrações/imutabilidade; AC04 estados e APPROVED→VERIFIED→COMPLETED; AC05 command boundary/deny-by-default; AC06 approval/nonce/replay/rollback offline; AC07 atomicidade; AC08 concorrência/lease/fencing; AC09 recovery/retry/reconciliação; AC10 outbox/DLQ; AC11 C12 canônico; AC12 retry/limites; AC13 CLI verify/compile/dry-run; AC14 CI/auditoria. Status local: AC01–AC13 PASS; AC14 PENDING final HEAD.
+
+**Não declarar o Work Order pai completo enquanto a auditoria independente CD-02 e os gates remotos não estiverem APPROVED.** Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows, modelo ou despesa.

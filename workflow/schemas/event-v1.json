@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexlabs:workflow-event:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "event_type", "occurred_at", "received_at", "producer", "subject_ref", "tenant_id", "correlation_id", "idempotency_key", "payload_ref", "payload_sha256", "data_classification", "risk"],
+  "properties": {
+    "schema_version": {"const": "nexlabs.event.v1"},
+    "event_id": {"type": "string"},
+    "event_type": {"type": "string"},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "received_at": {"type": "string", "format": "date-time"},
+    "producer": {"type": "string"},
+    "subject_ref": {"type": "string"},
+    "tenant_id": {"type": "string"},
+    "correlation_id": {"type": "string"},
+    "idempotency_key": {"type": "string"},
+    "payload_ref": {"type": "string"},
+    "payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "data_classification": {"enum": ["PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED"]},
+    "risk": {"enum": ["LOW", "STANDARD", "ELEVATED", "HIGH_ASSURANCE"]}
+  }
+}

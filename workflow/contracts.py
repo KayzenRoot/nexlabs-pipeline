@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -29,13 +30,14 @@ STATES = frozenset({
     "RETRY_WAIT", "UNKNOWN_EFFECT", "FAILED", "QUARANTINED",
 })
 TERMINAL = frozenset({"COMPLETED", "CANCELLED", "QUARANTINED"})
+EXECUTOR_STATES = frozenset({"RUNNING", "EFFECT_IN_PROGRESS"})
 TRANSITIONS = {
     "RECEIVED": frozenset({"VALIDATED", "QUARANTINED", "FAILED"}),
     "VALIDATED": frozenset({"QUEUED", "BLOCKED", "QUARANTINED"}),
     "QUEUED": frozenset({"RUNNING", "CANCELLED", "BLOCKED"}),
     "RUNNING": frozenset({"REVIEW", "FAILED", "RETRY_WAIT", "WAITING_APPROVAL", "BLOCKED"}),
     "REVIEW": frozenset({"APPROVED", "CORRECTION_REQUIRED", "BLOCKED"}),
-    "APPROVED": frozenset({"VERIFIED", "EFFECT_READY", "COMPLETED"}),
+    "APPROVED": frozenset({"VERIFIED", "EFFECT_READY"}),
     "CORRECTION_REQUIRED": frozenset({"QUEUED", "CANCELLED", "BLOCKED"}),
     "WAITING_APPROVAL": frozenset({"APPROVED", "CORRECTION_REQUIRED", "BLOCKED", "CANCELLED"}),
     "EFFECT_READY": frozenset({"EFFECT_IN_PROGRESS", "CANCELLED"}),
@@ -143,13 +145,64 @@ def retry_decision(status_code: int, attempts: int, retry_after: int | None = No
             "RETRY_INPUT_INVALID")
     require(retry_after is None or (type(retry_after) is int and retry_after >= 0),
             "RETRY_INPUT_INVALID")
+    if attempts >= MAX_ATTEMPTS:
+        return "FAILED"
     if status_code in (401, 403):
         return "BLOCK"
     if status_code == 429:
         return "RETRY_AFTER" if retry_after is not None else "RETRY_WAIT"
     if status_code in (408, 500, 502, 503, 504):
-        return "RETRY_WAIT" if attempts < MAX_ATTEMPTS else "FAILED"
+        return "RETRY_WAIT"
     return "FAILED"
+
+
+@dataclass(frozen=True)
+class RunContract:
+    run_id: str
+    tenant_id: str
+    project_id: str
+    task_id: str
+    workflow_id: str
+    workflow_version: str
+    event_id: str
+    correlation_id: str
+    state: str
+    revision: int
+    attempts: int
+    source_lock_sha256: str
+    deadline_at: datetime
+    stale: bool = False
+    revoked: bool = False
+    approval_id: str | None = None
+    lease_owner: str | None = None
+    lease_epoch: int = 0
+
+    def validate(self) -> None:
+        for value in (
+            self.run_id, self.tenant_id, self.project_id, self.task_id,
+            self.workflow_id, self.workflow_version, self.event_id, self.correlation_id,
+        ):
+            require_id(value, "RUN_IDENTIFIER_INVALID")
+        require(self.state in STATES, "RUN_STATE_INVALID")
+        require(type(self.revision) is int and self.revision >= 0, "RUN_REVISION_INVALID")
+        require(type(self.attempts) is int and 0 <= self.attempts <= MAX_ATTEMPTS,
+                "RUN_ATTEMPTS_INVALID")
+        require_hash(self.source_lock_sha256)
+        require_utc(self.deadline_at)
+        require(type(self.stale) is bool and type(self.revoked) is bool, "RUN_FLAGS_INVALID")
+
+
+def validate_workflow_catalog(workflows: list[dict[str, Any]]) -> None:
+    require(len(workflows) == 62, "WORKFLOW_CATALOG_COUNT")
+    require(all(item.get("activation") == "DISABLED" for item in workflows),
+            "WORKFLOW_ACTIVATION_FORBIDDEN")
+    require(all(item.get("qualification") == "NOT_RUN" for item in workflows),
+            "WORKFLOW_QUALIFICATION_FORBIDDEN")
+    gates = Counter(item.get("gate") for item in workflows)
+    require(gates == Counter({"INTERNAL_ONLY": 36, "POLICY_GATED_EXTERNAL": 12,
+                              "HUMAN_APPROVAL_REQUIRED": 14}), "WORKFLOW_GATE_DRIFT")
+    require(all(item.get("new_spend_limit_usd") == 0 for item in workflows),
+            "WORKFLOW_SPEND_FORBIDDEN")
 
 
 def load_workflows(root: Path = ROOT) -> dict[str, dict[str, Any]]:
@@ -168,6 +221,7 @@ def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
     require(workflow.get("new_spend_limit_usd") == 0, "C12_SPEND_FORBIDDEN")
     require(workflow.get("qualification") == "NOT_RUN", "C12_QUALIFICATION_FORBIDDEN")
     dispatcher = workflow.get("dispatch_agent")
+    require(dispatcher == "NLE-ATHENA-PMO", "C12_DISPATCHER_IDENTITY_INVALID")
     require_id(dispatcher, "C12_DISPATCHER_INVALID")
     steps = workflow.get("steps") or []
     require(isinstance(steps, list) and steps, "C12_STEPS_INVALID")

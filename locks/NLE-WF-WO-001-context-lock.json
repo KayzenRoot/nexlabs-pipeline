@@ -1,21 +1,13 @@
 {
   "work_order": "NLE-WF-WO-001",
-  "delta": "CD-01",
-  "status": "APPROVED",
+  "delta": "CD-02",
+  "status": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "539ac28c8cb72fce1e73830d3c218a1f650f4082",
-  "head_note": "539ac28 is the independently audited code/evidence head. This final lock/evidence update is docs-only; final HEAD is external.",
+  "head_at_context_capture": "82180fa4c9a29fc735ecb492c1e497bc75d0d53a",
+  "head_note": "82180fa is the previously audited CD-01 head. This CD-02 evidence/lock commit follows; final HEAD and independent audit are external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
-  "recovery": {
-    "existing_implementation_found": false,
-    "searched": "git fetch/for-each-ref/ls-remote/worktree/reflog/log/fsck, GitHub PR/issues, filesystem and local logs",
-    "remote_branch_found": false,
-    "open_or_closed_pr_found": false,
-    "recovered_from": "sources/NexLabs_Workflows/README.md, workflows.json, docs/Backlog.md and C12 requirement",
-    "ac_set": "14 reconstructed acceptance criteria in work-orders/NLE-WF-WO-001.md"
-  },
   "canonical_git_blob_fingerprints": {
     "docs/Checkpoint.md": "6bec83229507d06a4bbc2a457dff0b4c42ea959f",
     "docs/Decisions-Ledger.md": "df7c47def352a4fd3151e156d43007325209817d",
@@ -70,44 +62,66 @@
   },
   "implementation_git_blob_fingerprints": {
     "workflow/__init__.py": "4c05c11aa5926541254c86939c74437716efd44e",
-    "workflow/__main__.py": "88d04040fd6597c90ba3e8ebeefa716217e94b29",
+    "workflow/__main__.py": "ccdb06206938d9f73ebc8f3dc6299aa75eeccc72",
     "workflow/authorization.py": "b719be6fc42336666d2372c4d4d64117e6208c3c",
-    "workflow/contracts.py": "e248e26e3b075fcf0e652749328b1c578087e626",
-    "workflow/ledger.py": "cd5c2a5306805cd666cf63064d62a18db3116d62",
-    "workflow/README.md": "f3fab91c3fb3689832b2617b34c16669910a0bab",
-    "tests/test_workflow_controls.py": "94e3e4de1e7a6e58abd16bb1f3f4b8fc09cef1b9",
-    "work-orders/NLE-WF-WO-001.md": "a8a92e55d557d182cf3aed0ca30bc51d70901334",
+    "workflow/commands.py": "c9c408542760a890e614421fcd000a590ca1dc7c",
+    "workflow/compiler.py": "a6888f118df11309b2304ba1c545df6d1934510b",
+    "workflow/contracts.py": "843d9ab7f1996a7f9f76bcd16b8d9a04ee15a667",
+    "workflow/ledger.py": "612c7f088d4b98b52e5e8165ecd9d2229f5baf95",
+    "workflow/migrations.py": "70cd7724b0426eb82647b7dbad26a1a49b523c8a",
+    "workflow/README.md": "1fb21d02a89b5c818e88e77b5da893c8d1b25d12",
+    "workflow/schemas/event-v1.json": "a298d638d6b5fb3f4200b71e85e6f42f269c9bf6",
+    "workflow/schemas/run-v1.json": "4af8b4e904d54c34042c2f97ce5fccc9b619eb8c",
+    "workflow/schemas/command-v1.json": "bf7709bcd6150a546c903509bc7bb3e85773db55",
+    "tests/test_workflow_controls.py": "a35620f778a8c3ecf0c6a5b74d81b5ceadf0d5bd",
+    "tests/test_workflow_adversarial.py": "6ca65941c786504ba70eb7c036e8d1b38c54c290",
+    "work-orders/NLE-WF-WO-001.md": "aee26cf87e26db70bcc2e7d42bec2fb4ae4e1558",
     ".github/workflows/docs-validation.yml": "84e742b514a88b2252dc9867cf8cab966258b52e",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "a33369c1e5b6175e135a10e89d6de34a2f565a8d"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "8b5f43f8e0ff9cb2855d8eb22e829dfbd84c52f6"
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
-    "workflow/__main__.py": "4d214117af0501e3d5b62704723b0895ad4de03c0e4616580abce6dedeb1b3cf",
+    "workflow/__main__.py": "6d305633337302adeb31c6d9b27938eb88fafec9681679fe197dc9df572883a2",
     "workflow/authorization.py": "da5ec007f742f77fcab6d118551350ad9fb8256a4f300e65d03dbedf6f67daac",
-    "workflow/contracts.py": "8c1cf9aa825394551a0e7978c77f098eefe33d859f71b725f19d4d46c6913042",
-    "workflow/ledger.py": "62353775e23ba1d506062b8ccd1f2daea2796aa6d342ff8f390991e7e1d8fd6c",
-    "workflow/README.md": "0ef9f066322317bee5867974a728d4a5ad6257cbbfd4de34bf32f185be15836f",
-    "tests/test_workflow_controls.py": "cffe5aa1700763fbab022a10a7d6228ec970ba17dc407a098f55794c9b405a5a",
-    "work-orders/NLE-WF-WO-001.md": "98adcca7f32399674dfd90bbd1e12f0ca702b45a3a7d50f283acdfa143e63c9f",
+    "workflow/commands.py": "51ef6e6d849250e08fca952665cf87cf9cbd2c990c95ca071b3a064818a37636",
+    "workflow/compiler.py": "5e645dc3a10d05bafeef7dc1e2cc866d3149657ab2ef841e16effe65bfe68bf9",
+    "workflow/contracts.py": "9e488781dde7fbccdda4958d48f33c4082959b0daff992c35eb714fe43a128bc",
+    "workflow/ledger.py": "a5d13fa2b1aa185d3165359cb5bcbc4b48e8d544ed84332b9fbfba98382532f8",
+    "workflow/migrations.py": "fec5993c40db9eb2b91ee5f376beeea265afcae611470eb024a74f205363cf26",
+    "workflow/README.md": "9b2bb8c37f72c72fb00e9d7b20117c1f4ea8da5d8f03cd24e204fcf26de117e5",
+    "workflow/schemas/event-v1.json": "fc6035557d00b0e7934e3ecbbd644e945e0e77d0a0bb0a275c45f02fc11df2fd",
+    "workflow/schemas/run-v1.json": "06751e5d41b6f8833b907bc985260dcb5a41c157822ad8e1e4eb249529737bd0",
+    "workflow/schemas/command-v1.json": "93506be469ebe9017362839f8cbc7adb050560f89bb07cad9586415bb2a1db06",
+    "tests/test_workflow_controls.py": "78c9b0c814fc73d062c93ab8ad5b9f7564eedb27536cdb5d03074656a1fa20ac",
+    "tests/test_workflow_adversarial.py": "ef92b1284ea5a2cc4d67102ee87d000e5c630ba0ea44741347bdd3f77b33eb00",
+    "work-orders/NLE-WF-WO-001.md": "17bbcc7cfe3535913b5de9e9bfe7cf558bf8ae6cb1ed429f707a6fd402cfb240",
     ".github/workflows/docs-validation.yml": "830f8c7dd35fcb68b56ba7e99ed7ffa53529dbac8a4eb1c3add908d373fee45d",
-    "evidence/NLE-WF-WO-001-CD01-EXECUTION.md": "ccf5a93dbca60a0a8ecedaeff908e42c0bb0db3a703cacbd130c048b2721b142"
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "c697a73b679881c45df3fd4e45bcb876488af1d4e384d8f9125c5fbc0f0fef77"
   },
   "fingerprint_sets": {
     "canonical_base": 24,
-    "implementation_head": 10
+    "implementation_cd02": 17
   },
-  "fingerprint_status": "BASE_AND_IMPLEMENTATION_SETS_RECALCULATED; ZERO_DIVERGENCE_VERIFIED_LOCALLY",
+  "fingerprint_status": "BASE_AND_CD02_SETS_RECALCULATED; ZERO_DIVERGENCE_VERIFIED_LOCALLY; FINAL_HEAD_EXTERNAL",
   "tests": {
-    "full_windows": "120/120 OK (98 existing + 22 workflow)",
-    "workflow_verify": "WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=1",
-    "source_validator": "7/7 groups PASS; 364 sources unchanged",
-    "registry": "105 agents/92 packages/1110 assignments; 105 intents; 0 writes",
-    "security_verify": "SECURITY_CONTRACTS_OK default_deny=true network=offline secrets=opaque",
-    "security_scan": "475 tracked files; 0 findings",
-    "determinism": "event digest and C12/ledger verification deterministic"
+    "full_windows": "136/136 OK (120 prior + 16 adversarial)",
+    "workflow_verify": "WORKFLOW_OK workflows=62 c12=5 events=1 runs=1 nonces=0",
+    "compile": "62 workflows; gates 36/12/14; 0 grants",
+    "dry_run": "deterministic DAG; execution_allowed=false",
+    "source_validator": "7/7; 364 sources",
+    "registry": "105/92/1110; 105 intents; 0 writes",
+    "security_verify": "PASS",
+    "security_scan": "485 files; 0 findings"
+  },
+  "f01_f06": {
+    "F01": "COMMAND_BOUNDARY_AUTHORIZATION_TRANSACTION_IMPLEMENTED",
+    "F02": "TENANT_REFS_CONSTRAINTS_IDEMPOTENCY_IMPLEMENTED",
+    "F03": "NONCE_EXPIRY_RETENTION_ATOMICITY_IMPLEMENTED",
+    "F04": "RECOVERY_LEASE_FENCING_RETRY_RECONCILIATION_IMPLEMENTED",
+    "F05": "RUN_CONTRACT_SCHEMAS_MIGRATIONS_COMPILER_DAG_CLI_RESTORED",
+    "F06": "CONTEXT_LOCK_AND_C12_CANONICALIZED"
   },
   "c12": {
-    "workflows": 5,
     "ids": [
       "NLE-WF-GOV-03",
       "NLE-WF-QNT-01",
@@ -115,37 +129,22 @@
       "NLE-WF-QNT-03",
       "NLE-WF-QNT-05"
     ],
-    "dispatch_only": true,
-    "dispatcher_executes": false,
-    "dispatcher_reviews": false,
-    "skill_imports": [],
-    "memory_grants": [],
-    "activation": "DISABLED"
+    "dispatcher": "NLE-ATHENA-PMO",
+    "all_disabled": true,
+    "grants": 0
   },
   "ci": {
-    "code_head": "539ac28c8cb72fce1e73830d3c218a1f650f4082",
-    "run_id": 46017730724,
-    "docs_validation": "success_ubuntu-24.04",
-    "security_windows": "success_windows-2025",
-    "sonar": "0_open_issues_quality_gate_OK",
-    "socket": "PASS",
-    "ecc": "PASS",
-    "final_evidence_head": "PENDING_COMMIT"
+    "prior_run_id": 46018632012,
+    "prior_head": "82180fa4c9a29fc735ecb492c1e497bc75d0d53a",
+    "prior_docs_validation": "success_ubuntu-24.04",
+    "prior_security_windows": "success_windows-2025",
+    "prior_sonar": "0_open_issues_quality_gate_OK",
+    "prior_socket": "PASS",
+    "prior_ecc": "PASS",
+    "cd02_run": "PENDING_AFTER_PUSH"
   },
-  "independent_audit": {
-    "verdict": "APPROVED",
-    "head": "539ac28c8cb72fce1e73830d3c218a1f650f4082",
-    "scope": "NLE-WF-WO-001/CD-01 recovered offline workflow controls",
-    "high_critical_findings": 0,
-    "ac01_ac14": "PASS",
-    "method": "independent dossier/CI review; no tool re-execution by auditor",
-    "non_blocking": [
-      "evidence is attestation-level",
-      "Windows CI is focused 45 security + 22 workflow + verify; full 120 ran locally",
-      "Sonar/Socket/ECC links recorded in PR"
-    ]
-  },
-  "verdict": "APPROVED",
+  "independent_audit": "PENDING_CD02_EXTERNAL_INDEPENDENT_AUDIT",
+  "verdict": "CANDIDATE_PENDING_CD02_INDEPENDENT_AUDIT",
   "scope_lock": {
     "mode": "OFFLINE_CONTRACT_ONLY",
     "additional_spend_usd": 0,
@@ -157,16 +156,12 @@
     "workflows": false,
     "model_calls": false
   },
-  "security": {
-    "network_calls": 0,
-    "model_calls": 0,
-    "paperclip_writes": 0,
-    "vps_access": false,
-    "secret_values": false,
-    "additional_spend_usd": 0
-  },
-  "evidence": "evidence/NLE-WF-WO-001-CD01-EXECUTION.md",
-  "next_action": "Push the recovered branch, open a draft PR, verify CI/Sonar/Socket/ECC, obtain independent HIGH_ASSURANCE audit, then report. No merge, checkpoint promotion, runtime, VPS, agents, models or spend.",
+  "blockers": [
+    "CD-02 CI/Sonar/Socket/ECC read-back pending after push",
+    "Independent HIGH_ASSURANCE audit of CD-02 HEAD pending"
+  ],
+  "next_action": "Push CD-02, verify CI/Sonar/Socket/ECC, obtain independent code audit of final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
+  "evidence": "evidence/NLE-WF-WO-001-CD02-EXECUTION.md",
   "stale_when": [
     "base/main changes",
     "any canonical or implementation fingerprint changes",

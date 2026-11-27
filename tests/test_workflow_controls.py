@@ -96,9 +96,55 @@ def sign(envelope):
     return hmac.new(KEY, canonical_approval_bytes(envelope), hashlib.sha256).hexdigest()
 
 
+SOURCE_LOCK = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e"
+
+
+class TestLedger(Ledger):
+    """Storage test adapter; production mutation boundary is WorkflowCommands."""
+
+    def create_run(self, run_id, workflow_id, version, event, now):
+        self._create_run(run_id, "tenant-1", "project-1", "task-1", workflow_id,
+                         version, event, now, now + timedelta(hours=1), SOURCE_LOCK)
+
+    def append_event(self, event):
+        self._append_event(event)
+
+    def run(self, run_id, tenant_id="tenant-1"):
+        return super().run(run_id, tenant_id)
+
+    def transition(self, run_id, target, event_id, now, expected_revision=None,
+                   lease_owner=None, lease_epoch=None, reconciliation_ref=None):
+        current = self.run(run_id)
+        revision = current["revision"] if expected_revision is None else expected_revision
+        return self._transition(run_id, "tenant-1", target, event_id, now, revision,
+                                lease_owner, lease_epoch, reconciliation_ref)
+
+    def claim_lease(self, run_id, owner, now, ttl_seconds=30):
+        return self._claim_lease(run_id, "tenant-1", owner, now, ttl_seconds)
+
+    def consume(self, nonce, expires_at, now):
+        return self._consume(nonce, expires_at, now)
+
+    def enqueue_outbox(self, run_id, event_id, payload_ref, now):
+        return self._enqueue_outbox(run_id, "tenant-1", event_id, payload_ref, now)
+
+    def dead_letter(self, run_id, reason, sanitized_ref, now):
+        return self._dead_letter(run_id, "tenant-1", reason, sanitized_ref, now)
+
+    def recover(self, now):
+        return self._recover("tenant-1", now)
+
+
 def advance(ledger, run_id, *targets):
     for target in targets:
-        ledger.transition(run_id, target, None, NOW)
+        current = ledger.run(run_id)
+        lease = {}
+        if current["state"] == "RUNNING":
+            owner = "test-owner"
+            epoch = ledger.claim_lease(run_id, owner, NOW, 30)
+            lease = {"lease_owner": owner, "lease_epoch": epoch}
+        ledger.transition(run_id, target, None, NOW,
+                          expected_revision=current["revision"], **lease)
 
 
 class EventContractTests(unittest.TestCase):
@@ -128,17 +174,17 @@ class LedgerPersistenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "ledger.sqlite3"
             event = make_event()
-            with Ledger(path) as ledger:
+            with TestLedger(path) as ledger:
                 ledger.create_run("run-1", "NLE-WF-GOV-03", "0.1.0", event, NOW)
                 ledger.transition("run-1", "VALIDATED", event.event_id, NOW)
-            with Ledger(path) as ledger:
+            with TestLedger(path) as ledger:
                 self.assertEqual(ledger.run("run-1")["state"], "VALIDATED")
                 self.assertEqual(ledger.counts()["events"], 1)
                 self.assertEqual(ledger.integrity(), "ok")
 
     def test_duplicate_event_is_atomic_and_has_no_second_run(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = make_event()
                 ledger.create_run("run-1", "NLE-WF-GOV-03", "0.1.0", event, NOW)
                 with self.assertRaisesRegex(SecurityError, "DUPLICATE_EVENT"):
@@ -148,7 +194,7 @@ class LedgerPersistenceTests(unittest.TestCase):
 
     def test_events_are_append_only(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 ledger.append_event(make_event())
                 for statement in (
                     "UPDATE events SET event_type='incident.opened'",
@@ -166,7 +212,7 @@ class StateMachineTests(unittest.TestCase):
 
     def test_internal_path_and_terminal_state(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = make_event()
                 ledger.create_run("run-1", "NLE-WF-GOV-03", "0.1.0", event, NOW)
                 advance(ledger, "run-1", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
@@ -186,10 +232,10 @@ class NonceAndApprovalTests(unittest.TestCase):
     def test_nonce_is_single_use_across_reopen(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "ledger.sqlite3"
-            with Ledger(path) as ledger:
+            with TestLedger(path) as ledger:
                 self.assertTrue(ledger.consume("nonce-1", NOW + timedelta(minutes=1), NOW))
                 self.assertFalse(ledger.consume("nonce-1", NOW + timedelta(minutes=1), NOW))
-            with Ledger(path) as ledger:
+            with TestLedger(path) as ledger:
                 self.assertFalse(ledger.consume("nonce-1", NOW + timedelta(minutes=1), NOW))
 
     def test_high_assurance_approval_replay_is_denied(self):
@@ -202,10 +248,10 @@ class NonceAndApprovalTests(unittest.TestCase):
                 approval=approval, approval_signature=sign(approval),
                 verifier=HmacSha256TestVerifier(KEY),
             )
-            with Ledger(path) as ledger:
+            with TestLedger(path) as ledger:
                 allowed = authorize_workflow(ledger, request, [make_grant(request)], **kwargs)
                 self.assertTrue(allowed.allowed)
-            with Ledger(path) as ledger:
+            with TestLedger(path) as ledger:
                 replay = authorize_workflow(ledger, request, [make_grant(request)], **kwargs)
                 self.assertFalse(replay.allowed)
                 self.assertEqual(replay.reason, "APPROVAL_REPLAY")
@@ -215,7 +261,7 @@ class NonceAndApprovalTests(unittest.TestCase):
             request = make_request("HIGH_ASSURANCE")
             approval = make_approval(request)
             approval = replace(approval, approver_id=request.actor.principal_id)
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 result = authorize_workflow(
                     ledger, request, [make_grant(request)], current_policy_sha256=POLICY,
                     current_policy_epoch=1, approval=approval,
@@ -228,7 +274,7 @@ class AuthorizationTests(unittest.TestCase):
     def test_exact_scope_allows_and_unknown_scope_denies(self):
         request = make_request()
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 allowed = authorize_workflow(
                     ledger, request, [make_grant(request)],
                     current_policy_sha256=POLICY, current_policy_epoch=1,
@@ -244,7 +290,7 @@ class AuthorizationTests(unittest.TestCase):
     def test_no_grant_or_nonzero_spend_denies(self):
         request = make_request()
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 no_grant = authorize_workflow(
                     ledger, request, [], current_policy_sha256=POLICY,
                     current_policy_epoch=1,
@@ -262,14 +308,14 @@ class ConcurrencyAndLeaseTests(unittest.TestCase):
     def test_same_idempotency_has_one_winner_under_threads(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "ledger.sqlite3"
-            with Ledger(path):
+            with TestLedger(path):
                 pass
             barrier = threading.Barrier(8)
             results = []
             lock = threading.Lock()
 
             def worker():
-                ledger = Ledger(path)
+                ledger = TestLedger(path)
                 try:
                     try:
                         barrier.wait(timeout=5)
@@ -294,12 +340,12 @@ class ConcurrencyAndLeaseTests(unittest.TestCase):
                 thread.join()
             self.assertEqual(results.count("allowed"), 1)
             self.assertEqual(results.count("duplicate"), 7)
-            with Ledger(path) as ledger:
+            with TestLedger(path) as ledger:
                 self.assertEqual(ledger.counts()["runs"], 1)
 
     def test_lease_conflict_and_stale_fence_deny(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = make_event()
                 ledger.create_run("run-1", "NLE-WF-GOV-03", "0.1.0", event, NOW)
                 advance(ledger, "run-1", "VALIDATED", "QUEUED", "RUNNING")
@@ -318,7 +364,7 @@ class ConcurrencyAndLeaseTests(unittest.TestCase):
 class RecoveryTests(unittest.TestCase):
     def test_recovery_marks_retry_and_unknown_effect_without_blind_retry(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = make_event()
                 ledger.create_run("run-1", "NLE-WF-GOV-03", "0.1.0", event, NOW)
                 advance(ledger, "run-1", "VALIDATED", "QUEUED", "RUNNING")
@@ -328,13 +374,13 @@ class RecoveryTests(unittest.TestCase):
                 advance(ledger, "run-2", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
                         "APPROVED", "EFFECT_READY", "EFFECT_IN_PROGRESS")
                 result = ledger.recover(NOW)
-                self.assertEqual(result, {"retry_wait": 1, "unknown_effect": 1})
+                self.assertEqual(result, {"retry_wait": 1, "unknown_effect": 1, "failed": 0})
                 self.assertEqual(ledger.run("run-1")["state"], "RETRY_WAIT")
                 self.assertEqual(ledger.run("run-2")["state"], "UNKNOWN_EFFECT")
 
     def test_outbox_is_unique_and_dlq_keeps_sanitized_reference(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with Ledger(Path(tmp) / "ledger.sqlite3") as ledger:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = make_event()
                 ledger.create_run("run-1", "NLE-WF-GOV-03", "0.1.0", event, NOW)
                 ledger.enqueue_outbox("run-1", event.event_id, "payload-ref-1", NOW)
