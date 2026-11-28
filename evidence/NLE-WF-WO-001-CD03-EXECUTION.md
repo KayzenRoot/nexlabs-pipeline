@@ -70,9 +70,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 | Verificação | Resultado |
 |---|---|
-| Suíte local | **185/185 OK** |
+| Suíte local | **186/186 OK** |
 | Baseline CD-02 | 156/156 OK |
-| Novos testes CD-03 | 29 |
+| Novos testes CD-03 | 30 |
 | `workflow verify` | PASS local |
 | Source Pack | 7/7; 364 fontes |
 | Registry | 105/92/1110; 0 writes |
@@ -82,9 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/CD-03 Correction Delta 02 no code head `d74cbf535aae3f4992edc22ec59e4c2074806d99`: run **46148936493** — `docs-validation` (ubuntu-24.04, 185 testes) e `security-windows` **SUCCESS**; Sonar 0 issues; Socket/ECC PASS.
-- SonarCloud no HEAD `d74cbf5`: 0 issues abertas, Quality Gate passed.
-- Socket PR Alerts/Project Report PASS; ECC Security Evidence PASS em `d74cbf5`.
+- CI/CD-03 anterior no code head `d74cbf5`: run **46148936493** **SUCCESS**; a rodada atual (append/quarentena/audit timestamp) tem CI pendente.
+- SonarCloud na rodada anterior: 0 issues; leitura atual pendente.
+- Socket/ECC da rodada anterior PASS; leitura atual pendente.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -104,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | GATES PASS em d74cbf5; auditoria independente do HEAD final pendente |
+| AC14 CI/auditoria | PENDENTE — append/quarentena/audit timestamp em validação |
 
 ## 6. Limitações
 
@@ -144,3 +144,11 @@ Somente propor após auditoria independente APPROVED no HEAD exato. Sem merge, p
 - **F03/F04 migration v3:** exige conjunto completo de colunas, índices e FK; parcial com quatro campos + run_id falha fechada e não registra versão.
 - **F05 schema validator:** tipos e formatos desconhecidos são rejeitados; minItems/pattern/date-time recursivos mantidos.
 - **AC08 multiprocesso:** criação concorrente do mesmo run/idempotency, eventos distintos, nonce, lease/fencing e recovery; exitcodes, integridade e FK verificados.
+
+## 11. Correção da oitava auditoria
+
+- **HIGH-01:** `WorkflowCommands.append_event` exige `run_id`; não há mais append público sem escopo/auditoria. Append com run usa `run_scoped` e grava `now` do comando.
+- **HIGH-02:** QUARANTINED é transição permitida a partir dos estados não terminais relevantes (QUEUED/RUNNING/REVIEW/APPROVED/WAITING_APPROVAL/CORRECTION_REQUIRED/EFFECT_READY/EFFECT_IN_PROGRESS/UNKNOWN_EFFECT/RETRY_WAIT/STALE/BLOCKED), mantendo outbox e retomada bloqueados.
+- **MEDIUM-01:** auditoria de append usa o timestamp da operação (`now`), não `event.received_at`.
+- **LOW-01:** branch legado da migração v3 executa `_validate_approvals_v3` ao final.
+- **AC08:** testes multiprocesso adicionais para mesmo run/idempotency, eventos distintos, lease/fencing e recovery; exitcodes/integridade/FK.

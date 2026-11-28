@@ -117,7 +117,8 @@ class Ledger:
     def _append_event(self, event: WorkflowEvent, run_id: str | None = None,
                       *, scope: tuple[str, str, str] | None = None,
                       actor_id: str = "system",
-                      action: str = "workflow.event.append") -> None:
+                      action: str = "workflow.event.append",
+                      now: datetime | None = None) -> None:
         require(run_id is None or isinstance(run_id, str), "RUN_ID_INVALID")
         with self._transaction():
             run = None
@@ -130,10 +131,12 @@ class Ledger:
                 require(run is not None, "EVENT_RUN_TENANT_MISMATCH")
             self._insert_event(event, run_id)
             if run is not None:
+                audit_now = now or event.received_at
+                require_utc(audit_now)
                 self._audit(run_id, event.tenant_id, actor_id, action,
                             run["revision"],
                             {"event_id": event.event_id,
-                             "payload_ref": event.payload_ref}, event.received_at)
+                             "payload_ref": event.payload_ref}, audit_now)
 
     def _create_run(self, run_id: str, tenant_id: str, project_id: str, task_id: str,
                     workflow_id: str, workflow_version: str, event: WorkflowEvent,

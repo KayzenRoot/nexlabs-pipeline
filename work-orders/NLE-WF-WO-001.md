@@ -90,4 +90,4 @@ Auditoria CD-03 no HEAD `1e61917` emitiu CORRECTION REQUIRED com F01-R1–F07. C
 - **F06:** conjuntos exatos de 24 paths canônicos + 21 de implementação; integridade antes de verify/compile/c12/dry-run; lock CD-03; 364 fontes, 62 workflows e C12 preservados.
 - **F07:** auditoria independente pendente no HEAD final.
 
-Status local: AC01–AC13 PASS em 185/185 testes; AC14 PENDING. Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows ativos, modelo, efeitos externos ou despesa.
+Status local: AC01–AC13 PASS em 186/186 testes; AC14 PENDING. Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows ativos, modelo, efeitos externos ou despesa.

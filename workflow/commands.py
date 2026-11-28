@@ -226,10 +226,10 @@ class WorkflowCommands:
 
     def append_event(self, event: WorkflowEvent, run_id: str | None,
                      now: datetime) -> AccessDecision:
+        require(run_id is not None, "RUN_ID_REQUIRED")
         require(event.tenant_id == self.tenant_id, "EVENT_TENANT_MISMATCH")
         require_risk_floor(self.risk, event.risk)
-        if run_id is not None:
-            self._require_run_scope(run_id)
+        self._require_run_scope(run_id)
         payload = _payload_digest(
             EVENT_APPEND_ACTION, event_sha256=event.digest(), run_id=run_id,
             policy_epoch=self.policy_epoch,
@@ -240,7 +240,7 @@ class WorkflowCommands:
             lambda: self._ledger._append_event(
                 event, run_id, scope=self._scope_tuple,
                 actor_id=self.actor.principal_id,
-                action=EVENT_APPEND_ACTION,
+                action=EVENT_APPEND_ACTION, now=now,
             ),
             run_id,
         )

@@ -557,6 +557,12 @@ class HighAssuranceCommandTests(unittest.TestCase):
                     {"run_id": "run-1", "target_id": "event-2",
                      "action": "workflow.event.append"},
                 )
+                audit_time = ledger._conn.execute(
+                    "SELECT created_at FROM audit_events WHERE run_id=? "
+                    "AND action=? ORDER BY audit_id DESC LIMIT 1",
+                    ("run-1", "workflow.event.append"),
+                ).fetchone()[0]
+                self.assertEqual(audit_time, NOW.isoformat())
 
     def test_approval_payload_binds_run_options(self):
         event = make_event()
@@ -795,6 +801,14 @@ class LedgerIntegrityTests(unittest.TestCase):
                     with self.assertRaises(SecurityError):
                         command.append_event(appended, f"run-{index}", NOW)
                 self.assertEqual(ledger.counts()["events"], 3)
+                unlinked = make_event(event_id="event-unlinked",
+                                       idempotency_key="idem-unlinked")
+                command = commands(
+                    ledger, [grant("workflow.event.append", target=unlinked.event_id)]
+                )
+                with self.assertRaises(SecurityError):
+                    command.append_event(unlinked, None, NOW)
+                self.assertEqual(ledger.counts()["events"], 3)
 
     def test_append_event_requires_existing_same_tenant_run(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -917,6 +931,26 @@ class LedgerIntegrityTests(unittest.TestCase):
                 self.assertEqual(dict(audit),
                                  {"actor_id": "system",
                                   "action": "workflow.dlq.record"})
+
+    def test_quarantine_is_available_from_nonterminal_states(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for state in ("QUEUED", "RUNNING", "REVIEW"):
+                with self.subTest(state=state):
+                    path = Path(tmp) / f"{state}.sqlite3"
+                    with TestLedger(path) as ledger:
+                        ledger.create_run()
+                        if state == "QUEUED":
+                            ledger.advance("run-1", "VALIDATED", "QUEUED")
+                        elif state == "RUNNING":
+                            ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
+                        else:
+                            ledger.advance("run-1", "VALIDATED", "QUEUED",
+                                           "RUNNING", "REVIEW")
+                        ledger.dead_letter(
+                            "run-1", "INTEGRITY_FAILURE", "ref-sanitized", NOW,
+                        )
+                        self.assertEqual(ledger.run("run-1")["state"], "QUARANTINED")
+                        self.assertEqual(ledger.counts()["dlq"], 1)
 
     def test_outbox_audit_rolls_back_with_duplicate(self):
         with tempfile.TemporaryDirectory() as tmp:
