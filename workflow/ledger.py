@@ -231,6 +231,7 @@ class Ledger:
         require(type(expected_revision) is int and expected_revision >= 0,
                 "RUN_REVISION_REQUIRED")
         with self._transaction():
+            require(target != "QUARANTINED", "QUARANTINE_REQUIRES_DLQ")
             current = (self.run_scoped(run_id, tenant_id, *scope) if scope
                        else self.run(run_id, tenant_id))
             require(current["revision"] == expected_revision, "RUN_REVISION_CONFLICT")

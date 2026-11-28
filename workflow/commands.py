@@ -252,6 +252,7 @@ class WorkflowCommands:
         current = self._require_run_scope(run_id)
         require(target not in {"EFFECT_READY", "EFFECT_IN_PROGRESS"},
                 "WORKFLOW_DISABLED_EXECUTION")
+        require(target != "QUARANTINED", "QUARANTINE_REQUIRES_DLQ")
         action = f"workflow.run.transition.{current['state']}.{target}"
         payload = _payload_digest(
             "workflow.run.transition", target=target, event_id=event_id,
@@ -369,6 +370,7 @@ class WorkflowCommands:
                   lease_owner: str | None = None,
                   lease_epoch: int | None = None) -> AccessDecision:
         current = self._require_run_scope(run_id)
+        require(outcome != "QUARANTINED", "QUARANTINE_REQUIRES_DLQ")
         action = f"workflow.run.reconcile.{current['state']}.{outcome}"
         payload = _payload_digest(
             "workflow.run.reconcile", outcome=outcome, evidence_ref=evidence_ref,

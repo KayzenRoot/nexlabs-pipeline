@@ -233,6 +233,7 @@ def _migrate_v3(conn: sqlite3.Connection) -> None:
     conn.execute("ALTER TABLE approvals_v3 RENAME TO approvals")
     for statement in APPROVALS_V3_INDEXES:
         conn.execute(statement)
+    _validate_approvals_v3(conn)
 
 
 def _event_risk(conn: sqlite3.Connection, event_id: str, tenant_id: str) -> str:

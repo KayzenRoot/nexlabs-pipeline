@@ -932,6 +932,22 @@ class LedgerIntegrityTests(unittest.TestCase):
                                  {"actor_id": "system",
                                   "action": "workflow.dlq.record"})
 
+    def test_transition_and_reconcile_cannot_bypass_dlq(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = ledger.create_run()
+                transition = commands(
+                    ledger,
+                    [grant("workflow.run.transition.RECEIVED.QUARANTINED")],
+                )
+                with self.assertRaises(SecurityError):
+                    transition.transition(
+                        "run-1", "QUARANTINED", event.event_id, NOW,
+                        expected_revision=0, payload_sha256=PAYLOAD,
+                    )
+                self.assertEqual(ledger.run("run-1")["state"], "RECEIVED")
+                self.assertEqual(ledger.counts()["dlq"], 0)
+
     def test_quarantine_is_available_from_nonterminal_states(self):
         with tempfile.TemporaryDirectory() as tmp:
             for state in ("QUEUED", "RUNNING", "REVIEW"):
