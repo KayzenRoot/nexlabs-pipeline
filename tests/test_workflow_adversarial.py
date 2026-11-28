@@ -22,11 +22,14 @@ from security.core import EXPECTED_POLICY, policy_fingerprint
 from workflow.commands import CommandScope, WorkflowCommands, _payload_digest
 from workflow.compiler import compile_catalog, dry_run, validate_dag
 from workflow.contracts import (
-    MAX_ATTEMPTS, RunContract, RunOptions, WorkflowEvent, load_workflows,
-    retry_decision, validate_c12_workflow, validate_workflow_catalog,
+    MAX_ATTEMPTS, RunContract, RunOptions, WorkflowError, WorkflowEvent,
+    load_workflows, retry_decision, validate_c12_workflow,
+    validate_workflow_catalog,
 )
 from workflow.ledger import Ledger
-from workflow.migrations import MIGRATION_1, MIGRATION_2, SCHEMA_VERSION
+from workflow.migrations import (
+    APPROVALS_V3_TABLE, MIGRATION_1, MIGRATION_2, SCHEMA_VERSION,
+)
 from workflow.schema_validation import validate_document
 
 NOW = datetime(2026, 11, 27, 12, 0, tzinfo=timezone.utc)
@@ -90,7 +93,7 @@ class TestLedger(Ledger):
         for target in targets:
             current = self.run(run_id)
             lease = {}
-            if current["state"] == "RUNNING":
+            if current["state"] in ("RUNNING", "EFFECT_IN_PROGRESS"):
                 owner = "owner-a"
                 epoch = self._claim_lease(
                     run_id, "tenant-1", owner, NOW, 30, current["revision"],
@@ -168,11 +171,19 @@ def _open_worker(path, queue):
         return None
 
 
-def _process_consume(path, nonce, now_iso, expiry_iso, queue):
+def _ready(ledger, barrier, queue):
+    """Signal READY, then block until the controller releases every worker."""
+    queue.put("READY")
+    barrier.wait(timeout=30)
+    return ledger
+
+
+def _process_consume(path, nonce, now_iso, expiry_iso, queue, barrier):
     ledger = _open_worker(path, queue)
     if ledger is None:
         return
     try:
+        _ready(ledger, barrier, queue)
         now = datetime.fromisoformat(now_iso)
         expiry = datetime.fromisoformat(expiry_iso)
         _, outcome = ledger._consume_outcome(nonce, expiry, now)
@@ -183,11 +194,12 @@ def _process_consume(path, nonce, now_iso, expiry_iso, queue):
         ledger.close()
 
 
-def _process_create_same(path, queue):
+def _process_create_same(path, queue, barrier):
     ledger = _open_worker(path, queue)
     if ledger is None:
         return
     try:
+        _ready(ledger, barrier, queue)
         ledger.create_run("run-shared")
         queue.put("CREATED")
     except SecurityError:
@@ -200,11 +212,12 @@ def _process_create_same(path, queue):
         ledger.close()
 
 
-def _process_create_distinct(path, index, queue):
+def _process_create_distinct(path, index, queue, barrier):
     ledger = _open_worker(path, queue)
     if ledger is None:
         return
     try:
+        _ready(ledger, barrier, queue)
         event = make_event(
             event_id=f"event-distinct-{index}",
             idempotency_key=f"idem-distinct-{index}",
@@ -221,11 +234,12 @@ def _process_create_distinct(path, index, queue):
         ledger.close()
 
 
-def _process_claim(path, owner, queue):
+def _process_claim(path, owner, queue, barrier):
     ledger = _open_worker(path, queue)
     if ledger is None:
         return
     try:
+        _ready(ledger, barrier, queue)
         ledger.claim_lease("run-1", owner, NOW, 30)
         queue.put("CLAIMED")
     except SecurityError:
@@ -238,11 +252,12 @@ def _process_claim(path, owner, queue):
         ledger.close()
 
 
-def _process_recover(path, queue):
+def _process_recover(path, queue, barrier):
     ledger = _open_worker(path, queue)
     if ledger is None:
         return
     try:
+        _ready(ledger, barrier, queue)
         result = ledger.recover(NOW)
         queue.put(f"RETRY:{result['retry_wait']}")
     except SecurityError:
@@ -255,13 +270,53 @@ def _process_recover(path, queue):
         ledger.close()
 
 
-def _process_crash(path, now_iso, expiry_iso):
-    ledger = TestLedger(path)
+def _process_crash(path, now_iso, expiry_iso, queue, barrier):
+    ledger = _open_worker(path, queue)
+    if ledger is None:
+        return
+    _ready(ledger, barrier, queue)
     now = datetime.fromisoformat(now_iso)
     expiry = datetime.fromisoformat(expiry_iso)
     with ledger._transaction():
         ledger._consume("crash-nonce", expiry, now)
         os._exit(7)
+
+
+def _start_and_await_ready(processes, queue):
+    """Start workers and require a READY handshake from every one of them."""
+    for process in processes:
+        process.start()
+    try:
+        for _ in processes:
+            item = queue.get(timeout=60)
+            if item != "READY":
+                raise AssertionError(f"worker failed before barrier: {item}")
+    except BaseException:
+        for process in processes:
+            if process.is_alive():
+                process.terminate()
+        raise
+
+
+def _cleanup(processes):
+    for process in processes:
+        if process.is_alive():
+            process.terminate()
+    for process in processes:
+        process.join(timeout=10)
+
+
+def _spawn_and_collect(processes, queue):
+    """Release the barrier, join with timeout, terminate strays and collect."""
+    _start_and_await_ready(processes, queue)
+    for process in processes:
+        process.join(timeout=60)
+    _cleanup(processes)
+    outcomes = [queue.get(timeout=10) for _ in processes]
+    for process in processes:
+        if process.exitcode != 0:
+            raise AssertionError(f"worker exitcode {process.exitcode}")
+    return outcomes
 
 
 def grant(action, target="run-1", tenant="tenant-1", risk="ELEVATED"):
@@ -810,17 +865,112 @@ class LedgerIntegrityTests(unittest.TestCase):
                     command.append_event(unlinked, None, NOW)
                 self.assertEqual(ledger.counts()["events"], 3)
 
-    def test_append_event_requires_existing_same_tenant_run(self):
+    def test_append_event_primitive_requires_exact_scope(self):
         with tempfile.TemporaryDirectory() as tmp:
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 ledger.create_run()
-                ghost = make_event(event_id="event-ghost", idempotency_key="idem-ghost")
+                scope = ("project-1", "task-1", "NLE-WF-GOV-03")
+                appended = make_event(event_id="event-append",
+                                      idempotency_key="idem-append")
                 with self.assertRaises(SecurityError):
-                    ledger._append_event(ghost, "ghost-run")
+                    ledger._append_event(appended, "run-1")
+                with self.assertRaises(SecurityError):
+                    ledger._append_event(appended, "run-1",
+                                         scope=("project-1", "task-1"))
+                wrong = {
+                    "project": ("project-2", "task-1", "NLE-WF-GOV-03"),
+                    "task": ("project-1", "task-2", "NLE-WF-GOV-03"),
+                    "workflow": ("project-1", "task-1", "NLE-WF-QNT-01"),
+                }
+                for dimension, broken in wrong.items():
+                    with self.subTest(dimension=dimension):
+                        with self.assertRaises(SecurityError):
+                            ledger._append_event(appended, "run-1", scope=broken)
+                with self.assertRaises(SecurityError):
+                    ledger._append_event(appended, "ghost-run", scope=scope)
+                self.assertEqual(ledger.counts()["events"], 1)
+                self.assertEqual(
+                    ledger._conn.execute(
+                        "SELECT COUNT(*) FROM audit_events"
+                    ).fetchone()[0], 0)
+                ledger._append_event(appended, "run-1", scope=scope)
                 cross = make_event(event_id="event-cross", idempotency_key="idem-cross",
                                    tenant_id="tenant-2")
                 with self.assertRaises(SecurityError):
-                    ledger._append_event(cross, "run-1")
+                    ledger._append_event(cross, "run-1", scope=scope)
+                self.assertEqual(ledger.counts()["events"], 2)
+                self.assertEqual(
+                    ledger._conn.execute(
+                        "SELECT COUNT(*) FROM audit_events"
+                    ).fetchone()[0], 1)
+
+    def test_append_event_rejects_terminal_states(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            scope = ("project-1", "task-1", "NLE-WF-GOV-03")
+            for state in ("COMPLETED", "CANCELLED", "QUARANTINED"):
+                with self.subTest(state=state):
+                    path = Path(tmp) / f"{state}.sqlite3"
+                    with TestLedger(path) as ledger:
+                        ledger.create_run()
+                        if state == "QUARANTINED":
+                            ledger.dead_letter("run-1", "INTEGRITY_FAILURE",
+                                               "ref-sanitized", NOW)
+                        elif state == "CANCELLED":
+                            ledger.advance("run-1", "VALIDATED", "QUEUED", "CANCELLED")
+                        else:
+                            ledger.advance(
+                                "run-1", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
+                                "APPROVED", "EFFECT_READY", "EFFECT_IN_PROGRESS",
+                                "VERIFIED", "COMPLETED",
+                            )
+                        self.assertEqual(ledger.run("run-1")["state"], state)
+                        appended = make_event(event_id="event-terminal",
+                                              idempotency_key="idem-terminal")
+                        with self.assertRaises(SecurityError):
+                            ledger._append_event(appended, "run-1", scope=scope)
+                        self.assertEqual(ledger.counts()["events"], 1)
+                        self.assertEqual(
+                            ledger._conn.execute(
+                                "SELECT COUNT(*) FROM audit_events "
+                                "WHERE action='workflow.event.append'"
+                            ).fetchone()[0], 0)
+
+    def test_append_event_allows_nonterminal_states(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            scope = ("project-1", "task-1", "NLE-WF-GOV-03")
+            for state in ("RECEIVED", "RUNNING", "VERIFIED"):
+                with self.subTest(state=state):
+                    path = Path(tmp) / f"{state}.sqlite3"
+                    with TestLedger(path) as ledger:
+                        ledger.create_run()
+                        if state == "RUNNING":
+                            ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
+                        elif state == "VERIFIED":
+                            ledger.advance(
+                                "run-1", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
+                                "APPROVED", "EFFECT_READY", "EFFECT_IN_PROGRESS",
+                                "VERIFIED",
+                            )
+                        self.assertEqual(ledger.run("run-1")["state"], state)
+                        appended = make_event(event_id=f"event-append-{state}",
+                                              idempotency_key=f"idem-append-{state}")
+                        ledger._append_event(appended, "run-1", scope=scope)
+                        self.assertEqual(ledger.counts()["events"], 2)
+
+    def test_append_command_rejects_terminal_run(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                command = commands(ledger, [grant("workflow.run.create")])
+                event = make_event()
+                command.create_run("run-1", "0.1.0", event, NOW,
+                                   NOW + timedelta(hours=1))
+                ledger.advance("run-1", "VALIDATED", "QUEUED", "CANCELLED")
+                appended = make_event(event_id="event-2", idempotency_key="idem-2")
+                boundary = commands(
+                    ledger, [grant("workflow.event.append", target=appended.event_id)],
+                )
+                with self.assertRaises(SecurityError):
+                    boundary.append_event(appended, "run-1", NOW)
                 self.assertEqual(ledger.counts()["events"], 1)
 
     def test_blocked_state_has_exit_and_no_outbox(self):
@@ -904,6 +1054,81 @@ class LedgerIntegrityTests(unittest.TestCase):
             conn.close()
             self.assertEqual(version, 2)
 
+    def _replace_v3_table(self, path, table_sql, run_index=None, null_index=None):
+        conn = sqlite3.connect(path)
+        try:
+            conn.execute("DROP TABLE IF EXISTS approvals")
+            conn.execute(table_sql.replace("CREATE TABLE approvals_v3",
+                                           "CREATE TABLE approvals"))
+            if run_index:
+                conn.execute(run_index)
+            if null_index:
+                conn.execute(null_index)
+            conn.commit()
+        finally:
+            conn.close()
+
+    def test_migration_v3_validates_full_constraints(self):
+        wrong_run_unique = ("CREATE UNIQUE INDEX IF NOT EXISTS idx_approvals_run "
+                            "ON approvals(run_id, tenant_id)")
+        wrong_run_columns = ("CREATE INDEX IF NOT EXISTS idx_approvals_run "
+                             "ON approvals(tenant_id, run_id)")
+        nonunique_null = ("CREATE INDEX IF NOT EXISTS idx_approvals_null_run "
+                          "ON approvals(approval_id) WHERE run_id IS NULL")
+        unpredicated_null = ("CREATE UNIQUE INDEX IF NOT EXISTS idx_approvals_null_run "
+                             "ON approvals(approval_id)")
+        missing_unique = APPROVALS_V3_TABLE.replace(
+            "  UNIQUE (approval_id, run_id, tenant_id),\n", "")
+        fk_wrong_table = APPROVALS_V3_TABLE.replace(
+            "REFERENCES runs(run_id, tenant_id)", "REFERENCES events(event_id, tenant_id)")
+        fk_single_column = APPROVALS_V3_TABLE.replace(
+            "FOREIGN KEY (run_id, tenant_id) REFERENCES runs(run_id, tenant_id)",
+            "FOREIGN KEY (run_id) REFERENCES runs(run_id)")
+        fk_wrong_order = APPROVALS_V3_TABLE.replace(
+            "FOREIGN KEY (run_id, tenant_id) REFERENCES runs(run_id, tenant_id)",
+            "FOREIGN KEY (tenant_id, run_id) REFERENCES runs(tenant_id, run_id)")
+        wrong_type = APPROVALS_V3_TABLE.replace(
+            "policy_epoch INTEGER NOT NULL", "policy_epoch TEXT NOT NULL")
+        nullable_column = APPROVALS_V3_TABLE.replace(
+            "approval_id TEXT NOT NULL", "approval_id TEXT")
+        no_autoincrement = APPROVALS_V3_TABLE.replace(
+            "id INTEGER PRIMARY KEY AUTOINCREMENT", "id INTEGER PRIMARY KEY")
+        cases = {
+            "valid_schema_passes": (APPROVALS_V3_TABLE, None, None, True),
+            "run_index_unique": (APPROVALS_V3_TABLE, wrong_run_unique, None, False),
+            "run_index_columns": (APPROVALS_V3_TABLE, wrong_run_columns, None, False),
+            "null_index_not_unique": (APPROVALS_V3_TABLE, None, nonunique_null, False),
+            "null_index_without_predicate":
+                (APPROVALS_V3_TABLE, None, unpredicated_null, False),
+            "missing_composite_unique": (missing_unique, None, None, False),
+            "fk_wrong_table": (fk_wrong_table, None, None, False),
+            "fk_single_column": (fk_single_column, None, None, False),
+            "fk_wrong_order": (fk_wrong_order, None, None, False),
+            "column_type_wrong": (wrong_type, None, None, False),
+            "column_nullable": (nullable_column, None, None, False),
+            "pk_without_autoincrement": (no_autoincrement, None, None, False),
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            for label, (table_sql, run_index, null_index, passes) in cases.items():
+                with self.subTest(case=label):
+                    path = Path(tmp) / f"{label}.sqlite3"
+                    make_v2_ledger(path)
+                    self._replace_v3_table(path, table_sql, run_index, null_index)
+                    if passes:
+                        with TestLedger(path) as ledger:
+                            self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
+                            self.assertEqual(ledger.integrity(), "ok")
+                    else:
+                        with self.assertRaises(Exception):
+                            ledger = TestLedger(path)
+                            ledger.close()
+                        conn = sqlite3.connect(path)
+                        version = conn.execute(
+                            "SELECT MAX(version) FROM schema_migrations"
+                        ).fetchone()[0]
+                        conn.close()
+                        self.assertEqual(version, 2)
+
     def test_dlq_quarantines_atomically_and_blocks_outbox(self):
         with tempfile.TemporaryDirectory() as tmp:
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
@@ -967,6 +1192,148 @@ class LedgerIntegrityTests(unittest.TestCase):
                         )
                         self.assertEqual(ledger.run("run-1")["state"], "QUARANTINED")
                         self.assertEqual(ledger.counts()["dlq"], 1)
+
+    def test_dead_letter_cancels_pending_outbox_atomically(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                first = ledger.create_run()
+                second = make_event(event_id="event-2", idempotency_key="idem-2")
+                ledger._append_event(
+                    second, "run-1",
+                    scope=("project-1", "task-1", "NLE-WF-GOV-03"),
+                )
+                ledger.enqueue_outbox("run-1", first.event_id, first.payload_ref, NOW)
+                ledger.enqueue_outbox("run-1", second.event_id, second.payload_ref, NOW)
+                ledger.dead_letter("run-1", "INTEGRITY_FAILURE", "ref-sanitized", NOW)
+                current = ledger.run("run-1")
+                self.assertEqual(current["state"], "QUARANTINED")
+                rows = ledger._conn.execute(
+                    "SELECT event_id,status FROM outbox ORDER BY outbox_id"
+                ).fetchall()
+                self.assertEqual([dict(row) for row in rows], [
+                    {"event_id": "event-1", "status": "CANCELLED"},
+                    {"event_id": "event-2", "status": "CANCELLED"},
+                ])
+                self.assertEqual(ledger.counts()["dlq"], 1)
+                transition = ledger._conn.execute(
+                    "SELECT from_state,to_state FROM transitions WHERE run_id=? "
+                    "ORDER BY transition_id DESC LIMIT 1", ("run-1",),
+                ).fetchone()
+                self.assertEqual(dict(transition),
+                                 {"from_state": "RECEIVED", "to_state": "QUARANTINED"})
+                actions = [
+                    row["action"] for row in ledger._conn.execute(
+                        "SELECT action FROM audit_events WHERE run_id=? ORDER BY audit_id",
+                        ("run-1",),
+                    ).fetchall()
+                ]
+                self.assertEqual(actions, [
+                    "workflow.event.append", "workflow.outbox.enqueue",
+                    "workflow.outbox.enqueue", "workflow.dlq.record",
+                    "workflow.outbox.cancel",
+                ])
+                with self.assertRaises(SecurityError):
+                    ledger.enqueue_outbox(
+                        "run-1", second.event_id, second.payload_ref, NOW,
+                    )
+                with self.assertRaises(SecurityError):
+                    ledger.dead_letter("run-1", "INTEGRITY_FAILURE", "ref-2", NOW)
+                self.assertEqual(ledger.run("run-1")["revision"], current["revision"])
+
+    def test_dead_letter_outbox_cancellation_rolls_back_atomically(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = ledger.create_run()
+                ledger.enqueue_outbox("run-1", event.event_id, event.payload_ref, NOW)
+                revision = ledger.run("run-1")["revision"]
+                original = ledger._audit
+
+                def failing_audit(run_id, tenant_id, actor_id, action, rev,
+                                  detail, now):
+                    if action == "workflow.outbox.cancel":
+                        raise WorkflowError("AUDIT_INJECTED_FAILURE")
+                    return original(run_id, tenant_id, actor_id, action, rev,
+                                    detail, now)
+
+                with mock.patch.object(ledger, "_audit", side_effect=failing_audit):
+                    with self.assertRaises(WorkflowError):
+                        ledger.dead_letter("run-1", "INTEGRITY_FAILURE",
+                                           "ref-sanitized", NOW)
+                self.assertEqual(ledger.run("run-1")["state"], "RECEIVED")
+                self.assertEqual(ledger.run("run-1")["revision"], revision)
+                self.assertEqual(ledger.counts()["dlq"], 0)
+                self.assertEqual(
+                    ledger._conn.execute("SELECT status FROM outbox").fetchone()[0],
+                    "PENDING")
+                self.assertEqual(
+                    ledger._conn.execute(
+                        "SELECT COUNT(*) FROM transitions WHERE to_state='QUARANTINED'"
+                    ).fetchone()[0], 0)
+                self.assertEqual(
+                    ledger._conn.execute("SELECT COUNT(*) FROM audit_events "
+                                         "WHERE action='workflow.outbox.cancel'"
+                                         ).fetchone()[0], 0)
+
+    def test_verified_to_quarantined_only_via_dlq(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                ledger.create_run()
+                ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
+                               "APPROVED", "EFFECT_READY", "EFFECT_IN_PROGRESS",
+                               "VERIFIED")
+                self.assertEqual(ledger.run("run-1")["state"], "VERIFIED")
+                with self.assertRaises(SecurityError):
+                    ledger.transition("run-1", "QUARANTINED")
+                with self.assertRaises(SecurityError):
+                    ledger._transition("run-1", "tenant-1", "QUARANTINED", None, NOW,
+                                       ledger.run("run-1")["revision"])
+                ledger.dead_letter("run-1", "INTEGRITY_FAILURE", "ref-sanitized", NOW)
+                self.assertEqual(ledger.run("run-1")["state"], "QUARANTINED")
+                with self.assertRaises(SecurityError):
+                    ledger.transition("run-1", "QUEUED")
+                with self.assertRaises(SecurityError):
+                    ledger.dead_letter("run-1", "INTEGRITY_FAILURE", "ref-2", NOW)
+                self.assertEqual(ledger.counts()["dlq"], 1)
+                self.assertEqual(ledger.run("run-1")["state"], "QUARANTINED")
+
+    def test_verified_terminal_bypass_commands_are_denied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                command = commands(ledger, [grant("workflow.run.create")])
+                event = make_event()
+                command.create_run("run-1", "0.1.0", event, NOW,
+                                   NOW + timedelta(hours=1))
+                ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
+                               "APPROVED", "EFFECT_READY", "EFFECT_IN_PROGRESS",
+                               "VERIFIED")
+                revision = ledger.run("run-1")["revision"]
+                bypass_transition = commands(
+                    ledger, [grant("workflow.run.transition.VERIFIED.QUARANTINED")],
+                )
+                with self.assertRaises(SecurityError):
+                    bypass_transition.transition(
+                        "run-1", "QUARANTINED", None, NOW,
+                        expected_revision=revision, payload_sha256=PAYLOAD,
+                    )
+                bypass_reconcile = commands(
+                    ledger, [grant("workflow.run.reconcile.VERIFIED.QUARANTINED")],
+                )
+                with self.assertRaises(SecurityError):
+                    bypass_reconcile.reconcile(
+                        "run-1", "QUARANTINED", "evidence-1", NOW,
+                        expected_revision=revision, payload_sha256=PAYLOAD,
+                    )
+                self.assertEqual(ledger.run("run-1")["state"], "VERIFIED")
+                self.assertEqual(ledger.counts()["dlq"], 0)
+                ledger.dead_letter("run-1", "INTEGRITY_FAILURE", "ref-sanitized", NOW)
+                self.assertEqual(ledger.run("run-1")["state"], "QUARANTINED")
+                with self.assertRaises(SecurityError):
+                    bypass_reconcile.reconcile(
+                        "run-1", "QUEUED", "evidence-1", NOW,
+                        expected_revision=ledger.run("run-1")["revision"],
+                        payload_sha256=PAYLOAD,
+                    )
+                self.assertEqual(ledger.run("run-1")["state"], "QUARANTINED")
 
     def test_outbox_audit_rolls_back_with_duplicate(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1220,18 +1587,16 @@ class NonceRecoveryTests(unittest.TestCase):
             queue = context.Queue()
             now_iso = NOW.isoformat()
             expiry_iso = (NOW + timedelta(minutes=1)).isoformat()
+            barrier = context.Barrier(4)
             processes = [
                 context.Process(
                     target=_process_consume,
-                    args=(path, "process-nonce", now_iso, expiry_iso, queue),
+                    args=(path, "process-nonce", now_iso, expiry_iso, queue,
+                          barrier),
                 )
                 for _ in range(4)
             ]
-            for process in processes:
-                process.start()
-            for process in processes:
-                process.join(timeout=60)
-            outcomes = [queue.get(timeout=10) for _ in processes]
+            outcomes = _spawn_and_collect(processes, queue)
             self.assertEqual(outcomes.count("COMMITTED"), 1)
             self.assertEqual(outcomes.count("REPLAY_REJECTED"), 3)
             with TestLedger(path) as ledger:
@@ -1244,17 +1609,22 @@ class NonceRecoveryTests(unittest.TestCase):
             with TestLedger(path):
                 pass
             context = multiprocessing.get_context("spawn")
+            queue = context.Queue()
             process = context.Process(
                 target=_process_crash,
                 args=(path, NOW.isoformat(),
-                      (NOW + timedelta(minutes=1)).isoformat()),
+                      (NOW + timedelta(minutes=1)).isoformat(),
+                      queue, context.Barrier(1)),
             )
-            process.start()
+            _start_and_await_ready([process], queue)
             process.join(timeout=60)
-            self.assertNotEqual(process.exitcode, 0)
+            _cleanup([process])
+            self.assertEqual(process.exitcode, 7)
             with TestLedger(path) as ledger:
                 self.assertEqual(ledger.counts()["nonces"], 0)
                 self.assertEqual(ledger.integrity(), "ok")
+                self.assertFalse(ledger._conn.execute(
+                    "PRAGMA foreign_key_check").fetchall())
 
     def test_approval_record_failure_rolls_back_command(self):
         event = make_event()
@@ -1406,16 +1776,13 @@ class MultiprocessConcurrencyTests(unittest.TestCase):
                 pass
             context = multiprocessing.get_context("spawn")
             queue = context.Queue()
+            barrier = context.Barrier(4)
             processes = [
-                context.Process(target=_process_create_same, args=(path, queue))
+                context.Process(target=_process_create_same,
+                                args=(path, queue, barrier))
                 for _ in range(4)
             ]
-            for process in processes:
-                process.start()
-            for process in processes:
-                process.join(timeout=60)
-            outcomes = [queue.get(timeout=10) for _ in processes]
-            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            outcomes = _spawn_and_collect(processes, queue)
             self.assertEqual(outcomes.count("CREATED"), 1, outcomes)
             self.assertEqual(outcomes.count("DUPLICATE"), 3, outcomes)
             with TestLedger(path) as ledger:
@@ -1430,16 +1797,13 @@ class MultiprocessConcurrencyTests(unittest.TestCase):
                 pass
             context = multiprocessing.get_context("spawn")
             queue = context.Queue()
+            barrier = context.Barrier(4)
             processes = [
-                context.Process(target=_process_create_distinct, args=(path, index, queue))
+                context.Process(target=_process_create_distinct,
+                                args=(path, index, queue, barrier))
                 for index in range(1, 5)
             ]
-            for process in processes:
-                process.start()
-            for process in processes:
-                process.join(timeout=60)
-            outcomes = [queue.get(timeout=10) for _ in processes]
-            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            outcomes = _spawn_and_collect(processes, queue)
             self.assertEqual(outcomes.count("CREATED"), 4, outcomes)
             with TestLedger(path) as ledger:
                 self.assertEqual(ledger.counts()["runs"], 4)
@@ -1454,23 +1818,27 @@ class MultiprocessConcurrencyTests(unittest.TestCase):
                 ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
             context = multiprocessing.get_context("spawn")
             queue = context.Queue()
+            barrier = context.Barrier(4)
             processes = [
                 context.Process(
-                    target=_process_claim, args=(path, f"owner-{index}", queue)
+                    target=_process_claim,
+                    args=(path, f"owner-{index}", queue, barrier),
                 )
                 for index in range(1, 5)
             ]
-            for process in processes:
-                process.start()
-            for process in processes:
-                process.join(timeout=60)
-            outcomes = [queue.get(timeout=10) for _ in processes]
-            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            outcomes = _spawn_and_collect(processes, queue)
             self.assertEqual(outcomes.count("CLAIMED"), 1)
             self.assertEqual(outcomes.count("DENIED"), 3)
             self.assertNotIn("STORAGE_ERROR", outcomes)
             with TestLedger(path) as ledger:
-                self.assertIsNotNone(ledger.run("run-1")["lease_owner"])
+                current = ledger.run("run-1")
+                self.assertIsNotNone(current["lease_owner"])
+                self.assertEqual(current["lease_epoch"], 1)
+                revision = current["revision"]
+                with self.assertRaises(SecurityError):
+                    ledger._claim_lease("run-1", "tenant-1", "owner-99", NOW, 30,
+                                        revision)
+                self.assertEqual(ledger.run("run-1")["lease_epoch"], 1)
                 self.assertEqual(ledger.integrity(), "ok")
 
     def test_process_recovery_has_single_transition(self):
@@ -1481,16 +1849,13 @@ class MultiprocessConcurrencyTests(unittest.TestCase):
                 ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
             context = multiprocessing.get_context("spawn")
             queue = context.Queue()
+            barrier = context.Barrier(4)
             processes = [
-                context.Process(target=_process_recover, args=(path, queue))
+                context.Process(target=_process_recover,
+                                args=(path, queue, barrier))
                 for _ in range(4)
             ]
-            for process in processes:
-                process.start()
-            for process in processes:
-                process.join(timeout=60)
-            outcomes = [queue.get(timeout=10) for _ in processes]
-            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            outcomes = _spawn_and_collect(processes, queue)
             self.assertNotIn("STORAGE_ERROR", outcomes)
             with TestLedger(path) as ledger:
                 self.assertEqual(ledger.run("run-1")["state"], "RETRY_WAIT")

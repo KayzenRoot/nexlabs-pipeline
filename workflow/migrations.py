@@ -184,15 +184,103 @@ APPROVALS_V3_REQUIRED_COLUMNS = frozenset({
     "result", "created_at",
 })
 
+# PRAGMA table_info tuples: (name, type, notnull, default, pk) in table order.
+APPROVALS_V3_COLUMN_SPECS = (
+    ("id", "INTEGER", 0, None, 1),
+    ("approval_id", "TEXT", 1, None, 0),
+    ("run_id", "TEXT", 0, None, 0),
+    ("tenant_id", "TEXT", 1, None, 0),
+    ("actor_id", "TEXT", 1, None, 0),
+    ("approver_id", "TEXT", 1, None, 0),
+    ("approver_role", "TEXT", 1, None, 0),
+    ("action", "TEXT", 1, None, 0),
+    ("target_id", "TEXT", 1, None, 0),
+    ("project_id", "TEXT", 1, None, 0),
+    ("task_id", "TEXT", 1, None, 0),
+    ("workflow_id", "TEXT", 1, None, 0),
+    ("risk", "TEXT", 1, None, 0),
+    ("payload_sha256", "TEXT", 1, None, 0),
+    ("policy_sha256", "TEXT", 1, None, 0),
+    ("policy_epoch", "INTEGER", 1, None, 0),
+    ("nonce", "TEXT", 1, None, 0),
+    ("evidence_refs_json", "TEXT", 1, None, 0),
+    ("max_spend_usd", "TEXT", 1, None, 0),
+    ("issued_at", "TEXT", 1, None, 0),
+    ("expires_at", "TEXT", 1, None, 0),
+    ("result", "TEXT", 1, None, 0),
+    ("created_at", "TEXT", 1, None, 0),
+)
+APPROVALS_V3_UNIQUE_COLUMNS = ("approval_id", "run_id", "tenant_id")
+APPROVALS_V3_RUN_INDEX_SQL = "create index idx_approvals_run on approvals(run_id, tenant_id)"
+APPROVALS_V3_NULL_RUN_INDEX_SQL = (
+    "create unique index idx_approvals_null_run on approvals(approval_id) "
+    "where run_id is null"
+)
+
+
+def _normalized_sql(sql: str) -> str:
+    return " ".join(sql.replace('"', "").replace("`", "").split()).lower()
+
+
+def _index_columns(conn: sqlite3.Connection, name: str) -> tuple[str, ...]:
+    return tuple(row[2] for row in conn.execute(f"PRAGMA index_info({name})"))
+
+
+def _index_sql(conn: sqlite3.Connection, name: str) -> str | None:
+    row = conn.execute(
+        "SELECT sql FROM sqlite_master WHERE type='index' AND name=?", (name,)
+    ).fetchone()
+    return None if row is None else _normalized_sql(row[0] or "")
+
 
 def _validate_approvals_v3(conn: sqlite3.Connection) -> None:
-    if _columns(conn, "approvals") != set(APPROVALS_V3_REQUIRED_COLUMNS):
+    specs = tuple(
+        (row[1], (row[2] or "").upper(), row[3], row[4], row[5])
+        for row in conn.execute("PRAGMA table_info(approvals)")
+    )
+    if specs != APPROVALS_V3_COLUMN_SPECS:
         raise sqlite3.OperationalError("approvals schema incomplete")
-    indexes = {row[1] for row in conn.execute("PRAGMA index_list(approvals)")}
-    if not {"idx_approvals_run", "idx_approvals_null_run"}.issubset(indexes):
-        raise sqlite3.OperationalError("approvals indexes incomplete")
-    if not conn.execute("PRAGMA foreign_key_list(approvals)").fetchall():
-        raise sqlite3.OperationalError("approvals foreign key missing")
+    table_sql = conn.execute(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='approvals'"
+    ).fetchone()
+    if table_sql is None or "primary key autoincrement" not in _normalized_sql(table_sql[0] or ""):
+        raise sqlite3.OperationalError("approvals primary key invalid")
+    index_list = conn.execute("PRAGMA index_list(approvals)").fetchall()
+    composite = False
+    for index in index_list:
+        # PRAGMA index_list: (seq, name, unique, origin, partial)
+        if (index[3] == "u" and index[2] == 1 and not index[4]
+                and _index_columns(conn, index[1]) == APPROVALS_V3_UNIQUE_COLUMNS):
+            composite = True
+    if not composite:
+        raise sqlite3.OperationalError("approvals composite unique missing")
+    indexes = {row[1]: row for row in index_list}
+    run_index = indexes.get("idx_approvals_run")
+    if (run_index is None or run_index[2] != 0 or run_index[3] != "c"
+            or run_index[4] != 0
+            or _index_columns(conn, "idx_approvals_run") != ("run_id", "tenant_id")
+            or _index_sql(conn, "idx_approvals_run") != APPROVALS_V3_RUN_INDEX_SQL):
+        raise sqlite3.OperationalError("approvals run index invalid")
+    null_run_index = indexes.get("idx_approvals_null_run")
+    if (null_run_index is None or null_run_index[2] != 1 or null_run_index[3] != "c"
+            or null_run_index[4] != 1
+            or _index_columns(conn, "idx_approvals_null_run") != ("approval_id",)
+            or _index_sql(conn, "idx_approvals_null_run")
+            != APPROVALS_V3_NULL_RUN_INDEX_SQL):
+        raise sqlite3.OperationalError("approvals null-run index invalid")
+    foreign_keys = conn.execute("PRAGMA foreign_key_list(approvals)").fetchall()
+    groups: dict[int, list[tuple]] = {}
+    for row in foreign_keys:
+        groups.setdefault(row[0], []).append(row)
+    if len(groups) != 1 or len(next(iter(groups.values()))) != 2:
+        raise sqlite3.OperationalError("approvals foreign key invalid")
+    rows = next(iter(groups.values()))
+    if (rows[0][2] != "runs" or rows[1][2] != "runs"
+            or (rows[0][3], rows[0][4]) != ("run_id", "run_id")
+            or (rows[1][3], rows[1][4]) != ("tenant_id", "tenant_id")
+            or rows[0][5] != "NO ACTION" or rows[0][6] != "NO ACTION"
+            or rows[1][5] != "NO ACTION" or rows[1][6] != "NO ACTION"):
+        raise sqlite3.OperationalError("approvals foreign key invalid")
     if conn.execute("PRAGMA foreign_key_check").fetchall():
         raise sqlite3.OperationalError("approvals foreign key violation")
 

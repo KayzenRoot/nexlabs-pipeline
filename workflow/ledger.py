@@ -14,9 +14,10 @@ from security.contracts import (
 )
 
 from .contracts import (
-    EXECUTOR_STATES, MAX_ATTEMPTS, OUTBOX_BLOCKED_STATES, RISK_LEVELS, ROOT,
-    RunContract, RunOptions, WorkflowEvent, assert_transition, canonical_bytes,
-    require_risk_floor, validate_event, WorkflowError,
+    EXECUTOR_STATES, MAX_ATTEMPTS, OUTBOX_BLOCKED_STATES, OUTBOX_CANCELLED_STATUS,
+    OUTBOX_PENDING_STATUS, RISK_LEVELS, ROOT, RunContract, RunOptions, TERMINAL,
+    WorkflowEvent, assert_transition, canonical_bytes, require_risk_floor,
+    validate_event, WorkflowError,
 )
 from .migrations import apply_migrations
 from .outcomes import TxOutcome
@@ -123,12 +124,11 @@ class Ledger:
         with self._transaction():
             run = None
             if run_id is not None:
-                run = (self.run_scoped(run_id, event.tenant_id, *scope) if scope
-                       else self._conn.execute(
-                           "SELECT * FROM runs WHERE run_id=? AND tenant_id=?",
-                           (run_id, event.tenant_id),
-                       ).fetchone())
-                require(run is not None, "EVENT_RUN_TENANT_MISMATCH")
+                require(scope is not None, "EVENT_SCOPE_REQUIRED")
+                require(isinstance(scope, tuple) and len(scope) == 3,
+                        "EVENT_SCOPE_INVALID")
+                run = self.run_scoped(run_id, event.tenant_id, *scope)
+                require(run["state"] not in TERMINAL, "EVENT_RUN_TERMINAL")
             self._insert_event(event, run_id)
             if run is not None:
                 audit_now = now or event.received_at
@@ -430,7 +430,8 @@ class Ledger:
                 self._conn.execute(
                     "INSERT INTO outbox(run_id,tenant_id,event_id,payload_ref,status,created_at) "
                     "VALUES(?,?,?,?,?,?)",
-                    (run_id, tenant_id, event_id, payload_ref, "PENDING", self._timestamp(now)),
+                    (run_id, tenant_id, event_id, payload_ref, OUTBOX_PENDING_STATUS,
+                     self._timestamp(now)),
                 )
             except sqlite3.IntegrityError as exc:
                 raise WorkflowError("DUPLICATE_OUTBOX") from exc
@@ -471,8 +472,16 @@ class Ledger:
                 "VALUES(?,?,?,?,?)",
                 (run_id, tenant_id, reason, sanitized_ref, self._timestamp(now)),
             )
+            cancelled = self._conn.execute(
+                "UPDATE outbox SET status=? WHERE run_id=? AND tenant_id=? AND status=?",
+                (OUTBOX_CANCELLED_STATUS, run_id, tenant_id, OUTBOX_PENDING_STATUS),
+            ).rowcount
             self._audit(run_id, tenant_id, actor_id, action, revision,
-                        {"reason": reason, "sanitized_ref": sanitized_ref}, now)
+                        {"reason": reason, "sanitized_ref": sanitized_ref,
+                         "outbox_cancelled": cancelled}, now)
+            if cancelled:
+                self._audit(run_id, tenant_id, actor_id, "workflow.outbox.cancel",
+                            revision, {"cancelled": cancelled}, now)
 
     def _recover(self, tenant_id: str, project_id: str, task_id: str,
                  workflow_id: str, now: datetime,

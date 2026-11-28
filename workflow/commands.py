@@ -14,8 +14,8 @@ from security.contracts import (
 
 from .authorization import authorize_workflow
 from .contracts import (
-    C12_WORKFLOW_IDS, WORKFLOW_VERSION, RunOptions, WorkflowEvent, canonical_bytes,
-    load_workflows, require_risk_floor, validate_c12_workflow,
+    C12_WORKFLOW_IDS, TERMINAL, WORKFLOW_VERSION, RunOptions, WorkflowEvent,
+    canonical_bytes, load_workflows, require_risk_floor, validate_c12_workflow,
 )
 from .ledger import Ledger
 
@@ -229,7 +229,8 @@ class WorkflowCommands:
         require(run_id is not None, "RUN_ID_REQUIRED")
         require(event.tenant_id == self.tenant_id, "EVENT_TENANT_MISMATCH")
         require_risk_floor(self.risk, event.risk)
-        self._require_run_scope(run_id)
+        current = self._require_run_scope(run_id)
+        require(current["state"] not in TERMINAL, "EVENT_RUN_TERMINAL")
         payload = _payload_digest(
             EVENT_APPEND_ACTION, event_sha256=event.digest(), run_id=run_id,
             policy_epoch=self.policy_epoch,
