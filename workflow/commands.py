@@ -20,6 +20,7 @@ from .contracts import (
 from .ledger import Ledger
 
 SOURCE_LOCK_SHA256 = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e"
+EVENT_APPEND_ACTION = "workflow.event.append"
 
 
 def _payload_digest(operation: str, **values: Any) -> str:
@@ -230,16 +231,16 @@ class WorkflowCommands:
         if run_id is not None:
             self._require_run_scope(run_id)
         payload = _payload_digest(
-            "workflow.event.append", event_sha256=event.digest(), run_id=run_id,
+            EVENT_APPEND_ACTION, event_sha256=event.digest(), run_id=run_id,
             policy_epoch=self.policy_epoch,
         )
-        request = self._request("workflow.event.append", event.event_id, payload, now)
+        request = self._request(EVENT_APPEND_ACTION, event.event_id, payload, now)
         return self._execute(
             request,
             lambda: self._ledger._append_event(
                 event, run_id, scope=self._scope_tuple,
                 actor_id=self.actor.principal_id,
-                action="workflow.event.append",
+                action=EVENT_APPEND_ACTION,
             ),
             run_id,
         )
