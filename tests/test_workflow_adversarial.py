@@ -887,6 +887,8 @@ class NonceRecoveryTests(unittest.TestCase):
     def test_independent_processes_share_nonce(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = str(Path(tmp) / "ledger.sqlite3")
+            with TestLedger(path):
+                pass
             context = multiprocessing.get_context("spawn")
             queue = context.Queue()
             now_iso = NOW.isoformat()
