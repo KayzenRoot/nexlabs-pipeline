@@ -74,6 +74,18 @@ class TestLedger(Ledger):
             run_id, "tenant-1", owner, now, ttl_seconds, revision,
         )
 
+    def enqueue_outbox(self, run_id, event_id, payload_ref, now):
+        revision = self.run(run_id)["revision"]
+        return self._enqueue_outbox(
+            run_id, "tenant-1", event_id, payload_ref, now, revision,
+        )
+
+    def dead_letter(self, run_id, reason, sanitized_ref, now):
+        revision = self.run(run_id)["revision"]
+        return self._dead_letter(
+            run_id, "tenant-1", reason, sanitized_ref, now, revision,
+        )
+
     def advance(self, run_id, *targets):
         for target in targets:
             current = self.run(run_id)
@@ -148,13 +160,95 @@ def make_v2_ledger(path, *, partial_v3=False, event_risk="STANDARD",
         conn.close()
 
 
+def _open_worker(path, queue):
+    try:
+        return TestLedger(path)
+    except BaseException as exc:
+        queue.put(f"ERROR:OPEN:{type(exc).__name__}")
+        return None
+
+
 def _process_consume(path, nonce, now_iso, expiry_iso, queue):
-    ledger = TestLedger(path)
+    ledger = _open_worker(path, queue)
+    if ledger is None:
+        return
     try:
         now = datetime.fromisoformat(now_iso)
         expiry = datetime.fromisoformat(expiry_iso)
         _, outcome = ledger._consume_outcome(nonce, expiry, now)
         queue.put(outcome.value)
+    except BaseException as exc:
+        queue.put(f"ERROR:{type(exc).__name__}")
+    finally:
+        ledger.close()
+
+
+def _process_create_same(path, queue):
+    ledger = _open_worker(path, queue)
+    if ledger is None:
+        return
+    try:
+        ledger.create_run("run-shared")
+        queue.put("CREATED")
+    except SecurityError:
+        queue.put("DUPLICATE")
+    except sqlite3.Error:
+        queue.put("STORAGE_ERROR")
+    except BaseException as exc:
+        queue.put(f"ERROR:{type(exc).__name__}")
+    finally:
+        ledger.close()
+
+
+def _process_create_distinct(path, index, queue):
+    ledger = _open_worker(path, queue)
+    if ledger is None:
+        return
+    try:
+        event = make_event(
+            event_id=f"event-distinct-{index}",
+            idempotency_key=f"idem-distinct-{index}",
+        )
+        ledger.create_run(f"run-distinct-{index}", event=event)
+        queue.put("CREATED")
+    except SecurityError:
+        queue.put("REJECTED")
+    except sqlite3.Error:
+        queue.put("STORAGE_ERROR")
+    except BaseException as exc:
+        queue.put(f"ERROR:{type(exc).__name__}")
+    finally:
+        ledger.close()
+
+
+def _process_claim(path, owner, queue):
+    ledger = _open_worker(path, queue)
+    if ledger is None:
+        return
+    try:
+        ledger.claim_lease("run-1", owner, NOW, 30)
+        queue.put("CLAIMED")
+    except SecurityError:
+        queue.put("DENIED")
+    except sqlite3.Error:
+        queue.put("STORAGE_ERROR")
+    except BaseException as exc:
+        queue.put(f"ERROR:{type(exc).__name__}")
+    finally:
+        ledger.close()
+
+
+def _process_recover(path, queue):
+    ledger = _open_worker(path, queue)
+    if ledger is None:
+        return
+    try:
+        result = ledger.recover(NOW)
+        queue.put(f"RETRY:{result['retry_wait']}")
+    except SecurityError:
+        queue.put("DENIED")
+    except sqlite3.Error:
+        queue.put("STORAGE_ERROR")
     except BaseException as exc:
         queue.put(f"ERROR:{type(exc).__name__}")
     finally:
@@ -672,6 +766,36 @@ class LedgerIntegrityTests(unittest.TestCase):
                     ledger._enqueue_outbox("run-1", "tenant-2", event.event_id,
                                            event.payload_ref, NOW, 0)
 
+    def test_append_event_binds_full_persisted_scope(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                variants = (
+                    ("project-2", "task-1", "NLE-WF-QNT-01"),
+                    ("project-1", "task-2", "NLE-WF-QNT-01"),
+                    ("project-1", "task-1", "NLE-WF-QNT-02"),
+                )
+                for index, (project, task, workflow) in enumerate(variants, 1):
+                    run_event = make_event(
+                        event_id=f"event-base-{index}",
+                        idempotency_key=f"idem-base-{index}",
+                    )
+                    ledger._create_run(
+                        f"run-{index}", "tenant-1", project, task, workflow,
+                        "0.1.0", run_event, NOW, NOW + timedelta(hours=1), SOURCE_LOCK,
+                        RunOptions(risk="ELEVATED"),
+                    )
+                    appended = make_event(
+                        event_id=f"event-append-{index}",
+                        idempotency_key=f"idem-append-{index}",
+                    )
+                    command = commands(
+                        ledger,
+                        [grant("workflow.event.append", target=appended.event_id)],
+                    )
+                    with self.assertRaises(SecurityError):
+                        command.append_event(appended, f"run-{index}", NOW)
+                self.assertEqual(ledger.counts()["events"], 3)
+
     def test_append_event_requires_existing_same_tenant_run(self):
         with tempfile.TemporaryDirectory() as tmp:
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
@@ -744,6 +868,81 @@ class LedgerIntegrityTests(unittest.TestCase):
             ).fetchone()[0]
             conn.close()
             self.assertEqual(version, 2)
+
+    def test_migration_v3_rejects_partial_with_only_five_columns(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "partial-five.sqlite3"
+            make_v2_ledger(path)
+            conn = sqlite3.connect(path)
+            conn.execute("DROP TABLE approvals")
+            conn.execute(
+                "CREATE TABLE approvals_v3 (approval_id TEXT, tenant_id TEXT, "
+                "approver_role TEXT, evidence_refs_json TEXT, run_id TEXT)"
+            )
+            conn.commit()
+            conn.close()
+            with self.assertRaises(Exception):
+                Ledger(path)
+            conn = sqlite3.connect(path)
+            version = conn.execute(
+                "SELECT MAX(version) FROM schema_migrations"
+            ).fetchone()[0]
+            conn.close()
+            self.assertEqual(version, 2)
+
+    def test_dlq_quarantines_atomically_and_blocks_outbox(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = ledger.create_run()
+                ledger.advance("run-1", "VALIDATED")
+                ledger.dead_letter(
+                    "run-1", "INTEGRITY_FAILURE", "ref-sanitized", NOW,
+                )
+                current = ledger.run("run-1")
+                self.assertEqual(current["state"], "QUARANTINED")
+                self.assertEqual(current["status"], "QUARANTINED")
+                self.assertEqual(ledger.counts()["dlq"], 1)
+                with self.assertRaises(SecurityError):
+                    ledger._enqueue_outbox(
+                        "run-1", "tenant-1", event.event_id, event.payload_ref,
+                        NOW, current["revision"],
+                    )
+                with self.assertRaises(SecurityError):
+                    ledger.transition("run-1", "QUEUED")
+                audit = ledger._conn.execute(
+                    "SELECT actor_id,action FROM audit_events WHERE run_id=? "
+                    "ORDER BY audit_id DESC LIMIT 1",
+                    ("run-1",),
+                ).fetchone()
+                self.assertEqual(dict(audit),
+                                 {"actor_id": "system",
+                                  "action": "workflow.dlq.record"})
+
+    def test_outbox_audit_rolls_back_with_duplicate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = ledger.create_run()
+                ledger.enqueue_outbox(
+                    "run-1", event.event_id, event.payload_ref, NOW,
+                )
+                self.assertEqual(ledger.counts()["outbox"], 1)
+                audit_count = ledger._conn.execute(
+                    "SELECT COUNT(*) FROM audit_events WHERE run_id=?",
+                    ("run-1",),
+                ).fetchone()[0]
+                self.assertEqual(audit_count, 1)
+                with self.assertRaises(SecurityError):
+                    ledger.enqueue_outbox(
+                        "run-1", event.event_id, event.payload_ref, NOW,
+                    )
+                self.assertEqual(ledger.counts()["outbox"], 1)
+                self.assertEqual(
+                    ledger._conn.execute(
+                        "SELECT COUNT(*) FROM audit_events WHERE run_id=?",
+                        ("run-1",),
+                    ).fetchone()[0],
+                    audit_count,
+                )
 
     def test_migration_v5_audit_actor_upgrade_is_resumable(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -1149,6 +1348,112 @@ class NonceRecoveryTests(unittest.TestCase):
                 ledger.transition("run-1", "VERIFIED", reconciliation_ref="evidence-1")
 
 
+class MultiprocessConcurrencyTests(unittest.TestCase):
+    def test_same_run_and_idempotency_have_one_process_winner(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "ledger.sqlite3")
+            with TestLedger(path):
+                pass
+            context = multiprocessing.get_context("spawn")
+            queue = context.Queue()
+            processes = [
+                context.Process(target=_process_create_same, args=(path, queue))
+                for _ in range(4)
+            ]
+            for process in processes:
+                process.start()
+            for process in processes:
+                process.join(timeout=60)
+            outcomes = [queue.get(timeout=10) for _ in processes]
+            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            self.assertEqual(outcomes.count("CREATED"), 1, outcomes)
+            self.assertEqual(outcomes.count("DUPLICATE"), 3, outcomes)
+            with TestLedger(path) as ledger:
+                self.assertEqual(ledger.counts()["runs"], 1)
+                self.assertEqual(ledger.counts()["events"], 1)
+                self.assertEqual(ledger.integrity(), "ok")
+
+    def test_distinct_events_from_processes_are_all_preserved(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "ledger.sqlite3")
+            with TestLedger(path):
+                pass
+            context = multiprocessing.get_context("spawn")
+            queue = context.Queue()
+            processes = [
+                context.Process(target=_process_create_distinct, args=(path, index, queue))
+                for index in range(1, 5)
+            ]
+            for process in processes:
+                process.start()
+            for process in processes:
+                process.join(timeout=60)
+            outcomes = [queue.get(timeout=10) for _ in processes]
+            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            self.assertEqual(outcomes.count("CREATED"), 4, outcomes)
+            with TestLedger(path) as ledger:
+                self.assertEqual(ledger.counts()["runs"], 4)
+                self.assertEqual(ledger.counts()["events"], 4)
+                self.assertEqual(ledger.integrity(), "ok")
+
+    def test_process_lease_fencing_has_single_owner(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "ledger.sqlite3")
+            with TestLedger(path) as ledger:
+                ledger.create_run()
+                ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
+            context = multiprocessing.get_context("spawn")
+            queue = context.Queue()
+            processes = [
+                context.Process(
+                    target=_process_claim, args=(path, f"owner-{index}", queue)
+                )
+                for index in range(1, 5)
+            ]
+            for process in processes:
+                process.start()
+            for process in processes:
+                process.join(timeout=60)
+            outcomes = [queue.get(timeout=10) for _ in processes]
+            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            self.assertEqual(outcomes.count("CLAIMED"), 1)
+            self.assertEqual(outcomes.count("DENIED"), 3)
+            self.assertNotIn("STORAGE_ERROR", outcomes)
+            with TestLedger(path) as ledger:
+                self.assertIsNotNone(ledger.run("run-1")["lease_owner"])
+                self.assertEqual(ledger.integrity(), "ok")
+
+    def test_process_recovery_has_single_transition(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "ledger.sqlite3")
+            with TestLedger(path) as ledger:
+                ledger.create_run()
+                ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
+            context = multiprocessing.get_context("spawn")
+            queue = context.Queue()
+            processes = [
+                context.Process(target=_process_recover, args=(path, queue))
+                for _ in range(4)
+            ]
+            for process in processes:
+                process.start()
+            for process in processes:
+                process.join(timeout=60)
+            outcomes = [queue.get(timeout=10) for _ in processes]
+            self.assertTrue(all(process.exitcode == 0 for process in processes))
+            self.assertNotIn("STORAGE_ERROR", outcomes)
+            with TestLedger(path) as ledger:
+                self.assertEqual(ledger.run("run-1")["state"], "RETRY_WAIT")
+                self.assertEqual(ledger.run("run-1")["attempts"], 1)
+                transitions = ledger._conn.execute(
+                    "SELECT COUNT(*) FROM transitions WHERE run_id=? "
+                    "AND from_state='RUNNING' AND to_state='RETRY_WAIT'",
+                    ("run-1",),
+                ).fetchone()[0]
+                self.assertEqual(transitions, 1)
+                self.assertEqual(ledger.integrity(), "ok")
+
+
 class CompilerAndC12Tests(unittest.TestCase):
     def test_compiler_and_dry_run_are_deterministic(self):
         first = compile_catalog()
@@ -1183,6 +1488,17 @@ class CompilerAndC12Tests(unittest.TestCase):
         date_only["now"] = "2026-11-27"
         with self.assertRaises(SecurityError):
             validate_document(date_only, root / "plan-v1.json")
+        with tempfile.TemporaryDirectory() as tmp:
+            malformed_type = Path(tmp) / "type.json"
+            malformed_type.write_text('{"type":"number"}', encoding="utf-8")
+            with self.assertRaises(SecurityError):
+                validate_document(1, malformed_type)
+            malformed_format = Path(tmp) / "format.json"
+            malformed_format.write_text(
+                '{"type":"string","format":"email"}', encoding="utf-8"
+            )
+            with self.assertRaises(SecurityError):
+                validate_document("a@example.test", malformed_format)
 
     def test_context_lock_tamper_is_rejected(self):
         from workflow import __main__ as workflow_cli

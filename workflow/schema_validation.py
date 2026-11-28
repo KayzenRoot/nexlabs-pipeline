@@ -14,6 +14,10 @@ SUPPORTED_SCHEMA_KEYS = frozenset({
     "$schema", "$id", "type", "additionalProperties", "required", "properties",
     "enum", "const", "pattern", "format", "minimum", "items", "minItems",
 })
+SUPPORTED_TYPES = frozenset({
+    "object", "array", "string", "integer", "boolean", "null",
+})
+SUPPORTED_FORMATS = frozenset({"date-time"})
 
 
 class SchemaValidationError(SecurityError):
@@ -33,7 +37,7 @@ def _type_matches(value, expected: str) -> bool:
         "boolean": lambda item: isinstance(item, bool),
         "null": lambda item: item is None,
     }
-    return checks.get(expected, lambda _item: True)(value)
+    return checks[expected](value)
 
 
 def _validate_identity(value, schema: dict, path: str) -> None:
@@ -44,6 +48,8 @@ def _validate_identity(value, schema: dict, path: str) -> None:
     expected = schema.get("type")
     if expected is not None:
         allowed = expected if isinstance(expected, list) else [expected]
+        if not allowed or any(item not in SUPPORTED_TYPES for item in allowed):
+            _fail(path, "unsupported schema type")
         if not any(_type_matches(value, item) for item in allowed):
             _fail(path, f"expected {allowed}")
 
@@ -101,6 +107,8 @@ def _validate(value, schema: dict, path: str) -> None:
     unsupported = set(schema) - SUPPORTED_SCHEMA_KEYS
     if unsupported:
         _fail(path, f"unsupported schema keywords {sorted(unsupported)}")
+    if "format" in schema and schema["format"] not in SUPPORTED_FORMATS:
+        _fail(path, "unsupported schema format")
     _validate_scalar(value, schema, path)
     if isinstance(value, dict):
         _validate_object(value, schema, path)

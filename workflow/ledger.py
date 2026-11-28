@@ -114,16 +114,26 @@ class Ledger:
         except sqlite3.IntegrityError as exc:
             raise WorkflowError("DUPLICATE_EVENT_OR_IDEMPOTENCY") from exc
 
-    def _append_event(self, event: WorkflowEvent, run_id: str | None = None) -> None:
+    def _append_event(self, event: WorkflowEvent, run_id: str | None = None,
+                      *, scope: tuple[str, str, str] | None = None,
+                      actor_id: str = "system",
+                      action: str = "workflow.event.append") -> None:
         require(run_id is None or isinstance(run_id, str), "RUN_ID_INVALID")
         with self._transaction():
+            run = None
             if run_id is not None:
-                run = self._conn.execute(
-                    "SELECT 1 FROM runs WHERE run_id=? AND tenant_id=?",
-                    (run_id, event.tenant_id),
-                ).fetchone()
+                run = (self.run_scoped(run_id, event.tenant_id, *scope) if scope
+                       else self._conn.execute(
+                           "SELECT * FROM runs WHERE run_id=? AND tenant_id=?",
+                           (run_id, event.tenant_id),
+                       ).fetchone())
                 require(run is not None, "EVENT_RUN_TENANT_MISMATCH")
             self._insert_event(event, run_id)
+            if run is not None:
+                self._audit(run_id, event.tenant_id, actor_id, action,
+                            run["revision"],
+                            {"event_id": event.event_id,
+                             "payload_ref": event.payload_ref}, event.received_at)
 
     def _create_run(self, run_id: str, tenant_id: str, project_id: str, task_id: str,
                     workflow_id: str, workflow_version: str, event: WorkflowEvent,
@@ -383,7 +393,9 @@ class Ledger:
     def _enqueue_outbox(self, run_id: str, tenant_id: str, event_id: str,
                         payload_ref: str, now: datetime, expected_revision: int,
                         lease_owner: str | None = None, lease_epoch: int | None = None,
-                        *, scope: tuple[str, str, str] | None = None) -> None:
+                        *, scope: tuple[str, str, str] | None = None,
+                        actor_id: str = "system",
+                        action: str = "workflow.outbox.enqueue") -> None:
         require_utc(now)
         require(type(expected_revision) is int and expected_revision >= 0,
                 "RUN_REVISION_REQUIRED")
@@ -418,11 +430,14 @@ class Ledger:
                 )
             except sqlite3.IntegrityError as exc:
                 raise WorkflowError("DUPLICATE_OUTBOX") from exc
+            self._audit(run_id, tenant_id, actor_id, action, run["revision"],
+                        {"event_id": event_id, "payload_ref": payload_ref}, now)
 
     def _dead_letter(self, run_id: str, tenant_id: str, reason: str,
                      sanitized_ref: str, now: datetime, expected_revision: int,
                      *, scope: tuple[str, str, str] | None = None,
-                     actor_id: str = "system") -> None:
+                     actor_id: str = "system",
+                     action: str = "workflow.dlq.record") -> None:
         require_utc(now)
         require_id(reason, "DLQ_REASON_INVALID")
         require_id(sanitized_ref, "DLQ_REFERENCE_INVALID")
@@ -434,13 +449,25 @@ class Ledger:
             run = (self.run_scoped(run_id, tenant_id, *scope) if scope
                    else self.run(run_id, tenant_id))
             require(run["revision"] == expected_revision, "RUN_REVISION_CONFLICT")
+            assert_transition(run["state"], "QUARANTINED")
+            revision = run["revision"] + 1
+            self._conn.execute(
+                "UPDATE runs SET state='QUARANTINED',status='QUARANTINED',revision=?,"
+                "lease_owner=NULL,lease_expires_at=NULL,updated_at=? "
+                "WHERE run_id=? AND tenant_id=?",
+                (revision, self._timestamp(now), run_id, tenant_id),
+            )
+            self._conn.execute(
+                TRANSITION_INSERT_PLAIN,
+                (run_id, tenant_id, run["state"], "QUARANTINED", None, revision,
+                 self._timestamp(now), actor_id, action),
+            )
             self._conn.execute(
                 "INSERT INTO dlq(run_id,tenant_id,reason,sanitized_ref,created_at) "
                 "VALUES(?,?,?,?,?)",
                 (run_id, tenant_id, reason, sanitized_ref, self._timestamp(now)),
             )
-            self._audit(run_id, tenant_id, actor_id, "DEAD_LETTER",
-                        run["revision"],
+            self._audit(run_id, tenant_id, actor_id, action, revision,
                         {"reason": reason, "sanitized_ref": sanitized_ref}, now)
 
     def _recover(self, tenant_id: str, project_id: str, task_id: str,

@@ -70,9 +70,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 | Verificação | Resultado |
 |---|---|
-| Suíte local | **177/177 OK** |
+| Suíte local | **185/185 OK** |
 | Baseline CD-02 | 156/156 OK |
-| Novos testes CD-03 | 21 |
+| Novos testes CD-03 | 29 |
 | `workflow verify` | PASS local |
 | Source Pack | 7/7; 364 fontes |
 | Registry | 105/92/1110; 0 writes |
@@ -82,9 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/CD-03 no code head `a197f38edc805ded3c955ceef1daa09e1b8bdd58`: run **46145976801** — `docs-validation` (ubuntu-24.04, 177 testes, compile/c12/dry-run) e `security-windows` **SUCCESS**.
-- SonarCloud no HEAD `a197f38`: **0 issues abertas**, Quality Gate passed, check success.
-- Socket PR Alerts/Project Report PASS; ECC Security Evidence PASS em `a197f38`.
+- CI/CD-03 anterior no code head `a197f38`: run **46145976801** **SUCCESS**; a Correction Delta 02 tem CI pendente.
+- SonarCloud na rodada anterior: 0 issues; leitura da Correction Delta 02 pendente.
+- Socket/ECC da rodada anterior PASS; read-back atual pendente.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -104,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | GATES PASS em a197f38; auditoria independente do HEAD final pendente |
+| AC14 CI/auditoria | PENDENTE — Correction Delta 02 e CI do novo HEAD em validação |
 
 ## 6. Limitações
 
@@ -135,3 +135,12 @@ Somente propor após auditoria independente APPROVED no HEAD exato. Sem merge, p
 - **MEDIUM-01:** `RunOptions.agent_id` não pode ser reviewer, accountable ou dispatcher; testes negativos para os três papéis.
 - **MEDIUM-02:** transições e recovery gravam actor_id e ação autorizada; teste da transição `RECEIVED→VALIDATED`.
 - CI passa a executar `python -m workflow c12` como step dedicado.
+
+## 10. Correction Delta 02
+
+- **F01-R1 append scope:** `_append_event` recebe scope completo, valida `run_scoped` na mesma transação e grava actor/action em auditoria; testes cross-project/task/workflow.
+- **F02/F04 DLQ/quarentena:** `dead_letter` transiciona atomicamente para QUARANTINED, grava transição, DLQ e auditoria; outbox e retomada são negados; teste de rollback/duplicata.
+- **F02/F04 outbox audit:** enqueue grava actor/action na mesma transação; duplicata reverte auditoria.
+- **F03/F04 migration v3:** exige conjunto completo de colunas, índices e FK; parcial com quatro campos + run_id falha fechada e não registra versão.
+- **F05 schema validator:** tipos e formatos desconhecidos são rejeitados; minItems/pattern/date-time recursivos mantidos.
+- **AC08 multiprocesso:** criação concorrente do mesmo run/idempotency, eventos distintos, nonce, lease/fencing e recovery; exitcodes, integridade e FK verificados.

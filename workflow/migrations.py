@@ -176,24 +176,46 @@ def _tables(conn: sqlite3.Connection) -> set[str]:
     )}
 
 
+APPROVALS_V3_REQUIRED_COLUMNS = frozenset({
+    "id", "approval_id", "run_id", "tenant_id", "actor_id", "approver_id",
+    "approver_role", "action", "target_id", "project_id", "task_id",
+    "workflow_id", "risk", "payload_sha256", "policy_sha256", "policy_epoch",
+    "nonce", "evidence_refs_json", "max_spend_usd", "issued_at", "expires_at",
+    "result", "created_at",
+})
+
+
+def _validate_approvals_v3(conn: sqlite3.Connection) -> None:
+    if _columns(conn, "approvals") != set(APPROVALS_V3_REQUIRED_COLUMNS):
+        raise sqlite3.OperationalError("approvals schema incomplete")
+    indexes = {row[1] for row in conn.execute("PRAGMA index_list(approvals)")}
+    if not {"idx_approvals_run", "idx_approvals_null_run"}.issubset(indexes):
+        raise sqlite3.OperationalError("approvals indexes incomplete")
+    if not conn.execute("PRAGMA foreign_key_list(approvals)").fetchall():
+        raise sqlite3.OperationalError("approvals foreign key missing")
+    if conn.execute("PRAGMA foreign_key_check").fetchall():
+        raise sqlite3.OperationalError("approvals foreign key violation")
+
+
 def _migrate_v3(conn: sqlite3.Connection) -> None:
     tables = _tables(conn)
     if "approvals" not in tables:
         if "approvals_v3" not in tables:
             raise sqlite3.OperationalError("approvals table unavailable")
         columns = _columns(conn, "approvals_v3")
-        if not {"approval_id", "tenant_id", "approver_role",
-                "evidence_refs_json"}.issubset(columns):
+        if columns != set(APPROVALS_V3_REQUIRED_COLUMNS):
             raise sqlite3.OperationalError("partial approvals_v3 cannot be recovered")
         conn.execute("ALTER TABLE approvals_v3 RENAME TO approvals")
         for statement in APPROVALS_V3_INDEXES:
             conn.execute(statement)
+        _validate_approvals_v3(conn)
         return
     columns = _columns(conn, "approvals")
     conn.execute("DROP TABLE IF EXISTS approvals_v3")
-    if {"approver_role", "evidence_refs_json"}.issubset(columns):
+    if columns == set(APPROVALS_V3_REQUIRED_COLUMNS):
         for statement in APPROVALS_V3_INDEXES:
             conn.execute(statement)
+        _validate_approvals_v3(conn)
         return
     conn.execute(APPROVALS_V3_TABLE)
     conn.execute(
@@ -395,7 +417,6 @@ def apply_migrations(conn: sqlite3.Connection) -> int:
     except sqlite3.OperationalError:
         current = 0
     if current >= SCHEMA_VERSION:
-        conn.execute(f"PRAGMA user_version={SCHEMA_VERSION}")
         return current
     with _migration_lock(conn):
         return _apply_migrations_locked(conn)

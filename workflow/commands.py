@@ -235,7 +235,13 @@ class WorkflowCommands:
         )
         request = self._request("workflow.event.append", event.event_id, payload, now)
         return self._execute(
-            request, lambda: self._ledger._append_event(event, run_id), run_id
+            request,
+            lambda: self._ledger._append_event(
+                event, run_id, scope=self._scope_tuple,
+                actor_id=self.actor.principal_id,
+                action="workflow.event.append",
+            ),
+            run_id,
         )
 
     def transition(self, run_id: str, target: str, event_id: str | None, now: datetime,
@@ -314,6 +320,7 @@ class WorkflowCommands:
             lambda: self._ledger._enqueue_outbox(
                 run_id, self.tenant_id, event_id, payload_ref, now, expected_revision,
                 lease_owner, lease_epoch, scope=self._scope_tuple,
+                actor_id=self.actor.principal_id, action=action,
             ),
             run_id,
         )
@@ -332,6 +339,7 @@ class WorkflowCommands:
             lambda: self._ledger._dead_letter(
                 run_id, self.tenant_id, reason, sanitized_ref, now, expected_revision,
                 scope=self._scope_tuple, actor_id=self.actor.principal_id,
+                action=action,
             ),
             run_id,
         )
