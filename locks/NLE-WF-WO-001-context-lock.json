@@ -62,7 +62,7 @@
   },
   "implementation_git_blob_fingerprints": {
     "workflow/__init__.py": "4c05c11aa5926541254c86939c74437716efd44e",
-    "workflow/__main__.py": "b107fcd8e18042453df765f7d9340e1f05775c83",
+    "workflow/__main__.py": "919ef938fd95646bab423a30ba9d7eef8fde3d86",
     "workflow/authorization.py": "11f6e223de7f64d5ae44cf5192a056d1f12dd681",
     "workflow/commands.py": "c0e131d6624289c792855c4f6128ef0b6e76f2fc",
     "workflow/compiler.py": "07f62fd94a4d435683eb01e00e10fa0cfa16ab9b",
@@ -85,7 +85,7 @@
   },
   "implementation_fingerprints_sha256": {
     "workflow/__init__.py": "0b94f56eccb8b14e0e87be5a861f0b59a0e65f64f16df833b7e7d4502be602da",
-    "workflow/__main__.py": "a1bfb011d0c8fcc4eae081a423f521a10f915f3769d55e297460595db8aa16dc",
+    "workflow/__main__.py": "8534034ded642dffcd1932ed7c3d124c237bf17337ae677f5f4e26dc091b84d2",
     "workflow/authorization.py": "97083c7ef3c454d69790721ea3557effcadb36aaafaf0d5a8681a2a941523bed",
     "workflow/commands.py": "8b419396c82c9aaf9e09205867c8380c7ac985ef3585a7803de4a8af84537dfa",
     "workflow/compiler.py": "223a8f29dee4fc927f0526e8b509f1e3ef98189985f05b341a739252770245c7",

@@ -11,7 +11,7 @@ import sys
 import tempfile
 
 from scripts.validate_sources import validate as validate_source_pack
-from security.contracts import Grant, Principal, SecurityError, require
+from security.contracts import Grant, Principal, require
 from security.core import EXPECTED_POLICY, policy_fingerprint
 from workflow.commands import CommandScope, WorkflowCommands
 
@@ -245,8 +245,7 @@ def main(argv: list[str] | None = None) -> int:
             result = verify()
             print("WORKFLOW_OK workflows=%(workflows)d c12=%(c12)d events=%(events)d "
                   "runs=%(runs)d nonces=%(nonces)d" % result)
-    except (OSError, ValueError, TypeError, KeyError, AssertionError,
-            SecurityError) as exc:
+    except (OSError, ValueError, TypeError, KeyError, AssertionError) as exc:
         print("WORKFLOW_REJECTED " + type(exc).__name__ + ":" + str(exc),
               file=sys.stderr)
         return 1
