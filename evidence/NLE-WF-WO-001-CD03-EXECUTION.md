@@ -82,9 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/CD-03 anterior no code head `a197f38`: run **46145976801** **SUCCESS**; a Correction Delta 02 tem CI pendente.
-- SonarCloud na rodada anterior: 0 issues; leitura da Correction Delta 02 pendente.
-- Socket/ECC da rodada anterior PASS; read-back atual pendente.
+- CI/CD-03 Correction Delta 02 no code head `d74cbf535aae3f4992edc22ec59e4c2074806d99`: run **46148936493** — `docs-validation` (ubuntu-24.04, 185 testes) e `security-windows` **SUCCESS**; Sonar 0 issues; Socket/ECC PASS.
+- SonarCloud no HEAD `d74cbf5`: 0 issues abertas, Quality Gate passed.
+- Socket PR Alerts/Project Report PASS; ECC Security Evidence PASS em `d74cbf5`.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -104,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | PENDENTE — Correction Delta 02 e CI do novo HEAD em validação |
+| AC14 CI/auditoria | GATES PASS em d74cbf5; auditoria independente do HEAD final pendente |
 
 ## 6. Limitações
 
