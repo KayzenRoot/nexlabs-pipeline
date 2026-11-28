@@ -270,11 +270,12 @@ def _process_recover(path, queue, barrier):
         ledger.close()
 
 
-def _process_crash(path, now_iso, expiry_iso, queue, barrier):
+def _process_crash(path, now_iso, expiry_iso, queue):
+    """Single crash worker: READY handshake, then die inside the transaction."""
     ledger = _open_worker(path, queue)
     if ledger is None:
         return
-    _ready(ledger, barrier, queue)
+    queue.put("READY")
     now = datetime.fromisoformat(now_iso)
     expiry = datetime.fromisoformat(expiry_iso)
     with ledger._transaction():
@@ -1613,8 +1614,7 @@ class NonceRecoveryTests(unittest.TestCase):
             process = context.Process(
                 target=_process_crash,
                 args=(path, NOW.isoformat(),
-                      (NOW + timedelta(minutes=1)).isoformat(),
-                      queue, context.Barrier(1)),
+                      (NOW + timedelta(minutes=1)).isoformat(), queue),
             )
             _start_and_await_ready([process], queue)
             process.join(timeout=60)
