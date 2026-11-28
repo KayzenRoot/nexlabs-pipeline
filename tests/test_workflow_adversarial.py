@@ -530,9 +530,9 @@ class HighAssuranceCommandTests(unittest.TestCase):
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 command = commands(ledger, [grant("workflow.run.create")])
                 event = make_event()
+                deadline = NOW + timedelta(hours=1)
                 with self.assertRaises(SecurityError):
-                    command.create_run("run-1", "9.9.9", event, NOW,
-                                       NOW + timedelta(hours=1))
+                    command.create_run("run-1", "9.9.9", event, NOW, deadline)
                 self.assertEqual(ledger.counts()["runs"], 0)
 
     def test_unverified_approval_is_not_persisted(self):
@@ -546,9 +546,9 @@ class HighAssuranceCommandTests(unittest.TestCase):
                     approval=approval, approval_signature=signature,
                     verifier=HmacSha256TestVerifier(APPROVAL_KEY),
                 )
+                deadline = NOW + timedelta(hours=1)
                 with self.assertRaises(SecurityError):
-                    command.create_run("run-1", "0.1.0", event, NOW,
-                                       NOW + timedelta(hours=1))
+                    command.create_run("run-1", "0.1.0", event, NOW, deadline)
                 self.assertEqual(ledger.counts()["runs"], 0)
                 self.assertEqual(ledger.counts()["nonces"], 0)
 
@@ -944,13 +944,13 @@ class NonceRecoveryTests(unittest.TestCase):
                     approval=approval, approval_signature=signature,
                     verifier=HmacSha256TestVerifier(APPROVAL_KEY),
                 )
+                deadline = NOW + timedelta(hours=1)
                 with mock.patch.object(
                     ledger, "_record_approval",
                     side_effect=RuntimeError("approval storage failed"),
                 ):
                     with self.assertRaises(RuntimeError):
-                        command.create_run("run-1", "0.1.0", event, NOW,
-                                           NOW + timedelta(hours=1))
+                        command.create_run("run-1", "0.1.0", event, NOW, deadline)
                 counts = ledger.counts()
                 self.assertEqual(counts["runs"], 0)
                 self.assertEqual(counts["events"], 0)

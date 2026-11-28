@@ -246,16 +246,17 @@ def _migrate_v4(conn: sqlite3.Connection) -> None:
             )
 
 
+TEXT_NOT_NULL_EMPTY = "TEXT NOT NULL DEFAULT ''"
 RUN_V5_COLUMNS = (
-    ("idempotency_key", "TEXT NOT NULL DEFAULT ''"),
-    ("agent_id", "TEXT NOT NULL DEFAULT ''"),
+    ("idempotency_key", TEXT_NOT_NULL_EMPTY),
+    ("agent_id", TEXT_NOT_NULL_EMPTY),
     ("skill_lock_id", "TEXT"),
     ("skill_lock_version", "TEXT"),
     ("skill_lock_hash", "TEXT"),
     ("model_id", "TEXT"),
     ("quota", "INTEGER NOT NULL DEFAULT 0"),
     ("data_classification", "TEXT NOT NULL DEFAULT 'INTERNAL'"),
-    ("inputs_ref", "TEXT NOT NULL DEFAULT ''"),
+    ("inputs_ref", TEXT_NOT_NULL_EMPTY),
     ("output_ref", "TEXT"),
     ("evidence_ref", "TEXT"),
     ("approval_ref", "TEXT"),
