@@ -23,6 +23,17 @@ from .outcomes import TxOutcome
 from .schema_validation import validate_document
 
 
+TRANSITION_INSERT = (
+    "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
+    "revision,reconciliation_ref,occurred_at,actor_id,action) "
+    "VALUES(?,?,?,?,?,?,?,?,?,?)"
+)
+TRANSITION_INSERT_PLAIN = (
+    "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
+    "revision,occurred_at,actor_id,action) VALUES(?,?,?,?,?,?,?,?,?)"
+)
+
+
 class Ledger:
     """SQLite storage; public reads only. Commands use the private primitives."""
 
@@ -167,8 +178,7 @@ class Ledger:
             except sqlite3.IntegrityError as exc:
                 raise WorkflowError("DUPLICATE_RUN_OR_EVENT") from exc
             self._conn.execute(
-                "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
-                "revision,occurred_at,actor_id,action) VALUES(?,?,?,?,?,?,?,?,?)",
+                TRANSITION_INSERT_PLAIN,
                 (run_id, tenant_id, None, "RECEIVED", event.event_id, 0,
                  self._timestamp(now), actor_id, "workflow.run.create"),
             )
@@ -243,9 +253,7 @@ class Ledger:
                  tenant_id),
             )
             self._conn.execute(
-                "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
-                "revision,reconciliation_ref,occurred_at,actor_id,action) "
-                "VALUES(?,?,?,?,?,?,?,?,?,?)",
+                TRANSITION_INSERT,
                 (run_id, tenant_id, current["state"], target, event_id, revision,
                  reconciliation_ref, self._timestamp(now), actor_id, action),
             )
@@ -466,8 +474,7 @@ class Ledger:
                      row["run_id"], tenant_id),
                 )
                 self._conn.execute(
-                    "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
-                    "revision,occurred_at,actor_id,action) VALUES(?,?,?,?,?,?,?,?,?)",
+                    TRANSITION_INSERT_PLAIN,
                     (row["run_id"], tenant_id, "RUNNING", target, None, revision,
                      self._timestamp(now), actor_id, "workflow.recovery.run"),
                 )
@@ -491,8 +498,7 @@ class Ledger:
                     (revision, self._timestamp(now), row["run_id"], tenant_id),
                 )
                 self._conn.execute(
-                    "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
-                    "revision,occurred_at,actor_id,action) VALUES(?,?,?,?,?,?,?,?,?)",
+                    TRANSITION_INSERT_PLAIN,
                     (row["run_id"], tenant_id, "EFFECT_IN_PROGRESS", "UNKNOWN_EFFECT",
                      None, revision, self._timestamp(now), actor_id,
                      "workflow.recovery.run"),
