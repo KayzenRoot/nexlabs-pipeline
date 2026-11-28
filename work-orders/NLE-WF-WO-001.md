@@ -77,3 +77,17 @@ A auditoria oficial no HEAD `82180fa4c9a29fc735ecb492c1e497bc75d0d53a` emitiu CO
 AC01 Context Lock/base/364/fingerprints; AC02 Event Contract; AC03 Run/ledger/migrações/imutabilidade; AC04 estados e APPROVED→VERIFIED→COMPLETED; AC05 command boundary/deny-by-default; AC06 approval/nonce/replay/rollback offline; AC07 atomicidade; AC08 concorrência/lease/fencing; AC09 recovery/retry/reconciliação; AC10 outbox/DLQ; AC11 C12 canônico; AC12 retry/limites; AC13 CLI verify/compile/dry-run; AC14 CI/auditoria. Status local: AC01–AC13 PASS em 156/156 testes; AC14 PENDING final HEAD.
 
 **Não declarar o Work Order pai completo enquanto a auditoria independente CD-02 e os gates remotos não estiverem APPROVED.** Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows, modelo ou despesa.
+
+## HIGH_ASSURANCE CD-03 — Reconciliation | 2026-11-28
+
+Auditoria CD-03 no HEAD `1e61917` emitiu CORRECTION REQUIRED com F01-R1–F07. Correções no mesmo Work Order/PR:
+
+- **F01-R1:** binding completo tenant/project/task/workflow/run/actor/action/target/risk dentro da transação; recovery filtrado pelo escopo; testes cross-project/task/workflow.
+- **F01-R2:** validação canônica de workflow/version/activation/gate/risk/segregação; autorização por operação e estado; HUMAN_APPROVAL_REQUIRED e C12; aprovação verificada; authorizer substituível removido; DISABLED sem efeitos.
+- **F02/F04-R3:** outbox com revisão/stale/revoked/deadline/lease; flags com revision e audit_events; DLQ com revisão/auditoria; claim com revisão e lease expirada exigindo recovery.
+- **F03/F04-R4:** ownership transacional por thread/instância; migrações v3/v4/v5 transacionais e resumíveis; classificação COMMITTED/REPLAY_REJECTED/CONFLICT/STORAGE_ERROR; testes multiprocesso, crash, rollback e migração interrompida.
+- **F05:** RunContract completo conforme README original; DDL/schema/migração/compilador reconciliados; skill_lock/model/quota/refs/status/gate; validação real de event/run/plan contra JSON Schemas.
+- **F06:** conjuntos exatos de 24 paths canônicos + 21 de implementação; integridade antes de verify/compile/c12/dry-run; lock CD-03; 364 fontes, 62 workflows e C12 preservados.
+- **F07:** auditoria independente pendente no HEAD final.
+
+Status local: AC01–AC13 PASS em 171/171 testes; AC14 PENDING. Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows ativos, modelo, efeitos externos ou despesa.

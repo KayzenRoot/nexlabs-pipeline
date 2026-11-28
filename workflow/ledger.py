@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 import sqlite3
 from pathlib import Path
+import threading
 from typing import Iterator
 
 from security.contracts import (
@@ -13,11 +14,13 @@ from security.contracts import (
 )
 
 from .contracts import (
-    EXECUTOR_STATES, MAX_ATTEMPTS, OUTBOX_BLOCKED_STATES, RISK_LEVELS, RunContract,
-    WorkflowEvent, assert_transition, canonical_bytes, require_risk_floor,
-    validate_event, WorkflowError,
+    EXECUTOR_STATES, MAX_ATTEMPTS, OUTBOX_BLOCKED_STATES, RISK_LEVELS, ROOT,
+    RunContract, WorkflowEvent, assert_transition, canonical_bytes,
+    require_risk_floor, validate_event, WorkflowError,
 )
 from .migrations import apply_migrations
+from .outcomes import TxOutcome
+from .schema_validation import validate_document
 
 
 class Ledger:
@@ -33,8 +36,14 @@ class Ledger:
         require(str(mode).lower() == "wal", "LEDGER_WAL_REQUIRED")
         self._conn.execute("PRAGMA synchronous=FULL")
         self._conn.execute("PRAGMA foreign_keys=ON")
-        apply_migrations(self._conn)
+        try:
+            apply_migrations(self._conn)
+        except BaseException:
+            self._conn.close()
+            raise
         self._tx_depth = 0
+        self._tx_owner = None
+        self._lock = threading.RLock()
 
     def __enter__(self) -> "Ledger":
         return self
@@ -43,27 +52,36 @@ class Ledger:
         self.close()
 
     def close(self) -> None:
-        self._conn.close()
+        with self._lock:
+            self._conn.close()
 
     @property
     def schema_version(self) -> int:
-        return self._conn.execute("SELECT MAX(version) FROM schema_migrations").fetchone()[0]
+        with self._lock:
+            return self._conn.execute(
+                "SELECT MAX(version) FROM schema_migrations"
+            ).fetchone()[0]
 
     @contextmanager
     def _transaction(self) -> Iterator[None]:
-        if self._tx_depth:
-            yield
-            return
-        self._conn.execute("BEGIN IMMEDIATE")
-        self._tx_depth = 1
-        try:
-            yield
-            self._conn.execute("COMMIT")
-        except BaseException:
-            self._conn.execute("ROLLBACK")
-            raise
-        finally:
-            self._tx_depth = 0
+        owner = threading.get_ident()
+        with self._lock:
+            if self._tx_depth:
+                require(self._tx_owner == owner, "TRANSACTION_OWNER_MISMATCH")
+                yield
+                return
+            self._tx_owner = owner
+            self._tx_depth = 1
+            try:
+                self._conn.execute("BEGIN IMMEDIATE")
+                yield
+                self._conn.execute("COMMIT")
+            except BaseException:
+                self._conn.execute("ROLLBACK")
+                raise
+            finally:
+                self._tx_depth = 0
+                self._tx_owner = None
 
     @staticmethod
     def _timestamp(value: datetime) -> str:
@@ -72,6 +90,7 @@ class Ledger:
 
     def _insert_event(self, event: WorkflowEvent, run_id: str | None = None) -> None:
         validate_event(event)
+        validate_document(event.canonical(), ROOT / "workflow/schemas/event-v1.json")
         try:
             self._conn.execute(
                 "INSERT INTO events(event_id,tenant_id,run_id,event_sha256,idempotency_key,"
@@ -98,7 +117,12 @@ class Ledger:
     def _create_run(self, run_id: str, tenant_id: str, project_id: str, task_id: str,
                     workflow_id: str, workflow_version: str, event: WorkflowEvent,
                     now: datetime, deadline_at: datetime, source_lock_sha256: str,
-                    risk: str = "STANDARD") -> None:
+                    risk: str = "STANDARD", *, agent_id: str | None = None,
+                    skill_lock_id: str | None = None,
+                    skill_lock_version: str | None = None,
+                    skill_lock_hash: str | None = None, model_id: str | None = None,
+                    quota: int = 0, output_ref: str | None = None,
+                    evidence_ref: str | None = None, gate: str = "INTERNAL_ONLY") -> None:
         for value in (run_id, project_id, task_id, workflow_id, workflow_version):
             require_id(value, "RUN_IDENTIFIER_INVALID")
         require_utc(now)
@@ -106,24 +130,39 @@ class Ledger:
         require(deadline_at > now, "RUN_DEADLINE_INVALID")
         require_hash(source_lock_sha256)
         require(event.tenant_id == tenant_id, "EVENT_TENANT_MISMATCH")
-        RunContract(
+        contract = RunContract(
             run_id=run_id, tenant_id=tenant_id, project_id=project_id, task_id=task_id,
             workflow_id=workflow_id, workflow_version=workflow_version,
             event_id=event.event_id, correlation_id=event.correlation_id, state="RECEIVED",
             revision=0, attempts=0, source_lock_sha256=source_lock_sha256,
             deadline_at=deadline_at, risk=risk,
-        ).validate()
+            idempotency_key=event.idempotency_key,
+            agent_id=agent_id or event.producer,
+            skill_lock_id=skill_lock_id, skill_lock_version=skill_lock_version,
+            skill_lock_hash=skill_lock_hash, model_id=model_id, quota=quota,
+            data_classification=event.data_classification, inputs_ref=event.payload_ref,
+            output_ref=output_ref, evidence_ref=evidence_ref, gate=gate,
+        )
+        contract.validate()
+        validate_document(contract.document(), ROOT / "workflow/schemas/run-v1.json")
         with self._transaction():
             self._insert_event(event, run_id)
             try:
                 self._conn.execute(
                     "INSERT INTO runs(run_id,tenant_id,project_id,task_id,workflow_id,"
-                    "workflow_version,event_id,correlation_id,state,revision,attempts,"
-                    "source_lock_sha256,deadline_at,risk,created_at,updated_at) "
-                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    "workflow_version,event_id,correlation_id,state,status,revision,attempts,"
+                    "source_lock_sha256,deadline_at,risk,idempotency_key,agent_id,"
+                    "skill_lock_id,skill_lock_version,skill_lock_hash,model_id,quota,"
+                    "data_classification,inputs_ref,output_ref,evidence_ref,gate,activation,"
+                    "created_at,updated_at) VALUES("
+                    "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (run_id, tenant_id, project_id, task_id, workflow_id, workflow_version,
-                     event.event_id, event.correlation_id, "RECEIVED", 0, 0,
+                     event.event_id, event.correlation_id, "RECEIVED", "RECEIVED", 0, 0,
                      source_lock_sha256, self._timestamp(deadline_at), risk,
+                     contract.idempotency_key, contract.agent_id, contract.skill_lock_id,
+                     contract.skill_lock_version, contract.skill_lock_hash, contract.model_id,
+                     contract.quota, contract.data_classification, contract.inputs_ref,
+                     contract.output_ref, contract.evidence_ref, contract.gate, "DISABLED",
                      self._timestamp(now), self._timestamp(now)),
                 )
             except sqlite3.IntegrityError as exc:
@@ -137,21 +176,38 @@ class Ledger:
     def run(self, run_id: str, tenant_id: str) -> dict:
         require_id(run_id, "RUN_ID_INVALID")
         require_id(tenant_id, "TENANT_ID_INVALID")
-        row = self._conn.execute(
-            "SELECT * FROM runs WHERE run_id=? AND tenant_id=?", (run_id, tenant_id)
-        ).fetchone()
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT * FROM runs WHERE run_id=? AND tenant_id=?", (run_id, tenant_id)
+            ).fetchone()
         require(row is not None, "RUN_NOT_FOUND")
+        return dict(row)
+
+    def run_scoped(self, run_id: str, tenant_id: str, project_id: str,
+                   task_id: str, workflow_id: str) -> dict:
+        require_id(run_id, "RUN_ID_INVALID")
+        for value in (tenant_id, project_id, task_id, workflow_id):
+            require_id(value, "RUN_SCOPE_INVALID")
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT * FROM runs WHERE run_id=? AND tenant_id=? AND project_id=? "
+                "AND task_id=? AND workflow_id=?",
+                (run_id, tenant_id, project_id, task_id, workflow_id),
+            ).fetchone()
+        require(row is not None, "RUN_SCOPE_MISMATCH")
         return dict(row)
 
     def _transition(self, run_id: str, tenant_id: str, target: str, event_id: str | None,
                     now: datetime, expected_revision: int, lease_owner: str | None = None,
                     lease_epoch: int | None = None,
-                    reconciliation_ref: str | None = None) -> int:
+                    reconciliation_ref: str | None = None,
+                    *, scope: tuple[str, str, str] | None = None) -> int:
         require_utc(now)
         require(type(expected_revision) is int and expected_revision >= 0,
                 "RUN_REVISION_REQUIRED")
         with self._transaction():
-            current = self.run(run_id, tenant_id)
+            current = (self.run_scoped(run_id, tenant_id, *scope) if scope
+                       else self.run(run_id, tenant_id))
             require(current["revision"] == expected_revision, "RUN_REVISION_CONFLICT")
             require(not current["stale"], "RUN_STALE")
             require(not current["revoked"], "RUN_REVOKED")
@@ -179,9 +235,10 @@ class Ledger:
             revision = current["revision"] + 1
             attempts = current["attempts"] + (1 if target == "RETRY_WAIT" else 0)
             self._conn.execute(
-                "UPDATE runs SET state=?,revision=?,attempts=?,lease_owner=NULL,"
+                "UPDATE runs SET state=?,status=?,revision=?,attempts=?,lease_owner=NULL,"
                 "lease_expires_at=NULL,updated_at=? WHERE run_id=? AND tenant_id=?",
-                (target, revision, attempts, self._timestamp(now), run_id, tenant_id),
+                (target, target, revision, attempts, self._timestamp(now), run_id,
+                 tenant_id),
             )
             self._conn.execute(
                 "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
@@ -192,12 +249,17 @@ class Ledger:
             return revision
 
     def _claim_lease(self, run_id: str, tenant_id: str, owner: str, now: datetime,
-                     ttl_seconds: int) -> int:
+                     ttl_seconds: int, expected_revision: int,
+                     *, scope: tuple[str, str, str] | None = None) -> int:
         require_id(owner, "LEASE_OWNER_INVALID")
         require_utc(now)
         require(type(ttl_seconds) is int and 1 <= ttl_seconds <= 3600, "LEASE_TTL_INVALID")
+        require(type(expected_revision) is int and expected_revision >= 0,
+                "RUN_REVISION_REQUIRED")
         with self._transaction():
-            current = self.run(run_id, tenant_id)
+            current = (self.run_scoped(run_id, tenant_id, *scope) if scope
+                       else self.run(run_id, tenant_id))
+            require(current["revision"] == expected_revision, "RUN_REVISION_CONFLICT")
             require(current["state"] in {"RUNNING", "EFFECT_IN_PROGRESS"},
                     "LEASE_STATE_INVALID")
             require(not current["stale"] and not current["revoked"], "RUN_NOT_CLAIMABLE")
@@ -205,7 +267,10 @@ class Ledger:
             require(current["attempts"] < MAX_ATTEMPTS, "RETRY_LIMIT_EXCEEDED")
             active = (current["lease_owner"] is not None
                       and datetime.fromisoformat(current["lease_expires_at"]) > now)
-            require(not active or current["lease_owner"] == owner, "LEASE_HELD")
+            if active:
+                require(current["lease_owner"] == owner, "LEASE_HELD")
+            elif current["lease_owner"] is not None:
+                require(False, "LEASE_EXPIRED_RECOVERY_REQUIRED")
             epoch = current["lease_epoch"] + 1
             self._conn.execute(
                 "UPDATE runs SET lease_owner=?,lease_expires_at=?,lease_epoch=?,updated_at=? "
@@ -213,28 +278,54 @@ class Ledger:
                 (owner, self._timestamp(now + timedelta(seconds=ttl_seconds)), epoch,
                  self._timestamp(now), run_id, tenant_id),
             )
+            self._audit(run_id, tenant_id, "CLAIM_LEASE", current["revision"],
+                        {"owner": owner, "epoch": epoch, "ttl_seconds": ttl_seconds}, now)
             return epoch
 
-    def _consume(self, nonce: str, expires_at: datetime, now: datetime,
-                 run_id: str | None = None, tenant_id: str | None = None,
-                 approval_id: str | None = None, result: str = "CONSUMED") -> bool:
+    def _audit(self, run_id: str, tenant_id: str, action: str, revision: int,
+               detail: dict, now: datetime) -> None:
+        self._conn.execute(
+            "INSERT INTO audit_events(run_id,tenant_id,action,revision,detail_json,"
+            "created_at) VALUES(?,?,?,?,?,?)",
+            (run_id, tenant_id, action, revision,
+             canonical_bytes(detail).decode(), self._timestamp(now)),
+        )
+
+    def _consume_outcome(self, nonce: str, expires_at: datetime, now: datetime,
+                         run_id: str | None = None, tenant_id: str | None = None,
+                         approval_id: str | None = None,
+                         result: str = "CONSUMED") -> tuple[bool, TxOutcome]:
         require_id(nonce, "NONCE_INVALID")
         require_utc(expires_at)
         require_utc(now)
         require(expires_at > now, "NONCE_EXPIRED")
         require(result in {"CONSUMED", "REJECTED"}, "NONCE_RESULT_INVALID")
         retention = expires_at + timedelta(hours=24)
-        with self._transaction():
-            exists = self._conn.execute("SELECT 1 FROM nonces WHERE nonce=?", (nonce,)).fetchone()
-            if exists:
-                return False
-            self._conn.execute(
-                "INSERT INTO nonces(nonce,run_id,tenant_id,approval_id,expires_at,"
-                "consumed_at,retention_until,result) VALUES(?,?,?,?,?,?,?,?)",
-                (nonce, run_id, tenant_id, approval_id, self._timestamp(expires_at),
-                 self._timestamp(now), self._timestamp(retention), result),
-            )
-            return True
+        try:
+            with self._transaction():
+                exists = self._conn.execute(
+                    "SELECT 1 FROM nonces WHERE nonce=?", (nonce,)
+                ).fetchone()
+                if exists:
+                    return False, TxOutcome.REPLAY_REJECTED
+                self._conn.execute(
+                    "INSERT INTO nonces(nonce,run_id,tenant_id,approval_id,expires_at,"
+                    "consumed_at,retention_until,result) VALUES(?,?,?,?,?,?,?,?)",
+                    (nonce, run_id, tenant_id, approval_id, self._timestamp(expires_at),
+                     self._timestamp(now), self._timestamp(retention), result),
+                )
+                return True, TxOutcome.COMMITTED
+        except sqlite3.Error:
+            return False, TxOutcome.STORAGE_ERROR
+
+    def _consume(self, nonce: str, expires_at: datetime, now: datetime,
+                 run_id: str | None = None, tenant_id: str | None = None,
+                 approval_id: str | None = None, result: str = "CONSUMED") -> bool:
+        consumed, outcome = self._consume_outcome(
+            nonce, expires_at, now, run_id, tenant_id, approval_id, result,
+        )
+        require(outcome is not TxOutcome.STORAGE_ERROR, "NONCE_STORAGE_ERROR")
+        return consumed
 
     def _record_approval(self, request: AccessRequest, approval: ApprovalEnvelope,
                          run_id: str | None, result: str, now: datetime) -> None:
@@ -266,19 +357,37 @@ class Ledger:
                 )
                 if run_id is not None and request.action == "workflow.run.create":
                     self._conn.execute(
-                        "UPDATE runs SET approval_id=?,updated_at=? "
+                        "UPDATE runs SET approval_id=?,approval_ref=?,updated_at=? "
                         "WHERE run_id=? AND tenant_id=?",
-                        (approval.approval_id, self._timestamp(now), run_id,
-                         request.tenant_id),
+                        (approval.approval_id, approval.approval_id,
+                         self._timestamp(now), run_id, request.tenant_id),
                     )
             except sqlite3.IntegrityError as exc:
                 raise WorkflowError("APPROVAL_ALREADY_RECORDED") from exc
 
     def _enqueue_outbox(self, run_id: str, tenant_id: str, event_id: str,
-                        payload_ref: str, now: datetime) -> None:
+                        payload_ref: str, now: datetime, expected_revision: int,
+                        lease_owner: str | None = None, lease_epoch: int | None = None,
+                        *, scope: tuple[str, str, str] | None = None) -> None:
         require_utc(now)
+        require(type(expected_revision) is int and expected_revision >= 0,
+                "RUN_REVISION_REQUIRED")
         with self._transaction():
-            run = self.run(run_id, tenant_id)
+            run = (self.run_scoped(run_id, tenant_id, *scope) if scope
+                   else self.run(run_id, tenant_id))
+            require(run["revision"] == expected_revision, "RUN_REVISION_CONFLICT")
+            require(not run["stale"], "RUN_STALE")
+            require(not run["revoked"], "RUN_REVOKED")
+            require(datetime.fromisoformat(run["deadline_at"]) > now, "RUN_DEADLINE_EXPIRED")
+            require(run["state"] not in OUTBOX_BLOCKED_STATES, "OUTBOX_RUN_TERMINAL")
+            if run["state"] in EXECUTOR_STATES:
+                require(lease_owner is not None and lease_epoch is not None,
+                        "RUN_LEASE_REQUIRED")
+                require(run["lease_owner"] == lease_owner, "RUN_LEASE_OWNER_MISMATCH")
+                require(run["lease_epoch"] == lease_epoch, "RUN_LEASE_FENCE_MISMATCH")
+                require(run["lease_expires_at"] is not None
+                        and datetime.fromisoformat(run["lease_expires_at"]) > now,
+                        "RUN_LEASE_EXPIRED")
             event = self._conn.execute(
                 "SELECT tenant_id,run_id,payload_ref FROM events WHERE event_id=?", (event_id,)
             ).fetchone()
@@ -286,7 +395,6 @@ class Ledger:
             require(event["tenant_id"] == tenant_id, "OUTBOX_TENANT_MISMATCH")
             require(event["run_id"] == run_id, "OUTBOX_RUN_MISMATCH")
             require(event["payload_ref"] == payload_ref, "OUTBOX_PAYLOAD_REF_MISMATCH")
-            require(run["state"] not in OUTBOX_BLOCKED_STATES, "OUTBOX_RUN_TERMINAL")
             try:
                 self._conn.execute(
                     "INSERT INTO outbox(run_id,tenant_id,event_id,payload_ref,status,created_at) "
@@ -297,31 +405,41 @@ class Ledger:
                 raise WorkflowError("DUPLICATE_OUTBOX") from exc
 
     def _dead_letter(self, run_id: str, tenant_id: str, reason: str,
-                     sanitized_ref: str, now: datetime) -> None:
+                     sanitized_ref: str, now: datetime, expected_revision: int,
+                     *, scope: tuple[str, str, str] | None = None) -> None:
         require_utc(now)
         require_id(reason, "DLQ_REASON_INVALID")
         require_id(sanitized_ref, "DLQ_REFERENCE_INVALID")
         require(not sanitized_ref.startswith(("http:", "https:", "file:")),
                 "DLQ_REFERENCE_UNSANITIZED")
+        require(type(expected_revision) is int and expected_revision >= 0,
+                "RUN_REVISION_REQUIRED")
         with self._transaction():
-            self.run(run_id, tenant_id)
+            run = (self.run_scoped(run_id, tenant_id, *scope) if scope
+                   else self.run(run_id, tenant_id))
+            require(run["revision"] == expected_revision, "RUN_REVISION_CONFLICT")
             self._conn.execute(
                 "INSERT INTO dlq(run_id,tenant_id,reason,sanitized_ref,created_at) "
                 "VALUES(?,?,?,?,?)",
                 (run_id, tenant_id, reason, sanitized_ref, self._timestamp(now)),
             )
+            self._audit(run_id, tenant_id, "DEAD_LETTER", run["revision"],
+                        {"reason": reason, "sanitized_ref": sanitized_ref}, now)
 
-    def _recover(self, tenant_id: str, now: datetime,
+    def _recover(self, tenant_id: str, project_id: str, task_id: str,
+                 workflow_id: str, now: datetime,
                  risk: str = "HIGH_ASSURANCE") -> dict[str, int]:
-        require_id(tenant_id, "TENANT_ID_INVALID")
+        for value in (tenant_id, project_id, task_id, workflow_id):
+            require_id(value, "RECOVERY_SCOPE_INVALID")
         require_utc(now)
         require(risk in RISK_LEVELS, "RECOVERY_RISK_INVALID")
         retry = unknown = failed = 0
         with self._transaction():
             rows = self._conn.execute(
-                "SELECT * FROM runs WHERE tenant_id=? AND state='RUNNING' AND "
+                "SELECT * FROM runs WHERE tenant_id=? AND project_id=? AND task_id=? "
+                "AND workflow_id=? AND state='RUNNING' AND "
                 "(lease_expires_at IS NULL OR lease_expires_at <= ?)",
-                (tenant_id, self._timestamp(now)),
+                (tenant_id, project_id, task_id, workflow_id, self._timestamp(now)),
             ).fetchall()
             for row in rows:
                 require_risk_floor(risk, row["risk"])
@@ -332,9 +450,10 @@ class Ledger:
                 target = "FAILED" if terminal else "RETRY_WAIT"
                 revision = row["revision"] + 1
                 self._conn.execute(
-                    "UPDATE runs SET state=?,revision=?,attempts=?,lease_owner=NULL,"
+                    "UPDATE runs SET state=?,status=?,revision=?,attempts=?,lease_owner=NULL,"
                     "lease_expires_at=NULL,updated_at=? WHERE run_id=? AND tenant_id=?",
-                    (target, revision, attempts, self._timestamp(now), row["run_id"], tenant_id),
+                    (target, target, revision, attempts, self._timestamp(now),
+                     row["run_id"], tenant_id),
                 )
                 self._conn.execute(
                     "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
@@ -347,16 +466,18 @@ class Ledger:
                 else:
                     failed += 1
             rows = self._conn.execute(
-                "SELECT * FROM runs WHERE tenant_id=? AND state='EFFECT_IN_PROGRESS' AND "
+                "SELECT * FROM runs WHERE tenant_id=? AND project_id=? AND task_id=? "
+                "AND workflow_id=? AND state='EFFECT_IN_PROGRESS' AND "
                 "(lease_expires_at IS NULL OR lease_expires_at <= ?)",
-                (tenant_id, self._timestamp(now)),
+                (tenant_id, project_id, task_id, workflow_id, self._timestamp(now)),
             ).fetchall()
             for row in rows:
                 require_risk_floor(risk, row["risk"])
                 revision = row["revision"] + 1
                 self._conn.execute(
-                    "UPDATE runs SET state='UNKNOWN_EFFECT',revision=?,lease_owner=NULL,"
-                    "lease_expires_at=NULL,updated_at=? WHERE run_id=? AND tenant_id=?",
+                    "UPDATE runs SET state='UNKNOWN_EFFECT',status='UNKNOWN_EFFECT',"
+                    "revision=?,lease_owner=NULL,lease_expires_at=NULL,updated_at=? "
+                    "WHERE run_id=? AND tenant_id=?",
                     (revision, self._timestamp(now), row["run_id"], tenant_id),
                 )
                 self._conn.execute(
@@ -369,21 +490,30 @@ class Ledger:
         return {"retry_wait": retry, "unknown_effect": unknown, "failed": failed}
 
     def _set_flags(self, run_id: str, tenant_id: str, now: datetime,
-                   stale: bool | None = None, revoked: bool | None = None) -> None:
+                   stale: bool | None = None, revoked: bool | None = None,
+                   expected_revision: int | None = None,
+                   *, scope: tuple[str, str, str] | None = None) -> None:
         require_utc(now)
         require(stale is None or type(stale) is bool, "STALE_FLAG_INVALID")
         require(revoked is None or type(revoked) is bool, "REVOKED_FLAG_INVALID")
         with self._transaction():
-            current = self.run(run_id, tenant_id)
+            current = (self.run_scoped(run_id, tenant_id, *scope) if scope
+                       else self.run(run_id, tenant_id))
+            require(type(expected_revision) is int
+                    and current["revision"] == expected_revision, "RUN_REVISION_REQUIRED")
             new_stale = current["stale"] if stale is None else int(stale)
             new_revoked = current["revoked"] if revoked is None else int(revoked)
             require(not (current["stale"] and new_stale == 0), "STALE_REVERSAL_FORBIDDEN")
             require(not (current["revoked"] and new_revoked == 0),
                     "REVOCATION_REVERSAL_FORBIDDEN")
+            revision = current["revision"] + 1
             self._conn.execute(
-                "UPDATE runs SET stale=?,revoked=?,updated_at=? WHERE run_id=? AND tenant_id=?",
-                (new_stale, new_revoked, self._timestamp(now), run_id, tenant_id),
+                "UPDATE runs SET stale=?,revoked=?,revision=?,updated_at=? "
+                "WHERE run_id=? AND tenant_id=?",
+                (new_stale, new_revoked, revision, self._timestamp(now), run_id, tenant_id),
             )
+            self._audit(run_id, tenant_id, "SET_FLAGS", revision,
+                        {"stale": bool(new_stale), "revoked": bool(new_revoked)}, now)
 
     def integrity(self) -> str:
         result = self._conn.execute("PRAGMA integrity_check").fetchone()[0]

@@ -8,10 +8,13 @@ import hmac
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import json
+import multiprocessing
+import os
 import sqlite3
 import tempfile
 import threading
 import unittest
+from unittest import mock
 from pathlib import Path
 
 from security.approval import HmacSha256TestVerifier, canonical_approval_bytes
@@ -25,6 +28,7 @@ from workflow.contracts import (
 )
 from workflow.ledger import Ledger
 from workflow.migrations import MIGRATION_1, MIGRATION_2, SCHEMA_VERSION
+from workflow.schema_validation import validate_document
 
 NOW = datetime(2026, 11, 27, 12, 0, tzinfo=timezone.utc)
 PAYLOAD = "a" * 64
@@ -65,19 +69,29 @@ class TestLedger(Ledger):
         return self._transition(run_id, "tenant-1", target, event_id, NOW, revision,
                                 lease_owner, lease_epoch, reconciliation_ref)
 
+    def claim_lease(self, run_id, owner, now, ttl_seconds=30):
+        revision = self.run(run_id)["revision"]
+        return self._claim_lease(
+            run_id, "tenant-1", owner, now, ttl_seconds, revision,
+        )
+
     def advance(self, run_id, *targets):
         for target in targets:
             current = self.run(run_id)
             lease = {}
             if current["state"] == "RUNNING":
                 owner = "owner-a"
-                epoch = self._claim_lease(run_id, "tenant-1", owner, NOW, 30)
+                epoch = self._claim_lease(
+                    run_id, "tenant-1", owner, NOW, 30, current["revision"],
+                )
                 lease = {"lease_owner": owner, "lease_epoch": epoch}
             self.transition(run_id, target, None,
                             expected_revision=current["revision"], **lease)
 
     def recover(self, now=NOW):
-        return self._recover("tenant-1", now)
+        return self._recover(
+            "tenant-1", "project-1", "task-1", "NLE-WF-GOV-03", now,
+        )
 
 
 def make_v2_ledger(path, *, partial_v3=False, event_risk="STANDARD",
@@ -135,7 +149,29 @@ def make_v2_ledger(path, *, partial_v3=False, event_risk="STANDARD",
         conn.close()
 
 
-def grant(action, target="run-1", tenant="tenant-1", risk="STANDARD"):
+def _process_consume(path, nonce, now_iso, expiry_iso, queue):
+    ledger = TestLedger(path)
+    try:
+        now = datetime.fromisoformat(now_iso)
+        expiry = datetime.fromisoformat(expiry_iso)
+        _, outcome = ledger._consume_outcome(nonce, expiry, now)
+        queue.put(outcome.value)
+    except BaseException as exc:
+        queue.put(f"ERROR:{type(exc).__name__}")
+    finally:
+        ledger.close()
+
+
+def _process_crash(path, now_iso, expiry_iso):
+    ledger = TestLedger(path)
+    now = datetime.fromisoformat(now_iso)
+    expiry = datetime.fromisoformat(expiry_iso)
+    with ledger._transaction():
+        ledger._consume("crash-nonce", expiry, now)
+        os._exit(7)
+
+
+def grant(action, target="run-1", tenant="tenant-1", risk="ELEVATED"):
     return Grant(
         grant_id=f"grant-{action}", principal_id="agent-1", action=action,
         target_id=target, tenant_id=tenant, project_id="project-1", task_id="task-1",
@@ -156,7 +192,7 @@ COMMAND_SCOPE = CommandScope(
 def commands(ledger, grants):
     return WorkflowCommands(
         ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
-        grants=tuple(grants),
+        risk="ELEVATED", grants=tuple(grants),
     )
 
 
@@ -165,7 +201,7 @@ def create_payload(event, *, deadline=None, policy_epoch=1):
     return _payload_digest(
         "workflow.run.create", event_sha256=event.digest(),
         workflow_version="0.1.0", deadline_at=deadline.isoformat(),
-        policy_epoch=policy_epoch,
+        gate="INTERNAL_ONLY", activation="DISABLED", policy_epoch=policy_epoch,
     )
 
 
@@ -223,13 +259,59 @@ class CommandBoundaryTests(unittest.TestCase):
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = make_event()
                 commands(
-                    ledger, [grant("workflow.run.create"), grant("workflow.run.transition")]
+                    ledger, [grant("workflow.run.create")]
                 ).create_run("run-1", "0.1.0", event, NOW, NOW + timedelta(hours=1))
                 commands(
-                    ledger, [grant("workflow.run.transition")]
+                    ledger, [grant("workflow.run.transition.RECEIVED.VALIDATED")]
                 ).transition("run-1", "VALIDATED", event.event_id, NOW,
                              expected_revision=0, payload_sha256=PAYLOAD)
                 self.assertEqual(ledger.run("run-1")["state"], "VALIDATED")
+
+    def test_cross_project_task_workflow_scope_denied(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                variants = (
+                    ("project-2", "task-1", "NLE-WF-GOV-03"),
+                    ("project-1", "task-2", "NLE-WF-GOV-03"),
+                    ("project-1", "task-1", "NLE-WF-QNT-01"),
+                )
+                for index, (project, task, workflow) in enumerate(variants, 1):
+                    event = make_event(
+                        event_id=f"event-scope-{index}",
+                        idempotency_key=f"idem-scope-{index}",
+                    )
+                    ledger._create_run(
+                        f"run-scope-{index}", "tenant-1", project, task, workflow,
+                        "0.1.0", event, NOW, NOW + timedelta(hours=1), SOURCE_LOCK,
+                        "ELEVATED",
+                    )
+                    command = commands(ledger, [])
+                    with self.assertRaises(SecurityError):
+                        command.transition(
+                            f"run-scope-{index}", "VALIDATED", event.event_id, NOW,
+                            expected_revision=0, payload_sha256=PAYLOAD,
+                        )
+                    self.assertEqual(
+                        ledger.run(f"run-scope-{index}")["state"], "RECEIVED",
+                    )
+
+    def test_recovery_is_limited_to_authorized_scope(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = make_event(event_id="event-other", idempotency_key="idem-other")
+                ledger._create_run(
+                    "run-other", "tenant-1", "project-2", "task-1",
+                    "NLE-WF-GOV-03", "0.1.0", event, NOW,
+                    NOW + timedelta(hours=1), SOURCE_LOCK, "ELEVATED",
+                )
+                ledger.transition("run-other", "VALIDATED")
+                ledger.transition("run-other", "QUEUED")
+                ledger.transition("run-other", "RUNNING")
+                command = commands(
+                    ledger, [grant("workflow.recovery.run", target="tenant-1")]
+                )
+                command.recover(NOW)
+                self.assertEqual(ledger.run("run-other")["state"], "RUNNING")
 
     def test_event_risk_cannot_be_downgraded(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -247,7 +329,9 @@ class CommandBoundaryTests(unittest.TestCase):
                 commands(ledger, [grant("workflow.run.create")]).create_run(
                     "run-1", "0.1.0", event, NOW, NOW + timedelta(hours=1)
                 )
-                transition = commands(ledger, [grant("workflow.run.transition")])
+                transition = commands(
+                    ledger, [grant("workflow.run.transition.RECEIVED.VALIDATED")]
+                )
                 with self.assertRaises(SecurityError):
                     transition.transition(
                         "run-1", "VALIDATED", event.event_id, NOW,
@@ -273,7 +357,17 @@ class HighAssuranceCommandTests(unittest.TestCase):
                 counts = ledger.counts()
                 self.assertEqual(counts["approvals"], 1)
                 self.assertEqual(counts["nonces"], 1)
-                self.assertEqual(ledger.run("run-1")["approval_id"], "approval-1")
+                run = ledger.run("run-1")
+                self.assertEqual(run["approval_id"], "approval-1")
+                self.assertEqual(run["approval_ref"], "approval-1")
+                self.assertEqual(run["idempotency_key"], event.idempotency_key)
+                self.assertEqual(run["agent_id"], event.producer)
+                self.assertEqual(run["data_classification"], event.data_classification)
+                self.assertEqual(run["inputs_ref"], event.payload_ref)
+                self.assertEqual(run["quota"], 0)
+                self.assertEqual(run["status"], "RECEIVED")
+                self.assertEqual(run["gate"], "INTERNAL_ONLY")
+                self.assertEqual(run["activation"], "DISABLED")
                 row = ledger._conn.execute(
                     "SELECT run_id,target_id,actor_id,project_id,task_id,workflow_id,"
                     "risk,policy_epoch,action,approver_role,evidence_refs_json,"
@@ -394,12 +488,13 @@ class HighAssuranceCommandTests(unittest.TestCase):
         approved_event = make_event(event_id="event-2", idempotency_key="idem-2")
         payload = _payload_digest(
             "workflow.outbox.enqueue", event_id=approved_event.event_id,
-            payload_ref=approved_event.payload_ref, policy_epoch=1,
+            payload_ref=approved_event.payload_ref, expected_revision=0,
+            lease_owner=None, lease_epoch=None, policy_epoch=1,
         )
         approval, signature = make_approval(
             payload, nonce="outboxnonce0123456789abcdef",
-            approval_id="approval-outbox", action="workflow.outbox.enqueue",
-            target_id="run-1",
+            approval_id="approval-outbox",
+            action="workflow.outbox.enqueue.RECEIVED", target_id="run-1",
         )
         with tempfile.TemporaryDirectory() as tmp:
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
@@ -409,13 +504,68 @@ class HighAssuranceCommandTests(unittest.TestCase):
                 command = WorkflowCommands(
                     ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
                     risk="HIGH_ASSURANCE",
-                    grants=(grant("workflow.outbox.enqueue", risk="HIGH_ASSURANCE"),),
+                    grants=(grant("workflow.outbox.enqueue.RECEIVED",
+                                  risk="HIGH_ASSURANCE"),),
                     approval=approval, approval_signature=signature,
                     verifier=HmacSha256TestVerifier(APPROVAL_KEY),
                 )
                 with self.assertRaises(SecurityError):
-                    command.enqueue_outbox("run-1", "event-3", "payload-3", NOW)
+                    command.enqueue_outbox("run-1", "event-3", "payload-3", NOW,
+                                           expected_revision=0)
                 self.assertEqual(ledger.counts()["outbox"], 0)
+
+    def test_human_gate_requires_high_assurance_boundary(self):
+        scope = CommandScope(
+            actor=COMMAND_SCOPE.actor, tenant_id="tenant-1", project_id="project-1",
+            task_id="task-1", workflow_id="NLE-WF-GOV-01",
+        )
+        with self.assertRaises(SecurityError):
+            WorkflowCommands(
+                None, scope, policy_sha256=POLICY, policy_epoch=1,
+                risk="ELEVATED",
+            )
+
+    def test_unknown_workflow_version_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                command = commands(ledger, [grant("workflow.run.create")])
+                event = make_event()
+                with self.assertRaises(SecurityError):
+                    command.create_run("run-1", "9.9.9", event, NOW,
+                                       NOW + timedelta(hours=1))
+                self.assertEqual(ledger.counts()["runs"], 0)
+
+    def test_unverified_approval_is_not_persisted(self):
+        event = make_event()
+        approval, signature = make_approval(create_payload(event))
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                command = WorkflowCommands(
+                    ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
+                    risk="ELEVATED", grants=(grant("workflow.run.create"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                with self.assertRaises(SecurityError):
+                    command.create_run("run-1", "0.1.0", event, NOW,
+                                       NOW + timedelta(hours=1))
+                self.assertEqual(ledger.counts()["runs"], 0)
+                self.assertEqual(ledger.counts()["nonces"], 0)
+
+    def test_transition_requires_state_specific_grant(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = make_event()
+                commands(ledger, [grant("workflow.run.create")]).create_run(
+                    "run-1", "0.1.0", event, NOW, NOW + timedelta(hours=1)
+                )
+                command = commands(ledger, [grant("workflow.run.transition")])
+                with self.assertRaises(SecurityError):
+                    command.transition(
+                        "run-1", "VALIDATED", event.event_id, NOW,
+                        expected_revision=0, payload_sha256=PAYLOAD,
+                    )
+                self.assertEqual(ledger.run("run-1")["state"], "RECEIVED")
 
     def test_high_assurance_run_rejects_standard_transition(self):
         event = make_event(risk="HIGH_ASSURANCE")
@@ -433,7 +583,9 @@ class HighAssuranceCommandTests(unittest.TestCase):
                     verifier=HmacSha256TestVerifier(APPROVAL_KEY),
                 )
                 high.create_run("run-1", "0.1.0", event, NOW, NOW + timedelta(hours=1))
-                standard = commands(ledger, [grant("workflow.run.transition")])
+                standard = commands(
+                    ledger, [grant("workflow.run.transition.RECEIVED.VALIDATED")]
+                )
                 with self.assertRaises(SecurityError):
                     standard.transition("run-1", "VALIDATED", event.event_id, NOW,
                                         expected_revision=0, payload_sha256=PAYLOAD)
@@ -468,7 +620,7 @@ class LedgerIntegrityTests(unittest.TestCase):
                     ledger._transition("run-1", "tenant-2", "VALIDATED", event.event_id, NOW, 0)
                 with self.assertRaises(SecurityError):
                     ledger._enqueue_outbox("run-1", "tenant-2", event.event_id,
-                                           event.payload_ref, NOW)
+                                           event.payload_ref, NOW, 0)
 
     def test_append_event_requires_existing_same_tenant_run(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -488,9 +640,10 @@ class LedgerIntegrityTests(unittest.TestCase):
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = ledger.create_run()
                 ledger.advance("run-1", "VALIDATED", "BLOCKED")
+                revision = ledger.run("run-1")["revision"]
                 with self.assertRaises(SecurityError):
                     ledger._enqueue_outbox("run-1", "tenant-1", event.event_id,
-                                           event.payload_ref, NOW)
+                                           event.payload_ref, NOW, revision)
                 ledger.transition("run-1", "CANCELLED")
                 self.assertEqual(ledger.run("run-1")["state"], "CANCELLED")
 
@@ -523,6 +676,24 @@ class LedgerIntegrityTests(unittest.TestCase):
                 self.assertEqual(row["approver_role"], "OWNER")
                 self.assertEqual(json.loads(row["evidence_refs_json"]), ["evidence-001"])
                 self.assertEqual(row["policy_epoch"], 1)
+
+    def test_migration_fails_closed_without_approvals_or_complete_v3(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "broken.sqlite3"
+            make_v2_ledger(path)
+            conn = sqlite3.connect(path)
+            conn.execute("DROP TABLE approvals")
+            conn.execute("CREATE TABLE approvals_v3 (partial TEXT)")
+            conn.commit()
+            conn.close()
+            with self.assertRaises(Exception):
+                Ledger(path)
+            conn = sqlite3.connect(path)
+            version = conn.execute(
+                "SELECT MAX(version) FROM schema_migrations"
+            ).fetchone()[0]
+            conn.close()
+            self.assertEqual(version, 2)
 
     def test_migration_backfills_legacy_high_risk_and_resumes_v4(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -565,15 +736,57 @@ class LedgerIntegrityTests(unittest.TestCase):
                 self.assertEqual(ledger.counts()["approvals"], 2)
                 self.assertEqual(ledger.integrity(), "ok")
 
+    def test_outbox_requires_revision_and_lease(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                event = ledger.create_run()
+                ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
+                revision = ledger.run("run-1")["revision"]
+                with self.assertRaises(SecurityError):
+                    ledger._enqueue_outbox(
+                        "run-1", "tenant-1", event.event_id, event.payload_ref,
+                        NOW, revision - 1,
+                    )
+                with self.assertRaises(SecurityError):
+                    ledger._enqueue_outbox(
+                        "run-1", "tenant-1", event.event_id, event.payload_ref,
+                        NOW, revision,
+                    )
+                epoch = ledger.claim_lease("run-1", "owner-a", NOW, 30)
+                ledger._enqueue_outbox(
+                    "run-1", "tenant-1", event.event_id, event.payload_ref,
+                    NOW, revision, "owner-a", epoch,
+                )
+                self.assertEqual(ledger.counts()["outbox"], 1)
+
+    def test_flags_increment_revision_and_audit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                ledger.create_run()
+                revision = ledger.run("run-1")["revision"]
+                ledger._set_flags(
+                    "run-1", "tenant-1", NOW, stale=True, expected_revision=revision,
+                )
+                current = ledger.run("run-1")
+                self.assertEqual(current["revision"], revision + 1)
+                self.assertEqual(current["stale"], 1)
+                audit = ledger._conn.execute(
+                    "SELECT action,revision FROM audit_events WHERE run_id=?",
+                    ("run-1",),
+                ).fetchall()
+                self.assertEqual([(row["action"], row["revision"]) for row in audit],
+                                 [("SET_FLAGS", revision + 1)])
+
     def test_outbox_rejects_terminal_run(self):
         with tempfile.TemporaryDirectory() as tmp:
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 event = ledger.create_run()
                 ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
                                "APPROVED", "VERIFIED", "COMPLETED")
+                revision = ledger.run("run-1")["revision"]
                 with self.assertRaises(SecurityError):
                     ledger._enqueue_outbox("run-1", "tenant-1", event.event_id,
-                                           event.payload_ref, NOW)
+                                           event.payload_ref, NOW, revision)
 
     def test_idempotency_with_divergent_payload_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -621,9 +834,12 @@ class NonceRecoveryTests(unittest.TestCase):
                 ledger = TestLedger(path)
                 try:
                     barrier.wait(timeout=5)
-                    value = ledger._consume("same", NOW + timedelta(minutes=1), NOW)
-                except (SecurityError, sqlite3.Error):
-                    value = False
+                    _, outcome = ledger._consume_outcome(
+                        "same", NOW + timedelta(minutes=1), NOW,
+                    )
+                    value = outcome.value
+                except BaseException as exc:
+                    value = f"ERROR:{type(exc).__name__}"
                 finally:
                     ledger.close()
                 with lock:
@@ -634,7 +850,109 @@ class NonceRecoveryTests(unittest.TestCase):
                 thread.start()
             for thread in threads:
                 thread.join()
-            self.assertEqual(results.count(True), 1)
+            self.assertEqual(results.count("COMMITTED"), 1)
+            self.assertEqual(results.count("REPLAY_REJECTED"), 5)
+            self.assertFalse(any(item.startswith("ERROR") for item in results))
+
+    def test_same_instance_threads_are_serialized(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.sqlite3"
+            ledger = TestLedger(path)
+            results = []
+            lock = threading.Lock()
+            barrier = threading.Barrier(6)
+
+            def worker():
+                try:
+                    barrier.wait(timeout=5)
+                    _, outcome = ledger._consume_outcome(
+                        "shared", NOW + timedelta(minutes=1), NOW,
+                    )
+                    value = outcome.value
+                except BaseException as exc:
+                    value = f"ERROR:{type(exc).__name__}"
+                with lock:
+                    results.append(value)
+
+            threads = [threading.Thread(target=worker) for _ in range(6)]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
+            ledger.close()
+            self.assertEqual(results.count("COMMITTED"), 1)
+            self.assertEqual(results.count("REPLAY_REJECTED"), 5)
+            self.assertFalse(any(item.startswith("ERROR") for item in results))
+
+    def test_independent_processes_share_nonce(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "ledger.sqlite3")
+            context = multiprocessing.get_context("spawn")
+            queue = context.Queue()
+            now_iso = NOW.isoformat()
+            expiry_iso = (NOW + timedelta(minutes=1)).isoformat()
+            processes = [
+                context.Process(
+                    target=_process_consume,
+                    args=(path, "process-nonce", now_iso, expiry_iso, queue),
+                )
+                for _ in range(4)
+            ]
+            for process in processes:
+                process.start()
+            for process in processes:
+                process.join(timeout=60)
+            outcomes = [queue.get(timeout=10) for _ in processes]
+            self.assertEqual(outcomes.count("COMMITTED"), 1)
+            self.assertEqual(outcomes.count("REPLAY_REJECTED"), 3)
+            with TestLedger(path) as ledger:
+                self.assertEqual(ledger.counts()["nonces"], 1)
+                self.assertEqual(ledger.integrity(), "ok")
+
+    def test_crash_inside_transaction_rolls_back_nonce(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = str(Path(tmp) / "ledger.sqlite3")
+            with TestLedger(path):
+                pass
+            context = multiprocessing.get_context("spawn")
+            process = context.Process(
+                target=_process_crash,
+                args=(path, NOW.isoformat(),
+                      (NOW + timedelta(minutes=1)).isoformat()),
+            )
+            process.start()
+            process.join(timeout=60)
+            self.assertNotEqual(process.exitcode, 0)
+            with TestLedger(path) as ledger:
+                self.assertEqual(ledger.counts()["nonces"], 0)
+                self.assertEqual(ledger.integrity(), "ok")
+
+    def test_approval_record_failure_rolls_back_command(self):
+        event = make_event()
+        approval, signature = make_approval(
+            create_payload(event), nonce="rollbackapproval0123456789",
+            approval_id="approval-failure",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                command = WorkflowCommands(
+                    ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
+                    risk="HIGH_ASSURANCE",
+                    grants=(grant("workflow.run.create", risk="HIGH_ASSURANCE"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                with mock.patch.object(
+                    ledger, "_record_approval",
+                    side_effect=RuntimeError("approval storage failed"),
+                ):
+                    with self.assertRaises(RuntimeError):
+                        command.create_run("run-1", "0.1.0", event, NOW,
+                                           NOW + timedelta(hours=1))
+                counts = ledger.counts()
+                self.assertEqual(counts["runs"], 0)
+                self.assertEqual(counts["events"], 0)
+                self.assertEqual(counts["nonces"], 0)
 
     def test_recovery_releases_lease_and_caps_retries(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -642,8 +960,9 @@ class NonceRecoveryTests(unittest.TestCase):
                 ledger.create_run()
                 ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING",
                                "RETRY_WAIT", "QUEUED", "RUNNING")
+                revision = ledger.run("run-1")["revision"]
                 ledger._claim_lease("run-1", "tenant-1", "owner-a",
-                                    NOW - timedelta(minutes=2), 1)
+                                    NOW - timedelta(minutes=2), 1, revision)
                 result = ledger.recover()
                 self.assertEqual(result["failed"], 1)
                 self.assertEqual(ledger.run("run-1")["state"], "FAILED")
@@ -654,7 +973,8 @@ class NonceRecoveryTests(unittest.TestCase):
             with TestLedger(Path(tmp) / "stale.sqlite3") as ledger:
                 ledger.create_run()
                 ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
-                ledger._set_flags("run-1", "tenant-1", NOW, stale=True)
+                revision = ledger.run("run-1")["revision"]
+                ledger._set_flags("run-1", "tenant-1", NOW, stale=True, expected_revision=revision)
                 result = ledger.recover()
                 self.assertEqual(result["failed"], 1)
                 self.assertEqual(ledger.run("run-1")["state"], "FAILED")
@@ -665,14 +985,36 @@ class NonceRecoveryTests(unittest.TestCase):
                 self.assertEqual(result["failed"], 1)
                 self.assertEqual(ledger.run("run-1")["state"], "FAILED")
 
+    def test_claim_requires_revision_and_expired_lease_needs_recovery(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                ledger.create_run()
+                ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING")
+                revision = ledger.run("run-1")["revision"]
+                with self.assertRaises(SecurityError):
+                    ledger._claim_lease(
+                        "run-1", "tenant-1", "owner-a", NOW, 30, revision - 1,
+                    )
+                ledger._claim_lease(
+                    "run-1", "tenant-1", "owner-a",
+                    NOW - timedelta(minutes=2), 1, revision,
+                )
+                with self.assertRaises(SecurityError):
+                    ledger._claim_lease(
+                        "run-1", "tenant-1", "owner-b", NOW, 30, revision,
+                    )
+                result = ledger.recover()
+                self.assertEqual(result["retry_wait"], 1)
+
     def test_effect_in_progress_can_be_claimed_and_verified(self):
         with tempfile.TemporaryDirectory() as tmp:
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 ledger.create_run()
                 ledger.advance("run-1", "VALIDATED", "QUEUED", "RUNNING", "REVIEW",
                                "APPROVED", "EFFECT_READY", "EFFECT_IN_PROGRESS")
-                epoch = ledger._claim_lease("run-1", "tenant-1", "effect-owner", NOW, 30)
                 revision = ledger.run("run-1")["revision"]
+                epoch = ledger._claim_lease("run-1", "tenant-1", "effect-owner", NOW, 30,
+                                            revision)
                 ledger._transition("run-1", "tenant-1", "VERIFIED", None, NOW,
                                    revision, "effect-owner", epoch)
                 self.assertEqual(ledger.run("run-1")["state"], "VERIFIED")
@@ -696,15 +1038,20 @@ class NonceRecoveryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
                 ledger.create_run()
-                ledger._set_flags("run-1", "tenant-1", NOW, revoked=True)
+                revision = ledger.run("run-1")["revision"]
+                ledger._set_flags("run-1", "tenant-1", NOW, revoked=True,
+                                  expected_revision=revision)
+                revision = ledger.run("run-1")["revision"]
                 with self.assertRaises(SecurityError):
-                    ledger._set_flags("run-1", "tenant-1", NOW, revoked=False)
+                    ledger._set_flags("run-1", "tenant-1", NOW, revoked=False,
+                                      expected_revision=revision)
                 event = make_event(event_id="event-2", idempotency_key="idem-2")
                 ledger.create_run("run-2", event=event)
                 ledger.advance("run-2", "VALIDATED", "QUEUED", "RUNNING",
                                "RETRY_WAIT", "QUEUED", "RUNNING")
-                epoch = ledger._claim_lease("run-2", "tenant-1", "owner-a", NOW, 30)
                 revision = ledger.run("run-2")["revision"]
+                epoch = ledger._claim_lease("run-2", "tenant-1", "owner-a", NOW, 30,
+                                            revision)
                 with self.assertRaises(SecurityError):
                     ledger._transition("run-2", "tenant-1", "RETRY_WAIT", None, NOW,
                                        revision, "owner-a", epoch)
@@ -731,6 +1078,14 @@ class CompilerAndC12Tests(unittest.TestCase):
         self.assertEqual(first["summary"]["grants"], 0)
         plan = dry_run("NLE-WF-GOV-03", "run-1", "tenant-1", NOW, NOW + timedelta(hours=1))
         self.assertFalse(plan["execution_allowed"])
+        self.assertEqual(plan["schema"], "nexlabs.workflow-plan.v1")
+        self.assertEqual(plan["workflow_version"], "0.1.0")
+        for node in plan["dag"]["nodes"]:
+            self.assertEqual(
+                set(node),
+                {"id", "step", "agent_id", "task", "scope", "autonomy_ceiling",
+                 "eligible_packages", "external_effects"},
+            )
         deadline = NOW + timedelta(hours=1)
         with self.assertRaises(SecurityError):
             dry_run("unknown", "run-1", "tenant-1", NOW, deadline)
@@ -750,20 +1105,31 @@ class CompilerAndC12Tests(unittest.TestCase):
 
     def test_schema_files_exist(self):
         root = Path(__file__).resolve().parents[1] / "workflow/schemas"
-        for filename in ("event-v1.json", "run-v1.json", "command-v1.json"):
+        for filename in ("event-v1.json", "run-v1.json", "command-v1.json",
+                         "plan-v1.json"):
             self.assertTrue((root / filename).is_file())
 
-    def test_schema_required_fields_match_contracts(self):
+    def test_produced_documents_validate_against_schemas(self):
         root = Path(__file__).resolve().parents[1] / "workflow/schemas"
-        event_schema = json.loads((root / "event-v1.json").read_text(encoding="utf-8"))
-        run_schema = json.loads((root / "run-v1.json").read_text(encoding="utf-8"))
+        event = make_event()
+        validate_document(event.canonical(), root / "event-v1.json")
+        contract = RunContract(
+            run_id="run-schema", tenant_id="tenant-1", project_id="project-1",
+            task_id="task-1", workflow_id="NLE-WF-GOV-03",
+            workflow_version="0.1.0", event_id=event.event_id,
+            correlation_id=event.correlation_id, state="RECEIVED", revision=0,
+            attempts=0, source_lock_sha256=SOURCE_LOCK,
+            deadline_at=NOW + timedelta(hours=1), risk="ELEVATED",
+            idempotency_key=event.idempotency_key, agent_id="agent-1",
+            inputs_ref=event.payload_ref,
+        )
+        validate_document(contract.document(), root / "run-v1.json")
+        plan = dry_run("NLE-WF-GOV-03", "run-1", "tenant-1", NOW,
+                       NOW + timedelta(hours=1))
+        validate_document(plan, root / "plan-v1.json")
         command_schema = json.loads(
             (root / "command-v1.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(set(event_schema["required"]),
-                         {field.name for field in fields(WorkflowEvent)})
-        self.assertEqual(set(run_schema["required"]),
-                         {field.name for field in fields(RunContract)})
         self.assertEqual(set(command_schema["required"]),
                          set(command_schema["properties"]))
 

@@ -24,6 +24,32 @@ from .ledger import Ledger
 SOURCE_LOCK_SHA256 = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e"
 PAYLOAD = "a" * 64
 NOW = datetime(2026, 11, 27, 12, 0, tzinfo=timezone.utc)
+CANONICAL_PATHS = frozenset({
+    ".github/workflows/docs-validation.yml", "docs/Architecture.md",
+    "docs/Backlog.md", "docs/Checkpoint.md", "docs/Decisions-Ledger.md",
+    "docs/Definition-of-Done.md", "docs/Requirements.md", "docs/Scope.md",
+    "docs/Security.md", "docs/decisions-index.json", "locks/source-lock.json",
+    "registry/core.py", "scripts/validate_sources.py", "security/approval.py",
+    "security/authorization.py", "security/contracts.py", "security/core.py",
+    "security/policy.json", "sources/NexLabs_Workflows/README.md",
+    "sources/NexLabs_Workflows/VALIDATION.txt",
+    "sources/NexLabs_Workflows/catalogo-workflows.md",
+    "sources/NexLabs_Workflows/spec.txt",
+    "sources/NexLabs_Workflows/summary.json",
+    "sources/NexLabs_Workflows/workflows.json",
+})
+IMPLEMENTATION_PATHS = frozenset({
+    ".github/workflows/docs-validation.yml",
+    "evidence/NLE-WF-WO-001-CD02-EXECUTION.md",
+    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md",
+    "tests/test_workflow_adversarial.py", "tests/test_workflow_controls.py",
+    "work-orders/NLE-WF-WO-001.md", "workflow/README.md", "workflow/__init__.py",
+    "workflow/__main__.py", "workflow/authorization.py", "workflow/commands.py",
+    "workflow/compiler.py", "workflow/contracts.py", "workflow/ledger.py",
+    "workflow/migrations.py", "workflow/outcomes.py", "workflow/schema_validation.py",
+    "workflow/schemas/command-v1.json", "workflow/schemas/event-v1.json",
+    "workflow/schemas/plan-v1.json", "workflow/schemas/run-v1.json",
+})
 
 
 def _git_blob(path: str, ref: str = "HEAD") -> bytes:
@@ -97,9 +123,13 @@ def verify_context_lock() -> None:
     require(main_ref.returncode == 0, "CONTEXT_LOCK_MAIN_UNAVAILABLE")
     require(main_ref.stdout.decode("utf-8").strip() == base,
             "CONTEXT_LOCK_MAIN_STALE")
-    require(len(document["canonical_fingerprints_sha256"]) == 24
-            and len(implementation) == 17,
-            "CONTEXT_LOCK_REQUIRED_SET_INCOMPLETE")
+    require(set(document["canonical_fingerprints_sha256"]) == CANONICAL_PATHS,
+            "CONTEXT_LOCK_CANONICAL_SET_MISMATCH")
+    require(set(implementation) == IMPLEMENTATION_PATHS,
+            "CONTEXT_LOCK_IMPLEMENTATION_SET_MISMATCH")
+    require(set(document["canonical_git_blob_fingerprints"]) == CANONICAL_PATHS
+            and set(document["implementation_git_blob_fingerprints"])
+            == IMPLEMENTATION_PATHS, "CONTEXT_LOCK_BLOB_SET_MISMATCH")
     base_tree = subprocess.run(
         ["git", "-C", str(ROOT), "rev-parse", f"{base}^{{tree}}"],
         capture_output=True, check=False,
@@ -132,21 +162,23 @@ def _verification_commands(ledger: Ledger) -> WorkflowCommands:
         "principal_id": "verify-agent", "target_id": "run-verify-1",
         "tenant_id": "tenant-1", "project_id": "project-1", "task_id": "task-1",
         "workflow_id": "NLE-WF-GOV-03", "skill_id": "workflow-skill",
-        "host_id": "host-1", "provider_id": "provider-local", "risk": "STANDARD",
+        "host_id": "host-1", "provider_id": "provider-local", "risk": "ELEVATED",
         "policy_sha256": policy, "policy_epoch": 1,
         "issued_at": NOW - timedelta(minutes=1), "expires_at": NOW + timedelta(hours=1),
         "revoked": False, "max_spend_usd": 0, "external_effects": "DENY",
     }
     grants = (
         Grant(grant_id="verify-create", action="workflow.run.create", **common),
-        Grant(grant_id="verify-transition", action="workflow.run.transition", **common),
+        Grant(grant_id="verify-transition",
+              action="workflow.run.transition.RECEIVED.VALIDATED", **common),
     )
     scope = CommandScope(
         actor=actor, tenant_id="tenant-1", project_id="project-1",
         task_id="task-1", workflow_id="NLE-WF-GOV-03",
     )
     return WorkflowCommands(
-        ledger, scope, policy_sha256=policy, policy_epoch=1, grants=grants,
+        ledger, scope, policy_sha256=policy, policy_epoch=1, risk="ELEVATED",
+        grants=grants,
     )
 
 
@@ -167,12 +199,12 @@ def verify() -> dict:
             producer="offline-verifier", subject_ref="work-order-1",
             tenant_id="tenant-1", correlation_id="corr-1",
             idempotency_key="idem-verify-1", payload_ref="payload-ref-1",
-            payload_sha256=PAYLOAD, data_classification="INTERNAL", risk="STANDARD",
+            payload_sha256=PAYLOAD, data_classification="INTERNAL", risk="ELEVATED",
         )
         with Ledger(db) as ledger:
             commands = _verification_commands(ledger)
             commands.create_run("run-verify-1", "0.1.0", event, NOW,
-                                NOW + timedelta(hours=1))
+                                NOW + timedelta(hours=1), agent_id="verify-agent")
             commands.transition("run-verify-1", "VALIDATED", event.event_id, NOW,
                                 expected_revision=0, payload_sha256=PAYLOAD)
             ledger.integrity()
@@ -197,6 +229,9 @@ def main(argv: list[str] | None = None) -> int:
     dry.add_argument("--run-id", default="dry-run-1")
     args = parser.parse_args(argv)
     try:
+        if args.command in {"c12", "compile", "dry-run"}:
+            verify_source_lock()
+            verify_context_lock()
         if args.command == "c12":
             sys.stdout.buffer.write(canonical_bytes(validate_c12()))
         elif args.command == "compile":

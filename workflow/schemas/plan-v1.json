@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexlabs:workflow-plan:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "run_id", "tenant_id", "workflow_id", "workflow_version",
+    "source_lock_sha256", "workflow_source_sha256", "now", "deadline",
+    "gate", "risk", "activation", "qualification", "accountable", "reviewer",
+    "dispatch_agent", "execution_allowed", "external_effects",
+    "new_spend_limit_usd", "actual_effects", "dag"
+  ],
+  "properties": {
+    "schema": {"const": "nexlabs.workflow-plan.v1"},
+    "run_id": {"type": "string"},
+    "tenant_id": {"type": "string"},
+    "workflow_id": {"type": "string"},
+    "workflow_version": {"type": "string"},
+    "source_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "workflow_source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "now": {"type": "string", "format": "date-time"},
+    "deadline": {"type": "string", "format": "date-time"},
+    "gate": {"enum": ["INTERNAL_ONLY", "POLICY_GATED_EXTERNAL", "HUMAN_APPROVAL_REQUIRED"]},
+    "risk": {"enum": ["LOW", "STANDARD", "ELEVATED", "HIGH_ASSURANCE"]},
+    "activation": {"const": "DISABLED"},
+    "qualification": {"const": "NOT_RUN"},
+    "accountable": {"type": "string"},
+    "reviewer": {"type": "string"},
+    "dispatch_agent": {"type": "string"},
+    "execution_allowed": {"const": false},
+    "external_effects": {"const": "DENY"},
+    "new_spend_limit_usd": {"const": 0},
+    "actual_effects": {"const": 0},
+    "dag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "step", "agent_id", "task", "scope",
+                         "autonomy_ceiling", "eligible_packages", "external_effects"],
+            "properties": {
+              "id": {"type": "string"},
+              "step": {"type": "integer", "minimum": 1},
+              "agent_id": {"type": "string"},
+              "task": {"type": "string"},
+              "scope": {"type": "string"},
+              "autonomy_ceiling": {"type": "string"},
+              "eligible_packages": {"type": "array", "items": {"type": "string"}},
+              "external_effects": {"const": "DENY"}
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to"],
+            "properties": {
+              "from": {"type": "string"},
+              "to": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

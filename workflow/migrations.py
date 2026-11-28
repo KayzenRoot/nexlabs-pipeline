@@ -1,12 +1,14 @@
 """Versioned SQLite schema migrations for the offline workflow ledger."""
 from __future__ import annotations
 
+from contextlib import contextmanager
 import json
+import os
 import sqlite3
 
-from .contracts import RISK_LEVELS
+from .contracts import CLASSIFICATIONS, RISK_LEVELS, load_workflows
 
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 MIGRATION_1 = """
 CREATE TABLE IF NOT EXISTS schema_migrations (
@@ -244,11 +246,139 @@ def _migrate_v4(conn: sqlite3.Connection) -> None:
             )
 
 
-MIGRATIONS = {1: MIGRATION_1, 2: MIGRATION_2, 3: _migrate_v3, 4: _migrate_v4}
+RUN_V5_COLUMNS = (
+    ("idempotency_key", "TEXT NOT NULL DEFAULT ''"),
+    ("agent_id", "TEXT NOT NULL DEFAULT ''"),
+    ("skill_lock_id", "TEXT"),
+    ("skill_lock_version", "TEXT"),
+    ("skill_lock_hash", "TEXT"),
+    ("model_id", "TEXT"),
+    ("quota", "INTEGER NOT NULL DEFAULT 0"),
+    ("data_classification", "TEXT NOT NULL DEFAULT 'INTERNAL'"),
+    ("inputs_ref", "TEXT NOT NULL DEFAULT ''"),
+    ("output_ref", "TEXT"),
+    ("evidence_ref", "TEXT"),
+    ("approval_ref", "TEXT"),
+    ("status", "TEXT NOT NULL DEFAULT 'RECEIVED'"),
+    ("gate", "TEXT NOT NULL DEFAULT 'INTERNAL_ONLY'"),
+    ("activation", "TEXT NOT NULL DEFAULT 'DISABLED'"),
+)
+
+AUDIT_TABLE = """
+CREATE TABLE IF NOT EXISTS audit_events (
+  audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id TEXT NOT NULL,
+  tenant_id TEXT NOT NULL,
+  action TEXT NOT NULL,
+  revision INTEGER NOT NULL,
+  detail_json TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (run_id, tenant_id) REFERENCES runs(run_id, tenant_id)
+)
+"""
+
+
+def _event_payload(conn: sqlite3.Connection, event_id: str, tenant_id: str) -> dict:
+    row = conn.execute(
+        "SELECT body_json FROM events WHERE event_id=? AND tenant_id=?",
+        (event_id, tenant_id),
+    ).fetchone()
+    if row is None:
+        return {}
+    try:
+        value = json.loads(row[0])
+    except (TypeError, ValueError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _migrate_v5(conn: sqlite3.Connection) -> None:
+    columns = _columns(conn, "runs")
+    for name, definition in RUN_V5_COLUMNS:
+        if name not in columns:
+            conn.execute(f"ALTER TABLE runs ADD COLUMN {name} {definition}")
+    conn.execute(AUDIT_TABLE)
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_audit_run ON audit_events(run_id, tenant_id)"
+    )
+    workflows = load_workflows()
+    rows = conn.execute(
+        "SELECT run_id,tenant_id,workflow_id,event_id,state,approval_id,"
+        "idempotency_key,agent_id,data_classification,inputs_ref FROM runs"
+    ).fetchall()
+    for row in rows:
+        payload = _event_payload(conn, row["event_id"], row["tenant_id"])
+        workflow = workflows.get(row["workflow_id"], {})
+        idempotency_key = payload.get("idempotency_key") or row["idempotency_key"] \
+            or f"legacy-{row['run_id']}"
+        agent_id = payload.get("producer") or row["agent_id"] or "legacy-agent"
+        classification = payload.get("data_classification") \
+            if payload.get("data_classification") in CLASSIFICATIONS else None
+        classification = classification or row["data_classification"] or "INTERNAL"
+        inputs_ref = payload.get("payload_ref") or row["inputs_ref"] or "legacy-input"
+        gate = workflow.get("gate") if workflow.get("gate") else "HUMAN_APPROVAL_REQUIRED"
+        conn.execute(
+            "UPDATE runs SET idempotency_key=?,agent_id=?,data_classification=?,"
+            "inputs_ref=?,status=?,gate=?,activation='DISABLED',approval_ref=? "
+            "WHERE run_id=? AND tenant_id=?",
+            (idempotency_key, agent_id, classification, inputs_ref, row["state"],
+             gate, row["approval_id"], row["run_id"], row["tenant_id"]),
+        )
+
+
+MIGRATIONS = {1: MIGRATION_1, 2: MIGRATION_2, 3: _migrate_v3, 4: _migrate_v4,
+              5: _migrate_v5}
+
+
+@contextmanager
+def _migration_lock(conn: sqlite3.Connection):
+    row = conn.execute("PRAGMA database_list").fetchone()
+    path = row[2] if row else ""
+    if not path:
+        yield
+        return
+    lock_path = path + ".migration.lock"
+    handle = open(lock_path, "a+b")
+    try:
+        handle.seek(0, os.SEEK_END)
+        if handle.tell() == 0:
+            handle.write(b"\0")
+            handle.flush()
+        handle.seek(0)
+        if os.name == "nt":
+            import msvcrt
+            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        yield
+    finally:
+        handle.seek(0)
+        if os.name == "nt":
+            import msvcrt
+            msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+        handle.close()
 
 
 def apply_migrations(conn: sqlite3.Connection) -> int:
     conn.execute("PRAGMA foreign_keys=ON")
+    try:
+        current = conn.execute(
+            "SELECT COALESCE(MAX(version),0) FROM schema_migrations"
+        ).fetchone()[0]
+    except sqlite3.OperationalError:
+        current = 0
+    if current >= SCHEMA_VERSION:
+        conn.execute(f"PRAGMA user_version={SCHEMA_VERSION}")
+        return current
+    with _migration_lock(conn):
+        return _apply_migrations_locked(conn)
+
+
+def _apply_migrations_locked(conn: sqlite3.Connection) -> int:
     conn.execute(
         "CREATE TABLE IF NOT EXISTS schema_migrations "
         "(version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)"

@@ -28,3 +28,16 @@ primitives are private storage methods. Versioned migrations are in `workflow/mi
 event/run/command schemas are under `workflow/schemas/`; the deterministic 62-workflow
 compiler and per-run DAG are in `workflow/compiler.py`. SQLite remains local/offline,
 not a production isolation boundary.
+
+## CD-03 additions
+
+`WorkflowCommands` binds the full persisted resource scope (tenant/project/task/workflow/run)
+inside the ledger transaction, validates the canonical workflow/version/activation/gate/risk,
+uses state-specific action names, and persists approvals only after effective verification.
+Recovery is scoped to the authorized workflow/project/task; outbox, flags, DLQ and lease
+operations require revision and, where applicable, lease/fencing.
+
+`workflow/outcomes.py` classifies transaction outcomes; `workflow/schema_validation.py`
+validates produced event/run/plan documents against the versioned schemas. `compile_run`
+emits `nexlabs.workflow-plan.v1`; persisted runs use the expanded `run-v1.json` contract.
+SQLite remains local/offline and is not a production isolation boundary.

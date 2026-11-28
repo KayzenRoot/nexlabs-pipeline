@@ -120,19 +120,30 @@ class TestLedger(Ledger):
                                 lease_owner, lease_epoch, reconciliation_ref)
 
     def claim_lease(self, run_id, owner, now, ttl_seconds=30):
-        return self._claim_lease(run_id, "tenant-1", owner, now, ttl_seconds)
+        revision = self.run(run_id)["revision"]
+        return self._claim_lease(
+            run_id, "tenant-1", owner, now, ttl_seconds, revision,
+        )
 
     def consume(self, nonce, expires_at, now):
         return self._consume(nonce, expires_at, now)
 
     def enqueue_outbox(self, run_id, event_id, payload_ref, now):
-        return self._enqueue_outbox(run_id, "tenant-1", event_id, payload_ref, now)
+        revision = self.run(run_id)["revision"]
+        return self._enqueue_outbox(
+            run_id, "tenant-1", event_id, payload_ref, now, revision,
+        )
 
     def dead_letter(self, run_id, reason, sanitized_ref, now):
-        return self._dead_letter(run_id, "tenant-1", reason, sanitized_ref, now)
+        revision = self.run(run_id)["revision"]
+        return self._dead_letter(
+            run_id, "tenant-1", reason, sanitized_ref, now, revision,
+        )
 
     def recover(self, now):
-        return self._recover("tenant-1", now)
+        return self._recover(
+            "tenant-1", "project-1", "task-1", "NLE-WF-GOV-03", now,
+        )
 
 
 def advance(ledger, run_id, *targets):
@@ -471,6 +482,11 @@ class C12AndPolicyTests(unittest.TestCase):
 class CliTests(unittest.TestCase):
     def test_verify_cli(self):
         self.assertEqual(workflow_main(["verify"]), 0)
+
+    def test_compile_c12_and_dry_run_validate_integrity(self):
+        for command in ("compile", "c12", "dry-run"):
+            with self.subTest(command=command):
+                self.assertEqual(workflow_main([command]), 0)
 
 
 if __name__ == "__main__":

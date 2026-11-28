@@ -11,9 +11,11 @@ from typing import Any
 from security.contracts import require, require_id, require_utc
 
 from .contracts import (
-    C12_WORKFLOW_IDS, ROOT, WorkflowError, canonical_bytes, forbidden_field_count,
-    load_workflows, validate_c12, validate_workflow_catalog,
+    C12_WORKFLOW_IDS, ROOT, WORKFLOW_VERSION, WorkflowError, canonical_bytes,
+    forbidden_field_count, load_workflows, validate_c12, validate_c12_workflow,
+    validate_workflow_catalog,
 )
+from .schema_validation import validate_document
 
 SOURCE_LOCK_SHA256 = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e"
 WORKFLOW_SOURCE = "sources/NexLabs_Workflows/workflows.json"
@@ -72,7 +74,13 @@ def compile_catalog(root: Path = ROOT) -> dict[str, Any]:
             "qualification": workflow["qualification"],
             "dispatch_agent": workflow["dispatch_agent"],
             "accountable": workflow["accountable"], "reviewer": workflow["reviewer"],
-            "steps": [{"step": step["step"], "agent_id": step["agent_id"]} for step in steps],
+            "steps": [{
+                "step": step["step"], "agent_id": step["agent_id"],
+                "task": step["task"], "scope": step["scope"],
+                "autonomy_ceiling": step["autonomy_ceiling"],
+                "eligible_packages": sorted(step.get("eligible_packages", [])),
+                "external_effects": step["external_effects"],
+            } for step in steps],
             "next_candidates": sorted(workflow.get("next_candidates", [])),
             "eligible_packages_union": sorted(workflow.get("eligible_packages_union", [])),
             "new_spend_limit_usd": workflow["new_spend_limit_usd"],
@@ -105,31 +113,39 @@ def compile_run(workflow_id: str, run_id: str, tenant_id: str, now: datetime,
     workflows = load_workflows(root)
     require(workflow_id in workflows, "WORKFLOW_UNKNOWN")
     workflow = workflows[workflow_id]
+    if workflow_id in C12_WORKFLOW_IDS:
+        validate_c12_workflow(workflow)
+    require(workflow.get("activation") == "DISABLED", "WORKFLOW_ACTIVATION_FORBIDDEN")
     steps = sorted(workflow.get("steps") or [], key=lambda item: item["step"])
     require(bool(steps), "WORKFLOW_STEPS_EMPTY")
     nodes = []
     for step in steps:
-        if workflow_id in C12_WORKFLOW_IDS:
-            require(step["agent_id"] != workflow["dispatch_agent"], "C12_DISPATCHER_EXECUTES")
         require(step.get("external_effects") == "DENY", "WORKFLOW_EFFECT_DENIED")
         nodes.append({
-            "id": f"step-{step['step']}", "agent_id": step["agent_id"],
+            "id": f"step-{step['step']}", "step": step["step"],
+            "agent_id": step["agent_id"], "task": step["task"],
+            "scope": step["scope"], "autonomy_ceiling": step["autonomy_ceiling"],
             "eligible_packages": sorted(step.get("eligible_packages", [])),
             "external_effects": "DENY",
         })
     edges = [(nodes[index]["id"], nodes[index + 1]["id"]) for index in range(len(nodes) - 1)]
     validate_dag(nodes, edges)
-    return {
-        "schema": "nexlabs.workflow-run.v1", "run_id": run_id, "tenant_id": tenant_id,
-        "workflow_id": workflow_id, "workflow_version": "0.1.0-proposed",
+    document = {
+        "schema": "nexlabs.workflow-plan.v1", "run_id": run_id, "tenant_id": tenant_id,
+        "workflow_id": workflow_id, "workflow_version": WORKFLOW_VERSION,
         "source_lock_sha256": SOURCE_LOCK_SHA256,
         "workflow_source_sha256": _workflow_source_hash(root),
-        "deadline_at": deadline_at.isoformat(), "state": "PLANNED_NOT_QUALIFIED",
-        "dag": {"nodes": nodes, "edges": [{"from": a, "to": b} for a, b in edges]},
-        "activation": "DISABLED", "qualification": "NOT_RUN",
+        "now": now.isoformat(), "deadline": deadline_at.isoformat(),
+        "gate": workflow["gate"], "risk": workflow["risk"],
+        "activation": workflow["activation"], "qualification": workflow["qualification"],
+        "accountable": workflow["accountable"], "reviewer": workflow["reviewer"],
+        "dispatch_agent": workflow["dispatch_agent"],
         "execution_allowed": False, "external_effects": "DENY",
         "new_spend_limit_usd": 0, "actual_effects": 0,
+        "dag": {"nodes": nodes, "edges": [{"from": a, "to": b} for a, b in edges]},
     }
+    validate_document(document, ROOT / "workflow/schemas/plan-v1.json")
+    return document
 
 
 def dry_run(workflow_id: str, run_id: str, tenant_id: str, now: datetime,
