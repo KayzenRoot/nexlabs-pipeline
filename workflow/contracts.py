@@ -202,6 +202,22 @@ def retry_decision(status_code: int, attempts: int, retry_after: int | None = No
 
 
 @dataclass(frozen=True)
+class RunOptions:
+    """Optional qualified metadata for a new persisted run."""
+
+    risk: str = "STANDARD"
+    agent_id: str | None = None
+    skill_lock_id: str | None = None
+    skill_lock_version: str | None = None
+    skill_lock_hash: str | None = None
+    model_id: str | None = None
+    quota: int = 0
+    output_ref: str | None = None
+    evidence_ref: str | None = None
+    gate: str = "INTERNAL_ONLY"
+
+
+@dataclass(frozen=True)
 class RunContract:
     run_id: str
     tenant_id: str

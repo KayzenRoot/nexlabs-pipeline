@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import copy
-from dataclasses import fields
 import hashlib
 import hmac
 from datetime import datetime, timedelta, timezone
@@ -23,8 +22,8 @@ from security.core import EXPECTED_POLICY, policy_fingerprint
 from workflow.commands import CommandScope, WorkflowCommands, _payload_digest
 from workflow.compiler import compile_catalog, dry_run, validate_dag
 from workflow.contracts import (
-    MAX_ATTEMPTS, RunContract, WorkflowEvent, load_workflows, retry_decision,
-    validate_c12_workflow, validate_workflow_catalog,
+    MAX_ATTEMPTS, RunContract, RunOptions, WorkflowEvent, load_workflows,
+    retry_decision, validate_c12_workflow, validate_workflow_catalog,
 )
 from workflow.ledger import Ledger
 from workflow.migrations import MIGRATION_1, MIGRATION_2, SCHEMA_VERSION
@@ -283,7 +282,7 @@ class CommandBoundaryTests(unittest.TestCase):
                     ledger._create_run(
                         f"run-scope-{index}", "tenant-1", project, task, workflow,
                         "0.1.0", event, NOW, NOW + timedelta(hours=1), SOURCE_LOCK,
-                        "ELEVATED",
+                        RunOptions(risk="ELEVATED"),
                     )
                     command = commands(ledger, [])
                     with self.assertRaises(SecurityError):
@@ -302,7 +301,8 @@ class CommandBoundaryTests(unittest.TestCase):
                 ledger._create_run(
                     "run-other", "tenant-1", "project-2", "task-1",
                     "NLE-WF-GOV-03", "0.1.0", event, NOW,
-                    NOW + timedelta(hours=1), SOURCE_LOCK, "ELEVATED",
+                    NOW + timedelta(hours=1), SOURCE_LOCK,
+                    RunOptions(risk="ELEVATED"),
                 )
                 ledger.transition("run-other", "VALIDATED")
                 ledger.transition("run-other", "QUEUED")

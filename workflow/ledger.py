@@ -15,7 +15,7 @@ from security.contracts import (
 
 from .contracts import (
     EXECUTOR_STATES, MAX_ATTEMPTS, OUTBOX_BLOCKED_STATES, RISK_LEVELS, ROOT,
-    RunContract, WorkflowEvent, assert_transition, canonical_bytes,
+    RunContract, RunOptions, WorkflowEvent, assert_transition, canonical_bytes,
     require_risk_floor, validate_event, WorkflowError,
 )
 from .migrations import apply_migrations
@@ -117,12 +117,7 @@ class Ledger:
     def _create_run(self, run_id: str, tenant_id: str, project_id: str, task_id: str,
                     workflow_id: str, workflow_version: str, event: WorkflowEvent,
                     now: datetime, deadline_at: datetime, source_lock_sha256: str,
-                    risk: str = "STANDARD", *, agent_id: str | None = None,
-                    skill_lock_id: str | None = None,
-                    skill_lock_version: str | None = None,
-                    skill_lock_hash: str | None = None, model_id: str | None = None,
-                    quota: int = 0, output_ref: str | None = None,
-                    evidence_ref: str | None = None, gate: str = "INTERNAL_ONLY") -> None:
+                    options: RunOptions | None = None) -> None:
         for value in (run_id, project_id, task_id, workflow_id, workflow_version):
             require_id(value, "RUN_IDENTIFIER_INVALID")
         require_utc(now)
@@ -130,18 +125,21 @@ class Ledger:
         require(deadline_at > now, "RUN_DEADLINE_INVALID")
         require_hash(source_lock_sha256)
         require(event.tenant_id == tenant_id, "EVENT_TENANT_MISMATCH")
+        options = options or RunOptions()
         contract = RunContract(
             run_id=run_id, tenant_id=tenant_id, project_id=project_id, task_id=task_id,
             workflow_id=workflow_id, workflow_version=workflow_version,
             event_id=event.event_id, correlation_id=event.correlation_id, state="RECEIVED",
             revision=0, attempts=0, source_lock_sha256=source_lock_sha256,
-            deadline_at=deadline_at, risk=risk,
+            deadline_at=deadline_at, risk=options.risk,
             idempotency_key=event.idempotency_key,
-            agent_id=agent_id or event.producer,
-            skill_lock_id=skill_lock_id, skill_lock_version=skill_lock_version,
-            skill_lock_hash=skill_lock_hash, model_id=model_id, quota=quota,
-            data_classification=event.data_classification, inputs_ref=event.payload_ref,
-            output_ref=output_ref, evidence_ref=evidence_ref, gate=gate,
+            agent_id=options.agent_id or event.producer,
+            skill_lock_id=options.skill_lock_id,
+            skill_lock_version=options.skill_lock_version,
+            skill_lock_hash=options.skill_lock_hash, model_id=options.model_id,
+            quota=options.quota, data_classification=event.data_classification,
+            inputs_ref=event.payload_ref, output_ref=options.output_ref,
+            evidence_ref=options.evidence_ref, gate=options.gate,
         )
         contract.validate()
         validate_document(contract.document(), ROOT / "workflow/schemas/run-v1.json")
@@ -158,7 +156,7 @@ class Ledger:
                     "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (run_id, tenant_id, project_id, task_id, workflow_id, workflow_version,
                      event.event_id, event.correlation_id, "RECEIVED", "RECEIVED", 0, 0,
-                     source_lock_sha256, self._timestamp(deadline_at), risk,
+                     source_lock_sha256, self._timestamp(deadline_at), options.risk,
                      contract.idempotency_key, contract.agent_id, contract.skill_lock_id,
                      contract.skill_lock_version, contract.skill_lock_hash, contract.model_id,
                      contract.quota, contract.data_classification, contract.inputs_ref,

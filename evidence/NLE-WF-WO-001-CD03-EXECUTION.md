@@ -73,12 +73,12 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | Suíte local | **171/171 OK** |
 | Baseline CD-02 | 156/156 OK |
 | Novos testes CD-03 | 15 |
-| `workflow verify` | pendente do commit/lock final |
+| `workflow verify` | PASS local |
 | Source Pack | 7/7; 364 fontes |
 | Registry | 105/92/1110; 0 writes |
 | Security verify | PASS |
-| Scanner | a confirmar no HEAD final |
-| CLI compile/c12/dry-run | a confirmar no commit final |
+| Scanner | 497 arquivos, 0 achados |
+| CLI compile/c12/dry-run | PASS local, com integrity gate |
 
 ## 4. CI e segurança
 

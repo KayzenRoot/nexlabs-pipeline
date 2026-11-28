@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 import hashlib
-from typing import Any, Callable
+from typing import Any
 
 from security.approval import SignatureVerifier
 from security.contracts import (
@@ -14,13 +14,12 @@ from security.contracts import (
 
 from .authorization import authorize_workflow
 from .contracts import (
-    C12_WORKFLOW_IDS, WORKFLOW_VERSION, WorkflowEvent, canonical_bytes,
+    C12_WORKFLOW_IDS, WORKFLOW_VERSION, RunOptions, WorkflowEvent, canonical_bytes,
     load_workflows, require_risk_floor, validate_c12_workflow,
 )
 from .ledger import Ledger
 
 SOURCE_LOCK_SHA256 = "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e"
-Authorizer = Callable[..., AccessDecision]
 
 
 def _payload_digest(operation: str, **values: Any) -> str:
@@ -204,11 +203,13 @@ class WorkflowCommands:
             request,
             lambda: self._ledger._create_run(
                 run_id, self.tenant_id, self.project_id, self.task_id, self.workflow_id,
-                workflow_version, event, now, deadline_at, SOURCE_LOCK_SHA256, self.risk,
-                agent_id=agent_id, skill_lock_id=skill_lock_id,
-                skill_lock_version=skill_lock_version, skill_lock_hash=skill_lock_hash,
-                model_id=model_id, output_ref=output_ref, evidence_ref=evidence_ref,
-                gate=gate,
+                workflow_version, event, now, deadline_at, SOURCE_LOCK_SHA256,
+                RunOptions(
+                    risk=self.risk, agent_id=agent_id, skill_lock_id=skill_lock_id,
+                    skill_lock_version=skill_lock_version,
+                    skill_lock_hash=skill_lock_hash, model_id=model_id,
+                    output_ref=output_ref, evidence_ref=evidence_ref, gate=gate,
+                ),
             ),
             run_id,
         )
