@@ -82,9 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/CD-03 anterior no code head `bb881b9`: run **46144263287** — `docs-validation` e `security-windows` **SUCCESS**; a rodada atual de correções de migração/ator tem CI pendente.
-- SonarCloud na rodada anterior: 0 issues; read-back da rodada atual pendente.
-- Socket/ECC da rodada anterior PASS; read-back atual pendente.
+- CI/CD-03 no code head `a197f38edc805ded3c955ceef1daa09e1b8bdd58`: run **46145976801** — `docs-validation` (ubuntu-24.04, 177 testes, compile/c12/dry-run) e `security-windows` **SUCCESS**.
+- SonarCloud no HEAD `a197f38`: **0 issues abertas**, Quality Gate passed, check success.
+- Socket PR Alerts/Project Report PASS; ECC Security Evidence PASS em `a197f38`.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -104,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | PENDENTE — migração v6/ator e CI do novo HEAD em validação |
+| AC14 CI/auditoria | GATES PASS em a197f38; auditoria independente do HEAD final pendente |
 
 ## 6. Limitações
 
