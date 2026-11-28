@@ -4,8 +4,8 @@
   "status": "CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "f1a8e07aee55b9af0963a11b6f356c4cca911a54",
-  "head_note": "1e61917 is the last CD-02 approved head. f1a8e07 is the CD-03 correction code head with green CI/Sonar/Socket/ECC. The evidence commit containing this lock is the final HEAD; exact SHA and independent audit are external.",
+  "head_at_context_capture": "bb881b920d1f9688e0f041328ace306ca25a84a7",
+  "head_note": "1e61917 is the last CD-02 approved head. bb881b9 is the CD-03 audit-correction code head with green CI/Sonar/Socket/ECC. The evidence commit containing this lock is the final HEAD; exact SHA and independent audit are external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "canonical_git_blob_fingerprints": {
@@ -78,7 +78,7 @@
     "work-orders/NLE-WF-WO-001.md": "8674796403412771d3a92ea35d3314ad88364330",
     ".github/workflows/docs-validation.yml": "b3b33f8a65eb1e2a1a2de7188111a77e0dc19b87",
     "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "09f6efe250432f93b5503c6dddb9ad210a57146f",
-    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "5579430369cc59ca893f56bed8c319bd8c52b35e",
+    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "bea0d325d699b3bb468752b2d85b210f9e1c8ea8",
     "workflow/outcomes.py": "c0b3a0a7941f11326304676ca60792051d461552",
     "workflow/schema_validation.py": "167e02eb7e0f280adf54d1aa8ede4dbbf7f753f3",
     "workflow/schemas/plan-v1.json": "a0a59e6b0837e2a6fa3ee07cf5f9d0c597d80507"
@@ -101,7 +101,7 @@
     "work-orders/NLE-WF-WO-001.md": "0fbb0baba9ad79f503cd183a69f584581a2de1aac0b69e3cd25e9a053f9da475",
     ".github/workflows/docs-validation.yml": "49bd3785ff6267471016787121796e112576e249d81c4423684f61c1663d02f0",
     "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "37d804981e98ffcca94095d78f5d6e0febd6f11b894e8e2800a01b31431ab16d",
-    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "0de0f7164326f15c8cb549b52a7585b7c9a5377706dc2582ae01268e990dd5be",
+    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "bdfe6f9958f113dbb12dab9a47c1094586d6afbeb9cc3e3bcdd5650788225b3c",
     "workflow/outcomes.py": "148462c39cf3f93f6fd7f6d8e4be549be4fc04ddc21bc227bb7784e831732eb8",
     "workflow/schema_validation.py": "0fefc06bdeb7cf98f766d108691d3bb367ecf3b7a28dfac98b4cb6fa585d9f0e",
     "workflow/schemas/plan-v1.json": "06490e849aeff0dc1f8e66b6ec379802fe135d2dd4c584d3f8b38afed76d69f3"
@@ -144,16 +144,16 @@
     "grants": 0
   },
   "ci": {
-    "code_head": "PENDING_CD03_AUDIT_CORRECTION",
-    "run_id": null,
-    "docs_validation": "PENDING",
-    "security_windows": "PENDING",
-    "sonar": "PENDING",
-    "socket": "PENDING",
-    "ecc": "PENDING",
-    "prior_run_id": 46051067882,
-    "prior_code_head": "1e6191729d8c6ddad1f3779999972d8e7a10853e",
-    "prior_tests": 156,
+    "code_head": "bb881b920d1f9688e0f041328ace306ca25a84a7",
+    "run_id": 46144263287,
+    "docs_validation": "success_ubuntu-24.04_175_tests_compile_c12_dry_run_scanner",
+    "security_windows": "success_windows-2025_security_workflow_adversarial_verify_compile_dry_run",
+    "sonar": "0_open_issues_quality_gate_passed",
+    "socket": "PASS",
+    "ecc": "SECURITY_EVIDENCE_PASS",
+    "prior_run_id": 46141503819,
+    "prior_code_head": "798d4415447b25e612e4665747c015716526a04b",
+    "prior_tests": 171,
     "final_evidence_head": "COMMIT_CONTAINING_THIS_LOCK",
     "final_head_note": "Exact SHA, CI and approved audit are recorded in the external final report."
   },
@@ -171,10 +171,10 @@
     "model_calls": false
   },
   "blockers": [
-    "CD-03 audit-correction CI/Sonar/Socket/ECC read-back pending",
+    "Docs-only CD-03 evidence commit CI read-back pending",
     "Independent HIGH_ASSURANCE audit of CD-03 HEAD pending"
   ],
-  "next_action": "Commit/push CD-03 audit corrections, verify CI/Sonar/Socket/ECC, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
+  "next_action": "Push the docs-only CD-03 evidence commit, verify CI on it, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
   "evidence": "evidence/NLE-WF-WO-001-CD03-EXECUTION.md",
   "stale_when": [
     "base/main changes",
