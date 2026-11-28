@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
           persist-credentials: false
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Python version
         run: python3 --version
       - name: Validate Source Pack
@@ -34,6 +34,13 @@ jobs:
         run: python3 -m registry verify
       - name: Verify offline security control contracts
         run: python3 -m security verify
+      - name: Verify offline workflow contracts
+        run: python3 -m workflow verify
+      - name: Compile, C12 and dry-run workflow
+        run: |
+          python3 -m workflow compile > /dev/null
+          python3 -m workflow c12 > /dev/null
+          python3 -m workflow dry-run > /dev/null
       - name: Security regression scan
         run: python3 scripts/security/scan_repository.py
 
@@ -48,10 +55,20 @@ jobs:
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
           persist-credentials: false
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Python version
         run: py -3.12 --version
       - name: Run security controls on Windows
         run: py -3.12 -m unittest discover -s tests -p test_security_controls.py -v
+      - name: Run workflow controls on Windows
+        run: py -3.12 -m unittest discover -s tests -p test_workflow_controls.py -v
+      - name: Run workflow adversarial regressions on Windows
+        run: py -3.12 -m unittest discover -s tests -p test_workflow_adversarial.py -v
       - name: Verify offline policy on Windows
         run: py -3.12 -m security verify
+      - name: Verify and compile offline workflow on Windows
+        run: |
+          py -3.12 -m workflow verify
+          py -3.12 -m workflow compile > $null
+          py -3.12 -m workflow c12 > $null
+          py -3.12 -m workflow dry-run > $null

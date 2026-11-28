@@ -1,0 +1,394 @@
+"""Offline workflow event, state and C12 contracts for NLE-WF-WO-001."""
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime
+from collections import Counter
+import hashlib
+import json
+from pathlib import Path
+from typing import Any
+
+from security.contracts import (
+    RISKS, SecurityError, require, require_hash, require_id, require_utc,
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+WORKFLOWS = "sources/NexLabs_Workflows/workflows.json"
+SCHEMA_VERSION = "nexlabs.event.v1"
+EVENT_TYPES = frozenset({
+    "lead.qualified", "proposal.approved", "contract.signed", "work_order.ready",
+    "pr.audited", "release.validated", "product.qa_passed", "campaign.draft_ready",
+    "order.confirmed", "refund.confirmed", "research.validated",
+    "simulation.completed", "incident.opened",
+})
+CLASSIFICATIONS = frozenset({"PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED"})
+WORKFLOW_VERSION = "0.1.0"
+WORKFLOW_GATES = frozenset({
+    "INTERNAL_ONLY", "POLICY_GATED_EXTERNAL", "HUMAN_APPROVAL_REQUIRED",
+})
+STATES = frozenset({
+    "RECEIVED", "VALIDATED", "QUEUED", "RUNNING", "REVIEW", "APPROVED",
+    "CORRECTION_REQUIRED", "BLOCKED", "WAITING_APPROVAL", "EFFECT_READY",
+    "EFFECT_IN_PROGRESS", "VERIFIED", "COMPLETED", "STALE", "CANCELLED",
+    "RETRY_WAIT", "UNKNOWN_EFFECT", "FAILED", "QUARANTINED",
+})
+TERMINAL = frozenset({"COMPLETED", "CANCELLED", "QUARANTINED"})
+OUTBOX_BLOCKED_STATES = TERMINAL | {"BLOCKED"}
+OUTBOX_PENDING_STATUS = "PENDING"
+OUTBOX_CANCELLED_STATUS = "CANCELLED"
+EXECUTOR_STATES = frozenset({"RUNNING", "EFFECT_IN_PROGRESS"})
+TRANSITIONS = {
+    "RECEIVED": frozenset({"VALIDATED", "QUARANTINED", "FAILED"}),
+    "VALIDATED": frozenset({"QUEUED", "BLOCKED", "QUARANTINED"}),
+    "QUEUED": frozenset({"RUNNING", "CANCELLED", "BLOCKED", "QUARANTINED"}),
+    "RUNNING": frozenset({"REVIEW", "FAILED", "RETRY_WAIT", "WAITING_APPROVAL", "BLOCKED", "QUARANTINED"}),
+    "REVIEW": frozenset({"APPROVED", "CORRECTION_REQUIRED", "BLOCKED", "QUARANTINED"}),
+    "APPROVED": frozenset({"VERIFIED", "EFFECT_READY", "QUARANTINED"}),
+    "CORRECTION_REQUIRED": frozenset({"QUEUED", "CANCELLED", "BLOCKED", "QUARANTINED"}),
+    "BLOCKED": frozenset({"QUEUED", "CANCELLED", "FAILED", "QUARANTINED"}),
+    "WAITING_APPROVAL": frozenset({"APPROVED", "CORRECTION_REQUIRED", "BLOCKED", "CANCELLED", "QUARANTINED"}),
+    "EFFECT_READY": frozenset({"EFFECT_IN_PROGRESS", "CANCELLED", "QUARANTINED"}),
+    "EFFECT_IN_PROGRESS": frozenset({"VERIFIED", "UNKNOWN_EFFECT", "FAILED", "QUARANTINED"}),
+    "UNKNOWN_EFFECT": frozenset({"VERIFIED", "FAILED", "BLOCKED", "QUARANTINED"}),
+    "RETRY_WAIT": frozenset({"QUEUED", "FAILED", "CANCELLED", "QUARANTINED"}),
+    "STALE": frozenset({"QUEUED", "CANCELLED", "BLOCKED", "QUARANTINED"}),
+    "FAILED": frozenset({"RETRY_WAIT", "QUARANTINED", "CANCELLED"}),
+    "VERIFIED": frozenset({"COMPLETED", "QUARANTINED"}),
+    "COMPLETED": frozenset(),
+    "CANCELLED": frozenset(),
+    "QUARANTINED": frozenset(),
+}
+C12_WORKFLOW_IDS = frozenset({
+    "NLE-WF-GOV-03", "NLE-WF-QNT-01", "NLE-WF-QNT-02",
+    "NLE-WF-QNT-03", "NLE-WF-QNT-05",
+})
+C12_FORBIDDEN_FIELDS = frozenset({
+    "client_access", "external_grants", "grants", "memory", "memory_grants",
+    "permissions", "privileges", "skill_imports", "skills", "tools",
+})
+C12_ALLOWED_WORKFLOW_FIELDS = frozenset({
+    "accountable", "activation", "common_tests", "dispatch_agent", "effect_policy",
+    "eligible_packages_union", "failure", "gate", "id", "inputs", "kpi_proposed",
+    "name", "new_spend_limit_usd", "next_candidates", "output", "qualification",
+    "reviewer", "reviewer_packages", "risk", "scenario_specific_not_run", "steps",
+    "trigger_proposed",
+})
+C12_ALLOWED_STEP_FIELDS = frozenset({
+    "agent_id", "autonomy_ceiling", "eligible_packages", "external_effects", "scope",
+    "step", "task",
+})
+GRANT_KEY_MARKERS = (
+    "grant", "memory", "skill", "client", "privilege", "entitlement", "secret",
+    "permission", "tool",
+)
+MAX_ATTEMPTS = 2
+RISK_LEVELS = {"LOW": 0, "STANDARD": 1, "ELEVATED": 2, "HIGH_ASSURANCE": 3}
+
+
+def require_risk_floor(command_risk: str, event_risk: str) -> None:
+    """A command may escalate risk, but it may never process a higher-risk event."""
+    require(command_risk in RISK_LEVELS and event_risk in RISK_LEVELS
+            and RISK_LEVELS[command_risk] >= RISK_LEVELS[event_risk],
+            "EVENT_RISK_ESCALATION")
+
+
+def forbidden_field_count(value: Any) -> int:
+    """Count grant/memory/skill/privilege-like keys anywhere in a document."""
+    if isinstance(value, dict):
+        return sum(
+            1 for key in value if any(marker in str(key).lower() for marker in GRANT_KEY_MARKERS)
+        ) + sum(forbidden_field_count(item) for item in value.values())
+    if isinstance(value, list):
+        return sum(forbidden_field_count(item) for item in value)
+    return 0
+
+
+class WorkflowError(SecurityError):
+    """A fail-closed workflow contract violation."""
+
+
+def canonical_bytes(document: Any) -> bytes:
+    return (json.dumps(document, sort_keys=True, ensure_ascii=False,
+                       separators=(",", ":"), allow_nan=False) + "\n").encode("utf-8")
+
+
+def _read_json(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise WorkflowError("WORKFLOW_SOURCE_UNAVAILABLE") from exc
+
+
+@dataclass(frozen=True)
+class WorkflowEvent:
+    event_id: str
+    event_type: str
+    occurred_at: datetime
+    received_at: datetime
+    producer: str
+    subject_ref: str
+    tenant_id: str
+    correlation_id: str
+    idempotency_key: str
+    payload_ref: str
+    payload_sha256: str
+    data_classification: str
+    risk: str
+    schema_version: str = SCHEMA_VERSION
+
+    def validate(self) -> None:
+        require(self.schema_version == SCHEMA_VERSION, "EVENT_SCHEMA_INVALID")
+        require(self.event_type in EVENT_TYPES, "EVENT_TYPE_INVALID")
+        for value in (
+            self.event_id, self.producer, self.subject_ref, self.tenant_id,
+            self.correlation_id, self.idempotency_key, self.payload_ref,
+        ):
+            require_id(value, "EVENT_IDENTIFIER_INVALID")
+        require_utc(self.occurred_at)
+        require_utc(self.received_at)
+        require(self.received_at >= self.occurred_at, "EVENT_RECEIVED_BEFORE_OCCURRED")
+        require_hash(self.payload_sha256)
+        require(self.data_classification in CLASSIFICATIONS, "EVENT_CLASSIFICATION_INVALID")
+        require(self.risk in RISKS, "EVENT_RISK_INVALID")
+        require(not self.payload_ref.startswith(("http:", "https:", "file:")),
+                "EVENT_PAYLOAD_REF_MUST_BE_OPAQUE")
+
+    def canonical(self) -> dict[str, Any]:
+        return {
+            "schema_version": self.schema_version,
+            "event_id": self.event_id,
+            "event_type": self.event_type,
+            "occurred_at": self.occurred_at.isoformat(),
+            "received_at": self.received_at.isoformat(),
+            "producer": self.producer,
+            "subject_ref": self.subject_ref,
+            "tenant_id": self.tenant_id,
+            "correlation_id": self.correlation_id,
+            "idempotency_key": self.idempotency_key,
+            "payload_ref": self.payload_ref,
+            "payload_sha256": self.payload_sha256,
+            "data_classification": self.data_classification,
+            "risk": self.risk,
+        }
+
+    def digest(self) -> str:
+        return hashlib.sha256(canonical_bytes(self.canonical())).hexdigest()
+
+
+def validate_event(event: WorkflowEvent) -> None:
+    require(isinstance(event, WorkflowEvent), "EVENT_TYPE_OBJECT_REQUIRED")
+    event.validate()
+
+
+def assert_transition(current: str, target: str) -> None:
+    require(current in STATES and target in STATES
+            and current in TRANSITIONS, "STATE_UNKNOWN")
+    require(target in TRANSITIONS[current], "STATE_TRANSITION_FORBIDDEN")
+
+
+def retry_decision(status_code: int, attempts: int, retry_after: int | None = None) -> str:
+    require(type(status_code) is int and type(attempts) is int and attempts >= 0,
+            "RETRY_INPUT_INVALID")
+    require(retry_after is None or (type(retry_after) is int and retry_after >= 0),
+            "RETRY_INPUT_INVALID")
+    if status_code in (401, 403):
+        return "BLOCK"
+    if attempts + 1 >= MAX_ATTEMPTS:
+        return "FAILED"
+    if status_code == 429:
+        return "RETRY_AFTER" if retry_after is not None else "RETRY_WAIT"
+    if status_code in (408, 500, 502, 503, 504):
+        return "RETRY_WAIT"
+    return "FAILED"
+
+
+@dataclass(frozen=True)
+class RunOptions:
+    """Optional qualified metadata for a new persisted run."""
+
+    risk: str = "STANDARD"
+    agent_id: str | None = None
+    skill_lock_id: str | None = None
+    skill_lock_version: str | None = None
+    skill_lock_hash: str | None = None
+    model_id: str | None = None
+    quota: int = 0
+    output_ref: str | None = None
+    evidence_ref: str | None = None
+    gate: str = "INTERNAL_ONLY"
+
+
+@dataclass(frozen=True)
+class RunContract:
+    run_id: str
+    tenant_id: str
+    project_id: str
+    task_id: str
+    workflow_id: str
+    workflow_version: str
+    event_id: str
+    correlation_id: str
+    state: str
+    revision: int
+    attempts: int
+    source_lock_sha256: str
+    deadline_at: datetime
+    risk: str = "STANDARD"
+    idempotency_key: str = ""
+    agent_id: str = ""
+    skill_lock_id: str | None = None
+    skill_lock_version: str | None = None
+    skill_lock_hash: str | None = None
+    model_id: str | None = None
+    quota: int = 0
+    data_classification: str = "INTERNAL"
+    inputs_ref: str = ""
+    output_ref: str | None = None
+    evidence_ref: str | None = None
+    approval_ref: str | None = None
+    status: str = "RECEIVED"
+    gate: str = "INTERNAL_ONLY"
+    activation: str = "DISABLED"
+    stale: bool = False
+    revoked: bool = False
+    approval_id: str | None = None
+    lease_owner: str | None = None
+    lease_epoch: int = 0
+
+    def validate(self) -> None:
+        for value in (
+            self.run_id, self.tenant_id, self.project_id, self.task_id,
+            self.workflow_id, self.workflow_version, self.event_id, self.correlation_id,
+            self.idempotency_key, self.agent_id, self.inputs_ref,
+        ):
+            require_id(value, "RUN_IDENTIFIER_INVALID")
+        require(self.state in STATES and self.status == self.state, "RUN_STATE_INVALID")
+        require(type(self.revision) is int and self.revision >= 0, "RUN_REVISION_INVALID")
+        require(type(self.attempts) is int and 0 <= self.attempts <= MAX_ATTEMPTS,
+                "RUN_ATTEMPTS_INVALID")
+        require_hash(self.source_lock_sha256)
+        require_utc(self.deadline_at)
+        require(self.risk in RISK_LEVELS, "RUN_RISK_INVALID")
+        require(self.data_classification in CLASSIFICATIONS, "RUN_CLASSIFICATION_INVALID")
+        require(type(self.quota) is int and self.quota >= 0, "RUN_QUOTA_INVALID")
+        require(self.gate in WORKFLOW_GATES, "RUN_GATE_INVALID")
+        require(self.activation == "DISABLED", "RUN_ACTIVATION_FORBIDDEN")
+        for value in (self.skill_lock_id, self.skill_lock_version, self.model_id,
+                      self.output_ref, self.evidence_ref, self.approval_ref):
+            require(value is None or isinstance(value, str) and bool(value),
+                    "RUN_REFERENCE_INVALID")
+        skill_values = (
+            self.skill_lock_id, self.skill_lock_version, self.skill_lock_hash,
+        )
+        if any(value is not None for value in skill_values):
+            require(all(value is not None for value in skill_values),
+                    "RUN_SKILL_LOCK_INCOMPLETE")
+            require_hash(self.skill_lock_hash)
+        require(type(self.stale) is bool and type(self.revoked) is bool, "RUN_FLAGS_INVALID")
+
+    def document(self) -> dict[str, Any]:
+        return {
+            "schema_version": "nexlabs.workflow-run.v1",
+            "workflow_id": self.workflow_id, "workflow_version": self.workflow_version,
+            "run_id": self.run_id, "correlation_id": self.correlation_id,
+            "event_id": self.event_id, "tenant_id": self.tenant_id,
+            "project_id": self.project_id, "task_id": self.task_id,
+            "idempotency_key": self.idempotency_key, "source_lock": self.source_lock_sha256,
+            "agent_id": self.agent_id, "skill_lock": {
+                "id": self.skill_lock_id, "version": self.skill_lock_version,
+                "hash": self.skill_lock_hash,
+            }, "model_id": self.model_id, "quota": self.quota,
+            "data_classification": self.data_classification, "risk": self.risk,
+            "inputs_ref": self.inputs_ref, "output_ref": self.output_ref,
+            "evidence_ref": self.evidence_ref, "deadline": self.deadline_at.isoformat(),
+            "approval_ref": self.approval_ref, "status": self.status,
+            "state": self.state, "revision": self.revision, "attempts": self.attempts,
+            "gate": self.gate, "activation": self.activation,
+            "stale": self.stale, "revoked": self.revoked,
+            "lease_owner": self.lease_owner, "lease_epoch": self.lease_epoch,
+        }
+
+
+def validate_workflow_catalog(workflows: list[dict[str, Any]]) -> None:
+    require(len(workflows) == 62, "WORKFLOW_CATALOG_COUNT")
+    require(all(item.get("activation") == "DISABLED" for item in workflows),
+            "WORKFLOW_ACTIVATION_FORBIDDEN")
+    require(all(item.get("qualification") == "NOT_RUN" for item in workflows),
+            "WORKFLOW_QUALIFICATION_FORBIDDEN")
+    gates = Counter(item.get("gate") for item in workflows)
+    require(gates == Counter({"INTERNAL_ONLY": 36, "POLICY_GATED_EXTERNAL": 12,
+                              "HUMAN_APPROVAL_REQUIRED": 14}), "WORKFLOW_GATE_DRIFT")
+    require(all(item.get("new_spend_limit_usd") == 0 for item in workflows),
+            "WORKFLOW_SPEND_FORBIDDEN")
+    require(forbidden_field_count(workflows) == 0, "WORKFLOW_PRIVILEGE_FIELD")
+    for workflow in workflows:
+        agents = {
+            step.get("agent_id") for step in workflow.get("steps", [])
+            if isinstance(step, dict)
+        }
+        require(workflow.get("reviewer") != workflow.get("accountable"),
+                "WORKFLOW_REVIEWER_ACCOUNTABLE_COLLISION")
+        require(workflow.get("reviewer") not in agents,
+                "WORKFLOW_REVIEWER_EXECUTES")
+        require(all(step.get("external_effects") == "DENY"
+                    for step in workflow.get("steps", [])),
+                "WORKFLOW_STEP_EFFECT_FORBIDDEN")
+
+
+def load_workflows(root: Path = ROOT) -> dict[str, dict[str, Any]]:
+    document = _read_json(root / WORKFLOWS)
+    workflows = document.get("workflows")
+    require(isinstance(workflows, list), "WORKFLOW_CATALOG_INVALID")
+    result = {item["id"]: item for item in workflows if isinstance(item, dict) and "id" in item}
+    require(len(result) == len(workflows), "WORKFLOW_DUPLICATE_ID")
+    return result
+
+
+def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
+    require(set(workflow) <= C12_ALLOWED_WORKFLOW_FIELDS, "C12_UNKNOWN_FIELD")
+    require(forbidden_field_count(workflow) == 0, "C12_PRIVILEGE_FORBIDDEN")
+    require(workflow.get("activation") == "DISABLED", "C12_ACTIVATION_FORBIDDEN")
+    require(workflow.get("gate") == "INTERNAL_ONLY", "C12_GATE_FORBIDDEN")
+    require(workflow.get("effect_policy") == "DENY_DEFAULT", "C12_EFFECT_FORBIDDEN")
+    require(workflow.get("new_spend_limit_usd") == 0, "C12_SPEND_FORBIDDEN")
+    require(workflow.get("qualification") == "NOT_RUN", "C12_QUALIFICATION_FORBIDDEN")
+    require(not any(workflow.get(field) for field in C12_FORBIDDEN_FIELDS),
+            "C12_PRIVILEGE_FORBIDDEN")
+    dispatcher = workflow.get("dispatch_agent")
+    require(dispatcher == "NLE-ATHENA-PMO", "C12_DISPATCHER_IDENTITY_INVALID")
+    require_id(dispatcher, "C12_DISPATCHER_INVALID")
+    steps = workflow.get("steps") or []
+    require(isinstance(steps, list) and steps, "C12_STEPS_INVALID")
+    step_agents = {step.get("agent_id") for step in steps if isinstance(step, dict)}
+    require(dispatcher not in step_agents, "C12_DISPATCHER_EXECUTES")
+    require(dispatcher != workflow.get("reviewer"), "C12_DISPATCHER_REVIEWS")
+    require(dispatcher != workflow.get("accountable"), "C12_DISPATCHER_ACCOUNTABLE")
+    accountable_executes = workflow.get("accountable") in step_agents
+    segregation_violations = (
+        ["ACCOUNTABLE_EXECUTES"] if accountable_executes else []
+    )
+    for step in steps:
+        require(isinstance(step, dict), "C12_STEP_INVALID")
+        require(set(step) <= C12_ALLOWED_STEP_FIELDS, "C12_STEP_UNKNOWN_FIELD")
+        require(step.get("external_effects") == "DENY", "C12_STEP_EFFECT_FORBIDDEN")
+        require(not any(step.get(field) for field in C12_FORBIDDEN_FIELDS),
+                "C12_STEP_PRIVILEGE_FORBIDDEN")
+        require_id(step.get("agent_id"), "C12_STEP_AGENT_INVALID")
+        require(step.get("agent_id") != dispatcher, "C12_DISPATCHER_EXECUTES")
+    return {
+        "workflow_id": workflow["id"], "dispatcher": dispatcher,
+        "accountable": workflow.get("accountable"), "reviewer": workflow.get("reviewer"),
+        "execution_agents": sorted(step_agents), "dispatch_only": True,
+        "skill_imports": [], "memory_grants": [], "client_access": False,
+        "activation": "DISABLED", "effect_policy": "DENY_DEFAULT",
+        "new_spend_limit_usd": 0, "runtime_authorized": False,
+        "execution_allowed": False,
+        "segregation_violations": segregation_violations,
+    }
+
+
+def validate_c12(root: Path = ROOT) -> dict[str, dict[str, Any]]:
+    workflows = load_workflows(root)
+    require(C12_WORKFLOW_IDS <= set(workflows), "C12_WORKFLOW_MISSING")
+    return {wid: validate_c12_workflow(workflows[wid]) for wid in sorted(C12_WORKFLOW_IDS)}
