@@ -4,8 +4,8 @@
   "status": "CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT",
   "base_sha": "04724af867659e278210489c8ba91fc6344e3fb1",
   "base_tree_sha": "d0f135f2ba896a5fe22f21610bae78f025c0650e",
-  "head_at_context_capture": "1e6191729d8c6ddad1f3779999972d8e7a10853e",
-  "head_note": "1e61917 is the last CD-02 approved head. This CD-03 lock follows the F01-R1/F01-R2/F02-F06 corrections; final HEAD and independent CD-03 audit are external.",
+  "head_at_context_capture": "f1a8e07aee55b9af0963a11b6f356c4cca911a54",
+  "head_note": "1e61917 is the last CD-02 approved head. f1a8e07 is the CD-03 correction code head with green CI/Sonar/Socket/ECC. The evidence commit containing this lock is the final HEAD; exact SHA and independent audit are external.",
   "source_lock_sha256": "a72bc69bd3da2e456205d6cb98776c002cff53800d70efa9ea70b3ebd648231e",
   "source_pack_files": 364,
   "canonical_git_blob_fingerprints": {
@@ -78,7 +78,7 @@
     "work-orders/NLE-WF-WO-001.md": "f42ed9d51651daf4ff8a5198447a5c226942c04d",
     ".github/workflows/docs-validation.yml": "b3b33f8a65eb1e2a1a2de7188111a77e0dc19b87",
     "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "09f6efe250432f93b5503c6dddb9ad210a57146f",
-    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "733c4fe2e485084378ded62b084965cbf317095a",
+    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "c36e100c6d6d407e87f186ce0df0d20238c4e752",
     "workflow/outcomes.py": "1b6b3784bb47424c2caad28a416f156eadc6c88b",
     "workflow/schema_validation.py": "d95612c208c6d249b51eafbd117a8f6af9831902",
     "workflow/schemas/plan-v1.json": "a0a59e6b0837e2a6fa3ee07cf5f9d0c597d80507"
@@ -101,7 +101,7 @@
     "work-orders/NLE-WF-WO-001.md": "6260533a3eff6c1c6e9c764ad276b80f1216510a871e6e9a8290cd528466b7af",
     ".github/workflows/docs-validation.yml": "49bd3785ff6267471016787121796e112576e249d81c4423684f61c1663d02f0",
     "evidence/NLE-WF-WO-001-CD02-EXECUTION.md": "37d804981e98ffcca94095d78f5d6e0febd6f11b894e8e2800a01b31431ab16d",
-    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "a38196a7e9341a2fa1274302219b883cb48767625204f043a12c1065fec84680",
+    "evidence/NLE-WF-WO-001-CD03-EXECUTION.md": "27431a88a3b7932d5d4b44f2b25e38cfc3c22def6eafc1b9871c6fb912c1ea67",
     "workflow/outcomes.py": "d2e95bf8191102648589ace2b6d47f4eb440da37582c9eb5ef7041b35b226320",
     "workflow/schema_validation.py": "6006ede1fc0bee8d9a2e7ac479044fc6eee81543d5015f933b85b8aa70688492",
     "workflow/schemas/plan-v1.json": "06490e849aeff0dc1f8e66b6ec379802fe135d2dd4c584d3f8b38afed76d69f3"
@@ -144,13 +144,13 @@
     "grants": 0
   },
   "ci": {
-    "code_head": "PENDING_CD03_FINAL_HEAD",
-    "run_id": null,
-    "docs_validation": "PENDING",
-    "security_windows": "PENDING",
-    "sonar": "PENDING",
-    "socket": "PENDING",
-    "ecc": "PENDING",
+    "code_head": "f1a8e07aee55b9af0963a11b6f356c4cca911a54",
+    "run_id": 46141350591,
+    "docs_validation": "success_ubuntu-24.04_171_tests_compile_dry_run_scanner",
+    "security_windows": "success_windows-2025_security_workflow_adversarial_verify_compile_dry_run",
+    "sonar": "0_open_issues_quality_gate_passed",
+    "socket": "PASS",
+    "ecc": "SECURITY_EVIDENCE_PASS",
     "prior_run_id": 46051067882,
     "prior_code_head": "1e6191729d8c6ddad1f3779999972d8e7a10853e",
     "prior_tests": 156,
@@ -171,10 +171,10 @@
     "model_calls": false
   },
   "blockers": [
-    "CD-03 CI/Sonar/Socket/ECC read-back pending",
+    "Docs-only CD-03 evidence commit CI read-back pending",
     "Independent HIGH_ASSURANCE audit of CD-03 HEAD pending"
   ],
-  "next_action": "Commit/push CD-03, verify CI/Sonar/Socket/ECC, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
+  "next_action": "Push the docs-only CD-03 evidence commit, verify CI on it, then obtain independent audit of the exact final HEAD. No merge, checkpoint, VPS, runtime, agents, models or spend.",
   "evidence": "evidence/NLE-WF-WO-001-CD03-EXECUTION.md",
   "stale_when": [
     "base/main changes",

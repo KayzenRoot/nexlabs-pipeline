@@ -82,8 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/Sonar/Socket/ECC serão registrados no HEAD final; nenhum resultado é declarado aprovado antecipadamente.
-- Sonar CD-02: 0 issues e Quality Gate pass; a rodada CD-03 deve manter.
+- - CI/CD-03 no code head `f1a8e07aee55b9af0963a11b6f356c4cca911a54`: run **46141350591** — `docs-validation` (ubuntu-24.04, 171 testes) e `security-windows` (windows-2025, security/workflow/adversarial) **SUCCESS**.
+- SonarCloud no HEAD `f1a8e07`: **0 issues abertas**, Quality Gate **passed**, check **success**.
+- Socket Security PR Alerts/Project Report **PASS**; ECC Tools / Security Evidence **PASS** em `f1a8e07`.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -103,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | PENDENTE |
+| AC14 CI/auditoria | GATES PASS em f1a8e07; auditoria independente do HEAD final pendente |
 
 ## 6. Limitações
 
