@@ -70,9 +70,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 | Verificação | Resultado |
 |---|---|
-| Suíte local | **187/187 OK** |
+| Suíte local | **195/195 OK** |
 | Baseline CD-02 | 156/156 OK |
-| Novos testes CD-03 | 31 |
+| Novos testes CD-03 | 39 |
 | `workflow verify` | PASS local |
 | Source Pack | 7/7; 364 fontes |
 | Registry | 105/92/1110; 0 writes |
@@ -82,9 +82,10 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/CD-03 no code head `53c2ca017be7b9b279954e9d5ac1c05e29a2e5ef`: run **46151975227** — `docs-validation` (ubuntu-24.04, 187 testes) e `security-windows` **SUCCESS**; Sonar 0 issues; Socket/ECC PASS.
-- SonarCloud no HEAD `53c2ca0`: 0 issues abertas, Quality Gate passed.
-- Socket PR Alerts/Project Report PASS; ECC Security Evidence PASS em `53c2ca0`.
+- Correction Delta 02: code head `53c2ca017be7b9b279954e9d5ac1c05e29a2e5ef` run **46151975227** e docs head `24fde2c3afdf5f07aba2ab1b2e437e65cd14117d` run **46152110904** — ambos SUCCESS (Linux 187 testes + Windows); Sonar 0; Socket/ECC PASS.
+- Correction Delta 03, code head `28059123ef4e7d9f4bacd37cabe28aa209018ced`: run **46158146428** — falha esperada e exclusivamente nos quatro gate-tests do Context Lock (`CONTEXT_LOCK_IMPLEMENTATION_MISMATCH`, lock anterior ainda vinculado ao HEAD anterior); os demais 191 testes Linux e 45+24-4 testes Windows passam. Run anterior `d2a2c90` (**46157620690**) teve, além do gate, um `FileNotFoundError` de `SemLock._rebuild` no Linux ao reconstruir `Barrier(1)` do worker de crash — corrigido com ready handshake sem barrier no cenário F.
+- O CI do HEAD documental final (commit que contém este lock) é verificado por read-back no SHA exato no GitHub e registrado no corpo da PR e no relatório externo; não é embutido no lock.
+- SonarCloud no code head: 0 issues abertas, Quality Gate passed.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -93,18 +94,18 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 |---|---|
 | AC01 Context Lock/base/364/fingerprints | PASS local; lock CD-03 pendente do commit |
 | AC02 Event Contract | PASS |
-| AC03 Run Contract/ledger/migrações | PASS |
-| AC04 estados | PASS |
-| AC05 autorização/escopo | PASS |
+| AC03 Run Contract/ledger/migrações (v3 integral) | PASS |
+| AC04 estados (inclui VERIFIED→QUARANTINED) | PASS |
+| AC05 autorização/escopo (primitiva fail-closed) | PASS |
 | AC06 aprovação/nonce | PASS offline |
 | AC07 atomicidade | PASS |
-| AC08 concorrência/leases | PASS |
+| AC08 concorrência/leases (multiprocesso sincronizado) | PASS |
 | AC09 recovery/retry | PASS |
-| AC10 outbox/DLQ | PASS |
+| AC10 outbox/DLQ (append terminal + invalidação) | PASS |
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | GATES PASS em 53c2ca0; auditoria independente do HEAD final pendente |
+| AC14 CI/auditoria | CI do HEAD final por read-back; auditoria independente pendente |
 
 ## 6. Limitações
 
@@ -157,3 +158,17 @@ Somente propor após auditoria independente APPROVED no HEAD exato. Sem merge, p
 
 - **HIGH-01:** `transition` e `reconcile` negam `QUARANTINED`; apenas `dead_letter` efetiva DLQ/quarentena/auditoria. `_transition` também nega o alvo para defesa em profundidade. Teste negativo com grant de transição.
 - **LOW-01:** branch legado da migração v3 passa por `_validate_approvals_v3` após a cópia e criação de índices.
+
+## 13. Correction Delta 03 (F07–F13 da décima auditoria)
+
+Auditoria independente HIGH_ASSURANCE no HEAD `24fde2c3afdf5f07aba2ab1b2e437e65cd14117d` (code head `53c2ca0`) emitiu CORRECTION REQUIRED com F07–F13. Correções no mesmo WO/PR, code head `28059123ef4e7d9f4bacd37cabe28aa209018ced`:
+
+- **F07 LOW — Lock/Evidence coerentes:** este Evidence Bundle e o Context Lock registram o code head e o HEAD documental separadamente, o CI real por run/SHA (incluindo os runs 46152110904/46151975227 do Delta 02 e o run 46158146428 do code head Delta 03, com falha esperada apenas no gate de lock) e removem a referência contraditória a auditoria aprovada; `independent_audit` registra o veredito CORRECTION REQUIRED da décima auditoria e o status pendente de reauditoria.
+- **F08 HIGH — append em terminal/quarentena:** `commands.append_event` verifica o estado no boundary; `Ledger._append_event` revalida `state not in TERMINAL` (definição centralizada em `contracts.TERMINAL`) dentro da mesma transação; inserção de evento e auditoria permanecem atômicas. Testes: COMPLETED/CANCELLED/QUARANTINED negados, RECEIVED/RUNNING/VERIFIED permitidos, run inexistente e escopo cruzado negados, nenhum evento/auditoria parcial após falha.
+- **F09 HIGH — invalidação da outbox na quarentena:** `Ledger._dead_letter` cancela atomicamente todas as mensagens `PENDING` do run (`status=CANCELLED`), grava audit `workflow.outbox.cancel` com actor/timestamp na mesma transação e inclui `outbox_cancelled` na auditoria do DLQ; `enqueue_outbox` já nega runs em `OUTBOX_BLOCKED_STATES` (inclui QUARANTINED); não há caminho de claim/dispatch nesta entrega (a elegibilidade futura é a status CANCELLED + revalidação de estado na fila). Testes: duas pendências canceladas, DLQ/transição/auditoria persistidas, enqueue negado, DLQ duplicado negado, rollback por falha injetada na auditoria não deixa runs/DLQ/transição/outbox/audit parciais.
+- **F10 HIGH — migração v3 valida constraints reais:** `_validate_approvals_v3` agora valida, por PRAGMA e sqlite_master, as 23 colunas em ordem com tipo/NOT NULL/default/PK exatos, AUTOINCREMENT na PK, UNIQUE composto `(approval_id, run_id, tenant_id)`, `idx_approvals_run` não-unique com `(run_id, tenant_id)`, `idx_approvals_null_run` unique parcial em `approval_id` com predicado `run_id IS NULL`, FK única `(run_id, tenant_id) → runs(run_id, tenant_id)` na ordem e com ações NO ACTION, e `PRAGMA foreign_key_check`. Fixtures adversariais: índice com nome correto e definição errada (unique/colunas trocadas), índice parcial não-unique e sem predicado, ausência do UNIQUE composto, FK para tabela errada/uma coluna/ordem invertida, tipo e NOT NULL incorretos, PK sem AUTOINCREMENT — todos falham sem registrar versão (rollback integral); schema válido migra. Branch legado preservada.
+- **F11 MEDIUM — concorrência sincronizada:** os cinco workers multiprocesso sinalizam READY pela fila e liberam via `multiprocessing.Barrier` compartilhada (timeout 30s); o controlador exige READY de todos antes da contenção, faz join com timeout, encerra órfãos, exige exitcode 0 e coleta resultados estruturados. Cenários: mesmo run/idempotência (um vencedor), eventos distintos (nenhuma perda), nonce (um COMMITTED), lease/fencing (um owner, epoch 1, claim pós-lease negado), recovery (uma transição). Crash/rollback usa READY handshake e encerra dentro da transação; banco recuperável com integrity/FK. Sem `sleep()` como sincronização.
+- **F12 MEDIUM — VERIFIED → QUARANTINED:** `TRANSITIONS["VERIFIED"] = {COMPLETED, QUARANTINED}`; QUARANTINED permanece terminal; transição válida apenas via `dead_letter` (DLQ+transição+auditoria+invalidação atômicas); `transition`/`reconcile` genéricos continuam negando QUARANTINED no boundary e em `_transition`. Testes: VERIFIED→QUARANTINED via DLQ PASS; via transition/reconcile genéricos DENY; QUARANTINED→qualquer estado DENY; rollback do DLQ ausente coberto por F09.
+- **F13 MEDIUM — scope fail-closed na primitiva:** `_append_event` exige scope completo (3-tupla project/task/workflow) sempre que `run_id` está presente, valida identificadores via `run_scoped` e remove o fallback por run_id+tenant; o caminho sem run permanece para eventos sem execução, conforme contrato interno. Testes diretos na primitiva: escopo correto PASS; ausente/malformado/cruzado (tenant, project, task, workflow) e run inexistente DENY, sem linhas parciais.
+
+Suíte local: 195/195 OK (156 CD-02 + 39 CD-03) no code head. Auditoria independente HIGH_ASSURANCE do HEAD final permanece PENDING.

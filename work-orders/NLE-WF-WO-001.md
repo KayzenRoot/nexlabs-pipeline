@@ -90,4 +90,18 @@ Auditoria CD-03 no HEAD `1e61917` emitiu CORRECTION REQUIRED com F01-R1–F07. C
 - **F06:** conjuntos exatos de 24 paths canônicos + 21 de implementação; integridade antes de verify/compile/c12/dry-run; lock CD-03; 364 fontes, 62 workflows e C12 preservados.
 - **F07:** auditoria independente pendente no HEAD final.
 
-Status local: AC01–AC13 PASS em 187/187 testes; AC14 PENDING. Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows ativos, modelo, efeitos externos ou despesa.
+Status local: AC01–AC13 PASS em 195/195 testes; AC14 PENDING. Sem merge, checkpoint, VPS, Paperclip runtime, segredos, agentes, workflows ativos, modelo, efeitos externos ou despesa.
+
+## HIGH_ASSURANCE CD-03 — Correction Delta 03 | 2026-11-28
+
+A décima auditoria independente no HEAD `24fde2c3afdf5f07aba2ab1b2e437e65cd14117d` (code head `53c2ca0`) emitiu CORRECTION REQUIRED com F07–F13. Correções no mesmo Work Order/PR, code head `28059123ef4e7d9f4bacd37cabe28aa209018ced`:
+
+- **F07:** Context Lock/Evidence Bundle coerentes — code head e HEAD documental separados, CI real por run/SHA, sem referência a auditoria aprovada; `independent_audit` registra CORRECTION REQUIRED da décima auditoria e reauditoria pendente.
+- **F08:** append negado em estados terminais (COMPLETED/CANCELLED/QUARANTINED) no boundary e dentro da transação, com definição centralizada `TERMINAL`; RECEIVED/RUNNING/VERIFIED permanecem permitidos; sem evento/auditoria parcial.
+- **F09:** `dead_letter` cancela atomicamente a outbox `PENDING` do run, audita `workflow.outbox.cancel` com actor/timestamp e inclui o contador no audit do DLQ; enqueue permanece negado em QUARANTINED; rollback integral provado.
+- **F10:** migração v3 valida por PRAGMA/sqlite_master as 23 colunas (tipo/NOT NULL/default/PK/AUTOINCREMENT), UNIQUE composto, `idx_approvals_run` não-unique `(run_id, tenant_id)`, `idx_approvals_null_run` unique parcial com predicado, FK `(run_id, tenant_id) → runs(run_id, tenant_id)` e `foreign_key_check`; fixtures adversariais por divergência com rollback e versão não registrada; branch legado preservada.
+- **F11:** multiprocesso com READY handshake + `Barrier` compartilhada, timeouts, cleanup, exitcodes e resultados estruturados nos cenários mesmo run/idempotência, eventos distintos, nonce, lease/fencing (epoch monotônico, claim pós-lease negado) e recovery; crash/rollback com READY e integrity/FK; sem sleep como sincronização.
+- **F12:** `VERIFIED → QUARANTINED` legal, apenas via `dead_letter`; QUARANTINED terminal; transition/reconcile genéricos negam o alvo.
+- **F13:** `_append_event` fail-closed — scope completo obrigatório com `run_id`, identificadores validados via `run_scoped`, fallback parcial removido, eventos sem run preservados pelo contrato interno.
+
+Aceitação AC-F07–AC-F13: PASS local; AC01–AC14 anteriores válidos em 195/195 testes. CI do HEAD documental final por read-back no SHA; auditoria independente HIGH_ASSURANCE PENDING. Sem merge, checkpoint, NLE-WF-WO-002, NLE-INFRA-WO-003, VPS, SSH, Paperclip runtime, segredos, agentes, workflows, chamadas de modelo, deploy, efeitos externos ou despesa (US$0).
