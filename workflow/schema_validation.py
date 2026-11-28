@@ -10,6 +10,10 @@ from security.contracts import SecurityError
 
 SHA256_PATTERN = "^[0-9a-f]{64}$"
 _SHA256 = re.compile(SHA256_PATTERN)
+SUPPORTED_SCHEMA_KEYS = frozenset({
+    "$schema", "$id", "type", "additionalProperties", "required", "properties",
+    "enum", "const", "pattern", "format", "minimum", "items", "minItems",
+})
 
 
 class SchemaValidationError(SecurityError):
@@ -53,10 +57,14 @@ def _validate_string(value, schema: dict, path: str) -> None:
         if _SHA256.fullmatch(value) is None:
             _fail(path, "pattern mismatch")
     if schema.get("format") == "date-time":
+        if "T" not in value:
+            _fail(path, "date-time missing time")
         try:
-            datetime.fromisoformat(value)
+            parsed = datetime.fromisoformat(value)
         except ValueError:
             _fail(path, "date-time invalid")
+        if parsed.tzinfo is None:
+            _fail(path, "date-time timezone required")
 
 
 def _validate_scalar(value, schema: dict, path: str) -> None:
@@ -82,12 +90,17 @@ def _validate_object(value: dict, schema: dict, path: str) -> None:
 
 
 def _validate_array(value: list, schema: dict, path: str) -> None:
+    if len(value) < schema.get("minItems", 0):
+        _fail(path, "minItems violated")
     if "items" in schema:
         for index, item in enumerate(value):
             _validate(item, schema["items"], f"{path}[{index}]")
 
 
 def _validate(value, schema: dict, path: str) -> None:
+    unsupported = set(schema) - SUPPORTED_SCHEMA_KEYS
+    if unsupported:
+        _fail(path, f"unsupported schema keywords {sorted(unsupported)}")
     _validate_scalar(value, schema, path)
     if isinstance(value, dict):
         _validate_object(value, schema, path)

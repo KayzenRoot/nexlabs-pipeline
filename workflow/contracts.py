@@ -276,12 +276,13 @@ class RunContract:
                       self.output_ref, self.evidence_ref, self.approval_ref):
             require(value is None or isinstance(value, str) and bool(value),
                     "RUN_REFERENCE_INVALID")
-        if self.skill_lock_id is not None:
-            require(self.skill_lock_version is not None
-                    and self.skill_lock_hash is not None, "RUN_SKILL_LOCK_INCOMPLETE")
+        skill_values = (
+            self.skill_lock_id, self.skill_lock_version, self.skill_lock_hash,
+        )
+        if any(value is not None for value in skill_values):
+            require(all(value is not None for value in skill_values),
+                    "RUN_SKILL_LOCK_INCOMPLETE")
             require_hash(self.skill_lock_hash)
-        elif self.skill_lock_hash is not None:
-            require(False, "RUN_SKILL_LOCK_INCOMPLETE")
         require(type(self.stale) is bool and type(self.revoked) is bool, "RUN_FLAGS_INVALID")
 
     def document(self) -> dict[str, Any]:
@@ -361,6 +362,10 @@ def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
     require(dispatcher not in step_agents, "C12_DISPATCHER_EXECUTES")
     require(dispatcher != workflow.get("reviewer"), "C12_DISPATCHER_REVIEWS")
     require(dispatcher != workflow.get("accountable"), "C12_DISPATCHER_ACCOUNTABLE")
+    accountable_executes = workflow.get("accountable") in step_agents
+    segregation_violations = (
+        ["ACCOUNTABLE_EXECUTES"] if accountable_executes else []
+    )
     for step in steps:
         require(isinstance(step, dict), "C12_STEP_INVALID")
         require(set(step) <= C12_ALLOWED_STEP_FIELDS, "C12_STEP_UNKNOWN_FIELD")
@@ -375,7 +380,9 @@ def validate_c12_workflow(workflow: dict[str, Any]) -> dict[str, Any]:
         "execution_agents": sorted(step_agents), "dispatch_only": True,
         "skill_imports": [], "memory_grants": [], "client_access": False,
         "activation": "DISABLED", "effect_policy": "DENY_DEFAULT",
-        "new_spend_limit_usd": 0,
+        "new_spend_limit_usd": 0, "runtime_authorized": False,
+        "execution_allowed": False,
+        "segregation_violations": segregation_violations,
     }
 
 

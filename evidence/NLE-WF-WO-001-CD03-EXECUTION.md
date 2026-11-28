@@ -70,9 +70,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 | Verificação | Resultado |
 |---|---|
-| Suíte local | **171/171 OK** |
+| Suíte local | **175/175 OK** |
 | Baseline CD-02 | 156/156 OK |
-| Novos testes CD-03 | 15 |
+| Novos testes CD-03 | 19 |
 | `workflow verify` | PASS local |
 | Source Pack | 7/7; 364 fontes |
 | Registry | 105/92/1110; 0 writes |
@@ -82,9 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- - CI/CD-03 no code head `f1a8e07aee55b9af0963a11b6f356c4cca911a54`: run **46141350591** — `docs-validation` (ubuntu-24.04, 171 testes) e `security-windows` (windows-2025, security/workflow/adversarial) **SUCCESS**.
-- SonarCloud no HEAD `f1a8e07`: **0 issues abertas**, Quality Gate **passed**, check **success**.
-- Socket Security PR Alerts/Project Report **PASS**; ECC Tools / Security Evidence **PASS** em `f1a8e07`.
+- - CI/CD-03 anterior no code head `f1a8e07`: run **46141350591** — `docs-validation` e `security-windows` **SUCCESS**; a rodada atual de correções CD-03 tem CI/Sonar/Socket/ECC pendentes.
+- SonarCloud: a rodada anterior em `f1a8e07` tinha 0 issues; a rodada atual será lida no HEAD final.
+- Socket/ECC da rodada anterior PASS; read-back da rodada atual pendente.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -104,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | GATES PASS em f1a8e07; auditoria independente do HEAD final pendente |
+| AC14 CI/auditoria | PENDENTE — correções HIGH-01/02/03 e CI do novo HEAD em validação |
 
 ## 6. Limitações
 
@@ -117,3 +117,14 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 ## 7. Checkpoint Delta
 
 Somente propor após auditoria independente APPROVED no HEAD exato. Sem merge, promoção, NLE-WF-WO-002 ou NLE-INFRA-WO-003 nesta execução.
+
+## 8. Correções da auditoria CD-03 no HEAD 798d441
+
+- **HIGH-01:** payload de `workflow.run.create` agora inclui agent_id, skill_lock id/version/hash, model_id, quota, output_ref e evidence_ref; aprovação não pode ser reutilizada com RunOptions diferentes.
+- **HIGH-02:** `WorkflowCommands` rejeita accountable executor; QNT-05 é marcado em C12 com `ACCOUNTABLE_EXECUTES`, `runtime_authorized=false` e `execution_allowed=false`, sem alterar as 364 fontes.
+- **HIGH-03:** validador de schema aplica `minItems`, date-time com hora/fuso e rejeita keywords não suportadas; testes de nodes vazio e data-only.
+- **MEDIUM-01:** `audit_events` registra `actor_id` em claim/flags/DLQ; comandos passam o principal autorizado.
+- **MEDIUM-02:** `counts` e `integrity` usam o lock da instância.
+- **MEDIUM-03:** `sqlite3.IntegrityError` é classificado como `CONFLICT`, não storage.
+- **LOW-01:** CLI captura `SecurityError` e retorna `WORKFLOW_REJECTED`.
+- **LOW-03:** skill_lock exige id/version/hash juntos; `quota` exposto no boundary.

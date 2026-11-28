@@ -248,7 +248,8 @@ class Ledger:
 
     def _claim_lease(self, run_id: str, tenant_id: str, owner: str, now: datetime,
                      ttl_seconds: int, expected_revision: int,
-                     *, scope: tuple[str, str, str] | None = None) -> int:
+                     *, scope: tuple[str, str, str] | None = None,
+                     actor_id: str = "system") -> int:
         require_id(owner, "LEASE_OWNER_INVALID")
         require_utc(now)
         require(type(ttl_seconds) is int and 1 <= ttl_seconds <= 3600, "LEASE_TTL_INVALID")
@@ -276,16 +277,17 @@ class Ledger:
                 (owner, self._timestamp(now + timedelta(seconds=ttl_seconds)), epoch,
                  self._timestamp(now), run_id, tenant_id),
             )
-            self._audit(run_id, tenant_id, "CLAIM_LEASE", current["revision"],
+            self._audit(run_id, tenant_id, actor_id, "CLAIM_LEASE",
+                        current["revision"],
                         {"owner": owner, "epoch": epoch, "ttl_seconds": ttl_seconds}, now)
             return epoch
 
-    def _audit(self, run_id: str, tenant_id: str, action: str, revision: int,
-               detail: dict, now: datetime) -> None:
+    def _audit(self, run_id: str, tenant_id: str, actor_id: str, action: str,
+               revision: int, detail: dict, now: datetime) -> None:
         self._conn.execute(
-            "INSERT INTO audit_events(run_id,tenant_id,action,revision,detail_json,"
-            "created_at) VALUES(?,?,?,?,?,?)",
-            (run_id, tenant_id, action, revision,
+            "INSERT INTO audit_events(run_id,tenant_id,actor_id,action,revision,"
+            "detail_json,created_at) VALUES(?,?,?,?,?,?,?)",
+            (run_id, tenant_id, actor_id, action, revision,
              canonical_bytes(detail).decode(), self._timestamp(now)),
         )
 
@@ -313,6 +315,8 @@ class Ledger:
                      self._timestamp(now), self._timestamp(retention), result),
                 )
                 return True, TxOutcome.COMMITTED
+        except sqlite3.IntegrityError:
+            return False, TxOutcome.CONFLICT
         except sqlite3.Error:
             return False, TxOutcome.STORAGE_ERROR
 
@@ -404,7 +408,8 @@ class Ledger:
 
     def _dead_letter(self, run_id: str, tenant_id: str, reason: str,
                      sanitized_ref: str, now: datetime, expected_revision: int,
-                     *, scope: tuple[str, str, str] | None = None) -> None:
+                     *, scope: tuple[str, str, str] | None = None,
+                     actor_id: str = "system") -> None:
         require_utc(now)
         require_id(reason, "DLQ_REASON_INVALID")
         require_id(sanitized_ref, "DLQ_REFERENCE_INVALID")
@@ -421,7 +426,8 @@ class Ledger:
                 "VALUES(?,?,?,?,?)",
                 (run_id, tenant_id, reason, sanitized_ref, self._timestamp(now)),
             )
-            self._audit(run_id, tenant_id, "DEAD_LETTER", run["revision"],
+            self._audit(run_id, tenant_id, actor_id, "DEAD_LETTER",
+                        run["revision"],
                         {"reason": reason, "sanitized_ref": sanitized_ref}, now)
 
     def _recover(self, tenant_id: str, project_id: str, task_id: str,
@@ -490,7 +496,8 @@ class Ledger:
     def _set_flags(self, run_id: str, tenant_id: str, now: datetime,
                    stale: bool | None = None, revoked: bool | None = None,
                    expected_revision: int | None = None,
-                   *, scope: tuple[str, str, str] | None = None) -> None:
+                   *, scope: tuple[str, str, str] | None = None,
+                   actor_id: str = "system") -> None:
         require_utc(now)
         require(stale is None or type(stale) is bool, "STALE_FLAG_INVALID")
         require(revoked is None or type(revoked) is bool, "REVOKED_FLAG_INVALID")
@@ -510,23 +517,27 @@ class Ledger:
                 "WHERE run_id=? AND tenant_id=?",
                 (new_stale, new_revoked, revision, self._timestamp(now), run_id, tenant_id),
             )
-            self._audit(run_id, tenant_id, "SET_FLAGS", revision,
+            self._audit(run_id, tenant_id, actor_id, "SET_FLAGS", revision,
                         {"stale": bool(new_stale), "revoked": bool(new_revoked)}, now)
 
     def integrity(self) -> str:
-        result = self._conn.execute("PRAGMA integrity_check").fetchone()[0]
-        require(result == "ok", "LEDGER_INTEGRITY_FAILED")
-        require(not self._conn.execute("PRAGMA foreign_key_check").fetchall(),
-                "LEDGER_FOREIGN_KEY_FAILED")
-        return result
+        with self._lock:
+            result = self._conn.execute("PRAGMA integrity_check").fetchone()[0]
+            require(result == "ok", "LEDGER_INTEGRITY_FAILED")
+            require(not self._conn.execute("PRAGMA foreign_key_check").fetchall(),
+                    "LEDGER_FOREIGN_KEY_FAILED")
+            return result
 
     def counts(self, tenant_id: str | None = None) -> dict[str, int]:
         tables = ("events", "runs", "transitions", "approvals", "nonces", "outbox", "dlq")
         result = {}
-        for table in tables:
-            if tenant_id is None:
-                query, args = f"SELECT COUNT(*) FROM {table}", ()
-            else:
-                query, args = f"SELECT COUNT(*) FROM {table} WHERE tenant_id=?", (tenant_id,)
-            result[table] = self._conn.execute(query, args).fetchone()[0]
+        with self._lock:
+            for table in tables:
+                if tenant_id is None:
+                    query, args = f"SELECT COUNT(*) FROM {table}", ()
+                else:
+                    query, args = (
+                        f"SELECT COUNT(*) FROM {table} WHERE tenant_id=?", (tenant_id,)
+                    )
+                result[table] = self._conn.execute(query, args).fetchone()[0]
         return result

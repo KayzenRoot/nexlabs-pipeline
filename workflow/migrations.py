@@ -270,6 +270,7 @@ CREATE TABLE IF NOT EXISTS audit_events (
   audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
   run_id TEXT NOT NULL,
   tenant_id TEXT NOT NULL,
+  actor_id TEXT NOT NULL DEFAULT 'system',
   action TEXT NOT NULL,
   revision INTEGER NOT NULL,
   detail_json TEXT NOT NULL,
@@ -299,6 +300,10 @@ def _migrate_v5(conn: sqlite3.Connection) -> None:
         if name not in columns:
             conn.execute(f"ALTER TABLE runs ADD COLUMN {name} {definition}")
     conn.execute(AUDIT_TABLE)
+    if "actor_id" not in _columns(conn, "audit_events"):
+        conn.execute(
+            "ALTER TABLE audit_events ADD COLUMN actor_id TEXT NOT NULL DEFAULT 'system'"
+        )
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_audit_run ON audit_events(run_id, tenant_id)"
     )

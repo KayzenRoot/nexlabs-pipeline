@@ -11,7 +11,7 @@ import sys
 import tempfile
 
 from scripts.validate_sources import validate as validate_source_pack
-from security.contracts import Grant, Principal, require
+from security.contracts import Grant, Principal, SecurityError, require
 from security.core import EXPECTED_POLICY, policy_fingerprint
 from workflow.commands import CommandScope, WorkflowCommands
 
@@ -161,7 +161,7 @@ def _verification_commands(ledger: Ledger) -> WorkflowCommands:
     common = {
         "principal_id": "verify-agent", "target_id": "run-verify-1",
         "tenant_id": "tenant-1", "project_id": "project-1", "task_id": "task-1",
-        "workflow_id": "NLE-WF-GOV-03", "skill_id": "workflow-skill",
+        "workflow_id": "NLE-WF-QNT-01", "skill_id": "workflow-skill",
         "host_id": "host-1", "provider_id": "provider-local", "risk": "ELEVATED",
         "policy_sha256": policy, "policy_epoch": 1,
         "issued_at": NOW - timedelta(minutes=1), "expires_at": NOW + timedelta(hours=1),
@@ -174,7 +174,7 @@ def _verification_commands(ledger: Ledger) -> WorkflowCommands:
     )
     scope = CommandScope(
         actor=actor, tenant_id="tenant-1", project_id="project-1",
-        task_id="task-1", workflow_id="NLE-WF-GOV-03",
+        task_id="task-1", workflow_id="NLE-WF-QNT-01",
     )
     return WorkflowCommands(
         ledger, scope, policy_sha256=policy, policy_epoch=1, risk="ELEVATED",
@@ -204,7 +204,7 @@ def verify() -> dict:
         with Ledger(db) as ledger:
             commands = _verification_commands(ledger)
             commands.create_run("run-verify-1", "0.1.0", event, NOW,
-                                NOW + timedelta(hours=1), agent_id="verify-agent")
+                                NOW + timedelta(hours=1))
             commands.transition("run-verify-1", "VALIDATED", event.event_id, NOW,
                                 expected_revision=0, payload_sha256=PAYLOAD)
             ledger.integrity()
@@ -245,7 +245,8 @@ def main(argv: list[str] | None = None) -> int:
             result = verify()
             print("WORKFLOW_OK workflows=%(workflows)d c12=%(c12)d events=%(events)d "
                   "runs=%(runs)d nonces=%(nonces)d" % result)
-    except (OSError, ValueError, TypeError, KeyError, AssertionError) as exc:
+    except (OSError, ValueError, TypeError, KeyError, AssertionError,
+            SecurityError) as exc:
         print("WORKFLOW_REJECTED " + type(exc).__name__ + ":" + str(exc),
               file=sys.stderr)
         return 1

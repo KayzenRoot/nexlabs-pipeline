@@ -91,6 +91,8 @@ class WorkflowCommands:
                 "WORKFLOW_REVIEWER_ACCOUNTABLE_COLLISION")
         require(self._workflow.get("reviewer") not in agents,
                 "WORKFLOW_REVIEWER_EXECUTES")
+        require(self._workflow.get("accountable") not in agents,
+                "WORKFLOW_ACCOUNTABLE_EXECUTES")
         if self._workflow["gate"] == "HUMAN_APPROVAL_REQUIRED":
             require(self.risk == "HIGH_ASSURANCE",
                     "HUMAN_APPROVAL_ASSURANCE_REQUIRED")
@@ -181,22 +183,23 @@ class WorkflowCommands:
 
     def create_run(self, run_id: str, workflow_version: str, event: WorkflowEvent,
                    now: datetime, deadline_at: datetime, *,
-                   agent_id: str | None = None,
-                   skill_lock_id: str | None = None,
-                   skill_lock_version: str | None = None,
-                   skill_lock_hash: str | None = None,
-                   model_id: str | None = None,
-                   output_ref: str | None = None,
-                   evidence_ref: str | None = None) -> AccessDecision:
+                   options: RunOptions | None = None) -> AccessDecision:
+        options = options or RunOptions()
         require(event.tenant_id == self.tenant_id, "EVENT_TENANT_MISMATCH")
         require(workflow_version == WORKFLOW_VERSION, "WORKFLOW_VERSION_UNKNOWN")
+        require(type(options.quota) is int and options.quota >= 0, "RUN_QUOTA_INVALID")
         require_risk_floor(self.risk, event.risk)
         gate = self._workflow["gate"]
+        effective_agent = options.agent_id or event.producer
         payload = _payload_digest(
             "workflow.run.create", event_sha256=event.digest(),
             workflow_version=workflow_version, deadline_at=deadline_at.isoformat(),
             gate=gate, activation=self._workflow["activation"],
-            policy_epoch=self.policy_epoch,
+            agent_id=effective_agent, skill_lock_id=options.skill_lock_id,
+            skill_lock_version=options.skill_lock_version,
+            skill_lock_hash=options.skill_lock_hash, model_id=options.model_id,
+            quota=options.quota, output_ref=options.output_ref,
+            evidence_ref=options.evidence_ref, policy_epoch=self.policy_epoch,
         )
         request = self._request("workflow.run.create", run_id, payload, now)
         return self._execute(
@@ -205,10 +208,12 @@ class WorkflowCommands:
                 run_id, self.tenant_id, self.project_id, self.task_id, self.workflow_id,
                 workflow_version, event, now, deadline_at, SOURCE_LOCK_SHA256,
                 RunOptions(
-                    risk=self.risk, agent_id=agent_id, skill_lock_id=skill_lock_id,
-                    skill_lock_version=skill_lock_version,
-                    skill_lock_hash=skill_lock_hash, model_id=model_id,
-                    output_ref=output_ref, evidence_ref=evidence_ref, gate=gate,
+                    risk=self.risk, agent_id=effective_agent,
+                    skill_lock_id=options.skill_lock_id,
+                    skill_lock_version=options.skill_lock_version,
+                    skill_lock_hash=options.skill_lock_hash, model_id=options.model_id,
+                    quota=options.quota, output_ref=options.output_ref,
+                    evidence_ref=options.evidence_ref, gate=gate,
                 ),
             ),
             run_id,
@@ -267,7 +272,7 @@ class WorkflowCommands:
             request,
             lambda: self._ledger._claim_lease(
                 run_id, self.tenant_id, owner, now, ttl_seconds, expected_revision,
-                scope=self._scope_tuple,
+                scope=self._scope_tuple, actor_id=self.actor.principal_id,
             ),
             run_id,
         )
@@ -321,7 +326,7 @@ class WorkflowCommands:
             request,
             lambda: self._ledger._dead_letter(
                 run_id, self.tenant_id, reason, sanitized_ref, now, expected_revision,
-                scope=self._scope_tuple,
+                scope=self._scope_tuple, actor_id=self.actor.principal_id,
             ),
             run_id,
         )
@@ -340,7 +345,7 @@ class WorkflowCommands:
             request,
             lambda: self._ledger._set_flags(
                 run_id, self.tenant_id, now, stale, revoked, expected_revision,
-                scope=self._scope_tuple,
+                scope=self._scope_tuple, actor_id=self.actor.principal_id,
             ),
             run_id,
         )

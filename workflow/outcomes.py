@@ -13,6 +13,8 @@ class TxOutcome(str, Enum):
 
 
 def classify_exception(exc: BaseException) -> TxOutcome:
+    if isinstance(exc, sqlite3.IntegrityError):
+        return TxOutcome.CONFLICT
     if isinstance(exc, sqlite3.Error):
         return TxOutcome.STORAGE_ERROR
     text = str(exc).upper()

@@ -174,7 +174,7 @@ def grant(action, target="run-1", tenant="tenant-1", risk="ELEVATED"):
     return Grant(
         grant_id=f"grant-{action}", principal_id="agent-1", action=action,
         target_id=target, tenant_id=tenant, project_id="project-1", task_id="task-1",
-        workflow_id="NLE-WF-GOV-03", skill_id="workflow-skill", host_id="host-1",
+        workflow_id="NLE-WF-QNT-01", skill_id="workflow-skill", host_id="host-1",
         provider_id="provider-local", risk=risk, policy_sha256=POLICY, policy_epoch=1,
         issued_at=NOW - timedelta(minutes=1), expires_at=NOW + timedelta(minutes=5),
         revoked=False, max_spend_usd=Decimal("0"), external_effects="DENY",
@@ -184,7 +184,7 @@ def grant(action, target="run-1", tenant="tenant-1", risk="ELEVATED"):
 COMMAND_SCOPE = CommandScope(
     actor=Principal("agent-1", "agent", "tenant-1", "project-1", "host-1", "ACTIVE", 1),
     tenant_id="tenant-1", project_id="project-1", task_id="task-1",
-    workflow_id="NLE-WF-GOV-03",
+    workflow_id="NLE-WF-QNT-01",
 )
 
 
@@ -195,12 +195,18 @@ def commands(ledger, grants):
     )
 
 
-def create_payload(event, *, deadline=None, policy_epoch=1):
+def create_payload(event, *, deadline=None, policy_epoch=1, agent_id=None,
+                   skill_lock_id=None, skill_lock_version=None, skill_lock_hash=None,
+                   model_id=None, quota=0, output_ref=None, evidence_ref=None):
     deadline = deadline or NOW + timedelta(hours=1)
     return _payload_digest(
         "workflow.run.create", event_sha256=event.digest(),
         workflow_version="0.1.0", deadline_at=deadline.isoformat(),
-        gate="INTERNAL_ONLY", activation="DISABLED", policy_epoch=policy_epoch,
+        gate="INTERNAL_ONLY", activation="DISABLED",
+        agent_id=agent_id or event.producer, skill_lock_id=skill_lock_id,
+        skill_lock_version=skill_lock_version, skill_lock_hash=skill_lock_hash,
+        model_id=model_id, quota=quota, output_ref=output_ref,
+        evidence_ref=evidence_ref, policy_epoch=policy_epoch,
     )
 
 
@@ -218,7 +224,7 @@ def make_approval(payload_sha256, *, nonce="0123456789abcdefghijklmnopqrstuv",
         approval_id=approval_id, actor_id="agent-1", approver_id="human-owner",
         approver_kind="human", approver_role="OWNER", action=action,
         target_id=target_id, tenant_id="tenant-1", project_id="project-1",
-        task_id="task-1", workflow_id="NLE-WF-GOV-03", skill_id="workflow-skill",
+        task_id="task-1", workflow_id="NLE-WF-QNT-01", skill_id="workflow-skill",
         host_id="host-1", provider_id="provider-local", risk="HIGH_ASSURANCE",
         payload_sha256=payload_sha256, policy_sha256=POLICY,
         evidence_refs=("evidence-001",), max_spend_usd=Decimal("0"), nonce=nonce,
@@ -382,7 +388,7 @@ class HighAssuranceCommandTests(unittest.TestCase):
                     )},
                     {"run_id": "run-1", "target_id": "run-1", "actor_id": "agent-1",
                      "project_id": "project-1", "task_id": "task-1",
-                     "workflow_id": "NLE-WF-GOV-03", "risk": "HIGH_ASSURANCE",
+                     "workflow_id": "NLE-WF-QNT-01", "risk": "HIGH_ASSURANCE",
                      "policy_epoch": 1, "action": "workflow.run.create",
                      "approver_role": "OWNER", "max_spend_usd": "0"},
                 )
@@ -457,6 +463,32 @@ class HighAssuranceCommandTests(unittest.TestCase):
                     {"run_id": "run-1", "target_id": "event-2",
                      "action": "workflow.event.append"},
                 )
+
+    def test_approval_payload_binds_run_options(self):
+        event = make_event()
+        approval, signature = make_approval(create_payload(event))
+        with tempfile.TemporaryDirectory() as tmp:
+            with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                command = WorkflowCommands(
+                    ledger, COMMAND_SCOPE, policy_sha256=POLICY, policy_epoch=1,
+                    risk="HIGH_ASSURANCE",
+                    grants=(grant("workflow.run.create", risk="HIGH_ASSURANCE"),),
+                    approval=approval, approval_signature=signature,
+                    verifier=HmacSha256TestVerifier(APPROVAL_KEY),
+                )
+                deadline = NOW + timedelta(hours=1)
+                with self.assertRaises(SecurityError):
+                    command.create_run(
+                        "run-1", "0.1.0", event, NOW, deadline,
+                        options=RunOptions(
+                            agent_id="agent-B", skill_lock_id="skill-B",
+                            skill_lock_version="9.9.9", skill_lock_hash="b" * 64,
+                            model_id="model-B", quota=1, output_ref="out-B",
+                            evidence_ref="ev-B",
+                        ),
+                    )
+                self.assertEqual(ledger.counts()["runs"], 0)
+                self.assertEqual(ledger.counts()["nonces"], 0)
 
     def test_approval_payload_binds_append_run_id(self):
         run_event = make_event()
@@ -1092,9 +1124,55 @@ class CompilerAndC12Tests(unittest.TestCase):
         with self.assertRaises(SecurityError):
             dry_run("unknown", "run-1", "tenant-1", NOW, deadline)
 
+    def test_schema_validator_is_fail_closed(self):
+        root = Path(__file__).resolve().parents[1] / "workflow/schemas"
+        plan = dry_run("NLE-WF-GOV-03", "run-1", "tenant-1", NOW,
+                       NOW + timedelta(hours=1))
+        empty = copy.deepcopy(plan)
+        empty["dag"]["nodes"] = []
+        empty["dag"]["edges"] = []
+        with self.assertRaises(SecurityError):
+            validate_document(empty, root / "plan-v1.json")
+        date_only = copy.deepcopy(plan)
+        date_only["now"] = "2026-11-27"
+        with self.assertRaises(SecurityError):
+            validate_document(date_only, root / "plan-v1.json")
+
+    def test_context_lock_tamper_is_rejected(self):
+        from workflow import __main__ as workflow_cli
+        original = workflow_cli._git_blob
+
+        def tampered(path, ref="HEAD"):
+            data = original(path, ref)
+            if path.endswith("context-lock.json"):
+                document = json.loads(data)
+                document["implementation_fingerprints_sha256"].pop(
+                    next(iter(document["implementation_fingerprints_sha256"]))
+                )
+                return json.dumps(document).encode("utf-8")
+            return data
+
+        with mock.patch.object(workflow_cli, "_git_blob", side_effect=tampered):
+            with self.assertRaises(SecurityError):
+                workflow_cli.verify_context_lock()
+
     def test_dag_cycle_is_rejected(self):
         with self.assertRaises(SecurityError):
             validate_dag([{"id": "a"}, {"id": "b"}], [("a", "b"), ("b", "a")])
+
+    def test_c12_accountable_executor_collision_is_blocked(self):
+        contract = validate_c12_workflow(load_workflows()["NLE-WF-QNT-05"])
+        self.assertIn("ACCOUNTABLE_EXECUTES", contract["segregation_violations"])
+        self.assertFalse(contract["execution_allowed"])
+        scope = CommandScope(
+            actor=COMMAND_SCOPE.actor, tenant_id="tenant-1", project_id="project-1",
+            task_id="task-1", workflow_id="NLE-WF-QNT-05",
+        )
+        with self.assertRaises(SecurityError):
+            WorkflowCommands(
+                None, scope, policy_sha256=POLICY, policy_epoch=1,
+                risk="HIGH_ASSURANCE",
+            )
 
     def test_c12_dispatcher_identity_cannot_be_replaced(self):
         workflow = copy.deepcopy(load_workflows()["NLE-WF-GOV-03"])
