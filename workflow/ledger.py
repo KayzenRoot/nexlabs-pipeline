@@ -117,7 +117,8 @@ class Ledger:
     def _create_run(self, run_id: str, tenant_id: str, project_id: str, task_id: str,
                     workflow_id: str, workflow_version: str, event: WorkflowEvent,
                     now: datetime, deadline_at: datetime, source_lock_sha256: str,
-                    options: RunOptions | None = None) -> None:
+                    options: RunOptions | None = None,
+                    actor_id: str = "system") -> None:
         for value in (run_id, project_id, task_id, workflow_id, workflow_version):
             require_id(value, "RUN_IDENTIFIER_INVALID")
         require_utc(now)
@@ -166,9 +167,10 @@ class Ledger:
             except sqlite3.IntegrityError as exc:
                 raise WorkflowError("DUPLICATE_RUN_OR_EVENT") from exc
             self._conn.execute(
-                "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,revision,"
-                "occurred_at) VALUES(?,?,?,?,?,?,?)",
-                (run_id, tenant_id, None, "RECEIVED", event.event_id, 0, self._timestamp(now)),
+                "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
+                "revision,occurred_at,actor_id,action) VALUES(?,?,?,?,?,?,?,?,?)",
+                (run_id, tenant_id, None, "RECEIVED", event.event_id, 0,
+                 self._timestamp(now), actor_id, "workflow.run.create"),
             )
 
     def run(self, run_id: str, tenant_id: str) -> dict:
@@ -199,7 +201,9 @@ class Ledger:
                     now: datetime, expected_revision: int, lease_owner: str | None = None,
                     lease_epoch: int | None = None,
                     reconciliation_ref: str | None = None,
-                    *, scope: tuple[str, str, str] | None = None) -> int:
+                    *, scope: tuple[str, str, str] | None = None,
+                    actor_id: str = "system",
+                    action: str = "workflow.run.transition") -> int:
         require_utc(now)
         require(type(expected_revision) is int and expected_revision >= 0,
                 "RUN_REVISION_REQUIRED")
@@ -240,9 +244,10 @@ class Ledger:
             )
             self._conn.execute(
                 "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
-                "revision,reconciliation_ref,occurred_at) VALUES(?,?,?,?,?,?,?,?)",
+                "revision,reconciliation_ref,occurred_at,actor_id,action) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?)",
                 (run_id, tenant_id, current["state"], target, event_id, revision,
-                 reconciliation_ref, self._timestamp(now)),
+                 reconciliation_ref, self._timestamp(now), actor_id, action),
             )
             return revision
 
@@ -432,7 +437,8 @@ class Ledger:
 
     def _recover(self, tenant_id: str, project_id: str, task_id: str,
                  workflow_id: str, now: datetime,
-                 risk: str = "HIGH_ASSURANCE") -> dict[str, int]:
+                 risk: str = "HIGH_ASSURANCE",
+                 actor_id: str = "system") -> dict[str, int]:
         for value in (tenant_id, project_id, task_id, workflow_id):
             require_id(value, "RECOVERY_SCOPE_INVALID")
         require_utc(now)
@@ -461,9 +467,9 @@ class Ledger:
                 )
                 self._conn.execute(
                     "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
-                    "revision,occurred_at) VALUES(?,?,?,?,?,?,?)",
+                    "revision,occurred_at,actor_id,action) VALUES(?,?,?,?,?,?,?,?,?)",
                     (row["run_id"], tenant_id, "RUNNING", target, None, revision,
-                     self._timestamp(now)),
+                     self._timestamp(now), actor_id, "workflow.recovery.run"),
                 )
                 if target == "RETRY_WAIT":
                     retry += 1
@@ -486,9 +492,10 @@ class Ledger:
                 )
                 self._conn.execute(
                     "INSERT INTO transitions(run_id,tenant_id,from_state,to_state,event_id,"
-                    "revision,occurred_at) VALUES(?,?,?,?,?,?,?)",
-                    (row["run_id"], tenant_id, "EFFECT_IN_PROGRESS", "UNKNOWN_EFFECT", None,
-                     revision, self._timestamp(now)),
+                    "revision,occurred_at,actor_id,action) VALUES(?,?,?,?,?,?,?,?,?)",
+                    (row["run_id"], tenant_id, "EFFECT_IN_PROGRESS", "UNKNOWN_EFFECT",
+                     None, revision, self._timestamp(now), actor_id,
+                     "workflow.recovery.run"),
                 )
                 unknown += 1
         return {"retry_wait": retry, "unknown_effect": unknown, "failed": failed}

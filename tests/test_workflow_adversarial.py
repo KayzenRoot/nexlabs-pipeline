@@ -490,6 +490,24 @@ class HighAssuranceCommandTests(unittest.TestCase):
                 self.assertEqual(ledger.counts()["runs"], 0)
                 self.assertEqual(ledger.counts()["nonces"], 0)
 
+    def test_run_agent_cannot_take_segregated_role(self):
+        for agent in ("NLE-POSEIDON-CIO", "NLE-POSEIDON-RISK",
+                      "NLE-ATHENA-PMO"):
+            with self.subTest(agent=agent):
+                with tempfile.TemporaryDirectory() as tmp:
+                    with TestLedger(Path(tmp) / "ledger.sqlite3") as ledger:
+                        command = commands(
+                            ledger, [grant("workflow.run.create")]
+                        )
+                        event = make_event()
+                        deadline = NOW + timedelta(hours=1)
+                        with self.assertRaises(SecurityError):
+                            command.create_run(
+                                "run-1", "0.1.0", event, NOW, deadline,
+                                options=RunOptions(agent_id=agent),
+                            )
+                        self.assertEqual(ledger.counts()["runs"], 0)
+
     def test_approval_payload_binds_append_run_id(self):
         run_event = make_event()
         appended = make_event(event_id="event-2", idempotency_key="idem-2")
@@ -726,6 +744,34 @@ class LedgerIntegrityTests(unittest.TestCase):
             ).fetchone()[0]
             conn.close()
             self.assertEqual(version, 2)
+
+    def test_migration_v5_audit_actor_upgrade_is_resumable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.sqlite3"
+            with TestLedger(path):
+                pass
+            conn = sqlite3.connect(path)
+            conn.execute("ALTER TABLE audit_events DROP COLUMN actor_id")
+            conn.execute("DELETE FROM schema_migrations WHERE version=6")
+            conn.commit()
+            conn.close()
+            with TestLedger(path) as ledger:
+                self.assertEqual(ledger.schema_version, SCHEMA_VERSION)
+                columns = {
+                    row[1] for row in ledger._conn.execute(
+                        "PRAGMA table_info(audit_events)"
+                    )
+                }
+                self.assertIn("actor_id", columns)
+                ledger.create_run()
+                revision = ledger.run("run-1")["revision"]
+                ledger._set_flags("run-1", "tenant-1", NOW, stale=True,
+                                  expected_revision=revision, actor_id="agent-1")
+                actor = ledger._conn.execute(
+                    "SELECT actor_id FROM audit_events WHERE run_id=?",
+                    ("run-1",),
+                ).fetchone()[0]
+                self.assertEqual(actor, "agent-1")
 
     def test_migration_backfills_legacy_high_risk_and_resumes_v4(self):
         with tempfile.TemporaryDirectory() as tmp:

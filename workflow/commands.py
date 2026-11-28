@@ -191,6 +191,9 @@ class WorkflowCommands:
         require_risk_floor(self.risk, event.risk)
         gate = self._workflow["gate"]
         effective_agent = options.agent_id or event.producer
+        for role in ("reviewer", "accountable", "dispatch_agent"):
+            require(effective_agent != self._workflow.get(role),
+                    "RUN_AGENT_SEGREGATION_VIOLATION")
         payload = _payload_digest(
             "workflow.run.create", event_sha256=event.digest(),
             workflow_version=workflow_version, deadline_at=deadline_at.isoformat(),
@@ -215,6 +218,7 @@ class WorkflowCommands:
                     quota=options.quota, output_ref=options.output_ref,
                     evidence_ref=options.evidence_ref, gate=gate,
                 ),
+                actor_id=self.actor.principal_id,
             ),
             run_id,
         )
@@ -255,6 +259,7 @@ class WorkflowCommands:
             lambda: self._ledger._transition(
                 run_id, self.tenant_id, target, event_id, now, expected_revision,
                 lease_owner, lease_epoch, reconciliation_ref, scope=self._scope_tuple,
+                actor_id=self.actor.principal_id, action=action,
             ),
             run_id,
         )
@@ -288,7 +293,7 @@ class WorkflowCommands:
             request,
             lambda: self._ledger._recover(
                 self.tenant_id, self.project_id, self.task_id, self.workflow_id,
-                now, self.risk,
+                now, self.risk, self.actor.principal_id,
             ),
         )
 
@@ -368,6 +373,7 @@ class WorkflowCommands:
             lambda: self._ledger._transition(
                 run_id, self.tenant_id, outcome, None, now, expected_revision,
                 lease_owner, lease_epoch, evidence_ref, scope=self._scope_tuple,
+                actor_id=self.actor.principal_id, action=action,
             ),
             run_id,
         )

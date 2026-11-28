@@ -8,7 +8,7 @@ import sqlite3
 
 from .contracts import CLASSIFICATIONS, RISK_LEVELS, load_workflows
 
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 MIGRATION_1 = """
 CREATE TABLE IF NOT EXISTS schema_migrations (
@@ -332,8 +332,25 @@ def _migrate_v5(conn: sqlite3.Connection) -> None:
         )
 
 
+def _migrate_v6(conn: sqlite3.Connection) -> None:
+    audit_columns = _columns(conn, "audit_events")
+    if "actor_id" not in audit_columns:
+        conn.execute(
+            "ALTER TABLE audit_events ADD COLUMN actor_id TEXT NOT NULL DEFAULT 'system'"
+        )
+    transition_columns = _columns(conn, "transitions")
+    if "actor_id" not in transition_columns:
+        conn.execute(
+            "ALTER TABLE transitions ADD COLUMN actor_id TEXT NOT NULL DEFAULT 'system'"
+        )
+    if "action" not in transition_columns:
+        conn.execute(
+            "ALTER TABLE transitions ADD COLUMN action TEXT NOT NULL DEFAULT 'LEGACY'"
+        )
+
+
 MIGRATIONS = {1: MIGRATION_1, 2: MIGRATION_2, 3: _migrate_v3, 4: _migrate_v4,
-              5: _migrate_v5}
+              5: _migrate_v5, 6: _migrate_v6}
 
 
 @contextmanager

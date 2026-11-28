@@ -46,7 +46,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 - `Ledger._transaction` usa RLock por instância e ownership de thread; thread estranha não entra em transação alheia.
 - Leituras públicas são serializadas pelo mesmo lock.
-- Migrações 3/4/5 são transacionais; v3 detecta tabela nova/parcial/rename; v4/v5 são resumíveis; v5 adiciona Run Contract completo e `audit_events`.
+- Migrações 3/4/5 são transacionais; v3 detecta tabela nova/parcial/rename; v4/v5 são resumíveis; v5 adiciona Run Contract completo e `audit_events`; v6 adiciona `actor_id` em audit_events e `actor_id/action` em transitions de forma resumível.
 - Migração falha fechada sem registrar versão incompleta quando approvals falta e approvals_v3 é incompleta.
 - Testes: mesma instância/threads, conexões independentes, processos independentes, nonce multiprocesso, crash dentro de transação, rollback após nonce, falha de registro de aprovação, revisão concorrente, reopen, `integrity_check` e `foreign_key_check`.
 - `_consume_outcome` classifica `COMMITTED`, `REPLAY_REJECTED`, `CONFLICT` e `STORAGE_ERROR`; erro SQLite não é convertido em replay.
@@ -70,9 +70,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 | Verificação | Resultado |
 |---|---|
-| Suíte local | **175/175 OK** |
+| Suíte local | **177/177 OK** |
 | Baseline CD-02 | 156/156 OK |
-| Novos testes CD-03 | 19 |
+| Novos testes CD-03 | 21 |
 | `workflow verify` | PASS local |
 | Source Pack | 7/7; 364 fontes |
 | Registry | 105/92/1110; 0 writes |
@@ -82,9 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/CD-03 no code head `bb881b920d1f9688e0f041328ace306ca25a84a7`: run **46144263287** — `docs-validation` (ubuntu-24.04, 175 testes) e `security-windows` **SUCCESS**; Sonar **0 issues**; Socket/ECC **PASS**.
-- SonarCloud no HEAD `bb881b9`: **0 issues abertas**, Quality Gate passed, check success.
-- Socket PR Alerts/Project Report PASS; ECC Security Evidence PASS em `bb881b9`.
+- CI/CD-03 anterior no code head `bb881b9`: run **46144263287** — `docs-validation` e `security-windows` **SUCCESS**; a rodada atual de correções de migração/ator tem CI pendente.
+- SonarCloud na rodada anterior: 0 issues; read-back da rodada atual pendente.
+- Socket/ECC da rodada anterior PASS; read-back atual pendente.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -104,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | GATES PASS em bb881b9; auditoria independente do HEAD final pendente |
+| AC14 CI/auditoria | PENDENTE — migração v6/ator e CI do novo HEAD em validação |
 
 ## 6. Limitações
 
@@ -128,3 +128,10 @@ Somente propor após auditoria independente APPROVED no HEAD exato. Sem merge, p
 - **MEDIUM-03:** `sqlite3.IntegrityError` é classificado como `CONFLICT`, não storage.
 - **LOW-01:** CLI captura `SecurityError` e retorna `WORKFLOW_REJECTED`.
 - **LOW-03:** skill_lock exige id/version/hash juntos; `quota` exposto no boundary.
+
+## 9. Segunda correção da auditoria CD-03 (HEAD fa1a3b5)
+
+- **HIGH-01:** schema v6 adiciona `audit_events.actor_id` e `transitions.actor_id/action` de forma transacional/resumível; upgrade de uma base v5 sem `actor_id` é testado.
+- **MEDIUM-01:** `RunOptions.agent_id` não pode ser reviewer, accountable ou dispatcher; testes negativos para os três papéis.
+- **MEDIUM-02:** transições e recovery gravam actor_id e ação autorizada; teste da transição `RECEIVED→VALIDATED`.
+- CI passa a executar `python -m workflow c12` como step dedicado.
