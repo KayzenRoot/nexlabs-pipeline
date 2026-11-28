@@ -82,9 +82,9 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 
 ## 4. CI e segurança
 
-- CI/CD-03 anterior no code head `d74cbf5`: run **46148936493** **SUCCESS**; a rodada atual (append/quarentena/audit timestamp) tem CI pendente.
-- SonarCloud na rodada anterior: 0 issues; leitura atual pendente.
-- Socket/ECC da rodada anterior PASS; leitura atual pendente.
+- CI/CD-03 no code head `85341eb221b7d087ce999d5e492a10c63a985478`: run **46150500829** — `docs-validation` (ubuntu-24.04, 186 testes) e `security-windows` **SUCCESS**; Sonar 0 issues; Socket/ECC PASS.
+- SonarCloud no HEAD `85341eb`: 0 issues abertas, Quality Gate passed.
+- Socket PR Alerts/Project Report PASS; ECC Security Evidence PASS em `85341eb`.
 - Nenhum ruleset, proteção da main ou gate foi alterado.
 
 ## 5. Acceptance Criteria
@@ -104,7 +104,7 @@ Status: **CANDIDATE_PENDING_CD03_INDEPENDENT_AUDIT**
 | AC11 C12 | PASS |
 | AC12 retry/limites/deadline | PASS |
 | AC13 CLI | PASS local; integrity gate no commit final |
-| AC14 CI/auditoria | PENDENTE — append/quarentena/audit timestamp em validação |
+| AC14 CI/auditoria | GATES PASS em 85341eb; auditoria independente do HEAD final pendente |
 
 ## 6. Limitações
 
